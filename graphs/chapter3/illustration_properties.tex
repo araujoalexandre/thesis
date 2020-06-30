@@ -1,0 +1,27 @@
+\tikzset{%
+  >={Latex[width=2mm,length=2mm]},
+            base/.style = {rectangle, draw=black, text centered, font=\sffamily},
+           other/.style = {base, fill=none,  minimum width=1.7cm, minimum height=0.7cm},
+         ellipse/.style = {base}
+}
+\begin{tikzpicture}[every node/.style={fill=white, font=\sffamily}, align=center,scale=0.6]
+
+    \draw (0,0) circle (2.5cm);
+    \draw (0,0) circle (2.0cm);
+    \draw (0,0) circle (1.5cm);
+    \draw (0,0) circle (1.0cm);
+    \draw (0,0) circle (0.5cm);
+    
+    \draw[ellipse, rotate=30, fill=gray, opacity=0.5] (0.1, -1.1) ellipse (2.0cm and 0.9cm);
+    \draw[ellipse, rotate=30, fill=gray, opacity=0.5] (0.0, -0.8) ellipse (1.0cm and 0.45cm);
+
+    \node[other, draw=none] at (0.20, 0.20) {$\mathcal{C}_{1,n}$};
+    \node[other, draw=none] at (0.55, 0.55) {$\iddots$};
+    \node[other, draw=none] at (0.90, 0.90) {$\mathcal{C}_{9,n}$};
+    \node[other, draw=none] at (1.25, 1.25) {$\iddots$};
+    \node[other, draw=none] at (1.60, 1.60) {$\mathcal{C}_{18,n}$};
+    
+    \node[other, draw=none] at (0.4, -0.6) {$\mathcal{R}_{1,n}$};
+    \node[other, draw=none] at (1.0, -1.4) {$\mathcal{R}_{2,n}$};
+
+\end{tikzpicture}

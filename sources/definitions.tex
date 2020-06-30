@@ -1,0 +1,356 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Basic packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \usepackage{minitoc}        % produce a table of contents for each chapter
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{url}            % simple URL typesetting
+\usepackage{microtype}      % microtypography
+\usepackage{calc}           % perform arithmetic on the arguments
+\usepackage{xspace}         % commands that appear not to eat spaces
+\usepackage{enumitem}       % control layout of itemize, enumerate
+\usepackage{appendix}       % extra control of appendices
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% \usepackage{subfigure}
+% \usepackage{color}
+% \usepackage{colortbl}
+% \usepackage{wrapfig}
+% \usepackage{bbm}
+% \usepackage{stmaryrd}
+% \usepackage[normalem]{ulem}
+% \usepackage{textcomp}
+% \usepackage{changepage}
+% \usepackage{placeins}
+% \usepackage{setspace}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Minitoc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{etoc}
+\newlength\tocrulewidth
+\setlength{\tocrulewidth}{0.8pt}
+\etocsettocstyle{
+\addsec*{Contents\\\vspace{-0.5cm}\rule{\textwidth}{\tocrulewidth}}}{
+  \noindent\rule{\linewidth}{\tocrulewidth}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Mathematical packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{mathtools}
+\usepackage{amsmath}        % Basic mathematical typography
+\usepackage{amssymb}
+\usepackage{amsthm}         % Basic mathematical environments for proofs etc.
+\usepackage{mathdots}       % dots commands for matrices 
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{physics}        % typesetting equations for physics simpler
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Graphics packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{graphicx}       % enhanced support for graphics
+\usepackage{tikz}           % create graphic elements in latex
+\usepackage{tikz-cd}        % Create commutative diagrams with TikZ
+\usetikzlibrary{positioning}
+\usetikzlibrary{arrows.meta}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{array}          % extending the array and tabular environments
+\usepackage{multirow}       % create tabular cells spanning multiple rows
+\usepackage{tabularx}       % tabulars with adjustable-width columns
+\usepackage{booktabs}       % professional-quality tables
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Remove Warnings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{silence}
+\WarningFilter{minitoc(hints)}{W0023}
+\WarningFilter{minitoc(hints)}{W0028}
+\WarningFilter{minitoc(hints)}{W0030}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Some of my favourite personal adjustments
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% These are the adjustments that I consider necessary for typesetting
+% a nice thesis. However, they are *not* included in the template, as
+% I do not want to force you to use them.
+
+% This ensures that I am able to typeset bold font in table while still aligning the numbers
+% correctly.
+\usepackage{etoolbox}
+
+\usepackage[binary-units=true]{siunitx}
+\DeclareSIUnit\px{px}
+
+\sisetup{%
+  detect-all           = true,
+  detect-family        = true,
+  detect-mode          = true,
+  detect-shape         = true,
+  detect-weight        = true,
+  detect-inline-weight = math,
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Hyperlinks
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\definecolor{mydarkblue}{rgb}{0,0.08,0.45}
+\usepackage[%
+  colorlinks = true,
+  citecolor  = mydarkblue,
+  linkcolor  = mydarkblue,
+  urlcolor   = mydarkblue,
+  ]{hyperref}
+\usepackage{bookmark}       % Bookmarks in the resulting PDF
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Bibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% I like the bibliography to be extremely plain, showing only a numeric
+% identifier and citing everything in simple brackets. The first names,
+% if present, will be initialized. DOIs and URLs will be preserved.
+
+\usepackage[%
+  autocite     = plain,
+  backend      = biber,
+  doi          = false,
+  url          = false,
+  uniquename   = init,
+  giveninits   = true,
+  hyperref     = true,
+  maxbibnames  = 99,
+  maxcitenames = 2,
+  sortcites    = false,
+  style        = authoryear-comp,
+  natbib       = true,
+  backref      = true,
+  abbreviate   = true,
+  ]{biblatex}
+
+\makeatletter
+\let\abx@macro@citeOrig\abx@macro@cite
+\renewbibmacro{cite}{%
+\bibhyperref{%
+\let\bibhyperref\relax\relax%
+\abx@macro@citeOrig%
+  }%
+}
+\let\abx@macro@textciteOrig\abx@macro@textcite
+\renewbibmacro{textcite}{%
+  \bibhyperref{%
+    \let\bibhyperref\relax\relax%
+    \abx@macro@textciteOrig%
+  }%
+}%
+\makeatother
+
+\DefineBibliographyStrings{english}{and={and}}
+\DefineBibliographyStrings{english}{in={in}}
+\DefineBibliographyStrings{english}{page={page}}
+\DefineBibliographyStrings{english}{pages={pages}}
+\DefineBibliographyStrings{english}{andothers={et al.}}
+\DefineBibliographyStrings{english}{byeditor={editor}}
+\DefineBibliographyStrings{english}{volume={volume}}
+\DefineBibliographyStrings{english}{backrefpage={see page}}
+\DefineBibliographyStrings{english}{backrefpages={see pages}}
+\renewcommand{\cite}[1]{\citep{#1}}
+\renewcommand{\finalnamedelim}{ \& }
+\renewcommand{\textcitedelim}{
+  \iflastcitekey{
+    \unspace\textcolor{black}{\text{\ and}}\unspace
+  }{
+  \addcomma}\space}
+
+\input{bibliography-mimosis}
+\bibliography{bibliography}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Fonts
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \ifxetexorluatex
+%   \setmainfont{Minion Pro}
+% \else
+%   \usepackage[lf]{ebgaramond}
+%   \usepackage[oldstyle,scale=0.7]{sourcecodepro}
+%   \singlespacing
+% \fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Theorems
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{property}{Property}
+\newtheorem{remark}{Remark}
+
+% \newtheorem*{property*}{Property}
+% \newtheorem*{remark*}{Remark}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Specific Operators
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\DeclareMathOperator{\reshape}{vec}
+\DeclareMathOperator{\pad}{pad}
+\DeclareMathOperator{\lip}{Lip}
+\DeclareMathOperator{\lipbound}{LipBound}
+\DeclareMathOperator{\relu}{ReLU}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Custom Commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% complex number i
+\newcommand{\ci}{\ensuremath \mathbf{i}}
+
+% Definition d'une matrice: parenthese ou crochet
+\newcommand{\leftmat}{\left(} 
+\newcommand{\rightmat}{\right)}
+
+% definition de l'index a_h et B_h
+\newcommand{\seqidx}{h}
+\newcommand{\seqsetN}{N}
+\newcommand{\seqsetM}{M}
+
+% cin et cout
+\newcommand{\cin}{\mathrm{cin}}
+\newcommand{\cout}{\mathrm{cout}}
+
+% normes
+\newcommand{\lone}{\ensuremath \ell_1}
+\newcommand{\ltwo}{\ensuremath \ell_2}
+\newcommand{\linf}{\ensuremath \ell_\infty}
+
+% command for sets
+\newcommand{\Nbb}{{\ensuremath \mathbb{N}}}
+\newcommand{\Zbb}{{\ensuremath \mathbb{Z}}}
+\newcommand{\Rbb}{{\ensuremath \mathbb{R}}}
+\newcommand{\Cbb}{{\ensuremath \mathbb{C}}}
+\newcommand{\Rnn}{\Rbb^{n \times n}}
+\newcommand{\Cnn}{\Cbb^{n \times n}}
+% \newcommand{\Rn}{\Rbb^{n}}
+\newcommand{\Cn}{\Cbb^{n}}
+\newcommand{\Nxx}[2]{{\ensuremath \Nbb^{#1 \times #2}}}
+\newcommand{\Zxx}[2]{{\ensuremath \Zbb^{#1 \times #2}}}
+\newcommand{\Cxx}[2]{{\ensuremath \Cbb^{#1 \times #2}}}
+\newcommand{\Rxx}[2]{{\ensuremath \Rbb^{#1 \times #2}}}
+
+% expected value
+\newcommand{\Ebb}{\ensuremath \mathbb{E}}
+
+% command for matrices
+\newcommand{\Amat}{\ensuremath \mathbf{A}}
+\newcommand{\Bmat}{\ensuremath \mathbf{B}}
+\newcommand{\Cmat}{\ensuremath \mathbf{C}}
+\newcommand{\Dmat}{\ensuremath \mathbf{D}}
+\newcommand{\Emat}{\ensuremath \mathbf{E}}
+\newcommand{\Fmat}{\ensuremath \mathbf{F}}
+\newcommand{\Gmat}{\ensuremath \mathbf{G}}
+\newcommand{\Hmat}{\ensuremath \mathbf{H}}
+\newcommand{\Imat}{\ensuremath \mathbf{I}}
+\newcommand{\Jmat}{\ensuremath \mathbf{J}}
+\newcommand{\Kmat}{\ensuremath \mathbf{K}}
+\newcommand{\Lmat}{\ensuremath \mathbf{L}}
+\newcommand{\Mmat}{\ensuremath \mathbf{M}}
+\newcommand{\Nmat}{\ensuremath \mathbf{N}}
+\newcommand{\Omat}{\ensuremath \mathbf{O}}
+\newcommand{\Pmat}{\ensuremath \mathbf{P}}
+\newcommand{\Qmat}{\ensuremath \mathbf{Q}}
+\newcommand{\Rmat}{\ensuremath \mathbf{R}}
+\newcommand{\Smat}{\ensuremath \mathbf{S}}
+\newcommand{\Tmat}{\ensuremath \mathbf{T}}
+\newcommand{\Umat}{\ensuremath \mathbf{U}}
+\newcommand{\Vmat}{\ensuremath \mathbf{V}}
+\newcommand{\Wmat}{\ensuremath \mathbf{W}}
+\newcommand{\Xmat}{\ensuremath \mathbf{X}}
+\newcommand{\Ymat}{\ensuremath \mathbf{Y}}
+\newcommand{\Zmat}{\ensuremath \mathbf{Z}}
+
+% command for matrices
+\newcommand{\avec}{\ensuremath \mathbf{a}}
+\newcommand{\bvec}{\ensuremath \mathbf{b}}
+\newcommand{\cvec}{\ensuremath \mathbf{c}}
+\newcommand{\dvec}{\ensuremath \mathbf{d}}
+\newcommand{\evec}{\ensuremath \mathbf{e}}
+\newcommand{\fvec}{\ensuremath \mathbf{f}}
+\newcommand{\gvec}{\ensuremath \mathbf{g}}
+\newcommand{\hvec}{\ensuremath \mathbf{h}}
+\newcommand{\ivec}{\ensuremath \mathbf{i}}
+\newcommand{\jvec}{\ensuremath \mathbf{j}}
+\newcommand{\kvec}{\ensuremath \mathbf{k}}
+\newcommand{\lvec}{\ensuremath \mathbf{l}}
+\newcommand{\mvec}{\ensuremath \mathbf{m}}
+\newcommand{\nvec}{\ensuremath \mathbf{n}}
+\newcommand{\ovec}{\ensuremath \mathbf{o}}
+\newcommand{\pvec}{\ensuremath \mathbf{p}}
+\newcommand{\qvec}{\ensuremath \mathbf{q}}
+\newcommand{\rvec}{\ensuremath \mathbf{r}}
+\newcommand{\svec}{\ensuremath \mathbf{s}}
+\newcommand{\tvec}{\ensuremath \mathbf{t}}
+\newcommand{\uvec}{\ensuremath \mathbf{u}}
+\newcommand{\vvec}{\ensuremath \mathbf{v}}
+\newcommand{\wvec}{\ensuremath \mathbf{w}}
+\newcommand{\xvec}{\ensuremath \mathbf{x}}
+\newcommand{\yvec}{\ensuremath \mathbf{y}}
+\newcommand{\zvec}{\ensuremath \mathbf{z}}
+
+% matrix brackets
+\newcommand{\BEGINMAT}{\begin{pmatrix}}
+\newcommand{\ENDMAT}{\end{pmatrix}}
+
+% circulant & diagonal
+\newcommand{\circulant}{\ensuremath \mathrm{circ}}
+\newcommand{\diagonal}{\ensuremath \mathrm{diag}}
+
+% variance et covariance
+\newcommand{\Cov}{\ensuremath \mathrm{Cov}}
+\newcommand{\Var}{\ensuremath \mathrm{Var}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Text shortcut
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\yt}{\textit{YouTube-8M}\xspace}
+\newcommand{\eg}{\textit{e.g.}\xspace}
+\newcommand{\ie}{\textit{i.e.}\xspace}
+\newcommand{\aka}{\textit{a.k.a}\xspace}
+\newcommand{\ACDC}{\textbf{ACDC}\xspace}
+\newcommand{\AFDF}{\textbf{AFCF}\xspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Debug commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand\red{\cellcolor{red!10}}
+\newcommand{\todo}[2]{{\color{red}{\bf TODO (#1):} #2}}
+
+
+% \newcommand{\drn}{Deep ReLU network\xspace}
+% \newcommand{\drns}{Deep ReLU networks\xspace}
+% \newcommand{\DCRN}{DCRN\xspace}
+% \newcommand{\DCRNs}{DCRNs\xspace}
+% \newcommand{\divisiblerank}{divisible rank}
+% \newcommand{\totalrank}{total rank}
+
+
