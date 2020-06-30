@@ -1,0 +1,58 @@
+\documentclass{mimosis}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% External import 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{sources/definitions}
+\input{sources/acronyms}
+\input{sources/glossary}
+
+\makeindex
+\makeglossaries
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{Properties of structured matrices to improved training of Deep Neural Network}
+\author{Alexandre Araujo}
+
+\begin{document}
+
+\frontmatter
+  \input{sources/title}
+  \input{sources/abstract}
+  \tableofcontents
+  \listoffigures
+  \listoftables
+  \listofalgorithms
+
+  % This ensures that the subsequent sections are being included as root
+  % items in the bookmark structure of your PDF reader.
+  \bookmarksetup{startatroot}
+  \backmatter
+    \begingroup
+      \let\clearpage\relax
+      \glsaddall
+      \printglossary[type=\acronymtype]
+      \newpage
+      \printglossary[title={List of Symbols}]
+    \endgroup
+    \printindex
+
+\mainmatter
+  \input{sources/ch1-introduction}
+  \input{sources/ch2-related_work}
+  \input{sources/ch3-diagonal_circulant}
+  \input{sources/ch4-lipschitz_bound}
+  \input{sources/ch5-conclusion}
+
+  \appendix
+  \input{sources/ap1-randomized_inference}
+  \input{sources/ap2-advocating_for_multiple_defense_strategies}
+
+  \printbibliography
+
+
+\end{document}
