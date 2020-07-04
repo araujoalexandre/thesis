@@ -1,7 +1,90 @@
 
 
-\newglossaryentry{Real numbers}{%
-  name        = {$\real$},
-  description = {The set of real numbers},
-  sort        = {Real numbers},
+\newglossaryentry{Natural numbers}{%
+  name        = {$\mathbb{N}$},
+  description = {The set of natural numbers},
 }
+
+\newglossaryentry{Real numbers}{%
+  name        = {$\mathbb{R}$},
+  description = {The set of real numbers},
+}
+
+\newglossaryentry{Complex numbers}{%
+  name        = {$\mathbb{C}$},
+  description = {The set of complex numbers},
+}
+
+\newglossaryentry{Matrix}{%
+  name        = {$\Mmat = \left(a_{ij}\right)$},
+  description = {Matrix $\Mmat$ with $(i,j)$-entry $a_{ij}$},
+}
+
+\newglossaryentry{Vector}{%
+  name        = {$\xvec = \left[ \xvec_{1} \dots \xvec_{n} \right]$},
+  description = {Vector $\xvec$ of size $n$ with $\xvec_{i}$ entries},
+}
+
+\newglossaryentry{Transpose}{%
+  name        = {$\Mmat^\top$},
+  description = {Transpose of matrix $\Mmat$},
+}
+
+\newglossaryentry{Conjugate Transpose}{%
+  name        = {$\Mmat^*$},
+  description = {Conjugate transpose of matrix $\Mmat$},
+}
+
+\newglossaryentry{identity}{%
+  name        = {$\Imat$},
+  description = {Identity matrix},
+}
+
+\newglossaryentry{anti-identity}{%
+  name        = {$\Qmat$},
+  description = {Anti-identity matrix},
+}
+
+\newglossaryentry{Matrix p-norm}{%
+  name        = {$\norm{\Mmat}_p$},
+  description = {Norm $p$ of matrix $\Mmat$, \ie 
+ $\norm{\Mmat}_p = \sup_{\norm{\xvec}_p \neq 0} \frac{\norm{\Mmat \xvec}_p}{\norm{\xvec}_p}$},
+}
+
+\newglossaryentry{Vector p-norm}{%
+  name        = {$\norm{\xvec}_p$},
+  description = {Norm $p$ of vector $\xvec$, \ie
+  $\norm{\xvec}_p = \left( \sum_{i=0}^n \xvec_i^p \right)^\frac{1}{p} $},
+}
+
+\newglossaryentry{largest singular value of matrix}{%
+  name        = {$\sigma_1(\Mmat)$},
+  description = {largest singular value of matrix $\Mmat$, \ie $\sigma_1(\Mmat) = \norm{\Mmat}_2$},
+}
+
+\newglossaryentry{largest eigenvalue of matrix}{%
+  name        = {$\lambda_1(\Mmat)$},
+  description = {largest eigenvalue of matrix $\Mmat$},
+}
+
+\newglossaryentry{semi positive definite matrix}{%
+  name        = {$\Mmat \geq 0$},
+  description = {$\Mmat$ is positive semidefinite, \ie $\xvec^\top\Mmat\xvec \geq 0 \text{for all} \xvec \in \Cn$},
+}
+
+\newglossaryentry{positive definite}{%
+  name        = {$\Mmat > 0$},
+  description = {$\Mmat$ is positive definite, \ie $\xvec^\top\Mmat\xvec > 0 \text{for all} \xvec \in \Cn$},
+}
+
+
+\newglossaryentry{imaginary number}{%
+  name        = {$\ci = \sqrt{-1}$},
+  description = {imaginary number},
+}
+
+
+
+
+
+
