@@ -49,17 +49,17 @@ We introduce a new bound on the number of diagonal-circulant products required t
 Building on this result, we demonstrate that a DCNN with bounded width and small depth can approximate any dense networks with ReLU activations. 
 
 \paragraph{Outline of the chapter:}
-We present in Section~\ref{section:related_work} the related work on structured neural networks and several compression techniques.
+We present in Section~\ref{section:ch3-related_work} the related work on structured neural networks and several compression techniques.
 Section~\ref{section:circulant} introduces circulant matrices, our new result extending the one from \citet{Huhtanen2015}.
 Section~\ref{section:analysis_diagonal_circulant} proposes a theoretical analysis on the expressivity on DCNNs.
 Section~\ref{section:training} describes two efficient techniques for training deep diagonal circulant neural networks.
 Finally, Section~\ref{section:empirical_evaluation} presents extensive experiments to compare the performance of deep diagonal circulant neural networks in different settings with respect to other state of the art approaches.
-Section~\ref{section:conclusion} provides a discussion and concluding remarks.
+Section~\ref{section:ch3-conclusion} provides a discussion and concluding remarks.
 
 
 % #############################################################################
 \section{Related Work}
-\label{section:related_work}
+\label{section:ch3-related_work}
 % #############################################################################
 
 Structured matrices exhibit a number of good properties which have been exploited by deep learning practitioners, mainly to compress large neural networks architectures into smaller ones.
@@ -97,13 +97,13 @@ However, circulant networks show good performances in several contexts (the inte
 An $n$-by-$n$ circulant matrix $\Cmat$ is a matrix where each row is a cyclic right shift of the previous one as illustrated below.
 
 \begin{equation}
-    \Cmat = \circulant(\cvec) = \BEGINMAT
+    \Cmat = \circulant(\cvec) = \leftmatrix
     c_{0} & c_{n-1} & c_{n-2} & \dots & c_{1} \\
     c_{1} & c_{0} & c_{n-1} & & c_{2} \\
     c_{2} & c_{1} & c_{0}& & c_{3} \\
     \vdots & & & \ddots & \vdots \\
     c_{n-1} & c_{n-2} & c_{n-3} & & \phantom{0}c_{0}\phantom{0}
-    \ENDMAT
+    \rightmatrix
 \end{equation}
 
 Circulant matrices exhibit several interesting properties from the perspective of numerical computations.
@@ -131,12 +131,104 @@ This is useful when one deals with low-rank matrices, which is common in machine
 \begin{theorem}[Rank-based circulant decomposition] \label{theorem:rank-decomposition}
 Let $\Amat \in \Cnn$ be a matrix of rank at most $k$.
 Assume that $n$ can be divided by $k$.
-For any $\epsilon > 0$, there exists a sequence of $4k+1$ matrices $\Bmat_{1}, \ldots, \Bmat_{4k+1}$, where $\Bmat_{i}$ is a circulant matrix if $i$ is odd, and a diagonal matrix otherwise, such that $\norm{\Bmat_1 \Bmat_2 \ldots \Bmat_{4k+1} - A} < \epsilon$.
+For any $\epsilon > 0$, there exists a sequence of $4k+1$ matrices $\Bmat_{1}, \ldots, \Bmat_{4k+1}$, where $\Bmat_{i}$ is a circulant matrix if $i$ is odd, and a diagonal matrix otherwise, such that $\norm{\Bmat_1 \Bmat_2 \ldots \Bmat_{4k+1} - \Amat} < \epsilon$.
 \end{theorem}
+
+\begin{proof}[\proofrefth{theorem:rank-decomposition}]
+Let $\Umat \mathbf{\Sigma} \Vmat^{T}$ be the SVD decomposition of $\Mmat$ where $\Umat,\Vmat$ and $\mathbf{\Sigma}$ are $n \times n$ matrices.
+Because $\Mmat$ is of rank $k$, the last $n-k$ columns of $\Umat$ and $\Vmat$ are null.
+In the following, we will first decompose $\Umat$ into a product of matrices $\Wmat\Rmat\Omat$, where $\Rmat$ and $\Omat$ are respectively circulant and diagonal matrices, and $\Wmat$ is a matrix which will be further decomposed into a product of diagonal and circulant matrices.
+Then, we will apply the same decomposition technique to $\Vmat$.
+Ultimately, we will get a product of $4k+2$ matrices alternatively diagonal and circulant.  
+
+Let $\Rmat = \circulant(r_{1}\ldots r_{n})$. Let $\Omat$ be a $n \times n$ diagonal matrix where $\Omat_{i,i} = 1$ if $i \le k$ and $0$ otherwise. The $k$ first columns of the product $\Rmat\Omat$ will be equal to that of $\Rmat$, and the $n-k$ last colomns of $\Rmat\Omat$ will be zeros. For example, if $k=2$, we have: 
+\begin{equation}
+  \Rmat\Omat = \leftmatrix
+  r_{1} & r_{n} & 0 & \cdots & 0\\
+  r_{2} & r_{1}\\
+  r_{3} & r_{2} & \vdots &  & \vdots\\
+  \vdots & \vdots\\
+  r_{n} & r_{n-1} & 0 & \cdots & 0
+  \rightmatrix
+\end{equation}
+
+Let us define $k$ diagonal matrices $\Dmat_{i} = \diagonal(d_{i1} \ldots d_{in})$ for $i \in [k]$.
+For now, the values of $d_{ij}$ are unknown, but we will show how to compute them.
+Let $\Wmat = \sum_{i=1}^{k} \Dmat_{i} \Smat^{i-1}$.
+Note that the $n-k$ last columns of the product $\Wmat\Rmat\Omat$ will be zeros.
+For example, with $k=2$, we have: 
+\begin{equation}
+  \Wmat = \leftmatrix
+  d_{1,1} &  &  &  & d_{2,1} \\
+  d_{2,2} & d_{1,2} \\
+   & d_{2,3} & \ddots \\
+   &  & \ddots \\
+   &  &  & d_{2,n} & d_{1,n}
+  \rightmatrix
+\end{equation}
+
+\begin{equation}
+  \Wmat\Rmat\Omat = \leftmatrix
+  r_{1}d_{11}+r_{n}d_{21} & r_{n}d_{11}+r_{n-1}d_{21} & 0 & \cdots & 0 \\
+  r_{2}d_{12}+r_{1}d_{22} & r_{1}d_{12}+r_{n}d_{22}\\
+   &  & \vdots &  & \vdots \\
+  \vdots & \vdots\\
+  r_{n}d_{1n}+r_{n-1}d_{2n} & r_{n-1}d_{1n}+r_{n-2}d_{2n} & 0 & \cdots & 0
+  \rightmatrix
+\end{equation}
+We want to find the values of $d_{ij}$ such that $WRO=U$. We can formulate this as linear equation system. In case $k=2$, we get:
+\begin{equation}
+  \leftmatrix
+  r_{n} & r_{1}\\
+  r_{n-1} & r_{n}\\
+   &  & r_{1} & r_{2}\\
+   &  & r_{n} & r_{1}\\
+   &  &  &  & r_{2} & r_{3}\\
+   &  &  &  & r_{1} & r_{2}\\
+   &  &  &  &  &  & \ddots\\
+   &  &  &  &  &  &  & \ddots
+  \rightmatrix \times \leftmatrix
+  d_{2,1}\\
+  d_{1,1}\\
+  d_{2,2}\\
+  d_{1,2}\\
+  d_{2,3}\\
+  d_{1,3}\\
+  \vdots\\
+  \vdots
+  \rightmatrix = \leftmatrix
+  \Umat_{1,1}\\
+  \Umat_{1,2}\\
+  \Umat_{2,1}\\
+  \Umat_{2,2}\\
+  \\
+  \\
+  \vdots\\
+  \\
+  \rightmatrix
+\end{equation}
+
+The $i^{th}$ bloc of the bloc-diagonal matrix is a Toeplitz matrix induced by a subsequence of length $k$ of $(r_1,\ldots r_n,r_1 \ldots r_n)$.
+Set $r_{j}=1$ for all $j\in\{k,2k,3k,\ldots n\}$ and set $r_{j}=0$ for all other values of $j$.
+Then it is easy to see that each bloc is a permutation of the identity matrix.
+Thus, all blocs are invertible.
+This entails that the block diagonal matrix above is also invertible.
+So by solving this set of linear equations, we find $d_{1,1}\ldots d_{k,n}$ such that $\Wmat\Rmat\Omat=\Umat$.
+We can apply the same idea to factorize $\Vmat=\Wmat'.\Rmat.\Omat$ for some matrix $\Wmat'$.
+Finally, we get 
+\begin{equation}
+  \Amat = \Umat \mathbf{\Sigma} \Vmat^\top = \Wmat\Rmat\Omat \mathbf{\Sigma} \Omat^\top \Rmat^\top \Wmat^{'\top}
+\end{equation}
+
+Thanks to Theorem~\ref{theorem:huhtanen}, $\Wmat$ and $\Wmat'$ can both be factorized in a product of $2k-1$ circulant and diagonal matrices.
+Note that $\Omat \mathbf{\Sigma} \Omat^\top$ is diagonal, because all three are diagonal.
+Overall, $\Amat$ can be represented with a product of $4k+2$ matrices, alternatively diagonal and circulant.
+\end{proof}
+
 
 A direct consequence of Theorem~\ref{theorem:rank-decomposition}, is that if the number of diagonal-circulant factors is set to a value $K$, we can represent all linear transform $\Amat$ whose rank is $\frac{K - 1}{4}$.
 
-Compared to \cite{Huhtanen2015}, this result shows that structured matrices with fewer than $2n$ diagonal-circulant matrices (as it is the case in practice) can still represent a large class of matrices.
+Compared to \citet{Huhtanen2015}, this result shows that structured matrices with fewer than $2n$ diagonal-circulant matrices (as it is the case in practice) can still represent a large class of matrices.
 As we will show in the following section, this result will be useful to analyze the expressivity of neural networks based on diagonal and circulant matrices.
 
 
@@ -151,7 +243,7 @@ We answer these two questions in this section.
 First, we introduce some necessary definitions regarding neural networks and we provide a theoretical analysis of their approximation capabilities.  
 
 \begin{definition}[Deep ReLU network] \label{definition:deep_relu_network}
-Given $L$ weight matrices $\Wmat = (\Wmat_1, \ldots, \Wmat_L)$ with $\Wmat_i \in \Cnn$ and  $L$ bias vectors $\bvec = (\bvec_1, \ldots, \bvec_L)$  with  $\bvec_i \in \Cn$, a \emph{deep $\relu$ network} is a function $f_{\Wmat_L, \bvec_L} : \Cn \rightarrow \Cn$ such that $f_{\Wmat, \bvec}(\xvec) =  (f_{\Wmat_L, \bvec_L} \circ \ldots \circ f_{\Wmat_1, \bvec_1})(\xvec)$ where $f_{\Wmat_i, \bvec_i}(\xvec) = \phi(\Wmat_i \xvec + \bvec_i)$ and $\phi(\ \cdot\ )$ is a $\relu$ non-linearity \footnote{Because our networks deal with complex numbers, we use an extension of the $\relu$ function to the complex domain. The most straightforward extension defined in \cite{DBLP:conf/iclr/TrabelsiBZSSSMR18} is as follows: $\mathrm{\relu}(\zvec) = \relu\left(\mathfrak{R}(\zvec)\right) + \ci \relu \left(\mathfrak{I}(\zvec)\right)$.}
+Given $L$ weight matrices $\Wmat = (\Wmat_1, \ldots, \Wmat_L)$ with $\Wmat_i \in \Cnn$ and  $L$ bias vectors $\bvec = (\bvec_1, \ldots, \bvec_L)$  with  $\bvec_i \in \Cn$, a \emph{deep $\relu$ network} is a function $f_{\Wmat_L, \bvec_L} : \Cn \rightarrow \Cn$ such that $f_{\Wmat, \bvec}(\xvec) =  (f_{\Wmat_L, \bvec_L} \circ \ldots \circ f_{\Wmat_1, \bvec_1})(\xvec)$ where $f_{\Wmat_i, \bvec_i}(\xvec) = \phi(\Wmat_i \xvec + \bvec_i)$ and $\phi(\ \cdot\ )$ is a $\relu$ non-linearity \footnote{Because our networks deal with complex numbers, we use an extension of the $\relu$ function to the complex domain. The most straightforward extension defined by \citet{DBLP:conf/iclr/TrabelsiBZSSSMR18} is as follows: $\mathrm{\relu}(\zvec) = \relu\left(\mathfrak{R}(\zvec)\right) + \ci \relu \left(\mathfrak{I}(\zvec)\right)$.}
 In the rest of this paper, we call $L$ and $n$ respectively the depth and the width of the network.
 \end{definition}
 
@@ -163,19 +255,43 @@ Given $L$ diagonal matrices $\Dmat = (\Dmat_1, \ldots, \Dmat_L)$ with $\Dmat_i \
 
 We can now show that bounded-width DCNNs can approximate any Deep ReLU Network, and as a corollary, that they are universal approximators.
 
-\begin{lemma} \label{mainth_}
-  Let $\mathcal{N}$ be a deep ReLU network of width $n$ and depth $L$, and let $\mathcal{X} \subset \mathbb{C}^{n}$ be a bounded set. For any $\epsilon > 0$, there exists a DCNN $\mathcal{N}'$ of width $n$ and of depth $(2n-1)L$ such that $\norm{\mathcal{N}(\xvec) - \mathcal{N}'(\xvec)} < \epsilon$ for all $\xvec \in \mathcal{X}$.
+\begin{lemma} \label{lemma:dcnn_approx_neural_network}
+Let $\mathcal{N}$ be a deep ReLU network of width $n$ and depth $L$, and let $\mathcal{X} \subset \mathbb{C}^{n}$ be a bounded set.
+For any $\epsilon > 0$, there exists a DCNN $\mathcal{N}'$ of width $n$ and of depth $(2n-1)L$ such that $\norm{\mathcal{N}(\xvec) - \mathcal{N}'(\xvec)} < \epsilon$ for all $\xvec \in \mathcal{X}$.
 \end{lemma}
+
+\begin{proof}[\proofreflem{lemma:dcnn_approx_neural_network}]
+Assume $\mathcal{N}=f_{W_{L},b_{L}} \circ \ldots \circ f_{W_{1},b_{1}}$.
+By Theorem~\ref{theorem:huhtanen}, for any $\epsilon '> 0$, any matrix $\Wmat_{i}$, there exists a sequence of $2n-1$ matrices $\Cmat_{i,n} \Dmat_{i,n-1} \Cmat_{i,n-1} \ldots \Dmat_{i,1} \Cmat_{i,1}$ such that 
+\begin{equation}
+  \norm{\prod_{j=0}^{n-1} \Dmat_{i,n-j} \Cmat_{i,n-j} - \Wmat_{i}} < \epsilon' , 
+\end{equation}
+where $D_{i,1}$ is the identity matrix.
+By Lemma~\ref{lemma:product_of_mat_to_DNN}, we know that there exists $\left\{ \beta_{ij} \right\}_{i \in[L], j \in [n]}$ such that for all $i\in[L]$, 
+\begin{equation}
+  f_{\Dmat_{in} \Cmat_{in},\beta_{in}} \circ \ldots \circ f_{\Dmat_{i1} \Cmat_{i1}, \beta_{i1}}(\xvec) = \relu \left(\Dmat_{in}\Cmat_{in} \ldots \Cmat_{i1} \xvec + \bvec_{i} \right).
+\end{equation}
+Now if $\epsilon'$ tends to zero, $\norm{ f_{\Dmat_{in} \Cmat_{in},\beta_{in}} \circ \ldots \circ f_{\Dmat_{i1}\Cmat_{i1},\beta_{i1}} - \relu \left(\Wmat_{i}\xvec+\bvec_{i}\right)}$ will also tend to zero for any $\xvec \in \mathcal{X}$, because the ReLU function is continuous and $\mathcal{X}$ is bounded.
+Let $\mathcal{N}' = f_{\Dmat_{1n} \Cmat_{1n},\beta_{1n}} \circ \ldots \circ f_{\Dmat_{i1}\Cmat_{i1},\beta_{i1}}$.
+Again, because all functions are continuous, for all $\xvec \in \mathcal{X}$, $\norm{ \mathcal{N}(\xvec)-\mathcal{N}'(\xvec)} $ tends to zero as $\epsilon'$ tends to zero.
+\end{proof}
+
+
+
 
 We can now state the universal approximation corollary:
 
-\begin{corollary} \label{cor:universal}
-Bounded width DCNNs are universal approximators in the following sense: for any continuous function $f:[0,1]^{n}\rightarrow\mathbb{R}_+$ of bounded supremum norm,
-for any $\epsilon > 0$, there exists a DCNN
-$\mathcal{N}_{\epsilon}$ of width $n+3$ such that $\forall \xvec \in [0,1]^{n+3}$, $\left| f(\xvec_{1} \ldots \xvec_{n}) - \left( \mathcal{N}_{\epsilon} \left( \xvec \right) \right)_{1} \right| < \epsilon$, where $\left(\ \cdot\ \right)_{i}$ represents the $i^{th}$ component of a vector.
+\begin{corollary} \label{corollary:universal}
+Bounded width DCNNs are universal approximators in the following sense: for any continuous function $f:[0,1]^{n}\rightarrow\mathbb{R}_+$ of bounded supremum norm, for any $\epsilon > 0$, there exists a DCNN $\mathcal{N}_{\epsilon}$ of width $n+3$ such that $\forall \xvec \in [0,1]^{n+3}$, $\left| f(\xvec_{1} \ldots \xvec_{n}) - \left( \mathcal{N}_{\epsilon} \left( \xvec \right) \right)_{1} \right| < \epsilon$, where $\left(\ \cdot\ \right)_{i}$ represents the $i^{th}$ component of a vector.
 \end{corollary}
 
-This is a first result, however $(2n+5)L$ is not a small depth (in our experiments, $n$ can be over 300~000), and a number of work provided empirical evidences that DCNN with small depth can offer good performances (\emph{\cite{anca2018eccv,cheng}}). To improve our result, we introduce our main theorem which studies the approximation properties of these small depth networks.
+
+\begin{proof}[\proofrefcor{corollary:universal}]
+It has been shown recently by~\citet{hanin2017universal} that for any continuous function $f:[0,1]^{n} \rightarrow \mathbb{R}_+$ of bounded supremum norm, for any $\epsilon>0$, there exists a dense neural network $\mathcal{N}$ with an input layer of width $n$, an output layer of width $1$, hidden layers of width $n+3$ and ReLU activations such that $\forall x \in [0,1]^n, \left| f(\xvec) - \mathcal{N} \left(\xvec\right)\right| < \epsilon$. From $\mathcal{N}$, we can easily build a deep ReLU network $\mathcal{N'}$ of width exactly $n+3$, such that $\forall x \in [0,1]^{n+3}$, $\left|f(\xvec_{1} \ldots \xvec_{n}) - \left(\mathcal{N}'\left(\xvec\right)\right)_{1}\right| < \epsilon$. Thanks to Lemma~\ref{lemma:dcnn_approx_neural_network}, this last network can be approximated arbitrarily well by a DCNN of width $n+3$.
+\end{proof}
+
+
+This is a first result, however $(2n+5)L$ is not a small depth (in our experiments, $n$ can be over 300~000), and a number of work provided empirical evidences that DCNN with small depth can offer good performances \cite{anca2018eccv,cheng}. To improve our result, we introduce our main theorem which studies the approximation properties of these small depth networks.
 
 \begin{theorem}[Rank-based expressive power of DCNNs] \label{theorem:low_rank_nn}
 Let $\mathcal{N}$ be a deep ReLU network of width $n$, depth $L$ and a total rank $k$ and assume $n$ is a power of $2$.
@@ -183,10 +299,89 @@ Let $\mathcal{X} \subset \Cn$ be a bounded set.
 Then, for any $\epsilon > 0$, there exists a DCNN with ReLU activation $\mathcal{N}'$ of width $n$ such that $\norm{ \mathcal{N}(\xvec) - \mathcal{N}'(\xvec)} < \epsilon$ for all $\xvec \in \mathcal{X}$ and the depth of $\mathcal{N}'$ is bounded by $9k$.
 \end{theorem}
 
+\begin{proof}[\proofrefth{theorem:low_rank_nn}]
+Let $k_{1} \ldots k_{L}$ be the ranks of matrices $\Wmat_{1} \ldots \Wmat_{L}$, which are $n$-by-$n$ matrices.
+For all $i$, there exists $k_{i}' \in \{k_{i} \ldots 2k_{i}\}$ such that $k'_{i}$ is a power of $2$.
+Due to the fact that $n$ is also a power of $2$, $k'_{i}$ divides $n$.
+By Theorem~\ref{theorem:rank-decomposition}, for all $i$ each matrix $\Wmat_{i}$ can be decomposed as an alternating product of diagonal-circulant matrices $\Bmat_{i,1} \ldots \Bmat_{i,4k'_{i}+1}$ such that $\norm{ \Wmat_{i} - \Bmat_{i,1} \ldots \Bmat_{i,4k'_{i}+1}} < \epsilon$.
+Using the exact same technique as in Lemma~\ref{lemma:dcnn_approx_neural_network}, we can build a DCNN $\mathcal{N}'$ using matrices $\Bmat_{1,1} \ldots \Bmat_{L,4k'_{L}+1}$, such that $\norm{ \mathcal{N}(\xvec) - \mathcal{N}'(\xvec)} < \epsilon$ for all $\xvec \in \mathcal{X}$.
+The total number of layers is $\sum_{i}\left(4k_{i}'+1\right)\le L+8\sum_{i}k_{i}\le L+8.
+\textrm{total rank} \le 9.\textrm{total rank}$.
+\end{proof}
+
 Remark that in the theorem, we require that $n$ is a power of $2$.
 We conjecture that the result still holds even without this condition.
-This result refines Lemma~\ref{mainth_}, and answer our second question: a DCNN of bounded width and small depth can approximate a Deep ReLU network of low  total rank.
+This result refines Lemma~\ref{lemma:dcnn_approx_neural_network}, and answer our second question: a DCNN of bounded width and small depth can approximate a Deep ReLU network of low  total rank.
 Note that the converse is not true: because $n$-by-$n$ circulant matrix can be of rank $n$, approximating a DCNN of depth $1$ can require a deep ReLU network of total rank equals to $n$.
+
+
+Finally, what if we choose to use small depth networks to approximate deep ReLU networks where matrices are not of low rank?
+To answer this question, we first need to show the negative impact of replacing matrices by their low rank approximators in neural networks:
+
+\begin{proposition} \label{proposition:relu_to_svd}
+Let $\mathcal{N} = f_{\Wmat_{L},\bvec_{L}} \circ \ldots \circ f_{\Wmat_{1},\bvec_{1}}$ be a Deep ReLU network, where $\Wmat_{i} \in \Cnn, \bvec_{i} \in \Cn$ for all $i \in [L]$. Let $\tilde{\Wmat}_{i}$ be the matrix obtained by an SVD approximation of rank $k$ of matrix $\Wmat_{i}$. Let $\sigma_{i,j}$ be the $j^{th}$ singular value of $\Wmat_{i}$. Define $\tilde{\mathcal{N}} = f_{\tilde{\Wmat_{L}},\bvec_{L}} \circ \ldots \circ f_{\tilde{\Wmat_{1}},\bvec_{1}}$. Then, for any $\xvec \in \Cn$, we have:
+\begin{equation}
+\norm{ \mathcal{N}\left(\xvec\right) - \tilde{\mathcal{N}} \left(\xvec\right)} \le \frac{\left(\sigma_{max,1}^{L}-1\right)R\sigma_{max,k}}{\sigma_{max,1}-1}
+\end{equation}
+where $R$ is an upper bound on norm of the output of any layer in $\mathcal{N}$, and $\sigma_{max,j} = \max_{i}\sigma_{i,j}$.
+\end{proposition}
+
+\begin{proof}[\proofrefprop{proposition:relu_to_svd}]
+Let $\xvec_{0} \in \Cn$ and $\tilde{\xvec}_{0} = \xvec_{0}$.
+For all $i \in [L]$, define $\xvec_{i} = \relu \left(\Wmat_{i} \xvec_{i-1} + \bvec \right)$ and $\tilde{\xvec}_{i} = \relu \left( \tilde{\Wmat_{i}} \tilde{\xvec}_{i-1} + \bvec \right)$.
+By Lemma~\ref{lemma:bound_one_layer}, we have 
+\begin{equation}
+  \norm{ \xvec_{i} - \tilde{\xvec}_{i}} \le \sigma_{i,k+1} \norm{ \xvec_{i-1}} + \sigma_{i,1} \norm{ \xvec_{i-1} - \tilde{\xvec}_{i-1}} 
+\end{equation}
+Observe that for any sequence $a_{0}, a_{1} \ldots$ defined recurrently by $a_{0} = 0$ and $a_{i} = ra_{i-1} + s$, the recurrence relation can be unfold as follows: $a_{i} = \frac{s \left(r^{i} - 1\right)}{r-1}$.
+We can apply this formula to bound our error as follows:
+\begin{equation}
+  \norm{ x_{l} - \tilde{x}_{l} } \le\frac{ \left( \sigma_{max,1}^{l} - 1 \right) \sigma_{max,k} \max_{i} \norm{ x_{i} } }{\sigma_{max,1}-1}
+\end{equation}
+\end{proof}
+
+\begin{lemma} \label{lemma:bound_one_layer}
+Let $\Wmat \in \Cnn$ with singular values $\sigma_{1} \ldots \sigma_{n}$, and let $\xvec,\tilde{\xvec} \in \Cn$.
+Let $\tilde{\Wmat}$ be the matrix obtained by a SVD approximation of rank $k$ of matrix $\Wmat$.
+Then we have:
+\begin{equation}
+  \norm{ \relu \left( \Wmat\xvec + \bvec \right) - \relu \left( \tilde{\Wmat}\tilde{\xvec}+\bvec\right)} \le \sigma_{k+1} \norm{\xvec} + \sigma_{1} \norm{\tilde{\xvec} - \xvec} 
+\end{equation}
+\end{lemma}
+
+\begin{proof}[\proofreflem{lemma:bound_one_layer}]
+Recall that $\norm{\Wmat}_{2} = \sup_{\zvec} \frac{\norm{\Wmat\zvec}_2}{\norm{\zvec}_2 } = \sigma_{1} = \norm{\tilde{\Wmat}}_{2}$, because $\sigma_{1}$ is the greatest singular value of both $\Wmat$ and $\tilde{\Wmat}$. Also, note that $\norm{\Wmat - \tilde{\Wmat}}_{2} = \sigma_{k+1}$. Let us bound the formula without ReLUs:
+\begin{align}
+  \norm{\left(\Wmat\xvec+\bvec\right) - \left(\tilde{\Wmat}\tilde{\xvec}+\bvec\right)} &= \norm{\left(\Wmat\xvec+\bvec\right) - \left(\tilde{\Wmat}\tilde{\xvec}+\bvec\right)} \\
+   &= \norm{\Wmat\xvec - \tilde{\Wmat}\xvec - \tilde{\Wmat}\left(\tilde{\xvec}-\xvec\right)} \\
+   &\le \norm{\left(\Wmat - \tilde{\Wmat}\right)\xvec} + \norm{\tilde{\Wmat}}_{2} \norm{\tilde{\xvec} - \xvec} \\
+   &\le \norm{\xvec} \sigma_{k+1} + \sigma_{1} \norm{\tilde{\xvec} - \xvec} 
+\end{align}
+Finally, it is easy to see that for any pair of vectors $\avec,\bvec \in \Cn$, we have $\norm{ \relu(\avec) - \relu(\bvec)} \le \norm{\avec - \bvec} $.
+This concludes the proof.
+\end{proof}
+
+\begin{corollary} \label{corollary:relu_to_circ}
+Consider any deep ReLU network $\mathcal{N} = f_{W_{L},b_{L}} \circ \ldots \circ f_{W_{1},b_{1}}$ of depth $L$ and width $n$.
+Let $\sigma_{max,j} = \max_{i} \sigma_{i,j}$ where $\sigma_{i,j}$ is the $j^{th}$ singular value of $W_{i}$.
+Let $\mathcal{X} \subset \mathbb{C}^{n}$ be a bounded set.
+Let $k$ be an integer dividing $n$.
+There exists a DCNN $\mathcal{N}' = f_{D_{m}C_{m},b'_{m}} \circ \ldots \circ f_{D_{1}C_{1},b'_{1}}$ of width $n$ and of depth $m=L(4k+1)$, such that for any $x\in\mathcal{X}$:
+\begin{equation}
+  \norm{ \mathcal{N}\left(x\right) - \mathcal{N}'\left(x\right)} < \frac{\left(\sigma_{max,1}^{L}-1\right)R\sigma_{max,k}}{\sigma_{max,1}-1}
+\end{equation}
+where $R$ is an upper bound on the norm of the outputs of each layer in $\mathcal{N}$.
+\end{corollary}
+
+\begin{proof}[\proofrefcor{corollary:relu_to_circ}]
+Let $\tilde{\mathcal{N}} = f_{\tilde{\Wmat_{L}},\bvec_{L}} \circ \ldots \circ f_{\tilde{\Wmat_{1}},\bvec_{1}}$, where each $\tilde{\Wmat}_{i}$ is the matrix obtained by an SVD approximation of rank $k$ of matrix $\Wmat_{i}$.
+With Proposition~\ref{proposition:relu_to_svd}, we have an error bound on $\norm{\mathcal{N} \left(\xvec\right) - \tilde{\mathcal{N}} \left(\xvec\right)}$.
+Now each matrix $\tilde{\Wmat}_{i}$ can be replaced by a product of $k$ diagonal-circulant matrices.
+By Theorem~\ref{theorem:low_rank_nn}, this product yields a DCNN of depth $m = L(4k+1)$, strictly equivalent to $\tilde{\mathcal{N}}$ on $\mathcal{X}$.
+This conludes the proof.
+\end{proof}
+
+
 
 \paragraph{Expressivity of DCNNs}
 
@@ -200,7 +395,7 @@ Given an arbitrary fixed integer $n$, let $\mathcal{R}_{k}$ be the set of all fu
   \label{property:eq2} \forall l,\nexists k\, &\quad \mathcal{C}_{l} \subseteq \mathcal{R}_{k}
 \end{align}
 
-We illustrate the meaning of this properties using Figure~\ref{fig:circfig}.
+We illustrate the meaning of this properties using Figure~\ref{figure:circfig}.
 As we can see, the set $\mathcal R_{k}$ of all the functions representable by a deep $\relu$ network of total rank $k$ is strictly included in the set $\mathcal C_{9k}$ of all DCNN of depth $9k$ (as by Theorem~\ref{theorem:low_rank_nn}).
 
 \begin{figure}[htb]
@@ -208,12 +403,12 @@ As we can see, the set $\mathcal R_{k}$ of all the functions representable by a 
       \input{graphs/chapter3/illustration_properties.tex}
     \end{center}
     \caption{Illustration of Properties \ref{property:eq1} and \ref{property:eq2}.}
-    \label{fig:circfig}
+    \label{figure:circfig}
 \end{figure}
 
 These properties are interesting for many reasons. 
 First, Property~\ref{property:eq2} shows that diagonal-circulant networks are \emph{strictly more expressive} than networks with low total rank. 
-Second and most importantly, in standard deep neural networks, it is known that the most of the singular values are close to zero (see \eg \citet{Sedghi18iclr,Arora19neurips}).
+Second and most importantly, in standard deep neural networks, it is known that the most of the singular values are close to zero (see \eg \citet{sedghi2018iclr,Arora19neurips}).
 Property~\ref{property:eq1} shows that these networks can efficiently be approximated by diagonal-circulant networks.
 Finally, several publications have shown that neural networks can be trained explicitly to have low-rank weight matrices \cite{chong18eccv, goyal19}.
 This opens the possibility of learning compact and accurate diagonal-circulant networks.
@@ -225,25 +420,28 @@ This opens the possibility of learning compact and accurate diagonal-circulant n
 \label{section:training}
 % #############################################################################
 
-% \begin{figure}[ht]
-% \centering
-% \subfigure[]{
-%     \centering
-%     \includegraphics{graphs/cifar10_factor.jpg}
-%     \label{fig:cifar10_factor}
-%     }
-% \subfigure[]{
-%     \centering
-%     \includegraphics{graphs/cifar10_leaky_relu.jpg}
-%     \label{fig:cifar10_leaky_relu}
-%     }
-%     \caption{
-%       Experiments on training DCNNs and other structured neural networks on CIFAR-10.
-%       Figure~\ref{fig:cifar10_factor}: impact of increasing the number of ReLU activations in a DCNN.
-%       Deep DCNNs with fewer ReLUs are easier to train.
-%       Figure~\ref{fig:cifar10_leaky_relu}: impact of increasing the slope of a Leaky-ReLU in DCNNs.
-%       Deep DCNNs with a larger slope are easier to train.}
-% \end{figure}
+\begin{figure}
+   \centering
+   \begin{subfigure}[b]{0.49\textwidth}
+       \centering
+       \includegraphics[width=\textwidth]{graphs/cifar10_factor.jpg}
+       \caption{
+	Impact of increasing the number of ReLU activations in a DCNN.
+	Deep DCNNs with fewer ReLUs are easier to train.}
+       \label{figure:cifar10_factor}
+   \end{subfigure}
+   \hfill
+   \begin{subfigure}[b]{0.49\textwidth}
+       \centering
+       \includegraphics[width=\textwidth]{graphs/cifar10_leaky_relu.jpg}
+       \caption{
+        Impact of increasing the slope of a Leaky-ReLU in DCNNs.
+        Deep DCNNs with a larger slope are easier to train.}
+       \label{figure:cifar10_leaky_relu}
+   \end{subfigure}
+   \caption{Experiments on training DCNNs and other structured neural networks on CIFAR-10.}
+\end{figure}
+
 
 Training DCNNs has revealed to be a challenging problem.
 We devise two techniques to facilitate the training of deep DCNNs.
@@ -257,13 +455,14 @@ Next, for each diagonal matrix $\Dmat = \diagonal (d_{1} \ldots d_{n})$, each $d
 Finally, all biases in the network are randomly drawn from $\mathcal{N}\left(0,\sigma'^{2}\right)$, for some small value of $\sigma'$.
 The following proposition states that the covariance matrix at the output of any layer in a DCNN, independent of the depth, is constant.
 
-\begin{proposition} \label{proposition:initialization}
+\begin{proposition}[Initialization of DCNNs] \label{proposition:initialization}
 Let $\mathcal{N}$ be a DCNN of depth $L$ initialized according to our procedure, with $\sigma'=0$.
 Assume that all layers $1$ to $L-1$ have ReLU activation functions, and that the last layer has the identity activation function.
 Then, for any $\xvec \in \Rbb^{n}$, the covariance matrix of $\mathcal{N}(\xvec)$ is $\frac{2.Id}{n}\norm{\xvec}_{2}^{2}$.
 Moreover, note that this covariance does not depend on the depth of the network.
 \end{proposition}
-\begin{proof} 
+
+\begin{proof}[\proofrefprop{proposition:initialization}]
 Let $\mathcal{N} = f_{\Dmat_{L}, \Cmat_{L} \circ \ldots \circ f_{\Dmat_{1}, \Cmat_{1}}}$ be a $L$ layer DCNN.
 All matrices are initialized as described in the statement of the proposition.
 Let $\yvec = \Dmat_{1} \Cmat_{1} \xvec$.
@@ -339,9 +538,9 @@ To derive $\Cov(z_{i},z_{i'})$ and $\Cov(\bar{z}_{i},\bar{z}_{i'})$, the require
 We empirically found that reducing the number of non-linearities in the networks simplifies the training of deep neural networks.
 To support this claim, we conduct a series of experiments on various DCNNs with a varying number of ReLU activations (to reduce the number of non-linearities, we replace some ReLU activations with the identity function).
 In a second experiment, we replace the ReLU activations with Leaky-ReLU activations and vary the slope of the Leaky ReLU (a higher slope means an activation function that is closer to a linear function).
-The results of this experiment are presented in Figure~\ref{fig:cifar10_factor} and \ref{fig:cifar10_leaky_relu}.
-In Figure \ref{fig:cifar10_factor}, ``ReLU(DC)'' means that we interleave ReLU activation functions between every diagonal-circulant matrix, whereas ReLU(DCDC) means we interleave a ReLU activation every other block etc.
-In both Figure~\ref{fig:cifar10_factor} and  Figure~\ref{fig:cifar10_leaky_relu}, we observe that reducing the non-linearity of the networks can be used to train deeper networks.
+The results of this experiment are presented in Figure~\ref{figure:cifar10_factor} and \ref{figure:cifar10_leaky_relu}.
+In Figure \ref{figure:cifar10_factor}, ``ReLU(DC)'' means that we interleave ReLU activation functions between every diagonal-circulant matrix, whereas ReLU(DCDC) means we interleave a ReLU activation every other block etc.
+In both Figure~\ref{figure:cifar10_factor} and  Figure~\ref{figure:cifar10_leaky_relu}, we observe that reducing the non-linearity of the networks can be used to train deeper networks.
 This is an interesting result, since  we can use this technique to adjust the number of parameters in the network, without facing training difficulties. We obtain a maximum accuracy of 0.56 with one ReLU every three layers and leaky-ReLUs with a slope of 0.5.
 We hence rely on this setting in the experimental section. 
 
@@ -364,33 +563,54 @@ This experimental section aims at answering the following questions:
 % \centering
 % \subfigure[]{
 %     \includegraphics[scale=0.35]{figures/chapter3/acdc_regression.pdf}
-%     \label{fig:adcd_regression}
+%     \label{figure:adcd_regression}
 %     }
 % \subfigure[]{
 %     \includegraphics[scale=0.35]{figures/chapter3/acdc_cifar10.pdf}
-%     \label{fig:acdc_cifar10}
+%     \label{figure:acdc_cifar10}
 %     }
-% \caption{Comparison of DCNNs and \ACDC networks on two different tasks. Figure~\ref{fig:adcd_regression} shows the evolution of the training loss on a regression task with synthetic data. Figure~\ref{fig:acdc_cifar10} shows the test accuracy on the CIFAR-10 dataset.}
+% \caption{Comparison of DCNNs and \ACDC networks on two different tasks. Figure~\ref{figure:adcd_regression} shows the evolution of the training loss on a regression task with synthetic data. Figure~\ref{figure:acdc_cifar10} shows the test accuracy on the CIFAR-10 dataset.}
 % \end{figure}
+
+
+
+\begin{figure}
+   \centering
+   \begin{subfigure}[b]{0.49\textwidth}
+       \centering
+       \includegraphics[width=\textwidth]{figures/chapter3/acdc_regression.pdf}
+       \caption{Evolution of the training loss on a regression task with synthetic data.}
+       \label{figure:acdc_regression}
+   \end{subfigure}
+   \hfill
+   \begin{subfigure}[b]{0.49\textwidth}
+       \centering
+       \includegraphics[width=\textwidth]{figures/chapter3/acdc_cifar10.pdf}
+       \caption{Test accuracy on the CIFAR-10 dataset.~\\ \phantom{.}}
+       \label{figure:acdc_cifar10}
+   \end{subfigure}
+   \caption{Comparison of DCNNs and \ACDC networks on two different tasks.}
+\end{figure}
+
 
 
 
 \paragraph{Comparison with \ACDC \citep{moczulski2015acdc}.}
 
 
-In Section~\ref{section:related_work}, we have discussed the differences between the \ACDC framework and our approach from a theoretical perspective.
+In Section~\ref{section:ch3-related_work}, we have discussed the differences between the \ACDC framework and our approach from a theoretical perspective.
 In this section, we conduct experiments to compare the performance of DCNNs with neural networks based on \ACDC layers. 
-We first reproduce the experimental setting from \cite{moczulski2015acdc}, and compare both approaches using only linear networks (ie networks without any ReLU activations).
-The synthetic dataset has been created in order to reproduce the experiment on the regression linear problem proposed by~\cite{moczulski2015acdc}.
-We draw $X$ and $W$ from a uniform distribution between [-1, +1] and $\epsilon$ from a normal distribution with mean 0 and variance $0.01$.
-The relationship between $X$ and $Y$ is define by $Y = XW + \epsilon$. 
-The results are presented in Figure~\ref{fig:adcd_regression}.
+We first reproduce the experimental setting from \citet{moczulski2015acdc}, and compare both approaches using only linear networks (\ie networks without any ReLU activations).
+The synthetic dataset has been created in order to reproduce the experiment on the regression linear problem proposed by~\citet{moczulski2015acdc}.
+We draw $\Xmat$ and $\Wmat$ from a uniform distribution between [-1, +1] and $\epsilon$ from a normal distribution with mean 0 and variance $0.01$.
+The relationship between $\Xmat$ and $\Ymat$ is define by $\Ymat = \Xmat\Wmat + \epsilon$. 
+The results are presented in Figure~\ref{figure:acdc_regression}.
 On this simple setting, while both architectures demonstrate good performance, we can observe that DCNNs offer a better convergence rate.
-In Figure~\ref{fig:acdc_cifar10}, we compare neural networks with ReLU activations on CIFAR-10. 
+In Figure~\ref{figure:acdc_cifar10}, we compare neural networks with ReLU activations on CIFAR-10. 
 
 We found that networks which are based only on \ACDC layers are difficult to train and offer poor accuracy on CIFAR-10 (we have tried different initialization schemes including the one from the original paper, and the one we introduce in this paper).
-Moczulski et al. \cite{moczulski2015acdc} manage to train a large VGG network  however these networks are generally highly redundant and the contribution of the structured layer is difficult to quantify. 
-We also observe that adding a single dense layer improves the convergence rate of  \ACDC in the linear case, which explains the good results of \cite{moczulski2015acdc}.
+\citet{moczulski2015acdc} manage to train a large VGG network  however these networks are generally highly redundant and the contribution of the structured layer is difficult to quantify. 
+We also observe that adding a single dense layer improves the convergence rate of \ACDC in the linear case, which explains the good results of \citet{moczulski2015acdc}.
 However, it is difficult to characterize the true contribution of the \ACDC layers when the network has a large number of expressive layers.
 
 In contrast, deep DCNNs can be trained and offer good performance without additional dense layers (these results are in line with our experiments on the \yt dataset).
@@ -401,15 +621,36 @@ We can conclude that DCNNs are able to model complex relations at a low cost.
 % \subfigure[]{
 %     \centering
 %     \includegraphics{graphs/cifar10_type.jpg}
-%     \label{fig:cifar10_type}
+%     \label{figure:cifar10_type}
 %     }
 % \subfigure[]{
 %     \centering
 %     \includegraphics{graphs/scatterplot.jpg}
-%     \label{fig:cifar10_with_channels_xp}
+%     \label{figure:cifar10_with_channels_xp}
 %     }
-%     \caption{Figure~\ref{fig:cifar10_type}: network size vs. accuracy compared on Dense networks, DCNNs (our approach), DTNNs (our approach), neural networks based on Toeplitz matrices and neural networks based on Low Rank-based matrices. DCNNs outperforms alternatives structured approaches. Figure~\ref{fig:cifar10_with_channels_xp} shows the accuracy of different structured architecture given the number of trainable parameters.}
+%     \caption{Figure~\ref{figure:cifar10_type}: network size vs. accuracy compared on Dense networks, DCNNs (our approach), DTNNs (our approach), neural networks based on Toeplitz matrices and neural networks based on Low Rank-based matrices. DCNNs outperforms alternatives structured approaches. Figure~\ref{figure:cifar10_with_channels_xp} shows the accuracy of different structured architecture given the number of trainable parameters.}
 % \end{figure}
+
+
+
+\begin{figure}
+   \centering
+   \begin{subfigure}[b]{0.49\textwidth}
+       \centering
+       \includegraphics[width=\textwidth]{graphs/cifar10_type.jpg}
+       \caption{Network size vs. Accuracy compared on Dense networks, DCNNs (our approach), DTNNs (our approach), neural networks based on Toeplitz matrices and neural networks based on Low Rank-based matrices. DCNNs outperforms alternatives structured approaches.}
+       \label{figure:cifar10_type}
+   \end{subfigure}
+   \hfill
+   \begin{subfigure}[b]{0.49\textwidth}
+       \centering
+       \includegraphics[width=\textwidth]{graphs/scatterplot.jpg}
+       \caption{Accuracy of different structured architecture given the number of trainable parameters.~\\~\\~\\~\\~\\}
+       \label{figure:cifar10_with_channels_xp}
+   \end{subfigure}
+\end{figure}
+
+
 
 
 \paragraph{Comparison with Dense networks, Toeplitz networks and Low Rank networks.}
@@ -422,14 +663,14 @@ Finally we conduct experiments using networks based on low-rank matrices as they
 For each approach, we report the accuracy of several networks with a varying depth ranging from 1 to 40 (DCNNs, Toeplitz networks) and from 1 to 30 (from DTNNs).
 For low-rank networks, we used a fixed depth network and increased the rank of each matrix from 7 to 40.
 We also tried to increase the depth of low rank matrices, but we found that deep low-rank networks are difficult to train so we do not report the results here.
-We compare all the networks based on the number of weights from 21K (0.2\% of the dense network) to 370K weights (4\% of the dense network) and we report the results in Figure~\ref{fig:cifar10_type}. 
+We compare all the networks based on the number of weights from 21K (0.2\% of the dense network) to 370K weights (4\% of the dense network) and we report the results in Figure~\ref{figure:cifar10_type}. 
 First we can see that the size of the networks correlates positively with their accuracy which demonstrate successful training in all cases.
 We can also see that the DCNNs achieves the maximum accuracy of 56\% with 20 layers ($\sim$ 200K weights) which is as good as the dense networks with only 2\% of the number of weights.
 Other approaches also offer good trade-off but they are not able to reach the accuracy of a dense network.
 
-\begin{table}
+
+\begin{table}[htb]
   \centering
-  \caption{LDR networks compared with DCNNs on a flattend version of CIFAR-10. DCNNs outperform all LDR configurations with fewer weights.$^2$}
   \begin{tabular}{lcc}
     \toprule
     \textbf{Architectures} & \textbf{\#Params} & \textbf{Acc.}  \\
@@ -443,12 +684,12 @@ Other approaches also offer good trade-off but they are not able to reach the ac
     Toeplitz-like $(r =3)$	    & 52K    & 0.496 \\
     \bottomrule
     \end{tabular}
+    \caption{LDR networks compared with DCNNs on a flattend version of CIFAR-10. DCNNs outperform all LDR configurations with fewer weights. Remark: the numbers may differ from the original experiments by~\citet{Thomas_NIPS2018_8119} because we use the original dataset instead of a monochrome version.}
     \label{table:xp_ldr}
 \end{table}
 
-\begin{table}
+\begin{table}[htb]
   \centering
-  \caption{Two depths scattering on CIFAR-10 followed by LDR or DC layer. Networks with DC layers outperform all LDR configurations with fewer weights.}
   \begin{tabular}{lcc}
     \toprule
     \textbf{Architectures} & \textbf{\#Params} & \textbf{Acc.}  \\
@@ -462,15 +703,14 @@ Other approaches also offer good trade-off but they are not able to reach the ac
     Toeplitz-like $(r=10)$ & 388K & 0.720 \\
     \bottomrule
     \end{tabular}
+    \caption{Two depths scattering on CIFAR-10 followed by LDR or DC layer. Networks with DC layers outperform all LDR configurations with fewer weights.}
     \label{table:xp_ldr_scattering}
 \end{table}
 
 
-\footnotetext[2]{Remark: the numbers may differ from the original experiments by \cite{Thomas_NIPS2018_8119} because we use the original dataset instead of a monochrome version.}
-
 \paragraph{Comparison with LDR networks~\cite{Thomas_NIPS2018_8119}.}
 We now compare DCNNs with the LDR framework using the network configuration experimented in the original paper: a single LDR structured layer followed by a dense layer.
-In the LDR framework, we can change the size of a network by adjusting the rank of the residual matrix, effectively capturing matrices with a structure that is close to a known structure but not exactly (\em in the LDR framework, Toeplitz matrices can be encoded with a residual matrix with rank=2, so a matrix that can be encoded with a residual of rank=3 can be seen as Toeplitz-like.).
+In the LDR framework, we can change the size of a network by adjusting the rank of the residual matrix, effectively capturing matrices with a structure that is close to a known structure but not exactly (in the LDR framework, Toeplitz matrices can be encoded with a residual matrix with rank=2, so a matrix that can be encoded with a residual of rank=3 can be seen as Toeplitz-like.).
 The results are presented in Table~\ref{table:xp_ldr} and demonstrate that DCNNs outperforms all LDR networks both in terms in size and accuracy.
 
 \paragraph{Exploiting image features.}
@@ -480,7 +720,7 @@ In this section we compare the accuracy of various structured networks, enhanced
 
 Our test architecture consists of 2 depth scattering on the RGB images followed by a batch norm and LDR or DC layer.
 To vary the number of parameters of Scattering+LDR architecture, we increase the rank of the matrix (stacking several LDR matrices quickly exhausted the memory).
-The Figure \ref{fig:cifar10_with_channels_xp} and \ref{table:xp_ldr_scattering} shows the accuracy of these architectures given the number of trainable parameters.
+The Figure \ref{figure:cifar10_with_channels_xp} and \ref{table:xp_ldr_scattering} shows the accuracy of these architectures given the number of trainable parameters.
 
 First, we can see that the DCNN architecture very much benefits from the scattering transform and is able to reach a competitive accuracy over 78\%.
 We can also see that scattering followed by a DC layer systematically outperforms scattering + LDR or scattering + Toeplitz-like with less parameters. 
@@ -515,16 +755,26 @@ Table~\ref{tab:mnist} shows the test error of DCNN against other know compressio
 
 \subsection{DCNNs for large-scale video classification on the \yt dataset (Q6.3)}
 
-To understand the performance of deep DCNNs on large scale applications, we conducted experiments on the \yt video classification with 3.8 training examples introduced by \cite{abu2016youtube}. Notice that we favour this experiment over ImageNet applications because modern image classification architectures involve a large number of convolutional layers, and compressing convolutional layers is out of our scope. 
-Also, as mentioned earlier, testing the performance of DCNN architectures mixed with a large number of expressive layers makes little sense. The \yt includes two datasets describing 8 million labeled videos. Both datasets contain audio and video features for each video. In the first dataset ({\em aggregated}) all audio and video features have been aggregated every 300 frames. The second dataset ({\em full}) contains the descriptors for all the frames. To compare the models we use the GAP metric (Global Average Precision) proposed by~\cite{abu2016youtube}. On the simpler {\em aggregated} dataset we compared off-the-shelf DCNNs with a dense baseline with 5.7M weights.  On the full dataset, we designed three new compact architectures based on the state-of-the-art architecture introduced by \cite{abu2016youtube}. 
+To understand the performance of deep DCNNs on large scale applications, we conducted experiments on the \yt video classification with 3.8 training examples introduced by~\citet{abu2016youtube}.
+Notice that we favour this experiment over ImageNet applications because modern image classification architectures involve a large number of convolutional layers, and compressing convolutional layers is out of our scope. 
+Also, as mentioned earlier, testing the performance of DCNN architectures mixed with a large number of expressive layers makes little sense.
+The \yt includes two datasets describing 8 million labeled videos.
+Both datasets contain audio and video features for each video.
+In the first dataset (\emph{aggregated}) all audio and video features have been aggregated every 300 frames.
+The second dataset (\emph{full}) contains the descriptors for all the frames.
+To compare the models we use the GAP metric (Global Average Precision) proposed by~\citet{abu2016youtube}.
+On the simpler \emph{aggregated} dataset we compared off-the-shelf DCNNs with a dense baseline with 5.7M weights.
+On the full dataset, we designed three new compact architectures based on the state-of-the-art architecture introduced by~\citet{abu2016youtube}. 
 
-\textbf{Experiments on the {\em aggregated} dataset with DCNNs:}
-We compared DCNNs with a dense baseline with 5.7 millions weights. The goal of this experiment is to discover a good trade-off between depth and model accuracy. To compare the models we use the GAP metric (Global Average Precision) following the experimental protocol in~\cite{abu2016youtube}, to compare our experiments. 
+\paragraph{Experiments on the aggregated dataset with DCNNs:}
+We compared DCNNs with a dense baseline with 5.7 millions weights.
+The goal of this experiment is to discover a good trade-off between depth and model accuracy.
+To compare the models we use the GAP metric (Global Average Precision) following the experimental protocol in~\cite{abu2016youtube}, to compare our experiments. 
 
 Table~\ref{table:youtube_agg_xp} shows the results of our experiments on the {\em aggrgated} \yt dataset in terms of number of weights, compression rate and GAP.
-We can see that the compression ratio offered by the circulant  architectures is high. This comes at the cost of a little decrease of GAP measure. The 32 layers DCNN is 46 times smaller than the original model in terms of number of parameters while having a close performance. 
-
-
+We can see that the compression ratio offered by the circulant architectures is high.
+This comes at the cost of a little decrease of GAP measure.
+The 32 layers DCNN is 46 times smaller than the original model in terms of number of parameters while having a close performance. 
 
 
 \begin{table}
@@ -560,22 +810,37 @@ We can see that the compression ratio offered by the circulant  architectures is
   \label{table:youtube_full_xp}
 \end{table}
 
-\textbf{Experiments with DCNNs Deep Bag-of-Frames Architecture:} The Deep Bag-of-Frames architecture can be decomposed into three blocks of layers, as illustrated in Figure~\ref{fig:archi_youtube}.
-The first block of layers, composed of the Deep Bag-of-Frames embedding (DBoF), is meant to model an embedding of these frames in order to make a simple representation of each video. A second block of fully connected layers (FC) reduces the dimensionality of the output of the embedding and merges the resulting output with a concatenation operation. Finally, the classification block uses a combination of Mixtures-of-Experts (MoE) ~\cite{716791,45619} and Context Gating~\cite{miech2017learnable} to calculate the final class probabilities. Table~\ref{table:youtube_full_xp} shows the results in terms of number of weights, size of the model (MB) and GAP on the full dataset, replacing the DBoF block reduces the size of the network without impacting the accuracy. We obtain the best compression ratio by replacing the MoE block with DCNNs (26\%) of the size of the original dataset with a GAP score of 0.805 (95\% of the score obtained with the original architecture). We conclude that DCNN are both theoretically sound and of practical interest in real, large scale applications.
+\paragraph{Experiments with DCNNs Deep Bag-of-Frames Architecture:}
+The Deep Bag-of-Frames architecture can be decomposed into three blocks of layers, as illustrated in Figure~\ref{figure:archi_youtube}.
+The first block of layers, composed of the Deep Bag-of-Frames embedding (DBoF), is meant to model an embedding of these frames in order to make a simple representation of each video.
+A second block of fully connected layers (FC) reduces the dimensionality of the output of the embedding and merges the resulting output with a concatenation operation.
+Finally, the classification block uses a combination of Mixtures-of-Experts (MoE)~\cite{716791,45619} and Context Gating~\cite{miech2017learnable} to calculate the final class probabilities.
+Table~\ref{table:youtube_full_xp} shows the results in terms of number of weights, size of the model (MB) and GAP on the full dataset, replacing the DBoF block reduces the size of the network without impacting the accuracy.
+We obtain the best compression ratio by replacing the MoE block with DCNNs (26\%) of the size of the original dataset with a GAP score of 0.805 (95\% of the score obtained with the original architecture).
+We conclude that DCNN are both theoretically sound and of practical interest in real, large scale applications.
 
 \begin{figure}[htb]
   \centering
-  \scalebox{.72}{\input{graphs/chapter3/archi_youtube.tex}}
-  \caption{This figure shows the state-of-the-art neural network architecture, initially proposed by \cite{abu2016youtube} and later improved by~\cite{miech2017learnable}, used in our experiment. }
-  \label{fig:archi_youtube}
+  \input{graphs/chapter3/archi_youtube.tex}
+  \caption{This figure shows the state-of-the-art neural network architecture, initially proposed by~\citet{abu2016youtube} and later improved by~\citet{miech2017learnable}, used in our experiment.}
+  \label{figure:archi_youtube}
 \end{figure}
 
 \paragraph{Architectures \& Hyper-Parameters:} 
-For the first set of our experiments (\em experiments on CIFAR-10), we train all networks for 200 epochs, a batch size of 200, Leaky ReLU activation with a different slope. We minimize the Cross Entropy Loss with Adam optimizer and use a piecewise constant learning rate of $5 \times 10^{-5}$, $2.5\times10^{-5}$, $5\times10^{-6}$ and $1\times10^{-6}$ after respectively 40K, 60K and 80K steps. For the \yt dataset experiments, we built a neural network based on the SOTA architecture initially proposed by \cite{abu2016youtube} and later improved by~\cite{miech2017learnable}. Remark that no convolution layer is involved in this application since the input vectors are embeddings of video frames processed using state-of-the-art convolutional neural networks trained on ImageNet. We trained our models with the CrossEntropy loss and used Adam optimizer with a 0.0002 learning rate and a 0.8 exponential decay every 4 million examples. All fully connected layers are composed of 512 units. DBoF, NetVLAD and NetFV are respectively 8192, 64 and 64 of cluster size for video frames and 4096, 32, 32 for audio frames. We used 4 mixtures for the MoE Layer. We used all the available 300 frames for the DBoF embedding. In order to stabilize and accelerate the training, we used batch normalization before each non linear activation and gradient clipping. 
+For the first set of our experiments (\emph{experiments on CIFAR-10}), we train all networks for 200 epochs, a batch size of 200, Leaky ReLU activation with a different slope.
+We minimize the Cross Entropy Loss with Adam optimizer and use a piecewise constant learning rate of $5 \times 10^{-5}$, $2.5\times10^{-5}$, $5\times10^{-6}$ and $1\times10^{-6}$ after respectively 40K, 60K and 80K steps.
+For the \yt dataset experiments, we built a neural network based on the SOTA architecture initially proposed by~\citet{abu2016youtube} and later improved by~\citet{miech2017learnable}.
+Remark that no convolution layer is involved in this application since the input vectors are embeddings of video frames processed using state-of-the-art convolutional neural networks trained on ImageNet.
+We trained our models with the CrossEntropy loss and used Adam optimizer with a 0.0002 learning rate and a 0.8 exponential decay every 4 million examples.
+All fully connected layers are composed of 512 units.
+DBoF, NetVLAD and NetFV are respectively 8192, 64 and 64 of cluster size for video frames and 4096, 32, 32 for audio frames.
+We used 4 mixtures for the MoE Layer.
+We used all the available 300 frames for the DBoF embedding.
+In order to stabilize and accelerate the training, we used batch normalization before each non linear activation and gradient clipping. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
-\label{section:conclusion}
+\label{section:ch3-conclusion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 This paper deals with the training of diagonal circulant neural networks.
@@ -616,228 +881,138 @@ In the rest of this paper, we call $L$ and $n$ respectively the depth and the wi
 
 
 
-\section{Proofs of Section 3}
+% \section{Proofs of Section 3}
 
-\begin{theorem}
-(Reformulation from Huhtanen et al. \cite{Huhtanen2015})\label{theorem:huhtanen-appendix}
-For any given matrix $A\in\mathbb{C}^{n\times n}$, for any $\epsilon > 0$, there exists a sequence of matrices $B_1 \ldots B_{2n-1}$ where $B_{i}$ is a circulant matrix if $i$ is odd, and a diagonal matrix otherwise, such that $\left\Vert B_{1}B_{2}\ldots B_{2n-1}-A \right\Vert < \epsilon$.
-Moreover, if $A$ can be decomposed as $A=\sum_{i=1}^{k}D_{i}S^{i-1}$ where $S$ is the cyclic-shift matrix and $D_{1}\ldots D_{k}$ are diagonal matrices, then $A$ can be written as a product $B_{1}B_{2}\ldots B_{2k-1}$ where $B_{i}$ is a circulant matrix if $i$ is odd, and a diagonal matrix otherwise.
-\end{theorem}
+% \begin{theorem}
+% (Reformulation from Huhtanen et al. \cite{Huhtanen2015})\label{theorem:huhtanen-appendix}
+% For any given matrix $A\in\mathbb{C}^{n\times n}$, for any $\epsilon > 0$, there exists a sequence of matrices $B_1 \ldots B_{2n-1}$ where $B_{i}$ is a circulant matrix if $i$ is odd, and a diagonal matrix otherwise, such that $\norm{ B_{1}B_{2}\ldots B_{2n-1}-A } < \epsilon$.
+% Moreover, if $A$ can be decomposed as $A=\sum_{i=1}^{k}D_{i}S^{i-1}$ where $S$ is the cyclic-shift matrix and $D_{1}\ldots D_{k}$ are diagonal matrices, then $A$ can be written as a product $B_{1}B_{2}\ldots B_{2k-1}$ where $B_{i}$ is a circulant matrix if $i$ is odd, and a diagonal matrix otherwise.
+% \end{theorem}
+%
 
 
-
-\begin{theorem}(Rank-based circulant decomposition) \label{theorem:rank-decomposition-appendix}
-Let $A\in\mathbb{C}^{n\times n}$ be a matrix of rank at most $k$. Assume that $n$ can be divided by $k$. For
-any $\epsilon>0$, there exists a sequence of $4k+1$ matrices $B_{1},\ldots,B_{4k+1},$ where $B_{i}$ is a circulant matrix if $i$ is odd, and a diagonal matrix otherwise, such that $\Vert B_1B_2\ldots B_{4k+1} - A\Vert < \epsilon$
-\end{theorem}
-
-\begin{proof}
-Let $U\Sigma V^{T}$ be the SVD decomposition of $M$ where $U,V$ and $\Sigma$ are $n\times n$ matrices. Because $M$ is of rank $k$, the last $n-k$ columns of $U$ and $V$ are null. In the following, we will first decompose $U$ into a product of matrices $WRO$, where $R$ and $O$ are respectively circulant and diagonal matrices, and $W$ is a matrix which will be further decomposed into a product of diagonal and circulant matrices. Then, we will apply the same decomposition technique to $V$. Ultimately, we will get a product of $4k+2$ matrices alternatively diagonal and circulant.  
-
-Let $R= \circulant(r_{1}\ldots r_{n})$. Let $O$ be a $n\times n$ diagonal matrix where $O_{i,i}=1$ if $i\le k$ and $0$ otherwise. The $k$ first columns of the product $RO$ will be equal to that of $R$, and the $n-k$ last colomns of $RO$ will be zeros. For example, if $k=2$, we have: 
-\begin{equation}
-  RO=\left(\begin{array}{ccccc}
-  r_{1} & r_{n} & 0 & \cdots & 0\\
-  r_{2} & r_{1}\\
-  r_{3} & r_{2} & \vdots &  & \vdots\\
-  \vdots & \vdots\\
-  r_{n} & r_{n-1} & 0 & \cdots & 0
-  \end{array}\right)
-\end{equation}
-
-Let us define $k$ diagonal matrices $D_{i}=diag(d_{i1}\ldots d_{in})$ for $i\in[k]$. For now, the values of $d_{ij}$ are unknown, but we will show how to compute them. Let $W=\sum_{i=1}^{k}D_{i}S^{i-1}$.  Note that the $n-k$ last columns of the product $WRO$ will be zeros.  For example, with $k=2$, we have: 
-\begin{equation}
-  W = \left[ \begin{array}{ccccc}
-  d_{1,1} &  &  &  & d_{2,1} \\
-  d_{2,2} & d_{1,2} \\
-   & d_{2,3} & \ddots \\
-   &  & \ddots \\
-   &  &  & d_{2,n} & d_{1,n}
-  \end{array}\right]
-\end{equation}
-
-\begin{equation}
-  WRO = \left( \begin{array}{ccccc}
-  r_{1}d_{11}+r_{n}d_{21} & r_{n}d_{11}+r_{n-1}d_{21} & 0 & \cdots & 0\\
-  r_{2}d_{12}+r_{1}d_{22} & r_{1}d_{12}+r_{n}d_{22}\\
-   &  & \vdots &  & \vdots\\
-  \vdots & \vdots\\
-  r_{n}d_{1n}+r_{n-1}d_{2n} & r_{n-1}d_{1n}+r_{n-2}d_{2n} & 0 & \cdots & 0
-  \end{array}\right)
-\end{equation}
-We want to find the values of $d_{ij}$ such that $WRO=U$. We can formulate this as linear equation system. In case $k=2$, we get:
-\begin{equation}
-  \left(\begin{array}{cccccccc}
-  r_{n} & r_{1}\\
-  r_{n-1} & r_{n}\\
-   &  & r_{1} & r_{2}\\
-   &  & r_{n} & r_{1}\\
-   &  &  &  & r_{2} & r_{3}\\
-   &  &  &  & r_{1} & r_{2}\\
-   &  &  &  &  &  & \ddots\\
-   &  &  &  &  &  &  & \ddots
-  \end{array}\right)\times\left(\begin{array}{c}
-  d_{2,1}\\
-  d_{1,1}\\
-  d_{2,2}\\
-  d_{1,2}\\
-  d_{2,3}\\
-  d_{1,3}\\
-  \vdots\\
-  \vdots
-  \end{array}\right)=\left(\begin{array}{c}
-  U_{1,1}\\
-  U_{1,2}\\
-  U_{2,1}\\
-  U_{2,2}\\
-  \\
-  \\
-  \vdots\\
-  \\
-  \end{array}\right)
-\end{equation}
-
-The $i^{th}$ bloc of the bloc-diagonal matrix is a Toeplitz matrix induced by a subsequence of length $k$ of $(r_1,\ldots r_n,r_1 \ldots r_n)$. Set $r_{j}=1$ for all $j\in\{k,2k,3k,\ldots n\}$ and set $r_{j}=0$ for all other values of $j$. Then it is easy to see that each bloc is a permutation of the identity matrix. Thus, all blocs are invertible. This entails that the block diagonal matrix above is also invertible. So by solving this set of linear equations, we find $d_{1,1}\ldots d_{k,n}$ such that $WRO=U$. We can apply the same idea to factorize $V=W'.R.O$ for some matrix $W'$. Finally, we get 
-\begin{equation}
-  A = U \Sigma V^{T} = WRO \Sigma O^{T} R^{T} W^{'T}
-\end{equation}
-
-Thanks to Theorem~\ref{theorem:huhtanen-appendix}, $W$ and $W'$ can both be factorized in a product of $2k-1$ circulant and diagonal matrices.  Note that $O\Sigma O^{T}$ is diagonal, because all three are diagonal.  Overall, $A$ can be represented with a product of $4k+2$ matrices, alternatively diagonal and circulant.
-\end{proof}
-
+% \begin{theorem}(Rank-based circulant decomposition) \label{theorem:rank-decomposition-appendix}
+% Let $A\in\mathbb{C}^{n\times n}$ be a matrix of rank at most $k$. Assume that $n$ can be divided by $k$. For
+% any $\epsilon>0$, there exists a sequence of $4k+1$ matrices $B_{1},\ldots,B_{4k+1},$ where $B_{i}$ is a circulant matrix if $i$ is odd, and a diagonal matrix otherwise, such that $\Vert B_1B_2\ldots B_{4k+1} - A\Vert < \epsilon$
+% \end{theorem}
 
 \section{Proofs of Section 4}
 
-\begin{lemma}
-\label{lemma:product_of_mat_to_DNN}Let $W_{L},\ldots W_{1}\in\mathbb{C}^{n\times n}$,
-$b\in\mathbb{C}^{n}$ and let $\mathcal{X}\subset\mathbb{C}^{n}$
-be a bounded set. There exists $\beta_{L} \ldots \beta_{1} \in \mathbb{C}^{n}$
-such that for all $x \in \mathcal{X}$ we have $f_{W_{L},\beta_{L}} \circ \ldots \circ f_{W_{1},\beta_{1}}(x) = \relu \left(W_{L}W_{L-1} \ldots W_{1}x+b \right)$.
+\begin{lemma} \label{lemma:product_of_mat_to_DNN}
+Let $W_{L},\ldots W_{1}\in\mathbb{C}^{n\times n}$, $b\in\mathbb{C}^{n}$ and let $\mathcal{X}\subset\mathbb{C}^{n}$ be a bounded set.
+There exists $\beta_{L} \ldots \beta_{1} \in \mathbb{C}^{n}$ such that for all $x \in \mathcal{X}$ we have $f_{W_{L},\beta_{L}} \circ \ldots \circ f_{W_{1},\beta_{1}}(x) = \relu \left(W_{L}W_{L-1} \ldots W_{1}x+b \right)$.
 \end{lemma}
 
-\begin{proof} \emph{(Lemma \ref{lemma:product_of_mat_to_DNN})}
-Define $S=\left\{ \left(\left(\prod_{k=1}^{j}W_{k}\right)x\right)_{t}:x\in\mathcal{X},t\in[n],j\in[L]\right\} $.
-Let $\Omega=\max\left\{ \mathfrak{R}(v):v\in S\right\} +\ci \max\left\{ \mathfrak{I}(v):v\in S\right\} $.
+\begin{proof}[\proofreflem{lemma:product_of_mat_to_DNN}]
+Define $S = \left\{ \left(\left(\prod_{k=1}^{j} \Wmat_{k} \right) \xvec \right)_{t}: \xvec \in \mathcal{X}, t \in [n], j \in [L] \right\}$.
+Let $\Omega = \max\left\{ \mathfrak{R}(v): v \in S \right\} + \ci \max\left\{ \mathfrak{I}(v):v \in S \right\}$.
 Intuitively, the real and imaginary parts of $\Omega$ are the largest any activation in the network can have.
-Define $h_{j}(x) = W_{j}x + \beta_{j}$. Let $\beta_{1}=\Omega\mathbf{1}_{n}$. Clearly, for
-all $x \in \mathcal{X}$ we have $h_{1}(x)\ge0$, so $\relu \circ h_{1}(x) = h_{1}(x)$.
-More generally, for all $ j < n-1$ define $\beta_{j+1} = \mathbf{1}_{n} \Omega - W_{j+1} \beta_{j}$.
-It is easy to see that for all $j < n$ we have $h_{j} \circ \ldots \circ h_{1}(x) = W_{j}W_{j-1} \ldots W_{1}x + \mathbf{1}_{n} \Omega$.
-This guarantees that for all $j < n$, $h_{j} \circ \ldots \circ h_{1}(x) = \relu \circ h_{j} \circ \ldots \circ \relu \circ h_{1}(x)$.
-Finally, define $\beta_{L} = b-A_{L} \beta_{L-1}$. We have, $\relu \circ h_{L} \circ \ldots \circ \relu \circ h_{1}(x) = \relu \left(W_{j} \ldots W_{1}x+b \right)$. 
+Define $h_{j}(\xvec) = \Wmat_{j}\xvec + \beta_{j}$. Let $\beta_{1} = \Omega \mathbf{1}_{n}$.
+Clearly, for all $\xvec \in \mathcal{X}$ we have $h_{1}(\xvec)\ge0$, so $\relu \circ h_{1}(\xvec) = h_{1}(\xvec)$.
+More generally, for all $j < n-1$ define $\beta_{j+1} = \mathbf{1}_{n} \Omega - \Wmat_{j+1} \beta_{j}$.
+It is easy to see that for all $j < n$ we have $h_{j} \circ \ldots \circ h_{1}(\xvec) = \Wmat_{j}\Wmat_{j-1} \ldots \Wmat_{1}x + \mathbf{1}_{n} \Omega$.
+This guarantees that for all $j < n$, $h_{j} \circ \ldots \circ h_{1}(\xvec) = \relu \circ h_{j} \circ \ldots \circ \relu \circ h_{1}(\xvec)$.
+Finally, define $\beta_{L} = b - A_{L} \beta_{L-1}$.
+We have, $\relu \circ h_{L} \circ \ldots \circ \relu \circ h_{1}(\xvec) = \relu \left(\Wmat_{j} \ldots \Wmat_{1} \xvec + b \right)$. 
 \end{proof}
+%
+% \begin{lemma}\label{mainth_-appendix}
+% Let $\mathcal{N}$ be a deep ReLU network of width $n$ and depth $L$, and let $\mathcal{X} \subset \mathbb{C}^{n}$ be a bounded set. For any $\epsilon > 0$, there exists a DCNN $\mathcal{N}'$ of width $n$ and of depth $(2n-1)L$ such that $\Vert \mathcal{N}(x) - \mathcal{N}'(x) \Vert < \epsilon$ for all $x \in \mathcal{X}$.
+% \end{lemma}
+%
 
-\begin{lemma}\label{mainth_-appendix}
-Let $\mathcal{N}$ be a deep ReLU network of width $n$ and depth $L$, and let $\mathcal{X} \subset \mathbb{C}^{n}$ be a bounded set. For any $\epsilon > 0$, there exists a DCNN $\mathcal{N}'$ of width $n$ and of depth $(2n-1)L$ such that $\Vert \mathcal{N}(x) - \mathcal{N}'(x) \Vert < \epsilon$ for all $x \in \mathcal{X}$.
-\end{lemma}
+% \begin{corollary} \label{cor:universal-appendix}
+% Bounded width DCNNs are universal approximators in the following sense: for any continuous function $f:[0,1]^{n}\rightarrow\mathbb{R}_+$ of bounded supremum norm,
+% for any $\epsilon>0$, there exists a DCNN
+% $\mathcal{N}_{\epsilon}$ of width $n+3$ such that $\forall x\in[0,1]^{n+3}$, $\left|f(x_{1}\ldots x_{n})-\left(\mathcal{N}_{\epsilon}\left(x\right)\right)_{1}\right|<\epsilon$, where $\left(\cdot\right)_{i}$ represents the $i^{th}$ component of a vector.
+% \end{corollary}
 
-\begin{proof} \emph{(Lemma \ref{mainth_-appendix})}
-Assume $\mathcal{N}=f_{W_{L},b_{L}} \circ \ldots \circ f_{W_{1},b_{1}}$.
-By theorem $\text{\ref{theorem:huhtanen-appendix}}$, for any $\epsilon '> 0$, any matrix $W_{i}$, there exists a sequence of $2n-1$ matrices $C_{i,n} D_{i,n-1} C_{i,n-1}\ldots D_{i,1}C_{i,1}$ such that $\left\Vert\prod_{j=0}^{n-1}D_{i,n-j}C_{i,n-j}-W_{i}\right\Vert<\epsilon'$, where $D_{i,1}$ is the identity matrix.
-By lemma \ref{lemma:product_of_mat_to_DNN}, we know that there exists $\left\{ \beta_{ij}\right\} _{i\in[L],j\in[n]}$ such that for all $i\in[L]$, $f_{D_{in}C_{in},\beta_{in}} \circ \ldots \circ f_{D_{i1}C_{i1},\beta_{i1}}(x) = \relu \left(D_{in}C_{in}\ldots C_{i1}x+b_{i}\right)$.
-
-Now if $\epsilon'$ tends to zero, $\left\Vert f_{D_{in}C_{in},\beta_{in}} \circ \ldots \circ f_{D_{i1}C_{i1},\beta_{i1}} - \relu \left(W_{i}x+b_{i}\right)\right\Vert $ will also tend to zero for any $x\in\mathcal{X}$, because the ReLU
-function is continuous and $\mathcal{X}$ is bounded.
-Let $\mathcal{N}' = f_{D_{1n}C_{1n},\beta_{1n}} \circ \ldots \circ f_{D_{i1}C_{i1},\beta_{i1}}$.
-Again, because all functions are continuous, for all $x\in\mathcal{X}$, $\left\Vert \mathcal{N}(x)-\mathcal{N}'(x)\right\Vert $ tends to zero as $\epsilon'$ tends to zero.
-\end{proof}
-
-\begin{corollary} \label{cor:universal-appendix}
-Bounded width DCNNs are universal approximators in the following sense: for any continuous function $f:[0,1]^{n}\rightarrow\mathbb{R}_+$ of bounded supremum norm,
-for any $\epsilon>0$, there exists a DCNN
-$\mathcal{N}_{\epsilon}$ of width $n+3$ such that $\forall x\in[0,1]^{n+3}$, $\left|f(x_{1}\ldots x_{n})-\left(\mathcal{N}_{\epsilon}\left(x\right)\right)_{1}\right|<\epsilon$, where $\left(\cdot\right)_{i}$ represents the $i^{th}$ component of a vector.
-\end{corollary}
-
-\begin{proof} \emph{(Corollary \ref{cor:universal-appendix})}
-It has been shown recently in \cite{hanin2017universal} that for any continuous function $f:[0,1]^{n}\rightarrow\mathbb{R}_+$ of bounded supremum norm, for any $\epsilon>0$, there exists a dense neural network $\mathcal{N}$ with an input layer of width $n$, an output layer of width $1$, hidden layers of width $n+3$ and ReLU activations such that $\forall x\in[0,1]^n, \left|f(x)-\mathcal{N}\left(x\right)\right|<\epsilon$. From $\mathcal{N}$, we can easily build a deep ReLU network $\mathcal{N'}$ of width exactly $n+3$, such that $\forall x\in[0,1]^{n+3}$, $\left|f(x_{1}\ldots x_{n})-\left(\mathcal{N}'\left(x\right)\right)_{1}\right|<\epsilon$. Thanks to lemma \ref{mainth_-appendix}, this last network can be approximated arbitrarily well by a DCNN of width $n+3$.
-\end{proof}
-
-\begin{theorem}[Rank-based expressive power of diagonal circulant neural networks] \label{theorem:low_rank_nn-appendix}
-Let $\mathcal{N}:f_{W_{L},b_{L}} \circ \ldots \circ f_{W_{1},b_{1}}$ be a deep ReLU network of width $n$, depth $L$ and a total rank $k$.
-Assume $n$ is a power of $2$.
-Let $\mathcal{X} \subset \mathbb{C}^{n}$ be a bounded set.
-For any $\epsilon>0$, there exists a DCNN $\mathcal{N}'$ of width $n$ such that $\left\Vert \mathcal{N}(x)-\mathcal{N}'(x)\right\Vert <\epsilon$ for all $x\in\mathcal{X}$.
-In addition, the depth of $\mathcal{N}'$ is bounded by $9k$.
-Moreover, if the rank of each matrix $A_i$ divides $n$, then the depth of $\mathcal{N}'$ is bounded by $L+4k$.
-\end{theorem}
-
-\begin{proof} \emph{(Theorem \ref{theorem:low_rank_nn-appendix})}
-Let $k_{1}\ldots k_{L}$ be the ranks of matrices $W_{1}\ldots W_{L}$, which are $n$-by-$n$ matrices.
-For all $i$, there exists $k_{i}'\in\{k_{i}\ldots2k_{i}\}$ such that $k'_{i}$ is a power of $2$.
-Due to the fact that $n$ is also a power of $2$, $k'_{i}$ divides $n$.
-By theorem \ref{theorem:rank-decomposition-appendix}, for all $i$ each matrix $W_{i}$ can be decomposed as an alternating product of diagonal-circulant matrices $B_{i,1}\ldots B_{i,4k'_{i}+1}$ such that $\left\Vert W_{i}-B_{i,1}\times\ldots\times B_{i,4k'_{i}+1}\right\Vert <\epsilon$.
-Using the exact same technique as in lemma \ref{mainth_-appendix}, we can build a DCNN $\mathcal{N}'$ using matrices $B_{1,1}\ldots B_{L,4k'_{L}+1}$, such that $\left\Vert \mathcal{N}(x)-\mathcal{N}'(x)\right\Vert <\epsilon$ for all $x\in\mathcal{X}$.
-The total number of layers is $\sum_{i}\left(4k_{i}'+1\right)\le L+8\sum_{i}k_{i}\le L+8.
-\textrm{total rank} \le 9.\textrm{total rank}$.
-\end{proof}
-
-Finally, what if we choose to use small depth networks to approximate deep ReLU networks where matrices are not of low rank?
-To answer this question, we first need to show the negative impact of replacing matrices by their low rank approximators in neural networks:
-
-\begin{proposition} \label{proposition:relu_to_svd}
-Let $\mathcal{N} = f_{W_{L},b_{L}} \circ \ldots \circ f_{W_{1},b_{1}}$ be a Deep ReLU network, where $W_{i} \in \mathbb{C}^{n \times n}, b_{i} \in \mathbb{C}^{n}$ for all $i \in [L]$. Let $\tilde{W}_{i}$ be the matrix obtained by an SVD approximation of rank $k$ of matrix $W_{i}$. Let $\sigma_{i,j}$ be the $j^{th}$ singular value of $W_{i}$. Define $\tilde{\mathcal{N}} = f_{\tilde{W_{L}},b_{L}} \circ \ldots \circ f_{\tilde{W_{1}},b_{1}}$. Then, for any $x \in \mathbb{C}^{n}$, we have:
-\begin{equation}
-\left \Vert \mathcal{N}\left(x\right)-\tilde{\mathcal{N}}\left(x\right)\right\Vert \le\frac{\left(\sigma_{max,1}^{L}-1\right)R\sigma_{max,k}}{\sigma_{max,1}-1}
-\end{equation}
-where $R$ is an upper bound on norm of the output of any layer in $\mathcal{N}$, and $\sigma_{max,j}=\max_{i}\sigma_{i,j}$.
-\end{proposition}
-
-\begin{proof} \emph{(Proposition~\ref{proposition:relu_to_svd})}
-Let $x_{0} \in \mathbb{C}^{n}$ and $\tilde{x}_{0} = x_{0}$.
-For all $i \in [L]$, define $x_{i} = \relu \left(W_{i} x_{i-1} + b \right)$ and $\tilde{x}_{i} = \relu \left( \tilde{W_{i}} \tilde{x}_{i-1} + b \right)$.
-By lemma \ref{lemma:bound_one_layer}, we have 
-\begin{equation}
-  \left\Vert x_{i}-\tilde{x}_{i}\right\Vert \le\sigma_{i,k+1}\left\Vert x_{i-1}\right\Vert +\sigma_{i,1}\left\Vert x_{i-1}-\tilde{x}_{i-1}\right\Vert 
-\end{equation}
-Observe that for any sequence $a_{0},a_{1}\ldots$ defined recurrently by $a_{0}=0$ and $a_{i}=ra_{i-1}+s$, the recurrence relation can be unfold as follows: $a_{i}=\frac{s\left(r^{i}-1\right)}{r-1}$.
-We can apply this formula to bound our error as follows:
-\begin{equation}
-  \left\Vert x_{l} - \tilde{x}_{l} \right\Vert \le\frac{ \left( \sigma_{max,1}^{l} - 1 \right) \sigma_{max,k} \max_{i} \left\Vert x_{i} \right\Vert }{\sigma_{max,1}-1}
-\end{equation}
-\end{proof}
-
-\begin{lemma} \label{lemma:bound_one_layer}
-Let $W\in\mathbb{C}^{n\times n}$ with singular values $\sigma_{1}\ldots\sigma_{n}$, and let $x,\tilde{x}\in\mathbb{C}^{n}$.
-Let $\tilde{W}$ be the matrix obtained by a SVD approximation of rank $k$ of matrix $W$.
-Then we have:
-\begin{equation}
-  \left\Vert \relu \left( Wx + b \right) - \relu \left( \tilde{W}\tilde{x}+b\right)\right\Vert \le\sigma_{k+1}\left\Vert x\right\Vert +\sigma_{1}\left\Vert \tilde{x}-x\right\Vert 
-\end{equation}
-\end{lemma}
-
-\begin{proof} {\em (Lemma~\ref{lemma:bound_one_layer})}
-Recall that $\left\Vert W\right\Vert _{2}=\sup_{z}\frac{\left\Vert Wz\right\Vert_2 }{\left\Vert z\right\Vert_2 }=\sigma_{1}=\left\Vert \tilde{W}\right\Vert _{2}$, because $\sigma_{1}$ is the greatest singular value of both $W$ and $\tilde{W}$. Also, note that $\left\Vert W-\tilde{W}\right\Vert _{2}=\sigma_{k+1}$. Let us bound the formula without ReLUs:
-
-\begin{align*}
-  \left\Vert \left(Wx+b\right)-\left(\tilde{W}\tilde{x}+b\right)\right\Vert  & =\left\Vert \left(Wx+b\right)-\left(\tilde{W}\tilde{x}+b\right)\right\Vert \\
-   & =\left\Vert Wx-\tilde{W}x-\tilde{W}\left(\tilde{x}-x\right)\right\Vert \\
-   & \le \left\Vert \left(W-\tilde{W}\right)x\right\Vert +\left\Vert \tilde{W}\right\Vert _{2}\left\Vert \tilde{x}-x\right\Vert \\
-   & \le \left\Vert x\right\Vert \sigma_{k+1}+\sigma_{1}\left\Vert \tilde{x}-x\right\Vert 
-\end{align*}
-
-Finally, it is easy to see that for any pair of vectors $a,b\in\mathbb{C}^{n}$, we have $\left\Vert \relu(a) - \relu(b)\right\Vert \le\left\Vert a-b\right\Vert $.
-This concludes the proof.
-\end{proof}
-
-\begin{corollary} \label{corollary:relu_to_circ}
-  Consider any deep ReLU network $\mathcal{N} = f_{W_{L},b_{L}} \circ \ldots \circ f_{W_{1},b_{1}}$ of depth $L$ and width $n$.
-  Let $\sigma_{max,j} = \max_{i} \sigma_{i,j}$ where $\sigma_{i,j}$ is the $j^{th}$ singular value of $W_{i}$.
-  Let $\mathcal{X} \subset \mathbb{C}^{n}$ be a bounded set.
-  Let $k$ be an integer dividing $n$.
-  There exists a DCNN $\mathcal{N}' = f_{D_{m}C_{m},b'_{m}} \circ \ldots \circ f_{D_{1}C_{1},b'_{1}}$ of width $n$ and of depth $m=L(4k+1)$, such that for any $x\in\mathcal{X}$:
-\begin{equation}
-  \left\Vert \mathcal{N}\left(x\right)-\mathcal{N}'\left(x\right)\right\Vert <\frac{\left(\sigma_{max,1}^{L}-1\right)R\sigma_{max,k}}{\sigma_{max,1}-1}
-\end{equation}
-where $R$ is an upper bound on the norm of the outputs of each layer in $\mathcal{N}$.
-\end{corollary}
-
-\begin{proof} \emph{(Corollary \ref{corollary:relu_to_circ})}
-Let $\tilde{\mathcal{N}}=f_{\tilde{W_{L}},b_{L}}\circ\ldots\circ f_{\tilde{W_{1}},b_{1}}$, where each $\tilde{W}_{i}$ is the matrix obtained by an SVD approximation of rank $k$ of matrix $W_{i}$.
-With Proposition~\ref{proposition:relu_to_svd}, we have an error bound on $\Vert \mathcal{N}\left(x\right)-\tilde{\mathcal{N}}\left(x\right)\Vert $.
-Now each matrix $\tilde{W}_{i}$ can be replaced by a product of $k$ diagonal-circulant matrices.
-By theorem \ref{theorem:low_rank_nn-appendix}, this product yields a DCNN of depth $m = L(4k+1)$, strictly equivalent to $\tilde{\mathcal{N}}$ on $\mathcal{X}$.
-This conludes the proof.
-\end{proof}
-
+% \begin{theorem}[Rank-based expressive power of diagonal circulant neural networks] \label{theorem:low_rank_nn-appendix}
+% Let $\mathcal{N}:f_{W_{L},b_{L}} \circ \ldots \circ f_{W_{1},b_{1}}$ be a deep ReLU network of width $n$, depth $L$ and a total rank $k$.
+% Assume $n$ is a power of $2$.
+% Let $\mathcal{X} \subset \mathbb{C}^{n}$ be a bounded set.
+% For any $\epsilon>0$, there exists a DCNN $\mathcal{N}'$ of width $n$ such that $\norm{ \mathcal{N}(x)-\mathcal{N}'(x)} <\epsilon$ for all $x\in\mathcal{X}$.
+% In addition, the depth of $\mathcal{N}'$ is bounded by $9k$.
+% Moreover, if the rank of each matrix $A_i$ divides $n$, then the depth of $\mathcal{N}'$ is bounded by $L+4k$.
+% \end{theorem}
+%
+% \begin{proof} \emph{(Theorem \ref{theorem:low_rank_nn-appendix})}
+% Let $k_{1} \ldots k_{L}$ be the ranks of matrices $\Wmat_{1} \ldots \Wmat_{L}$, which are $n$-by-$n$ matrices.
+% For all $i$, there exists $k_{i}' \in \{k_{i} \ldots 2k_{i}\}$ such that $k'_{i}$ is a power of $2$.
+% Due to the fact that $n$ is also a power of $2$, $k'_{i}$ divides $n$.
+% By Theorem~\ref{theorem:rank-decomposition-appendix}, for all $i$ each matrix $\Wmat_{i}$ can be decomposed as an alternating product of diagonal-circulant matrices $\Bmat_{i,1} \ldots \Bmat_{i,4k'_{i}+1}$ such that $\norm{ \Wmat_{i} - \Bmat_{i,1} \times \ldots \times \Bmat_{i,4k'_{i}+1}} < \epsilon$.
+% Using the exact same technique as in Lemma~\ref{lemma:dcnn_approx_neural_network}, we can build a DCNN $\mathcal{N}'$ using matrices $\Bmat_{1,1} \ldots \Bmat_{L,4k'_{L}+1}$, such that $\norm{ \mathcal{N}(\xvec) - \mathcal{N}'(\xvec)} < \epsilon$ for all $\xvec \in \mathcal{X}$.
+% The total number of layers is $\sum_{i}\left(4k_{i}'+1\right)\le L+8\sum_{i}k_{i}\le L+8.
+% \textrm{total rank} \le 9.\textrm{total rank}$.
+% \end{proof}
+%
+% Finally, what if we choose to use small depth networks to approximate deep ReLU networks where matrices are not of low rank?
+% To answer this question, we first need to show the negative impact of replacing matrices by their low rank approximators in neural networks:
+%
+% \begin{proposition} \label{proposition:relu_to_svd}
+% Let $\mathcal{N} = f_{W_{L},b_{L}} \circ \ldots \circ f_{W_{1},b_{1}}$ be a Deep ReLU network, where $W_{i} \in \mathbb{C}^{n \times n}, b_{i} \in \mathbb{C}^{n}$ for all $i \in [L]$. Let $\tilde{W}_{i}$ be the matrix obtained by an SVD approximation of rank $k$ of matrix $W_{i}$. Let $\sigma_{i,j}$ be the $j^{th}$ singular value of $W_{i}$. Define $\tilde{\mathcal{N}} = f_{\tilde{W_{L}},b_{L}} \circ \ldots \circ f_{\tilde{W_{1}},b_{1}}$. Then, for any $x \in \mathbb{C}^{n}$, we have:
+% \begin{equation}
+% \norm{ \mathcal{N}\left(x\right) - \tilde{\mathcal{N}} \left(x\right)} \le \frac{\left(\sigma_{max,1}^{L}-1\right)R\sigma_{max,k}}{\sigma_{max,1}-1}
+% \end{equation}
+% where $R$ is an upper bound on norm of the output of any layer in $\mathcal{N}$, and $\sigma_{max,j}=\max_{i}\sigma_{i,j}$.
+% \end{proposition}
+%
+% \begin{proof} \emph{(Proposition~\ref{proposition:relu_to_svd})}
+% Let $x_{0} \in \mathbb{C}^{n}$ and $\tilde{x}_{0} = x_{0}$.
+% For all $i \in [L]$, define $x_{i} = \relu \left(W_{i} x_{i-1} + b \right)$ and $\tilde{x}_{i} = \relu \left( \tilde{W_{i}} \tilde{x}_{i-1} + b \right)$.
+% By lemma \ref{lemma:bound_one_layer}, we have 
+% \begin{equation}
+%   \norm{ x_{i}-\tilde{x}_{i}} \le\sigma_{i,k+1}\norm{ x_{i-1}} +\sigma_{i,1}\norm{ x_{i-1}-\tilde{x}_{i-1}} 
+% \end{equation}
+% Observe that for any sequence $a_{0},a_{1}\ldots$ defined recurrently by $a_{0}=0$ and $a_{i}=ra_{i-1}+s$, the recurrence relation can be unfold as follows: $a_{i}=\frac{s\left(r^{i}-1\right)}{r-1}$.
+% We can apply this formula to bound our error as follows:
+% \begin{equation}
+%   \norm{ x_{l} - \tilde{x}_{l} } \le\frac{ \left( \sigma_{max,1}^{l} - 1 \right) \sigma_{max,k} \max_{i} \norm{ x_{i} } }{\sigma_{max,1}-1}
+% \end{equation}
+% \end{proof}
+%
+% \begin{lemma} \label{lemma:bound_one_layer}
+% Let $W\in\mathbb{C}^{n\times n}$ with singular values $\sigma_{1}\ldots\sigma_{n}$, and let $x,\tilde{x}\in\mathbb{C}^{n}$.
+% Let $\tilde{W}$ be the matrix obtained by a SVD approximation of rank $k$ of matrix $W$.
+% Then we have:
+% \begin{equation}
+%   \norm{ \relu \left( Wx + b \right) - \relu \left( \tilde{W}\tilde{x}+b\right)} \le\sigma_{k+1}\norm{ x} +\sigma_{1}\norm{ \tilde{x}-x} 
+% \end{equation}
+% \end{lemma}
+%
+% \begin{proof} {\em (Lemma~\ref{lemma:bound_one_layer})}
+% Recall that $\norm{ W} _{2}=\sup_{z}\frac{\norm{ Wz}_2 }{\norm{ z}_2 }=\sigma_{1}=\norm{ \tilde{W}} _{2}$, because $\sigma_{1}$ is the greatest singular value of both $W$ and $\tilde{W}$. Also, note that $\norm{ W-\tilde{W}} _{2}=\sigma_{k+1}$. Let us bound the formula without ReLUs:
+%
+% \begin{align*}
+%   \norm{ \left(Wx+b\right)-\left(\tilde{W}\tilde{x}+b\right)}  & =\norm{ \left(Wx+b\right)-\left(\tilde{W}\tilde{x}+b\right)} \\
+%    & =\norm{ Wx-\tilde{W}x-\tilde{W}\left(\tilde{x}-x\right)} \\
+%    & \le \norm{ \left(W-\tilde{W}\right)x} +\norm{ \tilde{W}} _{2}\norm{ \tilde{x}-x} \\
+%    & \le \norm{ x} \sigma_{k+1}+\sigma_{1}\norm{ \tilde{x}-x} 
+% \end{align*}
+%
+% Finally, it is easy to see that for any pair of vectors $\avec,\bvec \in \Cn$, we have $\norm{ \relu(\avec) - \relu(\bvec)} \le \norm{\avec - \bvec} $.
+% This concludes the proof.
+% \end{proof}
+%
+% \begin{corollary} \label{corollary:relu_to_circ}
+% Consider any deep ReLU network $\mathcal{N} = f_{W_{L},b_{L}} \circ \ldots \circ f_{W_{1},b_{1}}$ of depth $L$ and width $n$.
+% Let $\sigma_{max,j} = \max_{i} \sigma_{i,j}$ where $\sigma_{i,j}$ is the $j^{th}$ singular value of $W_{i}$.
+% Let $\mathcal{X} \subset \mathbb{C}^{n}$ be a bounded set.
+% Let $k$ be an integer dividing $n$.
+% There exists a DCNN $\mathcal{N}' = f_{D_{m}C_{m},b'_{m}} \circ \ldots \circ f_{D_{1}C_{1},b'_{1}}$ of width $n$ and of depth $m=L(4k+1)$, such that for any $x\in\mathcal{X}$:
+% \begin{equation}
+%   \norm{ \mathcal{N}\left(x\right) - \mathcal{N}'\left(x\right)} < \frac{\left(\sigma_{max,1}^{L}-1\right)R\sigma_{max,k}}{\sigma_{max,1}-1}
+% \end{equation}
+% where $R$ is an upper bound on the norm of the outputs of each layer in $\mathcal{N}$.
+% \end{corollary}
+%
+% \begin{proof} \emph{(Corollary \ref{corollary:relu_to_circ})}
+% Let $\tilde{\mathcal{N}}=f_{\tilde{W_{L}},b_{L}}\circ\ldots\circ f_{\tilde{W_{1}},b_{1}}$, where each $\tilde{W}_{i}$ is the matrix obtained by an SVD approximation of rank $k$ of matrix $W_{i}$.
+% With Proposition~\ref{proposition:relu_to_svd}, we have an error bound on $\Vert \mathcal{N}\left(x\right)-\tilde{\mathcal{N}}\left(x\right)\Vert $.
+% Now each matrix $\tilde{W}_{i}$ can be replaced by a product of $k$ diagonal-circulant matrices.
+% By theorem \ref{theorem:low_rank_nn-appendix}, this product yields a DCNN of depth $m = L(4k+1)$, strictly equivalent to $\tilde{\mathcal{N}}$ on $\mathcal{X}$.
+% This conludes the proof.
+% \end{proof}
+%
 
 
