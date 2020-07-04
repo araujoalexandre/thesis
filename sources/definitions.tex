@@ -3,7 +3,6 @@
 % Basic packages
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \usepackage{minitoc}        % produce a table of contents for each chapter
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
 \usepackage{url}            % simple URL typesetting
@@ -14,9 +13,8 @@
 \usepackage{appendix}       % extra control of appendices
 
 \usepackage{algorithm}
-\usepackage{algorithmic}
+\usepackage{algpseudocode}
 
-% \usepackage{subfigure}
 % \usepackage{color}
 % \usepackage{colortbl}
 % \usepackage{wrapfig}
@@ -28,7 +26,6 @@
 % \usepackage{placeins}
 % \usepackage{setspace}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Minitoc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -39,6 +36,13 @@
 \etocsettocstyle{
 \addsec*{Contents\\\vspace{-0.5cm}\rule{\textwidth}{\tocrulewidth}}}{
   \noindent\rule{\linewidth}{\tocrulewidth}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Glossary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newlength\marginglossary
+\setlength{\marginglossary}{2.4cm}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Mathematical packages
@@ -76,10 +80,9 @@
 % Remove Warnings
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\usepackage{silence}
-\WarningFilter{minitoc(hints)}{W0023}
-\WarningFilter{minitoc(hints)}{W0028}
-\WarningFilter{minitoc(hints)}{W0030}
+% \WarningFilter{minitoc(hints)}{W0023}
+% \WarningFilter{minitoc(hints)}{W0028}
+% \WarningFilter{minitoc(hints)}{W0030}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Some of my favourite personal adjustments
@@ -203,9 +206,12 @@
 \newtheorem{property}{Property}
 \newtheorem{remark}{Remark}
 
-% \newtheorem*{property*}{Property}
-% \newtheorem*{remark*}{Remark}
+\renewcommand\qedsymbol{$\blacksquare$}
 
+\newcommand\proofrefth[1]{\textbf{Proof of Theorem}~\ref{#1}}
+\newcommand\proofrefcor[1]{\textbf{Proof of Corollary}~\ref{#1}}
+\newcommand\proofreflem[1]{\textbf{Proof of Lemma}~\ref{#1}}
+\newcommand\proofrefprop[1]{\textbf{Proof of Proposition}~\ref{#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Specific Operators
@@ -223,10 +229,6 @@
 
 % complex number i
 \newcommand{\ci}{\ensuremath \mathbf{i}}
-
-% Definition d'une matrice: parenthese ou crochet
-\newcommand{\leftmat}{\left(} 
-\newcommand{\rightmat}{\right)}
 
 % definition de l'index a_h et B_h
 \newcommand{\seqidx}{h}
@@ -316,8 +318,10 @@
 \newcommand{\zvec}{\ensuremath \mathbf{z}}
 
 % matrix brackets
-\newcommand{\BEGINMAT}{\begin{pmatrix}}
-\newcommand{\ENDMAT}{\end{pmatrix}}
+\newcommand{\leftmatrix}{\begin{pmatrix}}
+\newcommand{\rightmatrix}{\end{pmatrix}}
+\newcommand{\leftmat}{\left(}
+\newcommand{\rightmat}{\right)}
 
 % circulant & diagonal
 \newcommand{\circulant}{\ensuremath \mathrm{circ}}
@@ -335,15 +339,14 @@
 \newcommand{\eg}{\textit{e.g.}\xspace}
 \newcommand{\ie}{\textit{i.e.}\xspace}
 \newcommand{\aka}{\textit{a.k.a}\xspace}
-\newcommand{\ACDC}{\textbf{ACDC}\xspace}
-\newcommand{\AFDF}{\textbf{AFCF}\xspace}
+\newcommand{\ACDC}{ACDC\xspace}
+\newcommand{\AFDF}{AFCF\xspace}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Debug commands
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand\red{\cellcolor{red!10}}
-\newcommand{\todo}[2]{{\color{red}{\bf TODO (#1):} #2}}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO:} #1\xspace}}
 
 
 % \newcommand{\drn}{Deep ReLU network\xspace}
