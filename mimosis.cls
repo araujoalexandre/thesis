@@ -59,10 +59,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RequirePackage{graphicx}
-\graphicspath{%
-  {Figures/}
-  {./}
-}
 
 % Suppress warnings about page groups in PDFs. This is not justified
 % in most of the cases. I am pretty sure I am including my images in
