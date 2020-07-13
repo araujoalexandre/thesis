@@ -11,11 +11,11 @@
 \usepackage{xspace}         % commands that appear not to eat spaces
 \usepackage{enumitem}       % control layout of itemize, enumerate
 \usepackage{appendix}       % extra control of appendices
+\usepackage{pgfplots}
 
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 
-% \usepackage{color}
 % \usepackage{colortbl}
 % \usepackage{wrapfig}
 % \usepackage{bbm}
@@ -25,6 +25,7 @@
 % \usepackage{changepage}
 % \usepackage{placeins}
 % \usepackage{setspace}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Minitoc
@@ -77,15 +78,7 @@
 \usepackage{booktabs}       % professional-quality tables
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Remove Warnings
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% \WarningFilter{minitoc(hints)}{W0023}
-% \WarningFilter{minitoc(hints)}{W0028}
-% \WarningFilter{minitoc(hints)}{W0030}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Some of my favourite personal adjustments
+% Some of my favorite personal adjustments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % These are the adjustments that I consider necessary for typesetting
@@ -193,6 +186,13 @@
 %   \usepackage[oldstyle,scale=0.7]{sourcecodepro}
 %   \singlespacing
 % \fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Debugging
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{lineno}
+\linenumbers
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO:} #1\xspace}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Theorems
@@ -341,13 +341,6 @@
 \newcommand{\aka}{\textit{a.k.a}\xspace}
 \newcommand{\ACDC}{ACDC\xspace}
 \newcommand{\AFDF}{AFCF\xspace}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Debug commands
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO:} #1\xspace}}
-
 
 % \newcommand{\drn}{Deep ReLU network\xspace}
 % \newcommand{\drns}{Deep ReLU networks\xspace}
