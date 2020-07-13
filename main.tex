@@ -24,10 +24,6 @@
   \input{sources/title}
   \input{sources/abstract}
   \newpage
-  \tableofcontents
-  \listoffigures
-  \listoftables
-  % \listofalgorithms
 
   % This ensures that the subsequent sections are being included as root
   % items in the bookmark structure of your PDF reader.
@@ -36,7 +32,18 @@
     \begingroup
       \let\clearpage\relax
       \glsaddall
-      \printglossary[type=\acronymtype]
+      \addcontentsline{toc}{chapter}{Table of Contents}
+      \begingroup
+	\etocsettocstyle{\addchap*{Table of Contents}}{}
+	\tableofcontents
+      \endgroup
+      \newpage
+      \addcontentsline{toc}{chapter}{\listfigurename}
+      \listoffigures
+      \newpage
+      \addcontentsline{toc}{chapter}{\listtablename}
+      \listoftables
+      % \printglossary[type=\acronymtype]
       \newpage
       \printglossary[title={List of Symbols}]
     \endgroup
@@ -44,16 +51,16 @@
 
 \mainmatter
   \input{sources/ch1-introduction}
-  \input{sources/ch2-related_work}
+  % \input{sources/ch2-related_work}
   \input{sources/ch3-diagonal_circulant}
   \input{sources/ch4-lipschitz_bound}
   \input{sources/ch5-conclusion}
 
-  \appendix
-  \input{sources/ap1-randomized_inference}
-  \input{sources/ap2-advocating_for_multiple_defense_strategies}
+  % \appendix
+  % \input{sources/ap1-randomized_inference}
+  % \input{sources/ap2-advocating_for_multiple_defense_strategies}
 
-  \printbibliography
+  \printbibliography[title=References]
 
 
 \end{document}
