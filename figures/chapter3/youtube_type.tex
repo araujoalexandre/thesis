@@ -1,0 +1,21 @@
+\begin{tikzpicture}[scale=0.7]
+\begin{axis}[
+    legend cell align={left},
+    xlabel={\#weights},
+    ylabel={Test GAP},
+    xmin=21000, xmax=122000,
+    ymin=0.1, ymax=0.8,
+    % xtick={0,10000,...,40000},
+    % ytick={0,0.1,...,1.0},
+    legend pos=south east,
+    ymajorgrids=true,
+    grid style=dashed,
+	]
+  \addplot[color=red, line width=0.25mm, dashed] table [y=GAP, x=weights]{data/youtube/type/baseline.dat};
+  \addplot[color=green] table [y=GAP, x=weights]{data/youtube/type/circulant.dat};
+    \legend{
+      Dense (9M weights),
+      Circulant, 
+     }
+\end{axis}
+\end{tikzpicture}

@@ -1,0 +1,25 @@
+\begin{tikzpicture}[scale=0.5]
+\begin{axis}[
+    legend cell align={left},
+    xlabel={\large \#weights (x1000) },
+    ylabel={Test Accuracy},
+    xmin=21, xmax=370,
+    ymin=0.2, ymax=0.6,
+    legend pos=south east,
+    ymajorgrids=true,
+    grid style=dashed,
+	]
+    \addplot[color=red, line width=0.25mm, dashed] table [y=accuracy, x=weights]{figures/chapter3/data/cifar10/type/dense.dat};
+    \addplot[mark=triangle, color=blue, line width=0.4mm] table [y=accuracy, x=weights]{figures/chapter3/data/cifar10/type/circulant.dat};
+    \addplot[mark=square, color=red, line width=0.4mm] table [y=accuracy, x=weights]{figures/chapter3/data/cifar10/type/diag_toeplitz.dat};
+    \addplot[mark=o, color=gray, line width=0.4mm] table [y=accuracy, x=weights]{figures/chapter3/data/cifar10/type/toeplitz.dat};
+    \addplot[mark=diamond, color=brown, line width=0.4mm] table [y=accuracy, x=weights]{figures/chapter3/data/cifar10/type/low_rank.dat};
+    \legend{
+      Dense (9M weights),
+      DCNN,
+      DTNN,
+      Toeplitz network,
+      Low Rank network, 
+     }
+\end{axis}
+\end{tikzpicture}
