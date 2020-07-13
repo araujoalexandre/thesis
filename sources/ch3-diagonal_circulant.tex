@@ -28,8 +28,8 @@ In these models, dense weight matrices are replaced by matrices with a prescribe
 Despite substantial efforts \cite{cheng,moczulski2015acdc}, the performance of compact models is still far from achieving an acceptable accuracy motivating their use in real-world scenarios.
 This raises several questions about the effectiveness of such models and about our ability to train them. In particular two main questions call for investigation:
 \begin{itemize}
-  \item[] \textbf{Q1} {\em  How to efficiently train deep neural networks with a large number of structured layers?}
-  \item[] \textbf{Q2} {\em What is the expressive power of structured layers compared to dense layers?}
+  \item[] \textbf{Q1} \emph{How to efficiently train deep neural networks with a large number of structured layers?}
+  \item[] \textbf{Q2} \emph{What is the expressive power of structured layers compared to dense layers?}
 \end{itemize}
 
 
@@ -400,7 +400,7 @@ As we can see, the set $\mathcal R_{k}$ of all the functions representable by a 
 
 \begin{figure}[htb]
     \begin{center}
-      \input{graphs/chapter3/illustration_properties.tex}
+      \input{figures/chapter3/illustration_properties.tex}
     \end{center}
     \caption{Illustration of Properties \ref{property:eq1} and \ref{property:eq2}.}
     \label{figure:circfig}
@@ -424,7 +424,7 @@ This opens the possibility of learning compact and accurate diagonal-circulant n
    \centering
    \begin{subfigure}[b]{0.49\textwidth}
        \centering
-       \includegraphics[width=\textwidth]{graphs/cifar10_factor.jpg}
+       \input{figures/chapter3/cifar10_factor.tex}
        \caption{
 	Impact of increasing the number of ReLU activations in a DCNN.
 	Deep DCNNs with fewer ReLUs are easier to train.}
@@ -433,7 +433,7 @@ This opens the possibility of learning compact and accurate diagonal-circulant n
    \hfill
    \begin{subfigure}[b]{0.49\textwidth}
        \centering
-       \includegraphics[width=\textwidth]{graphs/cifar10_leaky_relu.jpg}
+       \input{figures/chapter3/cifar10_leaky_relu.tex}
        \caption{
         Impact of increasing the slope of a Leaky-ReLU in DCNNs.
         Deep DCNNs with a larger slope are easier to train.}
@@ -551,13 +551,16 @@ We hence rely on this setting in the experimental section.
 
 This experimental section aims at answering the following questions:
 \begin{itemize}
-    \item[] \textbf{Q6.1} -- How do DCNNs compare to other approaches such as \ACDC, LDR or other structured approaches?
-    \item[] \textbf{Q6.2} -- How do DCNNs compare to other compression based techniques?
-    \item[] \textbf{Q6.3} -- How do DCNNs perform in the context of large scale real-world machine learning applications?  
+    % \item[] \textbf{Q6.1} -- How do DCNNs compare to other approaches such as \ACDC, LDR or other structured approaches?
+    % \item[] \textbf{Q6.2} -- How do DCNNs compare to other compression based techniques?
+    % \item[] \textbf{Q6.3} -- How do DCNNs perform in the context of large scale real-world machine learning applications?  
+    \item[] How do DCNNs compare to other approaches such as \ACDC, LDR or other structured approaches?
+    \item[] How do DCNNs compare to other compression based techniques?
+    \item[] How do DCNNs perform in the context of large scale real-world machine learning applications?  
 \end{itemize}
 
 
-\subsection{Comparison with other structured approaches (Q6.1)}
+\subsection{Comparison with other structured approaches}
 
 % \begin{figure}[ht]
 % \centering
@@ -637,14 +640,16 @@ We can conclude that DCNNs are able to model complex relations at a low cost.
    \centering
    \begin{subfigure}[b]{0.49\textwidth}
        \centering
-       \includegraphics[width=\textwidth]{graphs/cifar10_type.jpg}
+       % \includegraphics[width=\textwidth]{graphs/cifar10_type.jpg}
+       \input{figures/chapter3/cifar10_type.tex}
        \caption{Network size vs. Accuracy compared on Dense networks, DCNNs (our approach), DTNNs (our approach), neural networks based on Toeplitz matrices and neural networks based on Low Rank-based matrices. DCNNs outperforms alternatives structured approaches.}
        \label{figure:cifar10_type}
    \end{subfigure}
    \hfill
    \begin{subfigure}[b]{0.49\textwidth}
        \centering
-       \includegraphics[width=\textwidth]{graphs/scatterplot.jpg}
+       % \includegraphics[width=\textwidth]{graphs/scatterplot.jpg}
+       \input{figures/chapter3/scatterplot.tex}
        \caption{Accuracy of different structured architecture given the number of trainable parameters.~\\~\\~\\~\\~\\}
        \label{figure:cifar10_with_channels_xp}
    \end{subfigure}
@@ -726,7 +731,7 @@ First, we can see that the DCNN architecture very much benefits from the scatter
 We can also see that scattering followed by a DC layer systematically outperforms scattering + LDR or scattering + Toeplitz-like with less parameters. 
 
 
-\subsection{Comparison with other compression based approaches (Q6.2)}
+\subsection{Comparison with other compression based approaches}
 
 
 \begin{table}
@@ -753,7 +758,7 @@ We provide a comparison with other compression based approaches such as HashNet 
 Table~\ref{tab:mnist} shows the test error of DCNN against other know compression techniques on the MNIST datasets. We can observe that DCNN outperform easily HashNet \cite{Chen_Hashing_Trick} and Dark Knowledge \cite{44873} with fewer number of parameters. The architecture with Fast Food (FF) \cite{7410530} achieves better performance but with convolutional layers and only $1$ Fast Food Layer as the last Softmax layer. 
 
 
-\subsection{DCNNs for large-scale video classification on the \yt dataset (Q6.3)}
+\subsection{DCNNs for large-scale video classification on the \yt dataset}
 
 To understand the performance of deep DCNNs on large scale applications, we conducted experiments on the \yt video classification with 3.8 training examples introduced by~\citet{abu2016youtube}.
 Notice that we favour this experiment over ImageNet applications because modern image classification architectures involve a large number of convolutional layers, and compressing convolutional layers is out of our scope. 
@@ -821,7 +826,7 @@ We conclude that DCNN are both theoretically sound and of practical interest in 
 
 \begin{figure}[htb]
   \centering
-  \input{graphs/chapter3/archi_youtube.tex}
+  \input{figures/chapter3/archi_youtube.tex}
   \caption{This figure shows the state-of-the-art neural network architecture, initially proposed by~\citet{abu2016youtube} and later improved by~\citet{miech2017learnable}, used in our experiment.}
   \label{figure:archi_youtube}
 \end{figure}
@@ -856,8 +861,17 @@ As future work, we would like to generalize our results to deep convolutional ne
 
 
 \section{Notations \& Definition}
-We note $\mathfrak{R}(z)$ and $\mathfrak{I}(z)$  the real and imaginary parts the complex number $z$. We note $\left(\ \cdot\ \right)_{t}$ is the $t^{th}$ component of a vector. Let $\ci$ be the imaginary number defined by $\ci^2=-1$. 
-Define $\mathbf{1}_{n}$ as the \emph{n-}vector of ones. Also, we note $[n]=\{1,\ldots , n\}$. The rectified linear unit on the complex domain is defined by $\relu(z)=\max\left(0,\mathfrak{R}(z)\right)+\ci\max\left(0,\mathfrak{I}(z)\right)$. The notation $\left|\ \cdot\ \right|$ refers to the complex modulus.
+% We note $\mathfrak{R}(z)$ and $\mathfrak{I}(z)$  the real and imaginary parts the complex number $z$.
+
+% We note $\left(\ \cdot\ \right)_{t}$ is the $t^{th}$ component of a vector.
+
+% Let $\ci$ be the imaginary number defined by $\ci^2=-1$.
+
+% Define $\mathbf{1}_{n}$ as the \emph{n-}vector of ones.
+
+Also, we note $[n]=\{1,\ldots , n\}$.
+
+The rectified linear unit on the complex domain is defined by $\relu(z)=\max\left(0,\mathfrak{R}(z)\right)+\ci\max\left(0,\mathfrak{I}(z)\right)$. The notation $\left|\ \cdot\ \right|$ refers to the complex modulus.
 Finally, define the \emph{cyclic shift }matrix $S \in \mathbb{R}^{n\times n}$ as follows: 
 
 \begin{equation}
