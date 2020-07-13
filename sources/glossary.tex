@@ -15,6 +15,26 @@
   description = {The set of complex numbers},
 }
 
+\newglossaryentry{imaginary number}{%
+  name        = {$\ci = \sqrt{-1}$},
+  description = {Imaginary number},
+}
+
+\newglossaryentry{real part}{%
+  name        = {$\mathfrak{R}(z)$},
+  description = {Real part of complex number z},
+}
+
+\newglossaryentry{imaginary part}{%
+  name        = {$\mathfrak{I}(z)$},
+  description = {Imaginary part of complex number z},
+}
+
+\newglossaryentry{complex modulus}{%
+  name        = {$|z|$},
+  description = {Modulus of complex number z},
+}
+
 \newglossaryentry{Matrix}{%
   name        = {$\Mmat = \left(a_{ij}\right)$},
   description = {Matrix $\Mmat$ with $(i,j)$-entry $a_{ij}$},
@@ -35,14 +55,19 @@
   description = {Conjugate transpose of matrix $\Mmat$},
 }
 
+\newglossaryentry{vector of ones}{%
+  name        = {$\mathbf{1}_n$},
+  description = {\emph{n-}vector of ones},
+}
+
 \newglossaryentry{identity}{%
-  name        = {$\Imat$},
-  description = {Identity matrix},
+  name        = {$\Imat_{n \times n}$},
+  description = {Identity matrix of size $n \times n$},
 }
 
 \newglossaryentry{anti-identity}{%
-  name        = {$\Qmat$},
-  description = {Anti-identity matrix},
+  name        = {$\Qmat_{n \times n}$},
+  description = {Anti-identity matrix $n \times n$},
 }
 
 \newglossaryentry{Matrix p-norm}{%
@@ -59,29 +84,24 @@
 
 \newglossaryentry{largest singular value of matrix}{%
   name        = {$\sigma_1(\Mmat)$},
-  description = {largest singular value of matrix $\Mmat$, \ie $\sigma_1(\Mmat) = \norm{\Mmat}_2$},
+  description = {Largest singular value of matrix $\Mmat$, \ie $\sigma_1(\Mmat) = \norm{\Mmat}_2$},
 }
 
 \newglossaryentry{largest eigenvalue of matrix}{%
   name        = {$\lambda_1(\Mmat)$},
-  description = {largest eigenvalue of matrix $\Mmat$},
+  description = {Largest eigenvalue of matrix $\Mmat$},
 }
 
 \newglossaryentry{semi positive definite matrix}{%
   name        = {$\Mmat \geq 0$},
-  description = {$\Mmat$ is positive semidefinite, \ie $\xvec^\top\Mmat\xvec \geq 0 \text{for all} \xvec \in \Cn$},
+  description = {$\Mmat$ is positive semidefinite, \ie $\xvec^*\Mmat\xvec \geq 0 \text{ for all } \xvec \in \Cn$},
 }
 
 \newglossaryentry{positive definite}{%
   name        = {$\Mmat > 0$},
-  description = {$\Mmat$ is positive definite, \ie $\xvec^\top\Mmat\xvec > 0 \text{for all} \xvec \in \Cn$},
+  description = {$\Mmat$ is positive definite, \ie $\xvec^*\Mmat\xvec > 0 \text{ for all } \xvec \in \Cn$},
 }
 
-
-\newglossaryentry{imaginary number}{%
-  name        = {$\ci = \sqrt{-1}$},
-  description = {imaginary number},
-}
 
 
 
