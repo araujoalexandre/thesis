@@ -1,6 +1,6 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Lipschitz Bound of Convolutionnal Neural Network}
+\chapter{Lipschitz Bound of Convolutional Neural Network}
 \label{chapter:lipschitz_bound}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \localtableofcontents
@@ -1011,74 +1011,74 @@ Our future work will focus on investigating these fields.
 
 
 
-
-\section{Additional Results and Discussions on the Experiments}
-
-
-
-\subsection{Additional Results and Discussion of Section~\ref{subsection:comparaison_sota}}
-
-
-\begin{table}[htb]
-  \centering
-  \caption{This table shows the efficiency of LipBound computation vs the Power Method with 10 iterations on the full networks.}
-  {\footnotesize
-    \begin{tabular}{llllr}
-    \toprule
-      &   & \multicolumn{1}{c}{\textbf{LipBound (ms)}} & \multicolumn{1}{c}{\textbf{Power Method (ms)}} & \textbf{Ratio} \\
-    \midrule
-     \cite{krizhevsky2012imagenet} & \textbf{AlexNet} & \phantom{....}$4.75\pm1.1$ & \phantom{....}$38.75\pm2.52$ & \textbf{8.14 }\\
-    \midrule
-    \multirow{5}[2]{*}{\cite{he2016deep}} & \textbf{ResNet 18} & \phantom{..}$29.88\pm1.73$ & \phantom{..}$148.35\pm14.92$ & \textbf{4.96 }\\
-      & \textbf{ResNet 34} & \phantom{..}$54.73\pm3.62$ & \phantom{..}$266.85\pm25.35$ & \textbf{4.87 }\\
-      & \textbf{ResNet 50} & \phantom{..}$60.77\pm4.62$ & \phantom{..}$467.61\pm36.52$ & \textbf{7.69 }\\
-      & \textbf{ResNet 101} & $102.72\pm11.53$ & \phantom{..}$817.06\pm102.87$ & \textbf{7.95 }\\
-      & \textbf{ResNet 152} & $158.80\pm20.84$ & $1373.57\pm164.37$ & \textbf{8.64} \\
-    \midrule
-    \multirow{4}[2]{*}{\cite{huang2017densely}} & \textbf{DenseNet 121} & $125.55\pm14.59$ & \phantom{..}$937.35\pm11.52$ & \textbf{7.46 }\\
-      & \textbf{DenseNet 161} & $176.11\pm19.13$ & $1292.61\pm30.5$ & \textbf{7.33} \\
-      & \textbf{DenseNet 169} & $188.03\pm19.74$ & $1372.62\pm21.16$ & \textbf{7.29} \\
-      & \textbf{DenseNet 201} & $281.13\pm23.41$ & $1930.19\pm170.79$ & \textbf{6.86 }\\
-    \midrule
-    \multirow{4}[2]{*}{\cite{simonyan2014very}} & \textbf{VGG 11} & \phantom{..}$13.73\pm1.19$ & \phantom{....}$81.78\pm4.45$ & \textbf{5.95 }\\
-      & \textbf{VGG 13} & \phantom{..}$14.96\pm1.99$ & \phantom{..}$102.04\pm4.2$ & \textbf{6.82 }\\
-      & \textbf{VGG 16} & \phantom{..}$21.92\pm1.94$ & \phantom{..}$132.29\pm5.99$ & \textbf{6.03 }\\
-      & \textbf{VGG 19} & \phantom{..}$29.05\pm0.66$ & \phantom{..}$162.28\pm4.87$ & \textbf{5.58 }\\
-    \midrule
-    \cite{zagoruyko2016wide} & \textbf{WideResnet 50-2} & $113.28\pm45.44$ & \phantom{..}$468.74\pm6.54$ & \textbf{4.13 }\\
-    \midrule
-    \multirow{2}[2]{*}{\cite{iandola2016squeezenet}} & \textbf{SqueezeNet 1-0} & \phantom{..}$18.44\pm5.93$ & \phantom{....}$222.4\pm25.49$ & \textbf{12.05} \\
-      & \textbf{SqueezeNet 1-1} & \phantom{..}$18.26\pm6.65$ & \phantom{....}$209.8\pm3.59$ & \textbf{11.48} \\
-    \bottomrule
-    \end{tabular}%
-    }
-  \label{tab:efficiency_lipbound_full_model}%
-\end{table}%
-
-The comparison of Table~\ref{table:comparaison} of Section~\ref{subsection:comparaison_sota} of the main paper has been made with the following code provided by the authors: 
-\begin{itemize}
-    \item \makebox[3.2cm]{\cite{sedghi2018iclr}\hfill} \url{https://github.com/brain-research/conv-sv}
-    \item \makebox[3.2cm]{\cite{singla2019bounding}\hfill} \url{https://github.com/singlasahil14/CONV-SV}
-    \item \makebox[3.2cm]{\cite{farnia2018generalizable}\hfill} \url{https://github.com/jessemzhang/dl_spectral_normalization}
-\end{itemize}
-We translated the code of \cite{sedghi2018iclr} from TensorFlow to PyTorch in order to use the PyTorch CUDA Profiler.
-
-We extended the experiments presented in Table~\ref{table:comparaison} of Section~\ref{subsection:comparaison_sota} with Table~\ref{tab:efficiency_lipbound_full_model}.
-This table shows the efficiency of LipBound computation vs the Power Method with 10 iterations on the full network (\ie on all the convolutions of each network).
-The Ratio represents the \emph{speed gain} between our proposed method and the Power Method. 
-
-% \subsection{Additional Results of Section~\ref{section:experiments} \& Hyper-parameters}
-
-
-\subsection{The Effect of Lipschitz Regularization on the Maximal Singular Value of Convolution Layer}
-
-\begin{figure*}[htb]
-    \centering
-    \includegraphics[scale=0.55]{figures/chapter4/singular_values.pdf}
-    \caption{This figure shows the maximal singular values of each convolution of a trained Wide ResNet on CIFAR10 dataset given different training scheme. The id 1 and 28 correspond to the first layer and last layer of the network.}
-    \label{figure:singular_values}
-\end{figure*}%
-
-Figure~\ref{figure:singular_values} shows the maximal singular values of each convolution of a trained Wide ResNet on CIFAR10 dataset given different training scheme. We can observe a small but clear decrease in the magnitude of the maximal singular values between Baseline and LipReg (blue and orange) on most of the convolution layers. A high increase of the maximal singular values appear with Adversarial Training. This is expected because the training scheme requires to the network to be a lot more expressive with the same number of parameters. We can observe that LipReg combined with AT have an important impact due on the singular value. 
-
-
+%
+% \section{Additional Results and Discussions on the Experiments}
+%
+%
+%
+% \subsection{Additional Results and Discussion of Section~\ref{subsection:comparaison_sota}}
+%
+%
+% \begin{table}[htb]
+%   \centering
+%   \caption{This table shows the efficiency of LipBound computation vs the Power Method with 10 iterations on the full networks.}
+%   {\footnotesize
+%     \begin{tabular}{llllr}
+%     \toprule
+%       &   & \multicolumn{1}{c}{\textbf{LipBound (ms)}} & \multicolumn{1}{c}{\textbf{Power Method (ms)}} & \textbf{Ratio} \\
+%     \midrule
+%      \cite{krizhevsky2012imagenet} & \textbf{AlexNet} & \phantom{....}$4.75\pm1.1$ & \phantom{....}$38.75\pm2.52$ & \textbf{8.14 }\\
+%     \midrule
+%     \multirow{5}[2]{*}{\cite{he2016deep}} & \textbf{ResNet 18} & \phantom{..}$29.88\pm1.73$ & \phantom{..}$148.35\pm14.92$ & \textbf{4.96 }\\
+%       & \textbf{ResNet 34} & \phantom{..}$54.73\pm3.62$ & \phantom{..}$266.85\pm25.35$ & \textbf{4.87 }\\
+%       & \textbf{ResNet 50} & \phantom{..}$60.77\pm4.62$ & \phantom{..}$467.61\pm36.52$ & \textbf{7.69 }\\
+%       & \textbf{ResNet 101} & $102.72\pm11.53$ & \phantom{..}$817.06\pm102.87$ & \textbf{7.95 }\\
+%       & \textbf{ResNet 152} & $158.80\pm20.84$ & $1373.57\pm164.37$ & \textbf{8.64} \\
+%     \midrule
+%     \multirow{4}[2]{*}{\cite{huang2017densely}} & \textbf{DenseNet 121} & $125.55\pm14.59$ & \phantom{..}$937.35\pm11.52$ & \textbf{7.46 }\\
+%       & \textbf{DenseNet 161} & $176.11\pm19.13$ & $1292.61\pm30.5$ & \textbf{7.33} \\
+%       & \textbf{DenseNet 169} & $188.03\pm19.74$ & $1372.62\pm21.16$ & \textbf{7.29} \\
+%       & \textbf{DenseNet 201} & $281.13\pm23.41$ & $1930.19\pm170.79$ & \textbf{6.86 }\\
+%     \midrule
+%     \multirow{4}[2]{*}{\cite{simonyan2014very}} & \textbf{VGG 11} & \phantom{..}$13.73\pm1.19$ & \phantom{....}$81.78\pm4.45$ & \textbf{5.95 }\\
+%       & \textbf{VGG 13} & \phantom{..}$14.96\pm1.99$ & \phantom{..}$102.04\pm4.2$ & \textbf{6.82 }\\
+%       & \textbf{VGG 16} & \phantom{..}$21.92\pm1.94$ & \phantom{..}$132.29\pm5.99$ & \textbf{6.03 }\\
+%       & \textbf{VGG 19} & \phantom{..}$29.05\pm0.66$ & \phantom{..}$162.28\pm4.87$ & \textbf{5.58 }\\
+%     \midrule
+%     \cite{zagoruyko2016wide} & \textbf{WideResnet 50-2} & $113.28\pm45.44$ & \phantom{..}$468.74\pm6.54$ & \textbf{4.13 }\\
+%     \midrule
+%     \multirow{2}[2]{*}{\cite{iandola2016squeezenet}} & \textbf{SqueezeNet 1-0} & \phantom{..}$18.44\pm5.93$ & \phantom{....}$222.4\pm25.49$ & \textbf{12.05} \\
+%       & \textbf{SqueezeNet 1-1} & \phantom{..}$18.26\pm6.65$ & \phantom{....}$209.8\pm3.59$ & \textbf{11.48} \\
+%     \bottomrule
+%     \end{tabular}%
+%     }
+%   \label{tab:efficiency_lipbound_full_model}%
+% \end{table}%
+%
+% The comparison of Table~\ref{table:comparaison} of Section~\ref{subsection:comparaison_sota} of the main paper has been made with the following code provided by the authors: 
+% \begin{itemize}
+%     \item \makebox[3.2cm]{\cite{sedghi2018iclr}\hfill} \url{https://github.com/brain-research/conv-sv}
+%     \item \makebox[3.2cm]{\cite{singla2019bounding}\hfill} \url{https://github.com/singlasahil14/CONV-SV}
+%     \item \makebox[3.2cm]{\cite{farnia2018generalizable}\hfill} \url{https://github.com/jessemzhang/dl_spectral_normalization}
+% \end{itemize}
+% We translated the code of \cite{sedghi2018iclr} from TensorFlow to PyTorch in order to use the PyTorch CUDA Profiler.
+%
+% We extended the experiments presented in Table~\ref{table:comparaison} of Section~\ref{subsection:comparaison_sota} with Table~\ref{tab:efficiency_lipbound_full_model}.
+% This table shows the efficiency of LipBound computation vs the Power Method with 10 iterations on the full network (\ie on all the convolutions of each network).
+% The Ratio represents the \emph{speed gain} between our proposed method and the Power Method. 
+%
+% % \subsection{Additional Results of Section~\ref{section:experiments} \& Hyper-parameters}
+%
+%
+% \subsection{The Effect of Lipschitz Regularization on the Maximal Singular Value of Convolution Layer}
+%
+% \begin{figure*}[htb]
+%     \centering
+%     \includegraphics[scale=0.55]{figures/chapter4/singular_values.pdf}
+%     \caption{This figure shows the maximal singular values of each convolution of a trained Wide ResNet on CIFAR10 dataset given different training scheme. The id 1 and 28 correspond to the first layer and last layer of the network.}
+%     \label{figure:singular_values}
+% \end{figure*}%
+%
+% Figure~\ref{figure:singular_values} shows the maximal singular values of each convolution of a trained Wide ResNet on CIFAR10 dataset given different training scheme. We can observe a small but clear decrease in the magnitude of the maximal singular values between Baseline and LipReg (blue and orange) on most of the convolution layers. A high increase of the maximal singular values appear with Adversarial Training. This is expected because the training scheme requires to the network to be a lot more expressive with the same number of parameters. We can observe that LipReg combined with AT have an important impact due on the singular value. 
+%
+%
