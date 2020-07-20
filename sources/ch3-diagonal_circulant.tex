@@ -90,7 +90,7 @@ However, circulant networks show good performances in several contexts (the inte
 
 
 % #############################################################################
-\section{A primer on circulant matrices and a new result}
+\section{A Primer on Circulant Matrices and a New Result}
 \label{section:circulant}
 % #############################################################################
 
@@ -110,7 +110,7 @@ Circulant matrices exhibit several interesting properties from the perspective o
 Most importantly, any $n$-by-$n$ circulant matrix $\Cmat$ can be represented using only $n$ coefficients instead of the $n^2$ coefficients required to represent classical unstructured matrices.
 In addition, the matrix-vector product is simplified from $O(n^2)$ to $O(n \log n)$ using the  convolution theorem.
 
-As we will show in this paper, circulant matrices also have a strong expressive power.
+As we will show in this chapter, circulant matrices also have a strong expressive power.
 So far, we know that a single circulant matrix can be used to represent a variety of important linear transforms such as random projections~\cite{hinrichs2011johnson}. 
 When they are combined with diagonal matrices, they can also be used as building blocks to represent any linear transform~\cite{schmid2000decomposing, Huhtanen2015} with an arbitrary precision.
 \citet{Huhtanen2015} were able to bound the number of factors that is required to approximate any matrix $\Amat$ with arbitrary precision.
@@ -123,7 +123,7 @@ We recall this result in Theorem~\ref{theorem:huhtanen} as it is the starting po
 \end{theorem}
 
 Unfortunately, this theorem is of little use to understand the expressive power of diagonal-circulant matrices when they are used in deep neural networks.
-This is because: 1) the bound only depends on the dimension of the matrix $\Amat$, not on the matrix itself, 2) the theorem does not provide any insights regarding the expressive power of $m$ diagonal-circulant factors when $m$ is much lower than $2n - 1$ as it is the case in most practical scenarios we consider in this paper. 
+This is because: 1) the bound only depends on the dimension of the matrix $\Amat$, not on the matrix itself, 2) the theorem does not provide any insights regarding the expressive power of $m$ diagonal-circulant factors when $m$ is much lower than $2n - 1$ as it is the case in most practical scenarios we consider in this chapter. 
 
 In the following theorem, we enhance the result by \citet{Huhtanen2015} by expressing the number of factors required to approximate $\Amat$, \emph{as a function of the rank of $\Amat$}.
 This is useful when one deals with low-rank matrices, which is common in machine learning problems. 
@@ -154,7 +154,19 @@ Let $\Rmat = \circulant(r_{1}\ldots r_{n})$. Let $\Omat$ be a $n \times n$ diago
 
 Let us define $k$ diagonal matrices $\Dmat_{i} = \diagonal(d_{i1} \ldots d_{in})$ for $i \in [k]$.
 For now, the values of $d_{ij}$ are unknown, but we will show how to compute them.
-Let $\Wmat = \sum_{i=1}^{k} \Dmat_{i} \Smat^{i-1}$.
+Let $\Wmat = \sum_{i=1}^{k} \Dmat_{i} \Smat^{i-1}$ where $\Smat$ is the \emph{cyclic shift} matrix 
+%$S \in \mathbb{R}^{n\times n}$
+define as follows:
+\begin{equation}
+  \Smat = \leftmatrix 0 &  &  &  & 1 \\
+  1 & 0 \\
+   & 1 & \ddots \\
+   &  & \ddots & 0 \\
+   &  &  & 1 & 0
+  \rightmatrix
+\end{equation}
+
+
 Note that the $n-k$ last columns of the product $\Wmat\Rmat\Omat$ will be zeros.
 For example, with $k=2$, we have: 
 \begin{equation}
@@ -176,7 +188,7 @@ For example, with $k=2$, we have:
   r_{n}d_{1n}+r_{n-1}d_{2n} & r_{n-1}d_{1n}+r_{n-2}d_{2n} & 0 & \cdots & 0
   \rightmatrix
 \end{equation}
-We want to find the values of $d_{ij}$ such that $WRO=U$. We can formulate this as linear equation system. In case $k=2$, we get:
+We want to find the values of $d_{ij}$ such that $\Wmat \Rmat \Omat = \Umat$. We can formulate this as linear equation system. In case $k=2$, we get:
 \begin{equation}
   \leftmatrix
   r_{n} & r_{1}\\
@@ -233,19 +245,38 @@ As we will show in the following section, this result will be useful to analyze 
 
 
 % #############################################################################
- \section{Analysis of Diagonal Circulant Neural Networks (DCNNs)}
+ \section{Analysis of Diagonal Circulant Neural Networks}
 \label{section:analysis_diagonal_circulant}
 % #############################################################################
 
-\citet{pmlr-v70-zhao17b} have shown that circulant networks with 2 layers and unbounded width are universal approximators. However, results on unbounded networks offer weak guarantees and two important questions have remained open until now: 1) \emph{Can we approximate any function with a bounded-width circulant networks?} 2) \emph{What function can we approximate with a circulant network that has a bounded width and a small depth?} 
-We answer these two questions in this section.
+\citet{pmlr-v70-zhao17b} have shown that circulant networks with 2 layers and unbounded width are universal approximators.
+However, results on unbounded networks offer weak guarantees and two important questions have remained open until now: 
+\begin{enumerate}
+  \item Can we approximate any function with a bounded-width circulant networks?
+  \item What function can we approximate with a circulant network that has a bounded width and a small depth?
+\end{enumerate}
 
+We answer these two questions in this section.
 First, we introduce some necessary definitions regarding neural networks and we provide a theoretical analysis of their approximation capabilities.  
 
-\begin{definition}[Deep ReLU network] \label{definition:deep_relu_network}
-Given $L$ weight matrices $\Wmat = (\Wmat_1, \ldots, \Wmat_L)$ with $\Wmat_i \in \Cnn$ and  $L$ bias vectors $\bvec = (\bvec_1, \ldots, \bvec_L)$  with  $\bvec_i \in \Cn$, a \emph{deep $\relu$ network} is a function $f_{\Wmat_L, \bvec_L} : \Cn \rightarrow \Cn$ such that $f_{\Wmat, \bvec}(\xvec) =  (f_{\Wmat_L, \bvec_L} \circ \ldots \circ f_{\Wmat_1, \bvec_1})(\xvec)$ where $f_{\Wmat_i, \bvec_i}(\xvec) = \phi(\Wmat_i \xvec + \bvec_i)$ and $\phi(\ \cdot\ )$ is a $\relu$ non-linearity \footnote{Because our networks deal with complex numbers, we use an extension of the $\relu$ function to the complex domain. The most straightforward extension defined by \citet{DBLP:conf/iclr/TrabelsiBZSSSMR18} is as follows: $\mathrm{\relu}(\zvec) = \relu\left(\mathfrak{R}(\zvec)\right) + \ci \relu \left(\mathfrak{I}(\zvec)\right)$.}
-In the rest of this paper, we call $L$ and $n$ respectively the depth and the width of the network.
+
+\begin{definition}[Complex ReLU function \citet{DBLP:conf/iclr/TrabelsiBZSSSMR18}]
+Let us define the complex ReLU function $\relu: \Cbb^n \rightarrow \Cbb^n$ by: $\relu(\zvec)= \max\left(0, \mathfrak{R}(\zvec)\right) + \ci \max\left(0, \mathfrak{I}(\zvec) \right)$
+% The rectified linear unit on the complex domain is defined by $\relu(z)=\max\left(0,\mathfrak{R}(z)\right)+\ci\max\left(0,\mathfrak{I}(z)\right)$.
+\label{definition:relu_function}
 \end{definition}
+
+\begin{definition}[Deep ReLU network] \label{definition:deep_relu_network}
+Given $L$ weight matrices $\Wmat = (\Wmat_1, \ldots, \Wmat_L)$ with $\Wmat_i \in \Cnn$ and  $L$ bias vectors $\bvec = (\bvec_1, \ldots, \bvec_L)$  with  $\bvec_i \in \Cn$, a \emph{deep $\relu$ network} is a function $f_{\Wmat_L, \bvec_L} : \Cn \rightarrow \Cn$ such that $f_{\Wmat, \bvec}(\xvec) =  (f_{\Wmat_L, \bvec_L} \circ \ldots \circ f_{\Wmat_1, \bvec_1})(\xvec)$ where $f_{\Wmat_i, \bvec_i}(\xvec) = \phi(\Wmat_i \xvec + \bvec_i)$ and $\phi(\ \cdot\ )$ is a $\relu$ non-linearity 
+% \footnote{Because our networks deal with complex numbers, we use an extension of the $\relu$ function to the complex domain.  The most straightforward extension defined by \citet{DBLP:conf/iclr/TrabelsiBZSSSMR18} is as follows: $\mathrm{\relu}(\zvec) = \relu\left(\mathfrak{R}(\zvec)\right) + \ci \relu \left(\mathfrak{I}(\zvec)\right)$.}
+In the rest of this chapter, we call $L$ and $n$ respectively the depth and the width of the network.
+\end{definition}
+
+\begin{definition}[Total Rank]
+  The Total Rank $k$ of the Neural Network $f_{\Wmat, \bvec}$ corresponds to the sum of the ranks of the matrices $W_{1}\ldots W_{L}$. \ie $k = \sum_{i=1}^L \rank(W_i)$.
+  % Moreover, we call {\em total rank $k$}, the sum of the ranks of the matrices $W_{1}\ldots W_{L}$. ie $k = \sum_{i=1}^L rank(W_i)$.
+\end{definition}
+
 
 We also need to introduce DCNNs, similarly to \citet{moczulski2015acdc}.
 
@@ -254,6 +285,24 @@ Given $L$ diagonal matrices $\Dmat = (\Dmat_1, \ldots, \Dmat_L)$ with $\Dmat_i \
 \end{definition}
 
 We can now show that bounded-width DCNNs can approximate any Deep ReLU Network, and as a corollary, that they are universal approximators.
+
+\begin{lemma} \label{lemma:product_of_mat_to_DNN}
+Let $W_{L},\ldots W_{1}\in\mathbb{C}^{n\times n}$, $b\in\mathbb{C}^{n}$ and let $\mathcal{X}\subset\mathbb{C}^{n}$ be a bounded set.
+There exists $\beta_{L} \ldots \beta_{1} \in \mathbb{C}^{n}$ such that for all $x \in \mathcal{X}$ we have $f_{W_{L},\beta_{L}} \circ \ldots \circ f_{W_{1},\beta_{1}}(x) = \relu \left(W_{L}W_{L-1} \ldots W_{1}x+b \right)$.
+\end{lemma}
+
+\begin{proof}[\proofreflem{lemma:product_of_mat_to_DNN}]
+Define $S = \left\{ \left(\left(\prod_{k=1}^{j} \Wmat_{k} \right) \xvec \right)_{t}: \xvec \in \mathcal{X}, t \in [n], j \in [L] \right\}$.
+Let $\Omega = \max\left\{ \mathfrak{R}(v): v \in S \right\} + \ci \max\left\{ \mathfrak{I}(v):v \in S \right\}$.
+Intuitively, the real and imaginary parts of $\Omega$ are the largest any activation in the network can have.
+Define $h_{j}(\xvec) = \Wmat_{j}\xvec + \beta_{j}$. Let $\beta_{1} = \Omega \mathbf{1}_{n}$.
+Clearly, for all $\xvec \in \mathcal{X}$ we have $h_{1}(\xvec)\ge0$, so $\relu \circ h_{1}(\xvec) = h_{1}(\xvec)$.
+More generally, for all $j < n-1$ define $\beta_{j+1} = \mathbf{1}_{n} \Omega - \Wmat_{j+1} \beta_{j}$.
+It is easy to see that for all $j < n$ we have $h_{j} \circ \ldots \circ h_{1}(\xvec) = \Wmat_{j}\Wmat_{j-1} \ldots \Wmat_{1}x + \mathbf{1}_{n} \Omega$.
+This guarantees that for all $j < n$, $h_{j} \circ \ldots \circ h_{1}(\xvec) = \relu \circ h_{j} \circ \ldots \circ \relu \circ h_{1}(\xvec)$.
+Finally, define $\beta_{L} = b - A_{L} \beta_{L-1}$.
+We have, $\relu \circ h_{L} \circ \ldots \circ \relu \circ h_{1}(\xvec) = \relu \left(\Wmat_{j} \ldots \Wmat_{1} \xvec + b \right)$. 
+\end{proof}
 
 \begin{lemma} \label{lemma:dcnn_approx_neural_network}
 Let $\mathcal{N}$ be a deep ReLU network of width $n$ and depth $L$, and let $\mathcal{X} \subset \mathbb{C}^{n}$ be a bounded set.
@@ -357,7 +406,10 @@ Recall that $\norm{\Wmat}_{2} = \sup_{\zvec} \frac{\norm{\Wmat\zvec}_2}{\norm{\z
    &\le \norm{\left(\Wmat - \tilde{\Wmat}\right)\xvec} + \norm{\tilde{\Wmat}}_{2} \norm{\tilde{\xvec} - \xvec} \\
    &\le \norm{\xvec} \sigma_{k+1} + \sigma_{1} \norm{\tilde{\xvec} - \xvec} 
 \end{align}
-Finally, it is easy to see that for any pair of vectors $\avec,\bvec \in \Cn$, we have $\norm{ \relu(\avec) - \relu(\bvec)} \le \norm{\avec - \bvec} $.
+Finally, it is easy to see that for any pair of vectors $\avec,\bvec \in \Cn$, we have
+\begin{equation}
+  \norm{ \relu(\avec) - \relu(\bvec)} \le \norm{\avec - \bvec}.
+\end{equation}
 This concludes the proof.
 \end{proof}
 
@@ -416,7 +468,7 @@ This opens the possibility of learning compact and accurate diagonal-circulant n
 
 
 % #############################################################################
-\section{How to train very deep DCNNs}
+\section{How to Train Deep Diagonal Circulant Neural Networks}
 \label{section:training}
 % #############################################################################
 
@@ -495,8 +547,9 @@ Also:
 \end{itemize}
 \label{lemma:covariance}
 \end{lemma}
-\begin{proof}
 
+
+\begin{proof}[\proofreflem{lemma:covariance}]
 By an abuse of notation, we write $c_{0}=c_{n},c_{-1}=c_{n-1}$ and so on.
 First, note that: $y_{i}=\sum_{j=1}^{n}c_{j-i}u_{j}d_{j}$ and $z_{i}=\sum_{j=1}^{n}c_{j-i}u_{j}d_{i}$.
 Observe that each term $c_{j-i}u_{j}d_{j}$ and $c_{j-i}u_{j}d_{i}$ have symmetric p.d.f. because of $d_{i}$ and $d_{j}$.
@@ -611,7 +664,7 @@ The results are presented in Figure~\ref{figure:acdc_regression}.
 On this simple setting, while both architectures demonstrate good performance, we can observe that DCNNs offer a better convergence rate.
 In Figure~\ref{figure:acdc_cifar10}, we compare neural networks with ReLU activations on CIFAR-10. 
 
-We found that networks which are based only on \ACDC layers are difficult to train and offer poor accuracy on CIFAR-10 (we have tried different initialization schemes including the one from the original paper, and the one we introduce in this paper).
+We found that networks which are based only on \ACDC layers are difficult to train and offer poor accuracy on CIFAR-10 (we have tried different initialization schemes including the one from the original paper, and the one we introduce in this chapter).
 \citet{moczulski2015acdc} manage to train a large VGG network  however these networks are generally highly redundant and the contribution of the structured layer is difficult to quantify. 
 We also observe that adding a single dense layer improves the convergence rate of \ACDC in the linear case, which explains the good results of \citet{moczulski2015acdc}.
 However, it is difficult to characterize the true contribution of the \ACDC layers when the network has a large number of expressive layers.
@@ -636,26 +689,39 @@ We can conclude that DCNNs are able to model complex relations at a low cost.
 
 
 
+% \begin{figure}
+%    \centering
+%    \begin{subfigure}[b]{0.49\textwidth}
+%        \centering
+%        % \includegraphics[width=\textwidth]{graphs/cifar10_type.jpg}
+%        \input{figures/chapter3/cifar10_type.tex}
+%        \caption{Network size vs. Accuracy compared on Dense networks, DCNNs (our approach), DTNNs (our approach), neural networks based on Toeplitz matrices and neural networks based on Low Rank-based matrices. DCNNs outperforms alternatives structured approaches.}
+%        \label{figure:cifar10_type}
+%    \end{subfigure}
+%    \hfill
+%    \begin{subfigure}[b]{0.49\textwidth}
+%        \centering
+%        % \includegraphics[width=\textwidth]{graphs/scatterplot.jpg}
+%        \input{figures/chapter3/scatterplot.tex}
+%        \caption{Accuracy of different structured architecture given the number of trainable parameters.~\\~\\~\\~\\~\\}
+%        \label{figure:cifar10_with_channels_xp}
+%    \end{subfigure}
+% \end{figure}
+
+
 \begin{figure}
    \centering
-   \begin{subfigure}[b]{0.49\textwidth}
-       \centering
-       % \includegraphics[width=\textwidth]{graphs/cifar10_type.jpg}
-       \input{figures/chapter3/cifar10_type.tex}
-       \caption{Network size vs. Accuracy compared on Dense networks, DCNNs (our approach), DTNNs (our approach), neural networks based on Toeplitz matrices and neural networks based on Low Rank-based matrices. DCNNs outperforms alternatives structured approaches.}
-       \label{figure:cifar10_type}
-   \end{subfigure}
-   \hfill
-   \begin{subfigure}[b]{0.49\textwidth}
-       \centering
-       % \includegraphics[width=\textwidth]{graphs/scatterplot.jpg}
-       \input{figures/chapter3/scatterplot.tex}
-       \caption{Accuracy of different structured architecture given the number of trainable parameters.~\\~\\~\\~\\~\\}
-       \label{figure:cifar10_with_channels_xp}
-   \end{subfigure}
+   \input{figures/chapter3/cifar10_type.tex}
+   \caption{Network size vs. Accuracy compared on Dense networks, DCNNs (our approach), DTNNs (our approach), neural networks based on Toeplitz matrices and neural networks based on Low Rank-based matrices. DCNNs outperforms alternatives structured approaches.}
+   \label{figure:cifar10_type}
 \end{figure}
 
-
+\begin{figure}
+   \centering
+   \input{figures/chapter3/scatterplot.tex}
+   \caption{Accuracy of different structured architecture given the number of trainable parameters.}
+   \label{figure:cifar10_with_channels_xp}
+\end{figure}
 
 
 \paragraph{Comparison with Dense networks, Toeplitz networks and Low Rank networks.}
@@ -758,7 +824,7 @@ We provide a comparison with other compression based approaches such as HashNet 
 Table~\ref{tab:mnist} shows the test error of DCNN against other know compression techniques on the MNIST datasets. We can observe that DCNN outperform easily HashNet \cite{Chen_Hashing_Trick} and Dark Knowledge \cite{44873} with fewer number of parameters. The architecture with Fast Food (FF) \cite{7410530} achieves better performance but with convolutional layers and only $1$ Fast Food Layer as the last Softmax layer. 
 
 
-\subsection{DCNNs for large-scale video classification on the \yt dataset}
+\subsection{Large-scale video classification on the \yt dataset}
 
 To understand the performance of deep DCNNs on large scale applications, we conducted experiments on the \yt video classification with 3.8 training examples introduced by~\citet{abu2016youtube}.
 Notice that we favour this experiment over ImageNet applications because modern image classification architectures involve a large number of convolutional layers, and compressing convolutional layers is out of our scope. 
@@ -848,7 +914,7 @@ In order to stabilize and accelerate the training, we used batch normalization b
 \label{section:ch3-conclusion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-This paper deals with the training of diagonal circulant neural networks.
+This chapter deals with the training of diagonal circulant neural networks.
 To the best of our knowledge, training such networks with a large number of layers had not been done before.
 We also endowed this kind of models with theoretical guarantees, hence enriching and refining previous theoretical work from the literature.
 More importantly, we showed that DCNNs outperform their competing structured alternatives, including the very recent general approach based on LDR networks.
@@ -860,30 +926,16 @@ This fact makes any contribution to the area of circulant matrices particularly 
 As future work, we would like to generalize our results to deep convolutional neural networks. 
 
 
-\section{Notations \& Definition}
+% \section{Notations \& Definition}
 % We note $\mathfrak{R}(z)$ and $\mathfrak{I}(z)$  the real and imaginary parts the complex number $z$.
-
 % We note $\left(\ \cdot\ \right)_{t}$ is the $t^{th}$ component of a vector.
-
 % Let $\ci$ be the imaginary number defined by $\ci^2=-1$.
-
 % Define $\mathbf{1}_{n}$ as the \emph{n-}vector of ones.
-
-Also, we note $[n]=\{1,\ldots , n\}$.
-
-The rectified linear unit on the complex domain is defined by $\relu(z)=\max\left(0,\mathfrak{R}(z)\right)+\ci\max\left(0,\mathfrak{I}(z)\right)$. The notation $\left|\ \cdot\ \right|$ refers to the complex modulus.
-Finally, define the \emph{cyclic shift }matrix $S \in \mathbb{R}^{n\times n}$ as follows: 
-
-\begin{equation}
-  S = \left[ \begin{array}{ccccc}
-  0 &  &  &  & 1 \\
-  1 & 0 \\
-   & 1 & \ddots \\
-   &  & \ddots & 0 \\
-   &  &  & 1 & 0
-  \end{array}\right]
-\end{equation}
-We introduce some necessary definitions regarding neural networks.  
+% The rectified linear unit on the complex domain is defined by $\relu(z)=\max\left(0,\mathfrak{R}(z)\right)+\ci\max\left(0,\mathfrak{I}(z)\right)$.
+% In the rest of this paper, we call $L$ and $n$ respectively the depth and the width of the network.
+% Moreover, we call {\em total rank $k$}, the sum of the ranks of the matrices $W_{1}\ldots W_{L}$. ie $k = \sum_{i=1}^L rank(W_i)$.
+% The notation $\left|\ \cdot\ \right|$ refers to the complex modulus.
+% We introduce some necessary definitions regarding neural networks.  
 
 % \begin{definition}[Deep ReLU network]\label{def:deep_relu_network-appendix}
 % Given $L$ weight matrices $W = (W_1, \ldots, W_L)$ with $W_i \in \mathbb C^{n\times n}$ and  $L$ bias vectors $b = (b_1, \ldots, b_L)$  with  $b_i \in \mathbb C^n$, a {\em deep $\relu$ network} is a function $f_{W_L, b_L} : \mathbb C^n \rightarrow \mathbb C^n$ such that $f_{W, b}(x) =  (f_{W_L, b_L} \circ \ldots \circ f_{W_1, b_1})(x)$ where $f_{W_i, b_i}(x) = \phi(W_i x + b_i)$ and $\phi(.)$ is a $\relu$ non-linearity
@@ -891,7 +943,6 @@ We introduce some necessary definitions regarding neural networks.
 % In the rest of this paper, we call $L$ and $n$ respectively the depth and the width of the network. Moreover, we call {\em total rank $k$}, the sum of the ranks of the matrices $W_{1}\ldots W_{L}$. ie $k = \sum_{i=1}^L rank(W_i)$.
 % \end{definition}
 
-In the rest of this paper, we call $L$ and $n$ respectively the depth and the width of the network. Moreover, we call {\em total rank $k$}, the sum of the ranks of the matrices $W_{1}\ldots W_{L}$. ie $k = \sum_{i=1}^L rank(W_i)$.
 
 
 
@@ -910,25 +961,25 @@ In the rest of this paper, we call $L$ and $n$ respectively the depth and the wi
 % any $\epsilon>0$, there exists a sequence of $4k+1$ matrices $B_{1},\ldots,B_{4k+1},$ where $B_{i}$ is a circulant matrix if $i$ is odd, and a diagonal matrix otherwise, such that $\Vert B_1B_2\ldots B_{4k+1} - A\Vert < \epsilon$
 % \end{theorem}
 
-\section{Proofs of Section 4}
-
-\begin{lemma} \label{lemma:product_of_mat_to_DNN}
-Let $W_{L},\ldots W_{1}\in\mathbb{C}^{n\times n}$, $b\in\mathbb{C}^{n}$ and let $\mathcal{X}\subset\mathbb{C}^{n}$ be a bounded set.
-There exists $\beta_{L} \ldots \beta_{1} \in \mathbb{C}^{n}$ such that for all $x \in \mathcal{X}$ we have $f_{W_{L},\beta_{L}} \circ \ldots \circ f_{W_{1},\beta_{1}}(x) = \relu \left(W_{L}W_{L-1} \ldots W_{1}x+b \right)$.
-\end{lemma}
-
-\begin{proof}[\proofreflem{lemma:product_of_mat_to_DNN}]
-Define $S = \left\{ \left(\left(\prod_{k=1}^{j} \Wmat_{k} \right) \xvec \right)_{t}: \xvec \in \mathcal{X}, t \in [n], j \in [L] \right\}$.
-Let $\Omega = \max\left\{ \mathfrak{R}(v): v \in S \right\} + \ci \max\left\{ \mathfrak{I}(v):v \in S \right\}$.
-Intuitively, the real and imaginary parts of $\Omega$ are the largest any activation in the network can have.
-Define $h_{j}(\xvec) = \Wmat_{j}\xvec + \beta_{j}$. Let $\beta_{1} = \Omega \mathbf{1}_{n}$.
-Clearly, for all $\xvec \in \mathcal{X}$ we have $h_{1}(\xvec)\ge0$, so $\relu \circ h_{1}(\xvec) = h_{1}(\xvec)$.
-More generally, for all $j < n-1$ define $\beta_{j+1} = \mathbf{1}_{n} \Omega - \Wmat_{j+1} \beta_{j}$.
-It is easy to see that for all $j < n$ we have $h_{j} \circ \ldots \circ h_{1}(\xvec) = \Wmat_{j}\Wmat_{j-1} \ldots \Wmat_{1}x + \mathbf{1}_{n} \Omega$.
-This guarantees that for all $j < n$, $h_{j} \circ \ldots \circ h_{1}(\xvec) = \relu \circ h_{j} \circ \ldots \circ \relu \circ h_{1}(\xvec)$.
-Finally, define $\beta_{L} = b - A_{L} \beta_{L-1}$.
-We have, $\relu \circ h_{L} \circ \ldots \circ \relu \circ h_{1}(\xvec) = \relu \left(\Wmat_{j} \ldots \Wmat_{1} \xvec + b \right)$. 
-\end{proof}
+% \section{Proofs of Section 4}
+%
+% \begin{lemma} \label{lemma:product_of_mat_to_DNN}
+% Let $W_{L},\ldots W_{1}\in\mathbb{C}^{n\times n}$, $b\in\mathbb{C}^{n}$ and let $\mathcal{X}\subset\mathbb{C}^{n}$ be a bounded set.
+% There exists $\beta_{L} \ldots \beta_{1} \in \mathbb{C}^{n}$ such that for all $x \in \mathcal{X}$ we have $f_{W_{L},\beta_{L}} \circ \ldots \circ f_{W_{1},\beta_{1}}(x) = \relu \left(W_{L}W_{L-1} \ldots W_{1}x+b \right)$.
+% \end{lemma}
+%
+% \begin{proof}[\proofreflem{lemma:product_of_mat_to_DNN}]
+% Define $S = \left\{ \left(\left(\prod_{k=1}^{j} \Wmat_{k} \right) \xvec \right)_{t}: \xvec \in \mathcal{X}, t \in [n], j \in [L] \right\}$.
+% Let $\Omega = \max\left\{ \mathfrak{R}(v): v \in S \right\} + \ci \max\left\{ \mathfrak{I}(v):v \in S \right\}$.
+% Intuitively, the real and imaginary parts of $\Omega$ are the largest any activation in the network can have.
+% Define $h_{j}(\xvec) = \Wmat_{j}\xvec + \beta_{j}$. Let $\beta_{1} = \Omega \mathbf{1}_{n}$.
+% Clearly, for all $\xvec \in \mathcal{X}$ we have $h_{1}(\xvec)\ge0$, so $\relu \circ h_{1}(\xvec) = h_{1}(\xvec)$.
+% More generally, for all $j < n-1$ define $\beta_{j+1} = \mathbf{1}_{n} \Omega - \Wmat_{j+1} \beta_{j}$.
+% It is easy to see that for all $j < n$ we have $h_{j} \circ \ldots \circ h_{1}(\xvec) = \Wmat_{j}\Wmat_{j-1} \ldots \Wmat_{1}x + \mathbf{1}_{n} \Omega$.
+% This guarantees that for all $j < n$, $h_{j} \circ \ldots \circ h_{1}(\xvec) = \relu \circ h_{j} \circ \ldots \circ \relu \circ h_{1}(\xvec)$.
+% Finally, define $\beta_{L} = b - A_{L} \beta_{L-1}$.
+% We have, $\relu \circ h_{L} \circ \ldots \circ \relu \circ h_{1}(\xvec) = \relu \left(\Wmat_{j} \ldots \Wmat_{1} \xvec + b \right)$. 
+% \end{proof}
 %
 % \begin{lemma}\label{mainth_-appendix}
 % Let $\mathcal{N}$ be a deep ReLU network of width $n$ and depth $L$, and let $\mathcal{X} \subset \mathbb{C}^{n}$ be a bounded set. For any $\epsilon > 0$, there exists a DCNN $\mathcal{N}'$ of width $n$ and of depth $(2n-1)L$ such that $\Vert \mathcal{N}(x) - \mathcal{N}'(x) \Vert < \epsilon$ for all $x \in \mathcal{X}$.
