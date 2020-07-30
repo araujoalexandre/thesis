@@ -11,7 +11,7 @@
 \usepackage{xspace}         % commands that appear not to eat spaces
 \usepackage{enumitem}       % control layout of itemize, enumerate
 \usepackage{appendix}       % extra control of appendices
-\usepackage{pgfplots}
+\usepackage{numprint}       % prints numbers with a separator every three digits
 
 \usepackage{algorithm}
 \usepackage{algpseudocode}
@@ -62,6 +62,7 @@
 % Graphics packages
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\usepackage{pgfplots}
 \usepackage{graphicx}       % enhanced support for graphics
 \usepackage{tikz}           % create graphic elements in latex
 \usepackage{tikz-cd}        % Create commutative diagrams with TikZ
@@ -222,6 +223,8 @@
 \DeclareMathOperator{\lip}{Lip}
 \DeclareMathOperator{\lipbound}{LipBound}
 \DeclareMathOperator{\relu}{ReLU}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Custom Commands
