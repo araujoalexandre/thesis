@@ -10,22 +10,18 @@
 \usepackage{calc}           % perform arithmetic on the arguments
 \usepackage{xspace}         % commands that appear not to eat spaces
 \usepackage{enumitem}       % control layout of itemize, enumerate
-\usepackage{appendix}       % extra control of appendices
 \usepackage{numprint}       % prints numbers with a separator every three digits
+\usepackage{epigraph}       % for citation
 
-\usepackage{algorithm}
-\usepackage{algpseudocode}
+\usepackage[title,
+            toc,
+	    titletoc,
+	    page,
+	    header,
+	  ]{appendix}       % extra control of appendices
 
-% \usepackage{colortbl}
-% \usepackage{wrapfig}
-% \usepackage{bbm}
-% \usepackage{stmaryrd}
-% \usepackage[normalem]{ulem}
-% \usepackage{textcomp}
-% \usepackage{changepage}
-% \usepackage{placeins}
-% \usepackage{setspace}
-
+\usepackage[nomaketitle
+	   ]{psl-cover}     % package for PSL cover
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Minitoc
@@ -36,7 +32,7 @@
 \setlength{\tocrulewidth}{0.8pt}
 \etocsettocstyle{
 \addsec*{Contents\\\vspace{-0.5cm}\rule{\textwidth}{\tocrulewidth}}}{
-  \noindent\rule{\linewidth}{\tocrulewidth}}
+\noindent\rule{\linewidth}{\tocrulewidth}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Glossary
@@ -49,14 +45,15 @@
 % Mathematical packages
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\usepackage{mathtools}
 \usepackage{amsmath}        % Basic mathematical typography
+\usepackage{mathtools}      % Mathematical tools to use with amsmath
 \usepackage{amssymb}
 \usepackage{amsthm}         % Basic mathematical environments for proofs etc.
 \usepackage{mathdots}       % dots commands for matrices 
 \usepackage{amsfonts}       % blackboard math symbols
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{physics}        % typesetting equations for physics simpler
+\usepackage{bm}             % Access bold symbols in maths mode
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Graphics packages
@@ -68,6 +65,7 @@
 \usepackage{tikz-cd}        % Create commutative diagrams with TikZ
 \usetikzlibrary{positioning}
 \usetikzlibrary{arrows.meta}
+\usepgfplotslibrary{groupplots}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Table packages
@@ -77,6 +75,7 @@
 \usepackage{multirow}       % create tabular cells spanning multiple rows
 \usepackage{tabularx}       % tabulars with adjustable-width columns
 \usepackage{booktabs}       % professional-quality tables
+\usepackage{makecell}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Some of my favorite personal adjustments
@@ -177,6 +176,8 @@
 \input{bibliography-mimosis}
 \bibliography{bibliography}
 
+\setlength\bibitemsep{10pt}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fonts
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -193,68 +194,95 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{lineno}
 % \linenumbers
-\newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO:} #1\xspace}}
+\usepackage{todonotes}
+\let\todoorg\todo
+\renewcommand{\todo}[1]{\todoorg[inline]{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% algorithm
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Theorems
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newtheorem{definition}{Definition}
-\newtheorem{theorem}{Theorem}
-\newtheorem{corollary}{Corollary}
-\newtheorem{lemma}{Lemma}
-\newtheorem{proposition}{Proposition}
-\newtheorem{property}{Property}
-\newtheorem{remark}{Remark}
+\newtheorem{definition}   {Definition}
+\newtheorem{theorem}      {Theorem}
+\newtheorem{corollary}    {Corollary}
+\newtheorem{lemma}        {Lemma}
+\newtheorem{proposition}  {Proposition}
+\newtheorem{property}     {Property}
+\newtheorem{remark}       {Remark}
 
 \renewcommand\qedsymbol{$\blacksquare$}
 
-\newcommand\proofrefth[1]{\textbf{Proof of Theorem}~\ref{#1}}
-\newcommand\proofrefcor[1]{\textbf{Proof of Corollary}~\ref{#1}}
-\newcommand\proofreflem[1]{\textbf{Proof of Lemma}~\ref{#1}}
-\newcommand\proofrefprop[1]{\textbf{Proof of Proposition}~\ref{#1}}
+\newcommand\proofrefth[1]   {\textbf{Proof of Theorem}~\ref{#1}}
+\newcommand\proofrefcor[1]  {\textbf{Proof of Corollary}~\ref{#1}}
+\newcommand\proofreflem[1]  {\textbf{Proof of Lemma}~\ref{#1}}
+\newcommand\proofrefprop[1] {\textbf{Proof of Proposition}~\ref{#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Specific Operators
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\DeclareMathOperator{\reshape}{vec}
-\DeclareMathOperator{\pad}{pad}
-\DeclareMathOperator{\lip}{Lip}
-\DeclareMathOperator{\lipbound}{LipBound}
-\DeclareMathOperator{\relu}{ReLU}
-\DeclareMathOperator*{\argmax}{arg\,max}
-\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\reshape}   {vec}
+\DeclareMathOperator{\pad}       {pad}
+\DeclareMathOperator{\lip}       {Lip}
+\DeclareMathOperator{\lipbound}  {LipBound}
+\DeclareMathOperator{\relu}      {ReLU}
+\DeclareMathOperator*{\argmax}   {arg\,max}
+\DeclareMathOperator*{\argmin}   {arg\,min}
+\DeclareMathOperator*{\Vol}      {Vol}
+
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator*{\Risk}{Risk}
+\DeclareMathOperator*{\advRisk}{Risk_{\alpha}}
+\DeclareMathOperator*{\PCadvRisk}{PC-Risk_{\alpha}}
+\DeclareMathOperator*{\randRisk}{Rand-Risk}
+\DeclareMathOperator*{\randadvRisk}{Rand-Risk_{\alpha}}
+\DeclareMathOperator*{\ranfPCadvRisk}{Rand-PC-Risk_{\alpha}}
+\DeclareMathOperator*{\B}{B(\alpha)}
+\DeclareMathOperator*{\probmap}{M}
+\DeclareMathOperator*{\EoT}{EoT}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Custom Commands
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+% \newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
 
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
 
 % complex number i
 \newcommand{\ci}{\ensuremath \mathbf{i}}
 
-% definition de l'index a_h et B_h
+% definition of index a_h and B_h
 \newcommand{\seqidx}{h}
 \newcommand{\seqsetN}{N}
 \newcommand{\seqsetM}{M}
 
-% cin et cout
-\newcommand{\cin}{\mathrm{cin}}
-\newcommand{\cout}{\mathrm{cout}}
+% channel-in and channels-out
+\newcommand{\cin}  {\mathrm{cin}}
+\newcommand{\cout} {\mathrm{cout}}
 
-% normes
-\newcommand{\lone}{\ensuremath \ell_1}
-\newcommand{\ltwo}{\ensuremath \ell_2}
-\newcommand{\linf}{\ensuremath \ell_\infty}
+% norms
+\newcommand{\lzero} {\ensuremath \ell_0 \xspace}
+\newcommand{\lone}  {\ensuremath \ell_1 \xspace}
+\newcommand{\ltwo}  {\ensuremath \ell_2 \xspace}
+\newcommand{\linf}  {\ensuremath \ell_\infty \xspace}
+\newcommand{\lp}    {\ensuremath \ell_p \xspace}
 
 % command for sets
-\newcommand{\Nbb}{{\ensuremath \mathbb{N}}}
-\newcommand{\Zbb}{{\ensuremath \mathbb{Z}}}
-\newcommand{\Rbb}{{\ensuremath \mathbb{R}}}
-\newcommand{\Cbb}{{\ensuremath \mathbb{C}}}
+\newcommand{\Nbb}{\ensuremath \mathbb{N}}
+\newcommand{\Zbb}{\ensuremath \mathbb{Z}}
+\newcommand{\Rbb}{\ensuremath \mathbb{R}}
+\newcommand{\Cbb}{\ensuremath \mathbb{C}}
+\newcommand{\Pbb}{\ensuremath \mathbb{P}}
+\newcommand{\Ebb}{\ensuremath \mathbb{E}}
 \newcommand{\Rnn}{\Rbb^{n \times n}}
 \newcommand{\Cnn}{\Cbb^{n \times n}}
 % \newcommand{\Rn}{\Rbb^{n}}
@@ -263,9 +291,6 @@
 \newcommand{\Zxx}[2]{{\ensuremath \Zbb^{#1 \times #2}}}
 \newcommand{\Cxx}[2]{{\ensuremath \Cbb^{#1 \times #2}}}
 \newcommand{\Rxx}[2]{{\ensuremath \Rbb^{#1 \times #2}}}
-
-% expected value
-\newcommand{\Ebb}{\ensuremath \mathbb{E}}
 
 % command for matrices
 \newcommand{\Amat}{\ensuremath \mathbf{A}}
@@ -324,29 +349,35 @@
 \newcommand{\zvec}{\ensuremath \mathbf{z}}
 
 % matrix brackets
-\newcommand{\leftmatrix}{\begin{pmatrix}}
-\newcommand{\rightmatrix}{\end{pmatrix}}
-\newcommand{\leftmat}{\left(}
-\newcommand{\rightmat}{\right)}
+\newcommand{\leftmatrix}  {\begin{pmatrix}}
+\newcommand{\rightmatrix} {\end{pmatrix}}
+\newcommand{\leftmat}     {\left(}
+\newcommand{\rightmat}    {\right)}
 
 % circulant & diagonal
-\newcommand{\circulant}{\ensuremath \mathrm{circ}}
-\newcommand{\diagonal}{\ensuremath \mathrm{diag}}
+\newcommand{\circulant}   {\ensuremath \mathrm{circ}}
+\newcommand{\diagonal}    {\ensuremath \mathrm{diag}}
 
-% variance et covariance
+% variance and covariance
 \newcommand{\Cov}{\ensuremath \mathrm{Cov}}
 \newcommand{\Var}{\ensuremath \mathrm{Var}}
+
+
+\newcommand{\F}{\ensuremath \mathcal{F}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Text shortcut
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\yt}{\textit{YouTube-8M}\xspace}
-\newcommand{\eg}{\textit{e.g.}\xspace}
-\newcommand{\ie}{\textit{i.e.}\xspace}
-\newcommand{\aka}{\textit{a.k.a}\xspace}
-\newcommand{\ACDC}{ACDC\xspace}
-\newcommand{\AFDF}{AFCF\xspace}
+\newcommand{\yt}    {\textit{YouTube-8M}\xspace}
+\newcommand{\eg}    {\textit{e.g.}\xspace}
+\newcommand{\ie}    {\textit{i.e.}\xspace}
+\newcommand{\aka}   {\textit{a.k.a}\xspace}
+\newcommand{\vs}    {\textit{vs.}\xspace}
+\newcommand{\wrt}   {w.r.t.\xspace}
+\newcommand{\st}    { s.t.\xspace}
+\newcommand{\ACDC}  {ACDC\xspace}
+\newcommand{\AFDF}  {AFCF\xspace}
 
 % \newcommand{\drn}{Deep ReLU network\xspace}
 % \newcommand{\drns}{Deep ReLU networks\xspace}
