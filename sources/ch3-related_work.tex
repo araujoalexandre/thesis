@@ -5,9 +5,70 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \localtableofcontents
 
+\todo{write small header}
 
-\section{Section 1}
-xxx
 
-\section{Section 2}
-xxx
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Compression of Neural Networks}
+\label{section:ch3-compression_of_neural_networks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Structured matrices exhibit a number of good properties which have been exploited by deep learning practitioners, mainly to compress large neural networks architectures into smaller ones.
+For example, \citet{hinrichs2011johnson} have demonstrated that a single circulant matrix can be used to approximate the Johnson-Lindenstrauss transform, often used in machine learning to perform dimensionality reduction.
+Building upon this result, \citet{cheng} proposed to replace the weight matrix of a fully connected layer by a circulant matrix effectively replacing the complex transform modeled by the fully connected layer by a simple dimensionality reduction.
+Despite the reduction of expressivity, the resulting network demonstrated good accuracy using only a fraction of its original size (90\% reduction).
+
+
+\paragraph{Comparison with \ACDC.}
+\citet{moczulski2015acdc} have introduced two \emph{Structured Efficient Linear Layers} (SELL) called \AFDF and \ACDC, where $\Amat$ and $\Dmat$ are diagonal matrices and $\Fmat$ and $\Cmat$ are the Fourier and cosine transform respectively.
+The \AFDF structured layer benefits from the theoretical results introduced by \citet{Huhtanen2015} and can be seen as the building block of DCNNs.
+However, \citet{moczulski2015acdc} only experiment using \ACDC, a different type of layer that does not involve circulant matrices.
+As far as we can tell, the theoretical guarantees available for the \AFDF layer do not apply on the \ACDC layer since the cosine transform does not diagonalize circulant matrices \cite{sanchez1995diagonalizing}.
+Another possible limit of the \ACDC paper is that they only train large neural networks involving \ACDC layers combined with many other expressive layers.
+Although the resulting network demonstrates good accuracy, it is difficult the characterize the true contribution of the \ACDC layers in this setting. 
+
+\paragraph{Comparison with Low displacement rank structures.}
+More recently, \citet{Thomas_NIPS2018_8119} have generalized these works by proposing neural networks with low-displacement rank matrices (LDR), that are structured matrices encompassing a large family of structured matrices, including Toeplitz-like, Vandermonde-like, Cauchy-like and more notably DCNNs.
+To obtain this result, LDR represents a structured matrix using two displacement operators and a low-rank residual.
+Despite being elegant and general, we found that the LDR framework suffers from several limits which are inherent to its generality and makes it difficult to use in the context of large and deep neural networks.
+First, the training procedure for learning LDR matrices is highly involved and implies many complex mathematical objects such as Krylov matrices.
+Then, as acknowledged by the authors, the number of parameters required to represent a given structured matrix (a \emph{Toeplitz matrix}) in practice is unnecessarily high (higher than required in theory). 
+
+\paragraph{Other compression techniques.}
+Besides structured matrices, a variety of techniques have been proposed to build more compact deep learning models.
+These include \emph{model distillation}~\cite{44873}, Tensor Train~\cite{novikov2015tensorizing}, Low-rank decomposition~\cite{NIPS2013_5025}, to mention a few.
+However, circulant networks show good performances in several contexts (the interested reader can refer to the results reported by \citet{moczulski2015acdc} and \citet{Thomas_NIPS2018_8119}).
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Lipschitz Regularization of Neural Networks}
+\label{section:ch5-related_work}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+A popular technique for approximating the maximal singular value of a matrix is the power method~\cite{golub2000eigenvalue}, an iterative algorithm which yields a good approximation of the maximum singular value when the algorithm is able to run for a sufficient number of iterations. 
+\citet{yoshida2017spectral, miyato2018spectral} have used the power method to normalize the spectral norm of each layer of a neural network, and showed that the resulting models offered improved generalization performance and generated better examples when they were used in the context of GANs. 
+\citet{farnia2018generalizable} built upon the work of~\citet{miyato2018spectral} and proposed a power method specific for convolutional layers that leverages the deconvolution operation and avoid the computation of the gradient.
+They used it in combination with adversarial training. 
+In the same vein, \citet{gouk2018regularisation} demonstrated that regularized neural networks using the power method also offered improvements over their non-regularized counterparts. 
+Furthermore, \citet{tsuzuku2018lipschitz} have shown that a neural network can be more robust to some adversarial attacks, if the prediction margin of the network (\ie the difference between the first and the second maximum logit) is higher than a minimum threshold that depends on the global Lipschitz constant of the network.
+Building on this observation, they use the power method to compute an upper bound on the global Lipschitz constant, and maximize the prediction margin during training.
+Finally, \citet{scaman2018lipschitz} have used automatic differentiation combined with the power method to compute a tighter bound on the global Lipschitz constant of neural networks.
+Despite a number of interesting results, using the power method is expensive and results in prohibitive training times. 
+
+Other approaches to regularize the Lipschitz constant of neural networks have been proposed by~\citet{sedghi2018iclr} and~\citet{singla2019bounding}.
+The method of~\citet{sedghi2018iclr} exploits the properties of circulant matrices to approximate the maximal singular value of a convolutional layer.
+Although interesting, this method results in a loose approximation of the maximal singular value of a convolutional layer.
+Furthermore, the complexity of their algorithm is dependent on the convolution input which can be high for large datasets such as ImageNet.
+More recently, \citet{singla2019bounding} have successfully bounded the operator norm of the Jacobian matrix of a convolution layer by the Frobenius norm of the reshaped kernel.
+This technique has the advantage to be very fast to compute and to be independent of the input size but it also results in a loose approximation. 
+
+To build robust neural networks, \citet{cisse2017parseval} and ~\citet{NIPS2019_9673} have proposed to constrain the Lipschitz constant of neural networks by using orthogonal convolutions.
+\citet{cisse2017parseval} use the concept of \emph{parseval tight frames}, to constrain their networks.
+\citet{NIPS2019_9673} built upon the work of~\citet{cisse2017parseval} to propose an efficient construction method of orthogonal convolutions.  
+
+Finally, recent work~\citet{NIPS2019_9319,latorre2020lipschitz} has proposed a tight bound on the Lipschitz constant of the full network with the use of semi-definite programming.
+These works are theoretically interesting but lack scalability (\ie the bound can only be computed on small networks).
+
+
+
