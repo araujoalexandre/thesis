@@ -183,24 +183,6 @@
 \renewcommand{\left}{\mathopen{}\mathclose\bgroup\originalleft}
 \renewcommand{\right}{\aftergroup\egroup\originalright}
 
-\DeclareMathOperator*{\argmin}          {arg\,min}
-\DeclareMathOperator {\dist}            {dist}
-\DeclareMathOperator {\im}              {im}
-
-\newcommand{\domain}{\ensuremath{\mathds{D}}}
-\newcommand{\real}  {\ensuremath{\mathds{R}}}
-
-% Proper differential operators
-\newcommand{\diff}[1]{\ensuremath{\operatorname{d}\!{#1}}}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Ordinals
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\newcommand  {\st}{\textsuperscript{\textup{st}}\xspace}
-\newcommand  {\rd}{\textsuperscript{\textup{rd}}\xspace}
-\newcommand  {\nd}{\textsuperscript{\textup{nd}}\xspace}
-\renewcommand{\th}{\textsuperscript{\textup{th}}\xspace}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Penalties
