@@ -93,10 +93,10 @@ Let $\phi_1$ and $\phi_2$ be two linear functions, we could define a \emph{Multi
 One of the first \emph{Multi-Layer Perceptron}, or now more commonly known as \emph{Deep Neural Network}, was introduced by~\citeauthor{ivakhnenko1967cybernetics} in~\citeyear{ivakhnenko1967cybernetics}.
 More precisely, a Neural Neural can be analytically described as a composition of linear function interlaced with non-linear function (also called activation function):
 \begin{equation}
-  f_\Wmat(\xvec) = \phi_{\Wmat_L} \circ \rho \circ \phi_{\Wmat_{L-1}} \circ \cdots \circ \phi_{\Wmat_2} \circ \rho \circ \phi_{\Wmat_1}(\xvec)
+  f_\Theta(\xvec) = \phi_{\Wmat_L} \circ \rho \circ \phi_{\Wmat_{L-1}} \circ \cdots \circ \phi_{\Wmat_2} \circ \rho \circ \phi_{\Wmat_1}(\xvec)
   \label{equation:neural_network}
 \end{equation}
-where the function $\phi_{\Wmat_i}$ is a linear function parameterized by $\Wmat_i$, $\rho$ is a non-linear function (also called activation function), $\Wmat = \{\Wmat_1, \dots, \Wmat_L \}$ and $L$ correspond to the \emph{depth} of the network (\ie the number of layers).
+where the function $\phi_{\Wmat_i}$ is a linear function parameterized by $\Wmat_i$, $\rho$ is a non-linear function (also called activation function), $\Theta \triangleq \{\Wmat_1, \dots, \Wmat_L \}$ and $L$ correspond to the \emph{depth} of the network (\ie the number of layers).
 
 In recent years, Deep Neural Networks have achieved state-of-the-art performances in a variety of domains such as image recognition~\cite{lecun1998gradient,krizhevsky2012imagenet,He_2016_CVPR,tan2019efficientnet}, image detection~\cite{redmon2016you}, natural language processing~\cite{radford2018Language}, speech recognition~\citet{hinton2012deep}, etc. 
 In order for Deep Neural Networks to achieve such performance, specific architectures have been devised for each application.
