@@ -1,0 +1,220 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Technical Proofs}
+\label{chapter:technical_proofs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\localtableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Proof of Chapter~\ref{chapter:diagonal_circulant_neural_network}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{proof}[\proofrefth{theorem:rank-decomposition}]
+Let $\Umat \mathbf{\Sigma} \Vmat^{T}$ be the SVD decomposition of $\Mmat$ where $\Umat,\Vmat$ and $\mathbf{\Sigma}$ are $n \times n$ matrices.
+Because $\Mmat$ is of rank $k$, the last $n-k$ columns of $\Umat$ and $\Vmat$ are null.
+In the following, we will first decompose $\Umat$ into a product of matrices $\Wmat\Rmat\Omat$, where $\Rmat$ and $\Omat$ are respectively circulant and diagonal matrices, and $\Wmat$ is a matrix which will be further decomposed into a product of diagonal and circulant matrices.
+Then, we will apply the same decomposition technique to $\Vmat$.
+Ultimately, we will get a product of $4k+2$ matrices alternatively diagonal and circulant.  
+
+Let $\Rmat = \circulant(r_{1}\ldots r_{n})$. Let $\Omat$ be a $n \times n$ diagonal matrix where $\Omat_{i,i} = 1$ if $i \le k$ and $0$ otherwise. The $k$ first columns of the product $\Rmat\Omat$ will be equal to that of $\Rmat$, and the $n-k$ last colomns of $\Rmat\Omat$ will be zeros. For example, if $k=2$, we have: 
+\begin{equation}
+  \Rmat\Omat = \leftmatrix
+  r_{1} & r_{n} & 0 & \cdots & 0\\
+  r_{2} & r_{1}\\
+  r_{3} & r_{2} & \vdots &  & \vdots\\
+  \vdots & \vdots\\
+  r_{n} & r_{n-1} & 0 & \cdots & 0
+  \rightmatrix
+\end{equation}
+
+Let us define $k$ diagonal matrices $\Dmat_{i} = \diagonal(d_{i1} \ldots d_{in})$ for $i \in [k]$.
+For now, the values of $d_{ij}$ are unknown, but we will show how to compute them.
+Let $\Wmat = \sum_{i=1}^{k} \Dmat_{i} \Smat^{i-1}$ where $\Smat$ is the \emph{cyclic shift} matrix 
+%$S \in \mathbb{R}^{n\times n}$
+define as follows:
+\begin{equation}
+  \Smat = \leftmatrix 0 &  &  &  & 1 \\
+  1 & 0 \\
+   & 1 & \ddots \\
+   &  & \ddots & 0 \\
+   &  &  & 1 & 0
+  \rightmatrix
+\end{equation}
+
+
+Note that the $n-k$ last columns of the product $\Wmat\Rmat\Omat$ will be zeros.
+For example, with $k=2$, we have: 
+\begin{equation}
+  \Wmat = \leftmatrix
+  d_{1,1} &  &  &  & d_{2,1} \\
+  d_{2,2} & d_{1,2} \\
+   & d_{2,3} & \ddots \\
+   &  & \ddots \\
+   &  &  & d_{2,n} & d_{1,n}
+  \rightmatrix
+\end{equation}
+
+\begin{equation}
+  \Wmat\Rmat\Omat = \leftmatrix
+  r_{1}d_{11}+r_{n}d_{21} & r_{n}d_{11}+r_{n-1}d_{21} & 0 & \cdots & 0 \\
+  r_{2}d_{12}+r_{1}d_{22} & r_{1}d_{12}+r_{n}d_{22}\\
+   &  & \vdots &  & \vdots \\
+  \vdots & \vdots\\
+  r_{n}d_{1n}+r_{n-1}d_{2n} & r_{n-1}d_{1n}+r_{n-2}d_{2n} & 0 & \cdots & 0
+  \rightmatrix
+\end{equation}
+We want to find the values of $d_{ij}$ such that $\Wmat \Rmat \Omat = \Umat$. We can formulate this as linear equation system. In case $k=2$, we get:
+\begin{equation}
+  \leftmatrix
+  r_{n} & r_{1}\\
+  r_{n-1} & r_{n}\\
+   &  & r_{1} & r_{2}\\
+   &  & r_{n} & r_{1}\\
+   &  &  &  & r_{2} & r_{3}\\
+   &  &  &  & r_{1} & r_{2}\\
+   &  &  &  &  &  & \ddots\\
+   &  &  &  &  &  &  & \ddots
+  \rightmatrix \times \leftmatrix
+  d_{2,1}\\
+  d_{1,1}\\
+  d_{2,2}\\
+  d_{1,2}\\
+  d_{2,3}\\
+  d_{1,3}\\
+  \vdots\\
+  \vdots
+  \rightmatrix = \leftmatrix
+  \Umat_{1,1}\\
+  \Umat_{1,2}\\
+  \Umat_{2,1}\\
+  \Umat_{2,2}\\
+  \\
+  \\
+  \vdots\\
+  \\
+  \rightmatrix
+\end{equation}
+
+The $i^{th}$ bloc of the bloc-diagonal matrix is a Toeplitz matrix induced by a subsequence of length $k$ of $(r_1,\ldots r_n,r_1 \ldots r_n)$.
+Set $r_{j}=1$ for all $j\in\{k,2k,3k,\ldots n\}$ and set $r_{j}=0$ for all other values of $j$.
+Then it is easy to see that each bloc is a permutation of the identity matrix.
+Thus, all blocs are invertible.
+This entails that the block diagonal matrix above is also invertible.
+So by solving this set of linear equations, we find $d_{1,1}\ldots d_{k,n}$ such that $\Wmat\Rmat\Omat=\Umat$.
+We can apply the same idea to factorize $\Vmat=\Wmat'.\Rmat.\Omat$ for some matrix $\Wmat'$.
+Finally, we get 
+\begin{equation}
+  \Amat = \Umat \mathbf{\Sigma} \Vmat^\top = \Wmat\Rmat\Omat \mathbf{\Sigma} \Omat^\top \Rmat^\top \Wmat^{'\top}
+\end{equation}
+
+Thanks to Theorem~\ref{theorem:huhtanen}, $\Wmat$ and $\Wmat'$ can both be factorized in a product of $2k-1$ circulant and diagonal matrices.
+Note that $\Omat \mathbf{\Sigma} \Omat^\top$ is diagonal, because all three are diagonal.
+Overall, $\Amat$ can be represented with a product of $4k+2$ matrices, alternatively diagonal and circulant.
+\end{proof}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Proof of Chapter~\ref{chapter:lipschitz_bound}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{proof}[\proofreflem{theorem:widom_idenity}]
+Let $(i, j)$ be matrix indexes such $(\ \cdot\ )_{i, j}$ correspond to the value at the $i^\textrm{th}$ row and $j^\textrm{th}$ column, let us define the following notation:
+\begin{align*}
+    i_1 &= \left\lfloor i/n \right\rfloor \quad \quad &&j_1 = \left\lfloor j/n \right\rfloor \\
+    i_2 &= i \mod n \quad \quad &&j_2 = j \mod n
+\end{align*}
+
+Let us define $\hat{f}$ as the 2 dimensional Fourier transform of the function $f$. We refer to $\hat{f}_{h_1, h_2}$ as the Fourier coefficient indexed by $(h_1, h_2)$ where $h_1$ correspond to the index of the block of the doubly-block Toeplitz and $h_2$ correspond to the index of the value inside the block. More precisely, we have 
+\begin{align}
+    \leftmat \Dmat(f) \rightmat_{i, j} &= \hat{f}_{(\left\lfloor j/n \right\rfloor - \left\lfloor i/n \right\rfloor), ((j \mod n) - (i \mod n)))} \label{equation:expression_fourier} \\
+    \leftmat \Hmat^{\alpha_0}(f) \rightmat_{i, j} &= \hat{f}_{(\left\lfloor j/n \right\rfloor + \left\lfloor i/n \right\rfloor + 1), ((j \mod n) - (i \mod n)))} \\
+    \leftmat \Hmat^{\alpha_1}(f) \rightmat_{i, j} &= \hat{f}_{(\left\lfloor j/n \right\rfloor - \left\lfloor i/n \right\rfloor), ((j \mod n) + (i \mod n) + 1))} \\
+    \leftmat \Hmat^{\alpha_2}(f) \rightmat_{i, j} &= \hat{f}_{(\left\lfloor j/n \right\rfloor - \left\lfloor i/n \right\rfloor), ((j \mod n) - (i \mod n)))} \\
+    \leftmat \Hmat^{\alpha_3}(f) \rightmat_{i, j} &= \hat{f}_{(\left\lfloor j/n \right\rfloor + \left\lfloor i/n \right\rfloor + n), ((j \mod n) + (i \mod n) + 1))}
+\end{align}
+
+We simplify the notation of the expressions above as follow:
+\begin{align}
+    \leftmat \Dmat(f) \rightmat_{i, j} &= \hat{f}_{(j_1 - i_1), (j_2 - i_2 )} \\
+    \leftmat \Hmat^{\alpha_0}(f) \rightmat_{i, j} &= \hat{f}_{(j_1 + i_1 + 1), (j_2 - i_2 )} \\
+    \leftmat \Hmat^{\alpha_1}(f) \rightmat_{i, j} &= \hat{f}_{(j_1 - i_1), (j_2 + i_2 + 1)} \\
+    \leftmat \Hmat^{\alpha_2}(f) \rightmat_{i, j} &= \hat{f}_{(j_1 - i_1), (j_2 - i_2 )} \\
+    \leftmat \Hmat^{\alpha_3}(f) \rightmat_{i, j} &= \hat{f}_{(j_1 + i_1 + n), (j_2 + i_2 + 1)}
+\end{align}
+
+The convolution theorem states that the Fourier transform of a product of two functions is the convolution of their Fourier coefficients. Therefore, one can observe that the entry $(i, j)$ of the matrix $\Dmat(f g)$ can be express as follows:
+
+\begin{equation*}
+    \leftmat \Dmat(f g) \rightmat_{i, j} = \sum_{k_1 = -2n + 1}^{2n-1} \sum_{k_2 = -2n + 1}^{2n-1} \hat{f}_{(k_1-i_1),(k_2-i_2)} \hat{g}_{(j_1-k_1),(j_2-k_2)}. 
+\end{equation*}
+
+
+By splitting the double sums and simplifying, we obtain:
+\begin{align} \label{equation:split_double_sum}
+\left( \Dmat(f g) \right)_{i, j} &= 
+\sum_{k_1, k_2 \in P} \left(
+\hat{f}_{(k_1-i_1),(k_2-i_2)} \hat{g}_{(j_1-k_1),(j_2-k_2)} +
+\hat{f}_{(-k_1-i_1-1),(k_2-i_2)} \hat{g}_{(j_1+k_1+1),(j_2-k_2)} \right. \notag \\ &\quad+ \left.
+\hat{f}_{(k_1-i_1),(-k_2-i_2-1)} \hat{g}_{(j_1-k_1),(j_2+k_2+1)} +
+\hat{f}_{(-k_1-i_1-1),(-k_2-i_2-1)} \hat{g}_{(j_1+k_1+1),(j_2+k_2+1)} \right. \notag \\ &\quad+ \left.
+\hat{f}_{(k_1-i_1+n),(-k_2-i_2-1)} \hat{g}_{(j_1-k_1-n),(j_2+k_2+1)} +
+\hat{f}_{(k_1-i_1+n),(k_2-i_2)} \hat{g}_{(j_1-k_1-n),(j_2-k_2)} \right. \notag \\ &\quad+ \left.
+\hat{f}_{(k_1-i_1),(k_2-i_2+n)} \hat{g}_{(j_1-k_1),(j_2-k_2-n)} +
+\hat{f}_{(k_1-i_1+n),(k_2-i_2+n)} \hat{g}_{(j_1-k_1-n),(j_2-k_2-n)} \right. \notag \\ &\quad+ \left.
+\hat{f}_{(-k_1-i_1-1),(k_2-i_2+n)} \hat{g}_{(j_1+k_1+1),(j_2-k_2-n)}  \right)
+\end{align}
+where $P = \{ (k_1, k_2)\ |\ k_1, k_2 \in \mathbb{N} \cup 0, 0 \leq k_1 \leq n-1,  0 \leq k_2 \leq n-1 \}$.
+
+
+Furthermore, we can observe the following:
+\begin{equation*}
+    \leftmat \Dmat(f) \Dmat(g) \rightmat_{i, j} = \sum_{k = 0}^{n^2} \leftmat\Dmat(f)\rightmat_{i, k} \leftmat\Dmat(g)\rightmat_{k, j}  = \sum_{k_1, k_2 \in P} \hat{f}_{(k_1-i_1),(k_2-i_2)} \hat{g}_{(j_1-k_1),(j_2-k_2)}
+\end{equation*}
+
+{\allowdisplaybreaks
+\begin{flalign*}
+    % # H1_a_.T @ H1_b
+    \leftmat \Hmat^{\alpha_1 \top}(f^*) \Hmat^{\alpha_1}(g) \rightmat_{i, j} &=  \sum_{k_1, k_2 \in P} \hat{f}^*_{(k_1+i_1+1),(i_2-k_2)} \hat{g}_{(j_1+k_1+1),(j_2-k_2)} \\
+    &=  \sum_{k_1, k_2 \in P} \hat{f}_{(-k_1-i_1-1),(k_2-i_2)} \hat{g}_{(j_1+k_1+1),(j_2-k_2)} \\
+    % # H2_a_.T @ H2_b
+    \leftmat \Hmat^{\alpha_2 \top}(f^*) \Hmat^{\alpha_2}(g) \rightmat_{i, j} &=  \sum_{k_1, k_2 \in P} \hat{f}^*_{(i_1-k_1),(k_2+i_2+1)} \hat{g}_{(j_1-k_1),(j_2+k_2+1)} \\
+    &=  \sum_{k_1, k_2 \in P} \hat{f}_{(k_1-i_1),(-k_2-i_2-1)} \hat{g}_{(j_1-k_1),(j_2+k_2+1)} \\
+    % # H3_a_.T @ H3_b
+    \leftmat \Hmat^{\alpha_3 \top}(f^*) \Hmat^{\alpha_3}(g) \rightmat_{i, j} &=  \sum_{k_1, k_2 \in P} \hat{f}^*_{(k_1+i_1+1),(k_2+i_2+1)} \hat{g}_{(j_1+k_1+1),(k_2+j_2+1)} \\
+    &= \sum_{k_1, k_2 \in P} \hat{f}_{(-k_1-i_1-1),(-k_2-i_2-1)} \hat{g}_{(j_1+k_1+1),(k_2+j_2+1)} \\
+    % # H4_a_.T @ H4_b
+    \leftmat \Hmat^{\alpha_4 \top}(f^*) \Hmat^{\alpha_4}(g) \rightmat_{i, j} &= \sum_{k_1, k_2 \in P} \hat{f}^*_{(i_1-k_1-n),(k_2+i_2+1)} \hat{g}_{(j_1-k_1-n),(j_2+k_2+1)} \\
+    &=  \sum_{k_1, k_2 \in P} \hat{f}_{(k_1-i_1+n),(-k_2-i_2-1)} \hat{g}_{(j_1-k_1-n),(j_2+k_2+1)} \\
+\end{flalign*}
+}
+Let us define the matrix $\Qmat$ of size $n^2 \times n^2$ as the anti-identity matrix. We have the following:
+
+{\allowdisplaybreaks
+\begin{flalign*}
+    % # Y @ H1_a.T @ H1_b_ @ Y
+    \leftmat \Hmat^{\alpha_1 \top}(f) \Hmat^{\alpha_1}(g^*) \rightmat_{i, j} &= \sum_{k_1, k_2 \in P} \hat{f}_{(k_1+i_1+1),(i_2-k_2)} \hat{g}^*_{(j_1+k_1+1),(j_2-k_2)} \\
+    &= \sum_{k_1, k_2 \in P} \hat{f}_{(k_1+i_1+1),(i_2-k_2)} \hat{g}_{(-j_1-k_1-1),(k_2-j_2)} \\
+    \Leftrightarrow \leftmat \Qmat \Hmat^{\alpha_1 \top}(f) \Hmat^{\alpha_1}(g^*) \Qmat \rightmat_{i, j} &= \sum_{k_1, k_2 \in P} \hat{f}_{(k_1-i_1+n),(k_2-i_2)} \hat{g}_{(j_1-k_1-n),(j_2-k_2)} \\
+    % # Y @ H2_a.T @ H2_b_ @ Y
+    \leftmat \Hmat^{\alpha_2 \top}(f) \Hmat^{\alpha_2}(g^*) \rightmat_{i, j} &=  \sum_{k_1, k_2 \in P} \hat{f}_{(i_1-k_1),(k_2+i_2+1)} \hat{g}^*_{(j_1-k_1),(j_2+k_2+1)} \\
+    &=  \sum_{k_1, k_2 \in P} \hat{f}_{(i_1-k_1),(k_2+i_2+1)} \hat{g}_{(k_1-j_1),(-j_2-k_2-1)} \\
+    \Leftrightarrow \leftmat \Qmat \Hmat^{\alpha_2 \top}(f) \Hmat^{\alpha_2}(g^*) \Qmat \rightmat_{i, j} &=  \sum_{k_1, k_2 \in P} \hat{f}_{(k_1-i_1),(k_2-i_2+n)} \hat{g}_{(j_1-k_1),(j_2-k_2-n)} \\
+    % # Y @ H3_a.T @ H3_b_ @ Y
+    \leftmat \Hmat^{\alpha_3 \top}(f) \Hmat^{\alpha_3}(g^*) \rightmat_{i, j} &=  \sum_{k_1, k_2 \in P}  \hat{f}_{(k_1+i_1+1),(k_2+i_2+1)} \hat{g}^*_{(j_1+k_1+1),(k_2+j_2+1)} \\
+    &=  \sum_{k_1, k_2 \in P} \hat{f}_{(k_1+i_1+1),(k_2+i_2+1)} \hat{g}_{(-j_1-k_1-1),(-k_2-j_2-1)} \\
+    \Leftrightarrow \leftmat \Qmat \Hmat^{\alpha_3 \top}(f) \Hmat^{\alpha_3}(g^*) \Qmat \rightmat_{i, j} &=  \sum_{k_1, k_2 \in P} \hat{f}_{(k_1-i_1+n),(k_2-i_2+n)} \hat{g}_{(j_1-k_1-n),(-k_2+j_2-n)} \\
+    % # Y @ H4_a.T @ H4_b_ @ Y
+    \leftmat \Hmat^{\alpha_4 \top}(f) \Hmat^{\alpha_4}(g^*) \rightmat_{i, j} &=  \sum_{k_1, k_2 \in P}  \hat{f}_{(-k_1+i_1-n),(k_2+i_2+1)} \hat{g}^*_{(j_1-k_1-n),(j_2+k_2+1)} \\
+    &= \sum_{k_1, k_2 \in P} \hat{f}_{(-k_1+i_1-n),(k_2+i_2+1)} \hat{g}_{(-j_1+k_1+n),(-j_2-k_2-1)} \\
+    \Leftrightarrow \leftmat \Qmat \Hmat^{\alpha_4 \top}(f) \Hmat^{\alpha_4}(g^*) \Qmat \rightmat_{i, j} &= \sum_{k_1, k_2 \in P} \hat{f}_{(-k_1-i_1-1),(k_2-i_2+n)} \hat{g}_{(j_1+k_1+1),(j_2-k_2-n)}
+\end{flalign*}
+}
+
+Now, we can observe from Equation~\ref{equation:split_double_sum} that:
+\begin{equation}
+    \Dmat(fg) = \Dmat(f)\Dmat(g) + \sum_{p=0}^3 \Hmat^{\alpha_p \top}(f^*) \Hmat^{\alpha_p}(g) + \Qmat \left( \sum_{p=0}^3 \Hmat^{\alpha_p \top}(f) \Hmat^{\alpha_p}(g^*) \right) \Qmat.
+\end{equation}
+which concludes the proof. 
+\end{proof}
