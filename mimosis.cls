@@ -216,5 +216,7 @@
 
 % Large number for chapter
 \renewcommand*{\chapterformat}{%
-  \fontsize{50}{55}\selectfont\thechapter\autodot\enskip
+  \fontsize{50}{55}\selectfont \chaptername~\thechapter\autodot\enskip
 }
+
+\KOMAoption{chapterprefix}{true}
