@@ -19,17 +19,62 @@
 % \title{Exploiting the Properties of Toeplitz Matrices to Improves the Training of Deep Neural Networks}
 % \title{Contributions on Deep Neural Networks from the Properties of Toeplitz Matrices: Efficiency and Robustness}
 \title{Contributions on Deep Neural Networks with Toeplitz Matrices: Efficiency and Robustness}
-
-
 \author{Alexandre Araujo}
+
+\logopath{figures/cover}
+\doctoralschool{Sciences de la Décision, des Organisations, de la Société et de l'Echange}{543}
+\institute{Université Paris-Dauphine, PSL Research University}
+\specialty{Informatique}
+\date{XX Novembre 2020}
+\supervisor[Benjamin Negrevergne]{Jamal Atif}
+\jury{
+  Mme Prénom Nom \\
+  Etablissement, \\
+  Président
+
+  M Prénom Nom \\
+  Etablissement, \\
+  Rapporteur
+
+  M Prénom Nom \\
+  Etablissement,\\ 
+  Rapporteur
+
+  M Prénom Nom \\
+  Etablissement, \\
+  Membre du jury
+
+  M Prénom Nom \\
+  Etablissement,\\
+  Membre du jury
+
+  M Prénom Nom \\
+  Etablissement,\\
+  Membre du jury
+
+  M Prénom Nom \\
+  Etablissement,\\
+  Membre du jury
+}
+\input{sources/abstract-cover.tex}
+
+
 
 \begin{document}
 
-\frontmatter
+  \frontmatter
+  % \pslcover{}
   \input{sources/title}
-  % \input{sources/abstract}
-  % \input{sources/resume}
-  \newpage
+  \listoftodos
+
+  \input{sources/dedication.tex}
+  \input{sources/quote.tex}
+  \addcontentsline{toc}{chapter}{Abstract}
+  \input{sources/abstract}
+  \addcontentsline{toc}{chapter}{Résumé}
+  \input{sources/resume}
+  \addcontentsline{toc}{chapter}{acknowledgments}
+  \input{sources/acknowledgments}
 
   % This ensures that the subsequent sections are being included as root
   % items in the bookmark structure of your PDF reader.
@@ -49,23 +94,31 @@
       \newpage
       \addcontentsline{toc}{chapter}{\listtablename}
       \listoftables
-      % \printglossary[type=\acronymtype]
+      \newpage
+      \printglossary[type=\acronymtype]
       \newpage
       \printglossary[title={List of Symbols}]
     \endgroup
     \printindex
 
-\mainmatter
+  \mainmatter
   \input{sources/ch1-introduction}
-  % \input{sources/ch2-background}
-  % \input{sources/ch3-related_work}
-  \input{sources/ch3-diagonal_circulant}
-  \input{sources/ch4-lipschitz_bound}
-  % \input{sources/ch5-conclusion}
+  \input{sources/ch2-background}
+  \input{sources/ch3-related_work}
+  \input{sources/ch4-diagonal_circulant}
+  \input{sources/ch5-lipschitz_bound}
+  \input{sources/ch6-conclusion}
 
-  % \appendix
-  % \input{sources/ap1-randomized_inference}
-  % \input{sources/ap2-advocating_for_multiple_defense_strategies}
+  \renewcommand\appendixpagename{\usekomafont{disposition}Appendices}
+  \begin{appendices}
+    \renewcommand\chaptername{Appendix}
+    \input{sources/ap1-technical_proofs.tex}
+    \input{sources/ap2-training_video_classification.tex}
+    \input{sources/ap3-randomized_inference}
+    \input{sources/ap4-advocating_for_multiple_defense_strategies}
+    \input{sources/ap5-datasets.tex}
+    \input{sources/ap6-publications.tex}
+  \end{appendices} 
 
   \printbibliography[title=References]
 
