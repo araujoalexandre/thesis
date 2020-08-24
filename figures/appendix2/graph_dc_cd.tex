@@ -1,0 +1,25 @@
+\begin{tikzpicture}[scale=0.7]
+\begin{axis}[
+    width=0.85\textwidth,
+    height=\axisdefaultheight,
+    title={\textbf{GAP given the pooling method used with DBoF embedding}},
+    legend style={fill=white,draw=black},
+    legend cell align={left},
+    xlabel={Epochs},
+    ylabel={Validation GAP},
+    xmin=0, xmax=10,
+    ymin=0.79, ymax=0.88,
+    xtick={0,1,2,3,4,5,6,7,8,9,10},
+    ytick={0.79,0.80,0.81,0.82,0.83,0.84,0.85,0.86,0.87,0.88},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+	]
+  \addplot[color=red] table [y=gap, x=epoch]{figures/appendix2/dc_cd/dc.dat};
+  \addplot[color=blue] table [y=gap, x=epoch]{figures/appendix2/dc_cd/cd.dat};
+\legend{
+ Compact FC w/general approach,
+ {Compact FC w/CD and $D \in \{-1, 1\}$},
+ }
+\end{axis}
+\end{tikzpicture}

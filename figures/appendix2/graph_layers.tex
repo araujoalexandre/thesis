@@ -1,0 +1,34 @@
+\begin{tikzpicture}[scale=0.7]
+\begin{axis}[
+    width=0.85\textwidth,
+    height=\axisdefaultheight,
+    title={\parbox{8cm}{\centering \textbf{Comparison of the effect of compactness over different layers with the base model}}},
+    legend columns=2,
+    legend style={fill=white,
+                  draw=black, 
+    			 /tikz/column 2/.style={
+                    column sep=5pt,
+                  },},
+    legend cell align={left},
+    xlabel={Epochs},
+    ylabel={Validation GAP},
+    xmin=0, xmax=7,
+    ymin=0.77, ymax=0.87,
+    xtick={0,1,2,3,4,5,6,7},
+    ytick={0.77,0.78,0.79,0.8,0.81,0.82,0.83,0.84,0.85,0.86,0.87},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+	]
+  \addplot[color=red] table [y=gap, x=epoch]{figures/appendix2/layers/dense.dat};
+  \addplot[color=yellow] table [y=gap, x=epoch]{figures/appendix2/layers/compact_dbof.dat};
+  \addplot[color=blue] table [y=gap, x=epoch]{figures/appendix2/layers/compact_fc.dat};
+  \addplot[color=green] table [y=gap, x=epoch]{figures/appendix2/layers/compact_moe.dat};
+\legend{
+   Dense Model,
+   Model with compact DBoF, 
+   Model with compact FC, 
+   Model with compact MoE,
+ }
+\end{axis}
+\end{tikzpicture}

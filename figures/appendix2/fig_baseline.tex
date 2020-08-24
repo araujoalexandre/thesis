@@ -1,0 +1,34 @@
+\tikzset{%
+  >={Latex[width=2mm,length=2mm]},
+  % Specifications for style of nodes:
+            base/.style = {rectangle, draw=black, text centered, font=\sffamily},
+             box/.style = {base, rounded corners, text depth=3cm, minimum height=4cm, minimum width=3cm},
+     transparent/.style = {rectangle, draw=black},
+       circulant/.style = {base, fill=yellow!30},
+       embedding/.style = {base, fill=blue!30, minimum width=2.5cm, minimum height=1cm},
+           other/.style = {base, fill=white!30,  minimum width=2cm, minimum height=1cm},
+              fc/.style = {base, fill=orange!30, minimum width=1.5cm, minimum height=1cm},
+          gating/.style = {base, fill=green!30, minimum width=2cm, text width=2cm, minimum height=1cm},
+             moe/.style = {base, fill=purple!30, minimum width=1.5cm, minimum height=1cm},
+}
+
+\begin{tikzpicture}[every node/.style={fill=white, font=\sffamily}, align=center]
+
+  \draw (0.0, +2.)  node [other, draw=none] {\textbf{Embedding}};
+  \draw (+3.7, +2.)  node [other, draw=none] {\textbf{Dim Reduction}};
+  \draw (+8.0, +2.)  node [other, draw=none] {\textbf{Classification}};
+
+  \draw (0, +0.8)  node [embedding] {Video};
+  \draw (0, -0.8)  node [embedding] {Audio};
+
+  \draw (+2.5, +0.8)  node (fc) [fc] {FC};
+  \draw (+2.5, -0.8)  node (fc) [fc] {FC};
+
+  \draw (+4.75, 0)  node (fc) [other] {concat};
+  \draw (+7.0, 0)  node (moe) [moe] {MoE};
+  \draw (+9.25, 0)  node (gating2) [gating] {Context Gating};
+ 
+  \draw (+1.5, +2) [dashed] -- (+1.5, -1.7);
+  \draw (+6, +2) [dashed] -- (+6, -1.7);
+  
+\end{tikzpicture}

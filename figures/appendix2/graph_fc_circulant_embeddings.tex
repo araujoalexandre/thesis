@@ -1,0 +1,60 @@
+\begin{tikzpicture}[scale=0.56]
+\begin{axis}[
+    title={\large \textbf{DBoF}},
+    legend style={fill=none,draw=none},
+    legend cell align={left},
+    xlabel={Epochs},
+    ylabel={Validation GAP},
+    xmin=0, xmax=10,
+    ymin=0.81, ymax=0.88,
+    xtick={0,1,2,3,4,5,6,7,8,9,10},
+    ytick={0.81, 0.82, 0.83,0.84,0.85,0.86, 0.87, 0.88},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+	]
+  \addplot[color=blue] table [y=gap, x=epoch]{figures/appendix2/fc_circulant_embedding/dbof_compressed.dat};
+  \addplot[color=red] table [y=gap, x=epoch]{figures/appendix2/fc_circulant_embedding/dbof_uncompressed.dat};
+\legend{Compact, Dense}
+\end{axis}
+\end{tikzpicture}
+\begin{tikzpicture}[scale=0.56]
+\begin{axis}[
+    title={\large \textbf{NetVLAD}},
+    legend style={fill=none,draw=none},
+    legend cell align={left},
+    xlabel={Epochs},
+    ylabel={Validation GAP},
+    xmin=0, xmax=10,
+    ymin=0.80, ymax=0.88,
+    xtick={0,1,2,3,4,5,6,7,8,9,10},
+    ytick={0.81, 0.82, 0.83,0.84,0.85,0.86, 0.87, 0.88},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+  ]
+  \addplot[color=blue] table [y=gap, x=epoch]{figures/appendix2/fc_circulant_embedding/netvlad_compressed.dat};
+  \addplot[color=red] table [y=gap, x=epoch]{figures/appendix2/fc_circulant_embedding/netvlad_uncompressed.dat};
+\legend{Compact, Dense}
+\end{axis}
+\end{tikzpicture}
+\begin{tikzpicture}[scale=0.56]
+\begin{axis}[
+    title={\large \textbf{NetFV}},
+    legend style={fill=none,draw=none},
+    legend cell align={left},
+    xlabel={Epochs},
+    ylabel={Validation GAP},
+    xmin=0, xmax=10,
+    ymin=0.810, ymax=0.88,
+    xtick={0,1,2,3,4,5,6,7,8,9,10},
+    ytick={0.81, 0.82, 0.83, 0.84, 0.85,0.86, 0.87, 0.88},
+    legend pos=north west,
+    ymajorgrids=true,
+    grid style=dashed,
+  ]
+  \addplot[color=blue] table [y=gap, x=epoch]{figures/appendix2/fc_circulant_embedding/fisher_compressed.dat};
+  \addplot[color=red] table [y=gap, x=epoch]{figures/appendix2/fc_circulant_embedding/fisher_uncompressed.dat};
+\legend{Compact, Dense}
+\end{axis}
+\end{tikzpicture}

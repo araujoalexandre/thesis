@@ -1,0 +1,39 @@
+\begin{tikzpicture}[scale=0.85]
+  \begin{axis}[
+%     width=0.6\textwidth,
+    height=\axisdefaultheight,
+    title={\textbf{Benchmark of compact models}},
+    legend style={fill=white,draw=none},
+    legend cell align={left},
+    xlabel={Number of weights (Millions)},
+    ylabel={Validation GAP},
+    xmin=0, xmax=200,
+    ymin=0.81, ymax=0.88,
+    xtick={0, 20, 40,60,80,100,120,140,160,180,200},
+    ytick={0.81,0.82,0.83,0.84,0.85,0.86,0.87,0.88},
+    legend pos=outer north east,
+    ymajorgrids=true,
+    grid style=dashed,
+  ]
+    \addplot[red,    only marks] coordinates {( 25, 0.831)};
+    \addplot[orange, only marks] coordinates {( 50, 0.851)};
+    \addplot[brown,  only marks] coordinates {( 51, 0.848)};
+    \addplot[green,  only marks] coordinates {( 59, 0.861)};
+    \addplot[lime,   only marks] coordinates {( 87, 0.858)};
+    \addplot[olive,  only marks] coordinates {(158, 0.861)};
+    \addplot[blue,   only marks] coordinates {(159, 0.863)};
+    \addplot[cyan,   only marks] coordinates {(166, 0.861)};
+    \addplot[teal,   only marks] coordinates {(176, 0.861)};
+    \legend{
+      {NetVLAD 32, Compact FC 256, MoE 2},
+      {NetVLAD 64, Compact FC 512, MoE 4},
+      {NetFV 64, Compact FC 512, MoE 4},
+      {DBoF 8192, Compact FC 512, MoE 4},
+      {NetVLAD 256, Compact FC 1024, MoE 4},
+      {NetVLAD 128, NetFV 64, Compact FC 1024, MoE 4},
+      {NetVLAD 256, NetFV 128, Compact FC 1024, MoE 4},
+      {DBoF 8192,  NetVLAD 128, Compact FC 1024, MoE 4},
+      {DBoF 16384, NetVLAD 256, Compact FC 1024, MoE 4},
+    }
+  \end{axis}
+\end{tikzpicture}

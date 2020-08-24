@@ -1,0 +1,51 @@
+\tikzset{%
+  >={Latex[width=2mm,length=2mm]},
+  % Specifications for style of nodes:
+            base/.style = {rectangle, draw=black, text centered, font=\sffamily},
+             box/.style = {base, rounded corners, text depth=2cm, minimum height=2cm, minimum width=3cm},
+     transparent/.style = {rectangle, draw=black},
+        fc_small/.style = {base, fill=orange!30, minimum width=0.5cm},
+       embedding/.style = {base, fill=blue!30, minimum width=2.5cm},
+          concat/.style = {base, fill=white!30, minimum height=1cm},
+           other/.style = {base, fill=white!30,  minimum width=1.7cm, minimum height=0.7cm},
+              fc/.style = {base, fill=orange!30, minimum width=1.5cm, minimum height=1cm},
+          gating/.style = {base, fill=green!30, minimum width=2cm, text width=2cm, minimum height=1cm},
+             moe/.style = {base, fill=purple!30, minimum width=1.5cm, minimum height=1cm},
+}
+\begin{tikzpicture}[every node/.style={fill=white, font=\sffamily}, align=center]
+
+  % Video
+  \draw (0,   0) node (box1) [box] {Video};
+  \draw (0, +0.4)  node [embedding] {DBoF};
+  \draw (0, -0.2)  node [embedding] {NetVLAD};
+  \draw (0, -0.8)  node [embedding] {NetFV};
+  \draw (+2.25, +0.4)  node (fc) [fc_small] {FC};
+  \draw (+2.25, -0.2)  node (fc) [fc_small] {FC};
+  \draw (+2.25, -0.8)  node (fc) [fc_small] {FC};
+  
+  % Audio
+  \draw (0, -2.6) node (box1) [box] {Audio};
+  \draw (0, +0.4-2.6)  node [embedding] {DBoF};
+  \draw (0, -0.2-2.6)  node [embedding] {NetVLAD};
+  \draw (0, -0.8-2.6)  node [embedding] {NetFV};
+  \draw (+2.25, +0.4-2.6)  node (fc) [fc_small] {FC};
+  \draw (+2.25, -0.2-2.6)  node (fc) [fc_small] {FC};
+  \draw (+2.25, -0.8-2.6)  node (fc) [fc_small] {FC};
+  
+  % merge
+  \draw (+3.75, -0.2-2.6)  node (concat) [other] {average};
+  \draw (+3.75, -0.2-0.0)  node (concat) [other] {average};
+  \draw (+5.85, -0.8-0.7)  node (concat) [other] {concat};
+
+  % Classification
+  \draw (+7.95, -0.8-0.7)  node (moe) [moe] {MoE};
+  \draw (+10.1, -0.8-0.7)  node (gating2) [gating] {Context Gating};
+  
+  \draw (+0, +1.75)  node [other, draw=none] {\textbf{Embedding}};
+  \draw (+4.5, +1.75)  node [other, draw=none] {\textbf{Dim Reduction}};
+  \draw (+9.2, +1.75)  node [other, draw=none] {\textbf{Classification}};
+  
+  \draw (+1.75, +2.0) [dashed] -- (+1.75, -4.0);
+  \draw (+6.95, +2.0) [dashed] -- (+6.95, -4.0);
+    
+\end{tikzpicture}
