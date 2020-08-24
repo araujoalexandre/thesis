@@ -11,159 +11,101 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-\label{section:ch4-introduction}
+\label{section:ch5-introduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-The last few years have witnessed a growing interest in Lipschitz regularization of neural networks, with the aim of improving their generalization~\cite{bartlett2017spectrally}, their robustness to adversarial attacks~\cite{tsuzuku2018lipschitz, farnia2018generalizable}, or their generation abilities (\eg for GANs: \cite{miyato2018spectral,arjovsky2017wasserstein}).
-Unfortunately computing  the exact Lipschitz constant of a neural network is NP-hard~\cite{scaman2018lipschitz} and in practice, existing techniques such as~\cite{scaman2018lipschitz, NIPS2019_9319} or~\cite{latorre2020lipschitz} are difficult to implement for neural networks with more than one or two layers, which hinders their use in deep learning applications.
-
-To overcome this difficulty, most of the work has focused on computing the Lipschitz constant of {\em individual layers} instead.
-The product of the Lipschitz constant of each layer is an upper-bound for the Lipschitz constant of the entire network, and it can be used as a surrogate to perform Lipschitz regularization.
-Since most common activation functions (such as ReLU) have a Lipschitz constant equal to one, the main bottleneck is to compute the Lipschitz constant of the underlying linear application which is equal to its maximal singular value.
-The work in this line of research mainly relies on the celebrated iterative algorithm by~\citet{golub2000eigenvalue} used to approximate the maximum singular value of a linear function.
-Although generic and accurate, this technique is also computationally expensive, which impedes its usage in large training settings. 
-
-In this paper we introduce a new tight and easy to compute  upper bound on the largest singular value of convolution layers.
-We rely on Toeplitz matrix theory and its links with Fourier analysis.
-It is known that the sequence of elements that characterizes a Toeplitz matrix is the Fourier transform of a given trigonometric polynomial.
-We extend this result to doubly-block Toeplitz matrices (\ie block Toeplitz matrices where each block is Toeplitz) and devise a bound on the singular values of these matrices as a function of a multivariate trigonometric polynomial.
-Implementing this bound in the context of convolutional neural networks, requires further to consider a sequence of doubly-block Toeplitz matrices, since the entries are commonly chosen to be tensors of more than one dimension.
-As a main result, we devise an upper bound for a stacked sequence of doubly-block Toeplitz matrices, which fits well the requirements of CNNs, both in terms of applicability and efficiency.
-From our analysis immediately follows an algorithm for bounding the Lipschitz constant of a convolutional layer, and by extension the Lipschitz constant of the whole network. 
-
-Finally, we illustrate our approach on adversarial robustness.
-Recent work has shown that empirical methods such as adversarial training offer poor generalization~\cite{schmidt2018adversarially}, and can be improved by applying Lipschitz regularization~\cite{farnia2018generalizable}.
-To illustrate the benefit of our new method, we train a large, state-of-the-art Wide ResNet architecture with Lipschitz regularization and show that it offers a significant improvement over adversarial training alone, and over other methods for Lipschitz regularization.
-To sum up, we make the following  contributions:
-\begin{enumerate}
-    \item We devise an upper bound on the singular values of the operator matrix of convolutional layers by leveraging Toeplitz matrix theory and its links with Fourier analysis. 
-    \item We propose an efficient algorithm to compute this upper bound which enables its use in the context of convolutional neural networks.
-    \item We use our method to regularize the Lipschitz constant of neural networks in the area of adversarial robustness and show that it offers a significant improvement over adversarial training alone.
-\end{enumerate}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Related Work}
-\label{section:ch4-related_work}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-A popular technique for approximating the maximal singular value of a matrix is the power method~\cite{golub2000eigenvalue}, an iterative algorithm which yields a good approximation of the maximum singular value when the algorithm is able to run for a sufficient number of iterations. 
-\citet{yoshida2017spectral, miyato2018spectral} have used the power method to normalize the spectral norm of each layer of a neural network, and showed that the resulting models offered improved generalization performance and generated better examples when they were used in the context of GANs. 
-\citet{farnia2018generalizable} built upon the work of~\citet{miyato2018spectral} and proposed a power method specific for convolutional layers that leverages the deconvolution operation and avoid the computation of the gradient.
-They used it in combination with adversarial training. 
-In the same vein, \citet{gouk2018regularisation} demonstrated that regularized neural networks using the power method also offered improvements over their non-regularized counterparts. 
-Furthermore, \citet{tsuzuku2018lipschitz} have shown that a neural network can be more robust to some adversarial attacks, if the prediction margin of the network (\ie the difference between the first and the second maximum logit) is higher than a minimum threshold that depends on the global Lipschitz constant of the network.
-Building on this observation, they use the power method to compute an upper bound on the global Lipschitz constant, and maximize the prediction margin during training.
-Finally, \citet{scaman2018lipschitz} have used automatic differentiation combined with the power method to compute a tighter bound on the global Lipschitz constant of neural networks.
-Despite a number of interesting results, using the power method is expensive and results in prohibitive training times. 
-
-Other approaches to regularize the Lipschitz constant of neural networks have been proposed by~\citet{sedghi2018iclr} and~\citet{singla2019bounding}.
-The method of~\citet{sedghi2018iclr} exploits the properties of circulant matrices to approximate the maximal singular value of a convolutional layer.
-Although interesting, this method results in a loose approximation of the maximal singular value of a convolutional layer.
-Furthermore, the complexity of their algorithm is dependent on the convolution input which can be high for large datasets such as ImageNet.
-More recently, \citet{singla2019bounding} have successfully bounded the operator norm of the Jacobian matrix of a convolution layer by the Frobenius norm of the reshaped kernel.
-This technique has the advantage to be very fast to compute and to be independent of the input size but it also results in a loose approximation. 
-
-To build robust neural networks, \citet{cisse2017parseval} and ~\citet{NIPS2019_9673} have proposed to constrain the Lipschitz constant of neural networks by using orthogonal convolutions.
-\citet{cisse2017parseval} use the concept of \emph{parseval tight frames}, to constrain their networks.
-\citet{NIPS2019_9673} built upon the work of~\citet{cisse2017parseval} to propose an efficient construction method of orthogonal convolutions.  
-
-Finally, recent work~\citet{NIPS2019_9319,latorre2020lipschitz} has proposed a tight bound on the Lipschitz constant of the full network with the use of semi-definite programming.
-These works are theoretically interesting but lack scalability (\ie the bound can only be computed on small networks).
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{A Primer on Toeplitz and block Toeplitz matrices}
 \label{section:primer_toeplitz_matrix}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Convolution as Matrix Multiplication}\label{section:conv_matrix_multiplication}
-
-A discrete convolution between a signal $\mathbf{x}$ and a kernel $\mathbf{k}$ can be expressed as a  product between the vectorization of $\mathbf{x}$ and a doubly-block Toeplitz matrix $\textbf{M}$, whose coefficients have been chosen to match the convolution $\mathbf{x} * \mathbf{k}$.
-For a 2-dimensional signal $\mathbf{x} \in \mathbb{R}^{n \times n}$ and a kernel $\mathbf{k} \in \mathbb{R}^{m \times m}$ with $m$ odd, the convolution operation can be written as follows:
-\begin{equation} \label{equation:equation_conv_as_matrix}
-    \reshape(\mathbf{y}) = \reshape(\pad(\mathbf{x}) * \mathbf{k}) = \Mmat \reshape(\mathbf{x})
-\end{equation}
-where $\Mmat$ is a $n^2$-by-$n^2$  doubly-block Toeplitz matrix, \ie a block Toeplitz matrix where the blocks are also Toeplitz (Note that this is not a doubly-block circulant matrix because of the padding.), $\mathbf{y}$ is the output of size $q \times q$ with $q = n - m + 2p + 1$, (see \eg \cite{dumoulin2016guide}).
-The $\reshape: \mathbb{R}^{n \times n} \rightarrow \mathbb{R}^{n^2}$ operator is defined as follows: $\reshape(\mathbf{x})_q = \mathbf{x}_{\lfloor q/n \rfloor,\ q\mod n}$.
-The $\pad: \mathbb{R}^{n \times n} \rightarrow \mathbb{R}^{(n+2p) \times (n+2p)}$ operator is a zero-padding operation which takes a signal $\mathbf{x}$ of shape $\mathbb{R}^{n \times n}$ and adds $0$ on the edges so as to obtain a new signal $\mathbf{y}$ of shape $\mathbb{R}^{(n+2p) \times (n+2p)}$.
-In order to have the same shape between the convoluted signal and the signal, we set $ p = \lfloor m/2 \rfloor$ \footnote{We take a square signal and an odd size square kernel to simplify the notation but the same applies for any input and kernel size.
-Also, we take a specific padding in order to have the same size between the input and output signal.
-But everything in the paper can be generalized to any paddings.}.
-
-We now present an example of the convolution operation with doubly-block Toeplitz matrix.
-Let us define a kernel $\mathbf{k} \in \mathbb{R}^{3\times3}$ as follows:
-\begin{equation}
-    \mathbf{k} = \begin{pmatrix}
-        k_{0} & k_{1} & k_{2} \\
-        k_{3} & k_{4} & k_{5} \\
-        k_{6} & k_{7} & k_{8} 
-    \end{pmatrix}
-\end{equation}
-If we set the padding to 1, then, the matrix $\Mmat$ is a tridiagonal doubly-block Toeplitz matrix of size $n \times n$ and has the following form:
-\begin{equation}
-    \Mmat = \begin{pmatrix}
-    \Tmat_0 & \Tmat_{1} &  &  & 0  \\
-    \Tmat_{2} & \Tmat_0 & \Tmat_{1} &  &  \\
-     & \Tmat_{2} & \scalebox{.70}{$\ddots$} & \scalebox{.70}{$\ddots$} &   \\
-     &  & \scalebox{.70}{$\ddots$} & \Tmat_0 & \Tmat_{1}  \\
-    0 &  &  & \Tmat_{2} & \Tmat_0  \\
-    \end{pmatrix}
-    \label{equation:operator_matrix}
-\end{equation}
-
-where $\Tmat_j$ are banded Toeplitz matrices and the values of $\mathbf{k}$ are distributed in the Toeplitz blocks as follow:
-\begin{align}
-\Tmat_0 = \begin{psmallmatrix}
-    k_{4} & k_{3} &  &  &  0 \\
-    k_{5} & k_{4} & k_{3} &  &   \\
-     & k_{5} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$}  \\
-     &  &  \scalebox{.40}{$\ddots$} & k_{4} & k_{3}  \\
-    0 &  &  & k_{5} & k_{4}  \\
-    \end{psmallmatrix} &&
-\Tmat_{1} = \begin{psmallmatrix}
-    k_{7} & k_{6} &  &  &  0 \\
-    k_{8} & k_{7} & k_{6} &  &   \\
-     & k_{8} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$} &    \\
-     &  &  \scalebox{.40}{$\ddots$} & k_{7} & k_{6}  \\
-    0 &  &  & k_{8} & k_{7}  \\
-    \end{psmallmatrix} &&
-\Tmat_{2} = \begin{psmallmatrix}
-    k_{1} & k_{0} &  &  &  0 \\
-    k_{2} & k_{1} & k_{0} &  &   \\
-     & k_{2} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$} &    \\
-     &  &  \scalebox{.40}{$\ddots$} & k_{1} & k_{0}  \\
-    0 &  &  & k_{2} & k_{1}  \\
-    \end{psmallmatrix} 
-\end{align}
-
-
-\paragraph{Remark 1: } Note that the size of the operator matrix $\Mmat$ of a convolution operation depends on the size of the signal. If a signal $\mathbf{x}$ has size $n \times n$, the vectorized signal will be of size $n^2$ and the operator matrix will be of size $n^2 \times n^2$ which can be very large. Indeed, in deep learning practice the size of the images used for training can range from 32 (CIFAR-10) to hundred for high definition images (ImageNet). Therefore, with classical methods, computing the singular values of this operator matrix can be very expensive.
-
-\paragraph{Remark 2: } In the particular case of zero padding convolution operation, the operator matrix is a Toeplitz block with circulant block (i.e. each block of the Toeplitz block is a circulant matrix) which is a particular case of doubly-block Toeplitz matrices. 
+% \subsection{Convolution as Matrix Multiplication}\label{section:conv_matrix_multiplication}
+%
+% A discrete convolution between a signal $\mathbf{x}$ and a kernel $\mathbf{k}$ can be expressed as a  product between the vectorization of $\mathbf{x}$ and a doubly-block Toeplitz matrix $\textbf{M}$, whose coefficients have been chosen to match the convolution $\mathbf{x} * \mathbf{k}$.
+% For a 2-dimensional signal $\mathbf{x} \in \mathbb{R}^{n \times n}$ and a kernel $\mathbf{k} \in \mathbb{R}^{m \times m}$ with $m$ odd, the convolution operation can be written as follows:
+% \begin{equation} \label{equation:equation_conv_as_matrix}
+%     \reshape(\mathbf{y}) = \reshape(\pad(\mathbf{x}) * \mathbf{k}) = \Mmat \reshape(\mathbf{x})
+% \end{equation}
+% where $\Mmat$ is a $n^2$-by-$n^2$  doubly-block Toeplitz matrix, \ie a block Toeplitz matrix where the blocks are also Toeplitz (Note that this is not a doubly-block circulant matrix because of the padding.), $\mathbf{y}$ is the output of size $q \times q$ with $q = n - m + 2p + 1$, (see \eg \cite{dumoulin2016guide}).
+% The $\reshape: \mathbb{R}^{n \times n} \rightarrow \mathbb{R}^{n^2}$ operator is defined as follows: $\reshape(\mathbf{x})_q = \mathbf{x}_{\lfloor q/n \rfloor,\ q\mod n}$.
+% The $\pad: \mathbb{R}^{n \times n} \rightarrow \mathbb{R}^{(n+2p) \times (n+2p)}$ operator is a zero-padding operation which takes a signal $\mathbf{x}$ of shape $\mathbb{R}^{n \times n}$ and adds $0$ on the edges so as to obtain a new signal $\mathbf{y}$ of shape $\mathbb{R}^{(n+2p) \times (n+2p)}$.
+% In order to have the same shape between the convoluted signal and the signal, we set $ p = \lfloor m/2 \rfloor$ \footnote{We take a square signal and an odd size square kernel to simplify the notation but the same applies for any input and kernel size.
+% Also, we take a specific padding in order to have the same size between the input and output signal.
+% But everything in the paper can be generalized to any paddings.}.
+%
+% We now present an example of the convolution operation with doubly-block Toeplitz matrix.
+% Let us define a kernel $\mathbf{k} \in \mathbb{R}^{3\times3}$ as follows:
+% \begin{equation}
+%     \mathbf{k} = \begin{pmatrix}
+%         k_{0} & k_{1} & k_{2} \\
+%         k_{3} & k_{4} & k_{5} \\
+%         k_{6} & k_{7} & k_{8} 
+%     \end{pmatrix}
+% \end{equation}
+% If we set the padding to 1, then, the matrix $\Mmat$ is a tridiagonal doubly-block Toeplitz matrix of size $n \times n$ and has the following form:
+% \begin{equation}
+%     \Mmat = \begin{pmatrix}
+%     \Tmat_0 & \Tmat_{1} &  &  & 0  \\
+%     \Tmat_{2} & \Tmat_0 & \Tmat_{1} &  &  \\
+%      & \Tmat_{2} & \scalebox{.70}{$\ddots$} & \scalebox{.70}{$\ddots$} &   \\
+%      &  & \scalebox{.70}{$\ddots$} & \Tmat_0 & \Tmat_{1}  \\
+%     0 &  &  & \Tmat_{2} & \Tmat_0  \\
+%     \end{pmatrix}
+%     \label{equation:operator_matrix}
+% \end{equation}
+%
+% where $\Tmat_j$ are banded Toeplitz matrices and the values of $\mathbf{k}$ are distributed in the Toeplitz blocks as follow:
+% \begin{align}
+% \Tmat_0 = \begin{psmallmatrix}
+%     k_{4} & k_{3} &  &  &  0 \\
+%     k_{5} & k_{4} & k_{3} &  &   \\
+%      & k_{5} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$}  \\
+%      &  &  \scalebox{.40}{$\ddots$} & k_{4} & k_{3}  \\
+%     0 &  &  & k_{5} & k_{4}  \\
+%     \end{psmallmatrix} &&
+% \Tmat_{1} = \begin{psmallmatrix}
+%     k_{7} & k_{6} &  &  &  0 \\
+%     k_{8} & k_{7} & k_{6} &  &   \\
+%      & k_{8} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$} &    \\
+%      &  &  \scalebox{.40}{$\ddots$} & k_{7} & k_{6}  \\
+%     0 &  &  & k_{8} & k_{7}  \\
+%     \end{psmallmatrix} &&
+% \Tmat_{2} = \begin{psmallmatrix}
+%     k_{1} & k_{0} &  &  &  0 \\
+%     k_{2} & k_{1} & k_{0} &  &   \\
+%      & k_{2} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$} &    \\
+%      &  &  \scalebox{.40}{$\ddots$} & k_{1} & k_{0}  \\
+%     0 &  &  & k_{2} & k_{1}  \\
+%     \end{psmallmatrix} 
+% \end{align}
+%
+%
+% \paragraph{Remark 1: } Note that the size of the operator matrix $\Mmat$ of a convolution operation depends on the size of the signal. If a signal $\mathbf{x}$ has size $n \times n$, the vectorized signal will be of size $n^2$ and the operator matrix will be of size $n^2 \times n^2$ which can be very large. Indeed, in deep learning practice the size of the images used for training can range from 32 (CIFAR-10) to hundred for high definition images (ImageNet). Therefore, with classical methods, computing the singular values of this operator matrix can be very expensive.
+%
+% \paragraph{Remark 2: } In the particular case of zero padding convolution operation, the operator matrix is a Toeplitz block with circulant block (i.e. each block of the Toeplitz block is a circulant matrix) which is a particular case of doubly-block Toeplitz matrices. 
 
 
 \subsection{Generating a Toeplitz matrix and block Toeplitz matrix from a trigonometric polynomial}
 An $n\times n$ Toeplitz matrix $\mathbf A$ is fully determined by a two-sided sequence of scalars: $\{a_\seqidx\}_{\seqidx \in \seqsetN}$, whereas an $nm\times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat_\seqidx\}_{\seqidx \in \seqsetN}$ and where each block $\Bmat_\seqidx$ is an $m \times m$ matrix.  
 
-% \begin{equation}
-%     \Amat \triangleq  \begin{psmallmatrix}
-%       a_0 & a_{1}   & a_{2} & \cdots & \cdots & a_{n-1}  \\
-%       a_{-1} & a_0 & a_{1} & \ddots & & \vdots \\
-%       a_{-2} & a_{-1} & \ddots & \ddots & \ddots & \vdots \\ 
-%      \vdots & \ddots & \ddots & \ddots & a_{1} & a_{2}\\
-%      \vdots & & \ddots & a_{-1} & a_{0} & a_{1} \\
-%     a_{-n+1} & \cdots & \cdots & a_{-2} & a_{-1} & a_0
-%     \end{psmallmatrix} \quad \quad
-%     \Bmat \triangleq  \begin{psmallmatrix}
-%       \Bmat_0 & \Bmat_{1}   & \Bmat_{2} & \cdots & \cdots & \Bmat_{n-1}  \\
-%       \Bmat_{-1} & \Bmat_0 & \Bmat_{1} & \ddots & & \vdots \\
-%       \Bmat_{-2} & \Bmat_{-1} & \ddots & \ddots & \ddots & \vdots \\ 
-%      \vdots & \ddots & \ddots & \ddots & \Bmat_{1} & \Bmat_{2}\\
-%      \vdots & & \ddots & \Bmat_{-1} & \Bmat_{0} & \Bmat_{1} \\
-%     \Bmat_{-n+1} & \cdots & \cdots & \Bmat_{-2} & \Bmat_{-1} & \Bmat_0
-%     \end{psmallmatrix}
-% \end{equation}
+\begin{equation}
+    \Amat \triangleq  \begin{psmallmatrix}
+      a_0 & a_{1}   & a_{2} & \cdots & \cdots & a_{n-1}  \\
+      a_{-1} & a_0 & a_{1} & \ddots & & \vdots \\
+      a_{-2} & a_{-1} & \ddots & \ddots & \ddots & \vdots \\ 
+     \vdots & \ddots & \ddots & \ddots & a_{1} & a_{2}\\
+     \vdots & & \ddots & a_{-1} & a_{0} & a_{1} \\
+    a_{-n+1} & \cdots & \cdots & a_{-2} & a_{-1} & a_0
+    \end{psmallmatrix} \quad \quad
+    \Bmat \triangleq  \begin{psmallmatrix}
+      \Bmat_0 & \Bmat_{1}   & \Bmat_{2} & \cdots & \cdots & \Bmat_{n-1}  \\
+      \Bmat_{-1} & \Bmat_0 & \Bmat_{1} & \ddots & & \vdots \\
+      \Bmat_{-2} & \Bmat_{-1} & \ddots & \ddots & \ddots & \vdots \\ 
+     \vdots & \ddots & \ddots & \ddots & \Bmat_{1} & \Bmat_{2}\\
+     \vdots & & \ddots & \Bmat_{-1} & \Bmat_{0} & \Bmat_{1} \\
+    \Bmat_{-n+1} & \cdots & \cdots & \Bmat_{-2} & \Bmat_{-1} & \Bmat_0
+    \end{psmallmatrix}
+\end{equation}
 
 The trigonometric polynomial that \emph{generates} the Toeplitz matrix $\Amat$ can be defined as follows:
 \begin{equation}
@@ -422,105 +364,6 @@ We can decompose the Doubly-Block Toeplitz matrix $\Dmat(fg)$ as follows:
 where $\Qmat$ is the anti-identity matrix of size $n^2 \times n^2$.
 \end{lemma}
 
-\begin{proof}[\proofreflem{theorem:widom_idenity}]
-Let $(i, j)$ be matrix indexes such $(\ \cdot\ )_{i, j}$ correspond to the value at the $i^\textrm{th}$ row and $j^\textrm{th}$ column, let us define the following notation:
-\begin{align*}
-    i_1 &= \left\lfloor i/n \right\rfloor \quad \quad &&j_1 = \left\lfloor j/n \right\rfloor \\
-    i_2 &= i \mod n \quad \quad &&j_2 = j \mod n
-\end{align*}
-
-Let us define $\hat{f}$ as the 2 dimensional Fourier transform of the function $f$. We refer to $\hat{f}_{h_1, h_2}$ as the Fourier coefficient indexed by $(h_1, h_2)$ where $h_1$ correspond to the index of the block of the doubly-block Toeplitz and $h_2$ correspond to the index of the value inside the block. More precisely, we have 
-\begin{align}
-    \leftmat \Dmat(f) \rightmat_{i, j} &= \hat{f}_{(\left\lfloor j/n \right\rfloor - \left\lfloor i/n \right\rfloor), ((j \mod n) - (i \mod n)))} \label{equation:expression_fourier} \\
-    \leftmat \Hmat^{\alpha_0}(f) \rightmat_{i, j} &= \hat{f}_{(\left\lfloor j/n \right\rfloor + \left\lfloor i/n \right\rfloor + 1), ((j \mod n) - (i \mod n)))} \\
-    \leftmat \Hmat^{\alpha_1}(f) \rightmat_{i, j} &= \hat{f}_{(\left\lfloor j/n \right\rfloor - \left\lfloor i/n \right\rfloor), ((j \mod n) + (i \mod n) + 1))} \\
-    \leftmat \Hmat^{\alpha_2}(f) \rightmat_{i, j} &= \hat{f}_{(\left\lfloor j/n \right\rfloor - \left\lfloor i/n \right\rfloor), ((j \mod n) - (i \mod n)))} \\
-    \leftmat \Hmat^{\alpha_3}(f) \rightmat_{i, j} &= \hat{f}_{(\left\lfloor j/n \right\rfloor + \left\lfloor i/n \right\rfloor + n), ((j \mod n) + (i \mod n) + 1))}
-\end{align}
-
-We simplify the notation of the expressions above as follow:
-\begin{align}
-    \leftmat \Dmat(f) \rightmat_{i, j} &= \hat{f}_{(j_1 - i_1), (j_2 - i_2 )} \\
-    \leftmat \Hmat^{\alpha_0}(f) \rightmat_{i, j} &= \hat{f}_{(j_1 + i_1 + 1), (j_2 - i_2 )} \\
-    \leftmat \Hmat^{\alpha_1}(f) \rightmat_{i, j} &= \hat{f}_{(j_1 - i_1), (j_2 + i_2 + 1)} \\
-    \leftmat \Hmat^{\alpha_2}(f) \rightmat_{i, j} &= \hat{f}_{(j_1 - i_1), (j_2 - i_2 )} \\
-    \leftmat \Hmat^{\alpha_3}(f) \rightmat_{i, j} &= \hat{f}_{(j_1 + i_1 + n), (j_2 + i_2 + 1)}
-\end{align}
-
-The convolution theorem states that the Fourier transform of a product of two functions is the convolution of their Fourier coefficients. Therefore, one can observe that the entry $(i, j)$ of the matrix $\Dmat(f g)$ can be express as follows:
-
-\begin{equation*}
-    \leftmat \Dmat(f g) \rightmat_{i, j} = \sum_{k_1 = -2n + 1}^{2n-1} \sum_{k_2 = -2n + 1}^{2n-1} \hat{f}_{(k_1-i_1),(k_2-i_2)} \hat{g}_{(j_1-k_1),(j_2-k_2)}. 
-\end{equation*}
-
-
-By splitting the double sums and simplifying, we obtain:
-\begin{align} \label{equation:split_double_sum}
-\left( \Dmat(f g) \right)_{i, j} &= 
-\sum_{k_1, k_2 \in P} \left(
-\hat{f}_{(k_1-i_1),(k_2-i_2)} \hat{g}_{(j_1-k_1),(j_2-k_2)} +
-\hat{f}_{(-k_1-i_1-1),(k_2-i_2)} \hat{g}_{(j_1+k_1+1),(j_2-k_2)} \right. \notag \\ &\quad+ \left.
-\hat{f}_{(k_1-i_1),(-k_2-i_2-1)} \hat{g}_{(j_1-k_1),(j_2+k_2+1)} +
-\hat{f}_{(-k_1-i_1-1),(-k_2-i_2-1)} \hat{g}_{(j_1+k_1+1),(j_2+k_2+1)} \right. \notag \\ &\quad+ \left.
-\hat{f}_{(k_1-i_1+n),(-k_2-i_2-1)} \hat{g}_{(j_1-k_1-n),(j_2+k_2+1)} +
-\hat{f}_{(k_1-i_1+n),(k_2-i_2)} \hat{g}_{(j_1-k_1-n),(j_2-k_2)} \right. \notag \\ &\quad+ \left.
-\hat{f}_{(k_1-i_1),(k_2-i_2+n)} \hat{g}_{(j_1-k_1),(j_2-k_2-n)} +
-\hat{f}_{(k_1-i_1+n),(k_2-i_2+n)} \hat{g}_{(j_1-k_1-n),(j_2-k_2-n)} \right. \notag \\ &\quad+ \left.
-\hat{f}_{(-k_1-i_1-1),(k_2-i_2+n)} \hat{g}_{(j_1+k_1+1),(j_2-k_2-n)}  \right)
-\end{align}
-where $P = \{ (k_1, k_2)\ |\ k_1, k_2 \in \mathbb{N} \cup 0, 0 \leq k_1 \leq n-1,  0 \leq k_2 \leq n-1 \}$.
-
-
-Furthermore, we can observe the following:
-\begin{equation*}
-    \leftmat \Dmat(f) \Dmat(g) \rightmat_{i, j} = \sum_{k = 0}^{n^2} \leftmat\Dmat(f)\rightmat_{i, k} \leftmat\Dmat(g)\rightmat_{k, j}  = \sum_{k_1, k_2 \in P} \hat{f}_{(k_1-i_1),(k_2-i_2)} \hat{g}_{(j_1-k_1),(j_2-k_2)}
-\end{equation*}
-
-{\allowdisplaybreaks
-\begin{flalign*}
-    % # H1_a_.T @ H1_b
-    \leftmat \Hmat^{\alpha_1 \top}(f^*) \Hmat^{\alpha_1}(g) \rightmat_{i, j} &=  \sum_{k_1, k_2 \in P} \hat{f}^*_{(k_1+i_1+1),(i_2-k_2)} \hat{g}_{(j_1+k_1+1),(j_2-k_2)} \\
-    &=  \sum_{k_1, k_2 \in P} \hat{f}_{(-k_1-i_1-1),(k_2-i_2)} \hat{g}_{(j_1+k_1+1),(j_2-k_2)} \\
-    % # H2_a_.T @ H2_b
-    \leftmat \Hmat^{\alpha_2 \top}(f^*) \Hmat^{\alpha_2}(g) \rightmat_{i, j} &=  \sum_{k_1, k_2 \in P} \hat{f}^*_{(i_1-k_1),(k_2+i_2+1)} \hat{g}_{(j_1-k_1),(j_2+k_2+1)} \\
-    &=  \sum_{k_1, k_2 \in P} \hat{f}_{(k_1-i_1),(-k_2-i_2-1)} \hat{g}_{(j_1-k_1),(j_2+k_2+1)} \\
-    % # H3_a_.T @ H3_b
-    \leftmat \Hmat^{\alpha_3 \top}(f^*) \Hmat^{\alpha_3}(g) \rightmat_{i, j} &=  \sum_{k_1, k_2 \in P} \hat{f}^*_{(k_1+i_1+1),(k_2+i_2+1)} \hat{g}_{(j_1+k_1+1),(k_2+j_2+1)} \\
-    &= \sum_{k_1, k_2 \in P} \hat{f}_{(-k_1-i_1-1),(-k_2-i_2-1)} \hat{g}_{(j_1+k_1+1),(k_2+j_2+1)} \\
-    % # H4_a_.T @ H4_b
-    \leftmat \Hmat^{\alpha_4 \top}(f^*) \Hmat^{\alpha_4}(g) \rightmat_{i, j} &= \sum_{k_1, k_2 \in P} \hat{f}^*_{(i_1-k_1-n),(k_2+i_2+1)} \hat{g}_{(j_1-k_1-n),(j_2+k_2+1)} \\
-    &=  \sum_{k_1, k_2 \in P} \hat{f}_{(k_1-i_1+n),(-k_2-i_2-1)} \hat{g}_{(j_1-k_1-n),(j_2+k_2+1)} \\
-\end{flalign*}
-}
-Let us define the matrix $\Qmat$ of size $n^2 \times n^2$ as the anti-identity matrix. We have the following:
-
-{\allowdisplaybreaks
-\begin{flalign*}
-    % # Y @ H1_a.T @ H1_b_ @ Y
-    \leftmat \Hmat^{\alpha_1 \top}(f) \Hmat^{\alpha_1}(g^*) \rightmat_{i, j} &= \sum_{k_1, k_2 \in P} \hat{f}_{(k_1+i_1+1),(i_2-k_2)} \hat{g}^*_{(j_1+k_1+1),(j_2-k_2)} \\
-    &= \sum_{k_1, k_2 \in P} \hat{f}_{(k_1+i_1+1),(i_2-k_2)} \hat{g}_{(-j_1-k_1-1),(k_2-j_2)} \\
-    \Leftrightarrow \leftmat \Qmat \Hmat^{\alpha_1 \top}(f) \Hmat^{\alpha_1}(g^*) \Qmat \rightmat_{i, j} &= \sum_{k_1, k_2 \in P} \hat{f}_{(k_1-i_1+n),(k_2-i_2)} \hat{g}_{(j_1-k_1-n),(j_2-k_2)} \\
-    % # Y @ H2_a.T @ H2_b_ @ Y
-    \leftmat \Hmat^{\alpha_2 \top}(f) \Hmat^{\alpha_2}(g^*) \rightmat_{i, j} &=  \sum_{k_1, k_2 \in P} \hat{f}_{(i_1-k_1),(k_2+i_2+1)} \hat{g}^*_{(j_1-k_1),(j_2+k_2+1)} \\
-    &=  \sum_{k_1, k_2 \in P} \hat{f}_{(i_1-k_1),(k_2+i_2+1)} \hat{g}_{(k_1-j_1),(-j_2-k_2-1)} \\
-    \Leftrightarrow \leftmat \Qmat \Hmat^{\alpha_2 \top}(f) \Hmat^{\alpha_2}(g^*) \Qmat \rightmat_{i, j} &=  \sum_{k_1, k_2 \in P} \hat{f}_{(k_1-i_1),(k_2-i_2+n)} \hat{g}_{(j_1-k_1),(j_2-k_2-n)} \\
-    % # Y @ H3_a.T @ H3_b_ @ Y
-    \leftmat \Hmat^{\alpha_3 \top}(f) \Hmat^{\alpha_3}(g^*) \rightmat_{i, j} &=  \sum_{k_1, k_2 \in P}  \hat{f}_{(k_1+i_1+1),(k_2+i_2+1)} \hat{g}^*_{(j_1+k_1+1),(k_2+j_2+1)} \\
-    &=  \sum_{k_1, k_2 \in P} \hat{f}_{(k_1+i_1+1),(k_2+i_2+1)} \hat{g}_{(-j_1-k_1-1),(-k_2-j_2-1)} \\
-    \Leftrightarrow \leftmat \Qmat \Hmat^{\alpha_3 \top}(f) \Hmat^{\alpha_3}(g^*) \Qmat \rightmat_{i, j} &=  \sum_{k_1, k_2 \in P} \hat{f}_{(k_1-i_1+n),(k_2-i_2+n)} \hat{g}_{(j_1-k_1-n),(-k_2+j_2-n)} \\
-    % # Y @ H4_a.T @ H4_b_ @ Y
-    \leftmat \Hmat^{\alpha_4 \top}(f) \Hmat^{\alpha_4}(g^*) \rightmat_{i, j} &=  \sum_{k_1, k_2 \in P}  \hat{f}_{(-k_1+i_1-n),(k_2+i_2+1)} \hat{g}^*_{(j_1-k_1-n),(j_2+k_2+1)} \\
-    &= \sum_{k_1, k_2 \in P} \hat{f}_{(-k_1+i_1-n),(k_2+i_2+1)} \hat{g}_{(-j_1+k_1+n),(-j_2-k_2-1)} \\
-    \Leftrightarrow \leftmat \Qmat \Hmat^{\alpha_4 \top}(f) \Hmat^{\alpha_4}(g^*) \Qmat \rightmat_{i, j} &= \sum_{k_1, k_2 \in P} \hat{f}_{(-k_1-i_1-1),(k_2-i_2+n)} \hat{g}_{(j_1+k_1+1),(j_2-k_2-n)}
-\end{flalign*}
-}
-
-Now, we can observe from Equation~\ref{equation:split_double_sum} that:
-\begin{equation}
-    \Dmat(fg) = \Dmat(f)\Dmat(g) + \sum_{p=0}^3 \Hmat^{\alpha_p \top}(f^*) \Hmat^{\alpha_p}(g) + \Qmat \left( \sum_{p=0}^3 \Hmat^{\alpha_p \top}(f) \Hmat^{\alpha_p}(g^*) \right) \Qmat.
-\end{equation}
-which concludes the proof. 
-\end{proof}
 
 Now we can prove Theorem~\ref{theorem:bound_sv_stacked_dbt} which bounds the maximal singular value of vertically stacked doubly-block Toeplitz matrices with their generating functions. 
 
@@ -783,7 +626,7 @@ Therefore $\lipbound$ gives an almost exact value of the maximal singular value 
 
 
 In this section we compare our PolyGrid algorithm with the values obtained using alternative approaches.
-We consider the 3 alternative techniques by~\citet{sedghi2018iclr,singla2019bounding,farnia2018generalizable} which have been described in Section~\ref{section:ch4-related_work}. 
+We consider the 3 alternative techniques by~\citet{sedghi2018iclr,singla2019bounding,farnia2018generalizable} which have been described in Section~\ref{section:ch5-related_work}. 
 
 To compare the different approaches, we extracted 20 kernels from a trained model.
 For each kernel we construct the corresponding doubly-block Toeplitz matrix and compute its largest singular value.
@@ -831,7 +674,7 @@ One promising application of Lipschitz regularization is in the area of adversar
 Empirical techniques to improve robustness against adversarial examples such as Adversarial Training only impact the training data,  and often show poor generalization capabilities~\cite{schmidt2018adversarially}. 
 \citet{farnia2018generalizable} have shown that the adversarial generalization error depends on the Lipschitz constant of the network, which suggests that the adversarial test error can be improved by applying Lipschitz regularization in addition to adversarial training. 
 
-In this section, we illustrate the usefulness of LipBound by training a state-of-the-art Wide ResNet architecture~\cite{zagoruyko2016wide} with Lipschitz regularization and adversarial training.
+In this section, we illustrate the usefulness of LipBound by training a state-of-the-art Wide ResNet architecture~\cite{ZagoruykoK16} with Lipschitz regularization and adversarial training.
 Our regularization scheme is inspired by the one used by~\citet{yoshida2017spectral} but instead of using the power method, we use our \textbf{PloyGrid} algorithm presented in Section~\ref{subsection:computing_max_modulus_trig_polynomial} which efficiently computes an upper bound on the maximal singular value of convolutional layers. 
 
 We introduce the \textbf{AT+LipReg} loss to combine Adversarial Training and our Lipschitz regularization scheme in which layers with a large Lipschitz constant are penalized.
@@ -919,7 +762,7 @@ It also demonstrates that Lipschitz regularization and Adversarial Training (or 
 Hence they offer an increased robustness to adversarial attacks as demonstrated above.
 
 \paragraph{Experimental Settings}
-We use the Wide ResNet architecture introduced by~\citet{zagoruyko2016wide} to train our classifiers (for details of the hyper-parameters used, see the supplementary material).
+We use the Wide ResNet architecture introduced by~\citet{ZagoruykoK16} to train our classifiers (for details of the hyper-parameters used, see the supplementary material).
 For Adversarial Training ~\cite{madry2018towards}, we use Projected Gradient Descent with an $\epsilon = 8/255 (\approx 0.031)$, a step size of $\textstyle \frac{\epsilon}{5} (\approx 0.0062)$ and 10 iterations, we use a random initialization but run the attack only once.
 To evaluate the robustness of our classifiers, we rigorously followed the experimental protocol proposed by~\citet{tramer2020adaptive} and~\citet{carlini2019evaluating}.
 More precisely, as an $\linf$ attack, we use PGD with the same parameters ($\epsilon = 8/255$, a step size of $\textstyle \frac{\epsilon}{5}$) but we increase the number of iterations up to 200 with 10 restarts.
@@ -947,7 +790,7 @@ We choose $0.6$ and $0.8$ as bounds for the $\ltwo$ perturbation. Note that the 
 
 
 \paragraph{Hyper-parameters used for training classifiers on CIFAR10 \& CIFAR100 dataset}
-For all our experiments, we use the Wide Resnet architecture \cite{zagoruyko2016wide} with 28 layers and a width factor of 10. We train our networks for 200 epochs with a batch size of $200$. We use Stochastic Gradient Descent with a momentum of $0.9$, an initial learning rate of $0.1$ with exponential decay of 0.1 (MultiStepLR gamma = 0.1) after the epochs $60$, $120$ and $160$. 
+For all our experiments, we use the Wide Resnet architecture \cite{ZagoruykoK16} with 28 layers and a width factor of 10. We train our networks for 200 epochs with a batch size of $200$. We use Stochastic Gradient Descent with a momentum of $0.9$, an initial learning rate of $0.1$ with exponential decay of 0.1 (MultiStepLR gamma = 0.1) after the epochs $60$, $120$ and $160$. 
 
 \subsection{Results on ImageNet dataset \& Hyper-parameters}
 
@@ -971,14 +814,18 @@ For all our experiments, we use the Wide Resnet architecture \cite{zagoruyko2016
 
 \paragraph{Hyper-parameters used for training and attacking classifiers on ImageNet dataset}
 
-For all our experiments, we use the Resnet-101 architecture \cite{he2016deep}. We have used Stochastic Gradient Descent with a momentum of $0.9$, a weight decay of $0.0001$, label smoothing of $0.1$, an initial learning rate of $0.1$ with exponential decay of $0.1$ (MultiStepLR gamma = $0.1$) after the epochs $30$ and $60$. We have used Exponential Moving Average over the weights with a decay of $0.999$. We have trained our networks for 80 epochs with a batch size of $4096$. For Adversarial Training, we have used PGD with 5 iterations, $\epsilon = 8/255 (\approx 0.031)$ and a step size of $\frac{\epsilon}{5} (\approx 0.0062)$. 
+For all our experiments, we use the Resnet-101 architecture \cite{He_2016_CVPR}.
+We have used Stochastic Gradient Descent with a momentum of $0.9$, a weight decay of $0.0001$, label smoothing of $0.1$, an initial learning rate of $0.1$ with exponential decay of $0.1$ (MultiStepLR gamma = $0.1$) after the epochs $30$ and $60$.
+We have used Exponential Moving Average over the weights with a decay of $0.999$.
+We have trained our networks for 80 epochs with a batch size of $4096$.
+For Adversarial Training, we have used PGD with 5 iterations, $\epsilon = 8/255 (\approx 0.031)$ and a step size of $\frac{\epsilon}{5} (\approx 0.0062)$. 
 
 To evaluate the robustness of our classifiers in ImageNet, we have used an $\linf$ and an $\ltwo$ attacks. More precisely, as an $\linf$ attack, we use PGD with an epsilon of 0.02 and 0.031, a step size of $\textstyle \frac{\epsilon}{5}$) but we increase the number of iterations to 30 with 5 restarts. For each image, we select the perturbation that maximizes the loss among all the iterations and the 10 restarts. As $\ltwo$ attacks, we use a bounded version of the~\cite{carlini2017towards} attack. We have used $1$, $2$ and $3$ as bounds for the $\ltwo$ perturbation. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
-\label{section:ch4-conclusion}
+\label{section:ch5-conclusion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In this chapter, we introduced a new bound on the Lipschitz constant of convolutional layers that is both accurate and efficient to compute.
@@ -989,28 +836,8 @@ Our future work will focus on investigating these fields.
 
 
 
-% \section{Notations}
-% Below are the notations we will use for the theorems and proofs. 
-% \begin{itemize}
-% \itemsep0em 
-%     \item Let $\ci = \sqrt{-1}$.
-%     \item We denote $\sigma_1(\Amat) = \sigma_{max}(\Amat)$ the maximum singular value of the matrix $\Amat$. 
-%     \item We denote $\lambda_1(\Amat) = \lambda_{max}(\Amat)$ the maximum eigenvalue of the Hermitian matrix $\Amat$. 
-%     \item For any function $f: \mathcal{X} \rightarrow \mathbb{C}$, we denote $f^*$ the conjugate function of $f$.
-%     \item Let $\Amat$ be a $n \times n$ symmetric real matrix, we say that 
-%     \begin{itemize}
-%         \item[] $\Amat$ is positive definite, and we note $\Amat > 0$ if $\mathbf{x}^{\top} \Amat \mathbf{x} > 0$ for all non-zero $\mathbf{x}$ in $\mathbb{R}^{n}$.
-%         \item[] $\Amat$ is positive semi-definite, and we note $\Amat \geq 0$ if $\mathbf{x}^{\top} \Amat \mathbf{x} \geq 0$ for all non-zero $\mathbf{x}$ in $\mathbb{R}^{n}$.
-%     \end{itemize}
-%     \item Let $N = \{ -n+1, \dots, n-1 \}$ and $M = \{ -m+1, \dots, m-1 \}$
-% \end{itemize}
 
 
-% \section{Discussion on the Convolution Operation}
-
-
-
-%
 % \section{Additional Results and Discussions on the Experiments}
 %
 %
@@ -1044,7 +871,7 @@ Our future work will focus on investigating these fields.
 %       & \textbf{VGG 16} & \phantom{..}$21.92\pm1.94$ & \phantom{..}$132.29\pm5.99$ & \textbf{6.03 }\\
 %       & \textbf{VGG 19} & \phantom{..}$29.05\pm0.66$ & \phantom{..}$162.28\pm4.87$ & \textbf{5.58 }\\
 %     \midrule
-%     \cite{zagoruyko2016wide} & \textbf{WideResnet 50-2} & $113.28\pm45.44$ & \phantom{..}$468.74\pm6.54$ & \textbf{4.13 }\\
+%     \cite{ZagoruykoK16} & \textbf{WideResnet 50-2} & $113.28\pm45.44$ & \phantom{..}$468.74\pm6.54$ & \textbf{4.13 }\\
 %     \midrule
 %     \multirow{2}[2]{*}{\cite{iandola2016squeezenet}} & \textbf{SqueezeNet 1-0} & \phantom{..}$18.44\pm5.93$ & \phantom{....}$222.4\pm25.49$ & \textbf{12.05} \\
 %       & \textbf{SqueezeNet 1-1} & \phantom{..}$18.26\pm6.65$ & \phantom{....}$209.8\pm3.59$ & \textbf{11.48} \\
