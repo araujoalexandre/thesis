@@ -3,13 +3,14 @@
 
 \LoadClass[twoside,
            11pt,
-           DIV=10,                % TODO: Make configurable
-           BCOR=10mm,             % TODO: Make configurable
+           DIV=10,
+           BCOR=10mm,
            cleardoublepage=empty,
            numbers=noenddot,
            titlepage,
            toc=bibliography,
-           toc=index,]{scrbook}
+           toc=index,
+         ]{scrbook}
 
 \RequirePackage{ifpdf}
 \RequirePackage{ifxetex}
