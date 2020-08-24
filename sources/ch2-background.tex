@@ -4,6 +4,242 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \localtableofcontents
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Supervised Learning \& Neural Networks}
+\label{secction:ch2-supervised_learning_neural_networks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This thesis focus on the concept of \emph{supervised learning} which refers to the notion of learning the parameters of a specific function that maps an input to an output based on example input-output pairs.
+For example, an image (input) associated with its content: label (output).
+The choice of the function used for supervised learning is an active area of research and will be part of the focus of this thesis.
+In this work, we study \emph{neural networks} which are a class of function widely used for unstructured datasets (image, sound, text).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Supervised Learning}
+\label{subsection:ch2-supervised_learning}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Let us consider an input space $\mathcal{X} = [0, 1]^d$ of dimension $d$, an output space $\mathcal{Y} = [k]$ where $k$ is the number of class and a data distribution $\mathcal{D}$ over $\mathcal{X} \times \mathcal{Y}$.
+We seek to find a function $h: \mathcal{X} \rightarrow \mathcal{Y}$ that maps the input $\xvec \in \mathcal{X}$ to the output $y \in \mathcal{Y}$ with $h \in \mathcal{H}$ where $h$ is called the \emph{hypothesis} and $\mathcal{H}$ the \emph{hypothesis space}.
+In order to measure how well the function fits, a \emph{loss function} $L: \mathcal{Y} \times \mathcal{Y} \rightarrow \Rbb^{+}$ is defined.
+The \emph{risk} $R$ associated with the hypothesis $h(\xvec)$ is defined as follows:
+\begin{equation}
+  R(h) \triangleq \Ebb_{(\xvec, y) \sim \mathcal{D}}\  L \left( h(\xvec), y \right)
+\end{equation}
+The 0-1 loss function is a natural loss function to use because it assigns 0 for a correct classification and 1 for an incorrect classification. 
+The goal of a \emph{learning algorithm} is to find an hypothesis $h^* \in \mathcal{H}$ which minimize the risk $R(h)$:
+\begin{equation}
+  h^* \triangleq \argmin_{h \in \mathcal{H}} R(h) .
+\end{equation}
+
+
+\paragraph{Empirical Risk Minimization} (ERM).
+In practice, the joint probability distribution $\mathcal{D}$ is unknown.
+Instead, we have $n$ independent observations of the distribution called the \emph{training set}
+\begin{equation}
+  \left\{ (\xvec^{(1)}, y^{(1)}), \dots, (\xvec^{(n)}, y^{(n)}) \right\} ,
+\end{equation}
+where $\xvec \in \mathcal{X}$ and $y \in \mathcal{Y}$.
+The risk minimization problem is therefore replace by the \emph{empirical risk minimization} as follows:
+\begin{equation}
+  E(h, n) \triangleq \frac{1}{n} \sum_{i = 0}^{n} L\left(h\left(\xvec^{(i)}\right), y^{(i)}\right) ,
+\end{equation}
+the learning algorithm then becomes:
+\begin{equation}
+  \hat{h}^* \triangleq \argmin_{h \in \mathcal{H}} E(h, n)  .
+\end{equation}
+
+
+\paragraph{Structural Risk Minimization} (SRM).
+The ERM principle assumes that the function $\hat{h}^*$ minimizing $E(h, n)$ leads to the risk $R(\hat{h}^*)$ being close to the minimum.
+However, does increasing the \emph{size} of the training set allow a better minimisation of the actual risk. More formally, does $R(\hat{h}^*)$ converge to its minimum value on the set $h \in \mathcal{H}$ when $n \rightarrow \infty$. 
+\citet{Vapnik1991TheNA} have shown that this question is equivalent to the following: does the empirical risk $E(h, n)$ \emph{converge uniformly} to the actual risk $R(h)$ over $h \in \mathcal{H}$ where the \emph{uniform convergence} is defined as follows:
+\begin{equation}
+  \Pbb \left[ \sup_{h \in \mathcal{H}} \left| R(h) - E(h, n) \right| < \epsilon \right] \rightarrow 0 \quad \text{ when } \quad n \rightarrow \infty, \quad \forall \epsilon > 0 
+\end{equation}
+
+
+\citet{vapnik1992principles} 
+
+
+\begin{enumerate}
+  \item Structure given by the architecture of the neural network: xxx
+  \item Structure given by the learning procedure: xxx 
+\end{enumerate}
+
+
+
+
+
+
+
+
+%
+% of the ERM principle \ie, does $R(\hat{h}^*)$ converge to its minimum value on the set $h \in \mathcal{H}$ when $n \rightarrow \infty$ is equivalent to the question: 
+%
+% is equivalent to the question: does the empirical risk E(h, n) \emph{converge uniformly} to the actual risk $R(h)$ over $h \in \mat
+%
+% An interesting question to ask is 
+
+
+% \begin{equation}
+%   h^* = \argmin_{h \in \mathcal{H}} \frac{1}{n} \sum_{i = 0}^{n} L(h(\xvec_i), y) + \lambda C(\theta) 
+% \end{equation}
+
+
+% Because the relation between $\xvec \in \mathcal{X}$ and $y \in \mathcal{Y}$ is unknown, we aim to find the best approximation of the function $h$ with a parameterized function $h_\theta \in \mathcal{H}$ where $\mathcal{H}$ is called the \emph{hypothesis space}.
+
+
+% The goal of a \textbf{learning algorithm} is to learn a function $f: \mathcal{X} \rightarrow \mathcal{Y}$ which outputs $y \in \mathcal{Y}$ given an input $\xvec \in \mathcal{X}$ with $f \in \mathcal{H}$ where $\mathcal{H}$ is called the \emph{hypothesis space}.
+%
+% The supervised learning settings assume that a function $f: \mathcal{X} \rightarrow \mathcal{Y}$ exists. 
+%
+% The supervised learning settings assume that a function $f$ that maps $\xvec \sim \mathcal{X}$ to $y \sim \mathcal{y}$ exists. 
+
+
+
+% The goal of a \textbf{learning algorithm} is to approximate $f$ by a parameterized function $f_\theta$.
+% The standard method to learn the set of parameters $\theta$ is the \textbf{empirical risk minimization (ERM)}:
+% \begin{equation*}
+%   \hat{\theta}_{ERM} \triangleq \argmin_{\theta} \frac{1}{n} \sum_{i=1}^{n} L (f_{\theta} (\xvec_i), y_i )
+% \end{equation*}
+
+% \begin{equation}
+%   \min_{\theta} \Ebb_{(\xvec, y) \sim \mathcal{D}} \left[ L(f_\theta(x), y) \right]. 
+% \end{equation}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Neural Networks}
+\label{subsection:ch2-neural_networks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+xxx
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Evaluation of Neural Networks}
+\label{subsection:ch2-evaluation_neural_networks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+xxx
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Classical Evaluation of Neural Networks}
+\label{section:ch2-preliminaries_adversarial_attacks_and_defenses}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+xxx
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Preliminaries on Adversarial Attacks and Defenses}
+\label{section:ch2-preliminaries_adversarial_attacks_and_defenses}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Deep neural networks achieve state-of-the-art performances in a variety of domains such as natural language processing~\cite{radford2018Language}, image recognition~\cite{He_2016_CVPR} and speech recognition~\cite{hinton2012deep}.
+However, it has been shown that such neural networks are vulnerable to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,Szegedy2013IntriguingPO}.
+Since their discovery, a variety of algorithms have been developed to generate adversarial examples (\aka attacks), for example FGSM \cite{goodfellow2014explaining}, PGD \cite{madry2018towards} and C\&W \cite{carlini2017towards}, to mention the most popular ones.
+
+Because it is difficult to characterize the space of visually imperceptible variations of a natural image, existing adversarial attacks use surrogates that can differ from one attack to another.
+For example, \citet{goodfellow2014explaining} use the $\linf$ norm to measure the distance between the original image and the adversarial image whereas \citet{carlini2017towards} use the $\ltwo$ norm.
+When the input dimension is low, the choice of the norm is of little importance because the $\linf$ and $\ltwo$ balls overlap by a large margin, and the adversarial examples lie in the same space.
+An important insight in this paper is to observe that the overlap between the two balls  diminishes exponentially quickly as the dimensionality of the input space increases.
+For typical image datasets with large dimensionality, the two balls are mostly disjoint.
+As a consequence, the $\linf$ and the $\ltwo$ adversarial examples lie in different areas of the space, and it explains why $\linf$ defense mechanisms perform poorly against $\ltwo$ attacks and vice versa. 
+
+% Building on this insight, we advocate for designing models that incorporate defense mechanisms against both $\linf$ and $\ltwo$ attacks and review several ways of mixing existing defense mechanisms.
+% In particular, we evaluate the performance of  {\em Mixed Adversarial Training} (MAT)~\cite{goodfellow2014explaining} which consists of  augmenting training batches using \emph{both} $\linf$ and $\ltwo$ adversarial examples, and {\em Randomized Adversarial Training} (RAT)~\cite{salman2019provably}, a solution to benefit from the advantages of both $\linf$ adversarial training, and $\ltwo$ randomized defense. 
+
+
+Let us first consider a standard classification task with an input space $\mathcal{X}=[0,1]^d$ of dimension $d$,  an output space $\mathcal{Y}=[K]$ and a data distribution $\mathcal D$ over $\mathcal X \times \mathcal Y$.
+We assume the model $f_\theta$ has been trained to minimize the expectation over $\mathcal{D}$ of a loss function $L$ as follows:
+\begin{equation}
+  \min_{\theta} \Ebb_{(\xvec, y) \sim \mathcal{D}} \left[ L(f_\theta(\xvec), y) \right]. 
+  \label{equation:ch2-classification}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Adversarial attacks}
+\label{subsection:ch2-adversarial_attacks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+Given an input-output pair $(\xvec, y) \sim \mathcal{D}$, an \emph{adversarial attack} is a procedure that produces a small perturbation $\pmb{\tau} \in  \mathcal X$  such that $f_\theta(\xvec + \pmb{\tau}) \neq y$.
+To find the best perturbation $\pmb{\tau}$, existing attacks can adopt one of the two following strategies:
+\begin{itemize}
+  \item[(I)] \textbf{Loss maximization}: maximizing the loss $\mathcal L(f_\theta(\xvec + \pmb{\tau}), y)$ under some constraint on $\norm{\pmb{\tau}}_p$ with $p \in \{0, \cdots, \infty\}$.;
+  \item[(II)] \textbf{Perturbation minimization}: minimizing $\norm{\pmb{\tau}}_p$ under some constraint on the loss $L(f_\theta(\xvec + \pmb{\tau}), y)$.
+\end{itemize}
+
+\paragraph{(i) Loss maximization.}
+In this scenario, the procedure maximizes the loss objective function, under the constraint that the $\lp$ norm of the perturbation remains bounded by some value $\epsilon$, as follows:  
+
+\begin{equation}
+  \argmax_{\norm{\pmb{\tau}}_p \leq \epsilon} L(f_\theta(\xvec + \pmb{\tau}),y).
+  \label{equation:ch2-lossmax}
+\end{equation}
+
+The typical value of $\epsilon$ depends on the norm $\norm{\cdot}_p$ considered in the problem setting.
+In order to compare $\linf$ and $\ltwo$ attacks of similar strength, we choose values of $\epsilon_\infty$ and $\epsilon_2$ (for $\linf$ and $\ltwo$ norms respectively) which result in $\linf$ and $\ltwo$ balls of equivalent volumes.
+For the particular case of CIFAR-10, this would lead us to choose $\epsilon_\infty = 0.03$ and $\epsilon_2 = 0.8$ which correspond to the maximum values chosen empirically to avoid the generation of visually detectable perturbations. 
+The current state-of-the-art method to solve Problem~(\ref{equation:ch2-lossmax}) is based on a projected gradient descent (PGD)~\cite{madry2018towards} of radius~$\epsilon$. Given a budget $\epsilon$, it recursively computes
+\begin{equation}
+    \xvec^{t+1}=\prod_{B_p(\xvec,\epsilon)}\left(\xvec^t
+    +\alpha \argmax_{\delta \text{ s.t. } \norm{\delta}_p \leq 1} \left( \Delta^t \ |\ \delta \right)\right)
+    \label{equation:ch2-projectionPGD}
+\end{equation}
+where $B_p(\xvec,\epsilon) = \{ \xvec + \pmb{\tau} \text{ s.t. } \norm{\pmb{\tau}}_p \leq \epsilon\}$, $\Delta^t = \nabla_\xvec L\left( f_\theta \left(\xvec^t \right), y \right)$, $\alpha$ is a gradient step size, and $\prod_S$ is the projection operator on $S$. Both PGD attacks with $p=2$, and $p=\infty$ are currently used in the literature as state-of-the-art attacks for the loss maximization problem. 
+
+
+\paragraph{(ii) Perturbation minimization.}
+This type of procedure search for the perturbation that has the minimal $\lp$ norm, under the constraint that $L(f_\theta(\xvec + \pmb{\tau}), y)$ is bigger than a given bound $c$:
+\begin{equation}
+  \argmin_{L(f_\theta(\xvec + \pmb{\tau}), y) \geq c} \norm{\pmb{\tau}}_p.
+  \label{equation:ch2-normmin}
+\end{equation}
+The value of $c$ is typically chosen depending on the loss function $L$. For example, if $L$ is the $0/1$ loss, any $c > 0$ is acceptable.
+Problem~\ref{equation:ch2-normmin} has been tackled by~\citep{carlini2017towards}, leading to the following method, denoted C\&W attack in the rest of the chapter. It aims at solving the following Lagrangian relaxation of Problem~\ref{equation:ch2-normmin}:
+\begin{equation}
+  \argmin_{\pmb{\tau}} \norm{\pmb{\tau}}_p+ \lambda \times g(x+\pmb{\tau})
+  \label{equation:ch2-CWproblem}
+\end{equation}
+where $g(x+\pmb{\tau})<0$ if and only if $L(f_\theta(x+\pmb{\tau}),y) \geq c$. 
+The authors use a change of variable $\pmb{\tau}=\tanh(w)-x$ to ensure that $-1 \leq x+\pmb{\tau} \leq 1$, a binary search to optimize the constant $c$, and Adam or SGD to compute an approximated solution.
+The C\&W attack is well defined both for $p=2$, and $p=\infty$, but there is a clear empirical gap of efficiency in favor of the $\ltwo$ attack.
+
+In this paper, we focus on the \emph{Loss Maximization} setting using the PGD attack. However we conduct some of our experiments using \emph{Perturbation Minimization} algorithms such as C\&W to capture more detailed information about the location of adversarial examples in the vector space\footnote{As it has a more flexible geometry than the \emph{Loss Maximization} attacks.}. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Defense mechanisms}
+\label{subsection:ch2-defense_mechanisms}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\paragraph{Adversarial Training (AT).}
+Adversarial Training was introduced by \citep{goodfellow2014explaining} and later improved by \citep{madry2018towards} as a first defense mechanism to train robust neural networks.
+It consists in augmenting training batches with adversarial examples generated during the training procedure.
+The standard training procedure from Equation~\ref{equation:ch2-classification} is thus replaced by the following  $\min$ $\max$ problem, where the classifier tries to minimize the expected loss under maximum perturbation of its input:
+\begin{equation}
+  \min_{\theta} \Ebb_{(\xvec, y) \sim \mathcal{D}} \left[ \max_{\norm{\pmb{\tau}}_p \leq \epsilon} L \left( f_{\theta}(\xvec + \pmb{\tau}), y \right) \right].
+\end{equation}
+
+In the case where $p=\infty$, this technique offers good robustness  against $\linf$ attacks \cite{athalye2018obfuscated}. AT can also be used with $\ltwo$ attacks but as we will discuss in Section~\ref{section:ch2-no_free_lunch}, AT with one norm offers poor protection against the other.
+The main weakness of Adversarial Training is its lack of formal guarantees.
+Despite some recent work providing great insights \cite{sinha2017certifying,zhang2019theoretically}, there is no worst case lower bound yet on the accuracy under attack of this method.
+
+
+\paragraph{Noise injection mechanisms (NI).}
+\label{subsection:ch2-randomized_training}
+
+Another important technique to defend against adversarial examples is to use Noise Injection. 
+In contrast with Adversarial Training, Noise Injection mechanisms are usually deployed after training.
+In a nutshell, it works as follows.
+At inference time, given a unlabeled sample $x$, the network outputs
+\begin{equation}
+  \tilde{f}_\theta(\xvec) \triangleq f_\theta(\xvec + \eta) \ \ \ (\text{instead of  } f_\theta(\xvec)) 
+\end{equation}
+where $\eta$ is a random variable on $\mathbb{R}^d$.
+Even though, Noise Injection is often less efficient than Adversarial Training in practice (see \eg, Table~\ref{table:ch2-results}), it benefits from strong theoretical background.
+In particular, recent works \cite{lecuyer2018certified,NIPS2019_9143}, followed by \cite{KolterRandomizedSmoothing,pinot2019theoretical} demonstrated that noise injection from a Gaussian distribution can give provable defense against $\ltwo$ adversarial attacks.
+In this work, besides the classical Gaussian noises already investigated in previous works, we evaluate the efficiency of Uniform distributions to defend against $\ltwo$ adversarial examples. 
 
 
 % \citeauthor{werbos1974thesis,rumelhart1986learning} conside
@@ -16,7 +252,6 @@
 % \end{equation}
 
 % This discovery led to the first large scale application with the US Post Office. Yann Lecun successfully devise a Convolutional Neural Network to recognize hand written digits \cite{lecun1998gradient}.
-
 
 
 
@@ -36,12 +271,105 @@
 % \end{equation}
 %
 % This discovery led to the first large scale application with the US Post Office. Yann Lecun successfully devise a Convolutional Neural Network to recognize hand written digits \cite{lecun1998gradient}.
-%
-%
-% \section{The Limitations of Deep Neural Networks}
-% xxx
-%
-%
-% AlexNet \cite{NIPS2012_4824}
-% VGG \cite{}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Primer on Structured Matrices}
+\label{secction:ch2-primer_structured_matrices}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+xxx
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Introduction on Circulant Matrices}
+\label{subsection:primer_circulant_matrices}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+An $n$-by-$n$ circulant matrix $\Cmat$ is a matrix where each row is a cyclic right shift of the previous one as illustrated below.
+
+\begin{equation}
+    \Cmat = \circulant(\cvec) = \leftmatrix
+    c_{0} & c_{n-1} & c_{n-2} & \dots & c_{1} \\
+    c_{1} & c_{0} & c_{n-1} & & c_{2} \\
+    c_{2} & c_{1} & c_{0}& & c_{3} \\
+    \vdots & & & \ddots & \vdots \\
+    c_{n-1} & c_{n-2} & c_{n-3} & & \phantom{0}c_{0}\phantom{0}
+    \rightmatrix
+\end{equation}
+
+Circulant matrices exhibit several interesting properties from the perspective of numerical computations.
+Most importantly, any $n$-by-$n$ circulant matrix $\Cmat$ can be represented using only $n$ coefficients instead of the $n^2$ coefficients required to represent classical unstructured matrices.
+In addition, the matrix-vector product is simplified from $O(n^2)$ to $O(n \log n)$ using the  convolution theorem.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Convolution as Matrix Multiplication}
+\label{subsection:convolution_as_matrix_multiplication}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+A discrete convolution between a signal $\mathbf{x}$ and a kernel $\mathbf{k}$ can be expressed as a  product between the vectorization of $\mathbf{x}$ and a doubly-block Toeplitz matrix $\textbf{M}$, whose coefficients have been chosen to match the convolution $\mathbf{x} * \mathbf{k}$.
+For a 2-dimensional signal $\mathbf{x} \in \mathbb{R}^{n \times n}$ and a kernel $\mathbf{k} \in \mathbb{R}^{m \times m}$ with $m$ odd, the convolution operation can be written as follows:
+\begin{equation} \label{equation:equation_conv_as_matrix}
+    \reshape(\mathbf{y}) = \reshape(\pad(\mathbf{x}) * \mathbf{k}) = \Mmat \reshape(\mathbf{x})
+\end{equation}
+where $\Mmat$ is a $n^2$-by-$n^2$  doubly-block Toeplitz matrix, \ie a block Toeplitz matrix where the blocks are also Toeplitz (Note that this is not a doubly-block circulant matrix because of the padding.), $\mathbf{y}$ is the output of size $q \times q$ with $q = n - m + 2p + 1$, (see \eg \cite{dumoulin2016guide}).
+The $\reshape: \mathbb{R}^{n \times n} \rightarrow \mathbb{R}^{n^2}$ operator is defined as follows: $\reshape(\mathbf{x})_q = \mathbf{x}_{\lfloor q/n \rfloor,\ q\mod n}$.
+The $\pad: \mathbb{R}^{n \times n} \rightarrow \mathbb{R}^{(n+2p) \times (n+2p)}$ operator is a zero-padding operation which takes a signal $\mathbf{x}$ of shape $\mathbb{R}^{n \times n}$ and adds $0$ on the edges so as to obtain a new signal $\mathbf{y}$ of shape $\mathbb{R}^{(n+2p) \times (n+2p)}$.
+In order to have the same shape between the convoluted signal and the signal, we set $ p = \lfloor m/2 \rfloor$ \footnote{We take a square signal and an odd size square kernel to simplify the notation but the same applies for any input and kernel size.
+Also, we take a specific padding in order to have the same size between the input and output signal.
+But everything in the paper can be generalized to any paddings.}.
+
+We now present an example of the convolution operation with doubly-block Toeplitz matrix.
+Let us define a kernel $\mathbf{k} \in \mathbb{R}^{3\times3}$ as follows:
+\begin{equation}
+    \mathbf{k} = \begin{pmatrix}
+        k_{0} & k_{1} & k_{2} \\
+        k_{3} & k_{4} & k_{5} \\
+        k_{6} & k_{7} & k_{8} 
+    \end{pmatrix}
+\end{equation}
+If we set the padding to 1, then, the matrix $\Mmat$ is a tridiagonal doubly-block Toeplitz matrix of size $n \times n$ and has the following form:
+\begin{equation}
+    \Mmat = \begin{pmatrix}
+    \Tmat_0 & \Tmat_{1} &  &  & 0  \\
+    \Tmat_{2} & \Tmat_0 & \Tmat_{1} &  &  \\
+     & \Tmat_{2} & \scalebox{.70}{$\ddots$} & \scalebox{.70}{$\ddots$} &   \\
+     &  & \scalebox{.70}{$\ddots$} & \Tmat_0 & \Tmat_{1}  \\
+    0 &  &  & \Tmat_{2} & \Tmat_0  \\
+    \end{pmatrix}
+    \label{equation:operator_matrix}
+\end{equation}
+
+where $\Tmat_j$ are banded Toeplitz matrices and the values of $\mathbf{k}$ are distributed in the Toeplitz blocks as follow:
+\begin{align}
+\Tmat_0 = \begin{psmallmatrix}
+    k_{4} & k_{3} &  &  &  0 \\
+    k_{5} & k_{4} & k_{3} &  &   \\
+     & k_{5} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$}  \\
+     &  &  \scalebox{.40}{$\ddots$} & k_{4} & k_{3}  \\
+    0 &  &  & k_{5} & k_{4}  \\
+    \end{psmallmatrix} &&
+\Tmat_{1} = \begin{psmallmatrix}
+    k_{7} & k_{6} &  &  &  0 \\
+    k_{8} & k_{7} & k_{6} &  &   \\
+     & k_{8} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$} &    \\
+     &  &  \scalebox{.40}{$\ddots$} & k_{7} & k_{6}  \\
+    0 &  &  & k_{8} & k_{7}  \\
+    \end{psmallmatrix} &&
+\Tmat_{2} = \begin{psmallmatrix}
+    k_{1} & k_{0} &  &  &  0 \\
+    k_{2} & k_{1} & k_{0} &  &   \\
+     & k_{2} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$} &    \\
+     &  &  \scalebox{.40}{$\ddots$} & k_{1} & k_{0}  \\
+    0 &  &  & k_{2} & k_{1}  \\
+    \end{psmallmatrix} 
+\end{align}
+
+
+\paragraph{Remark 1: } Note that the size of the operator matrix $\Mmat$ of a convolution operation depends on the size of the signal. If a signal $\mathbf{x}$ has size $n \times n$, the vectorized signal will be of size $n^2$ and the operator matrix will be of size $n^2 \times n^2$ which can be very large. Indeed, in deep learning practice the size of the images used for training can range from 32 (CIFAR-10) to hundred for high definition images (ImageNet). Therefore, with classical methods, computing the singular values of this operator matrix can be very expensive.
+
+\paragraph{Remark 2: } In the particular case of zero padding convolution operation, the operator matrix is a Toeplitz block with circulant block (i.e. each block of the Toeplitz block is a circulant matrix) which is a particular case of doubly-block Toeplitz matrices. 
 
