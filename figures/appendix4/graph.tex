@@ -1,0 +1,45 @@
+\begin{tikzpicture}[scale=0.7]
+    \begin{groupplot}[group style={
+                        group name=myplot,
+			group size= 2 by 1,
+		        horizontal sep=3cm},
+                      grid style=dashed,
+		      ymajorgrids=true]
+       
+    \nextgroupplot[
+       stack plots=y,
+       area style,
+       ytick={0,5000,1000},
+       ymin=0,
+       ymax=10000,
+       xmin=0.3,
+       xmax=16.63,
+       axis x line*=bottom,
+       axis y line*=left,
+       xtick={2,14},
+       xticklabels={\Large $\epsilon'=\epsilon\phantom{\sqrt{d}}$, \Large $\epsilon'=\epsilon\times\sqrt{d}$},
+       xtick style={draw=none}]
+        \addplot table [x=eps,y=linf_ball] {figures/appendix4/data/ball_l2_base.dat}\closedcycle;
+        \addplot table [x=eps,y=callote] {figures/appendix4/data/ball_l2_base.dat}\closedcycle;
+        \addplot table [x=eps,y=outside] {figures/appendix4/data/ball_l2_base.dat}\closedcycle;
+
+    \nextgroupplot[
+       stack plots=y,
+       area style,
+       ytick={0,5000,1000},
+       ymin=0,
+       ymax=10000,
+       xmin=0.3, 
+       xmax=16.63,
+       axis x line*=bottom,
+       axis y line*=left,
+       xtick={2,14},
+       xticklabels={\Large $\epsilon'=\epsilon\phantom{\sqrt{d}}$, \Large $\epsilon'=\epsilon\times\sqrt{d}$},
+       xtick style={draw=none}]
+        \addplot table [x=eps,y=linf_ball] {figures/appendix4/data/ball_l2_at.dat}\closedcycle;
+        \addplot table [x=eps,y=callote] {figures/appendix4/data/ball_l2_at.dat}\closedcycle;
+        \addplot table [x=eps,y=outside] {figures/appendix4/data/ball_l2_at.dat}\closedcycle;
+
+    \end{groupplot}
+\end{tikzpicture}
+
