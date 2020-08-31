@@ -512,19 +512,19 @@ Finally, we compare the efficiency and the accuracy of our bound against the sta
   \centering
   \begin{minipage}{.24\linewidth}
     \centering
-    \includegraphics[scale=0.23]{figures/chapter4/contour_poly_200_1_1_3.pdf}\\kernel $1\times3\times3$
+    \includegraphics[scale=0.23]{figures/chapter5/contour_poly_200_1_1_3.pdf}\\kernel $1\times3\times3$
   \end{minipage}
   \begin{minipage}{.24\linewidth}
       \centering
-      \includegraphics[scale=0.23]{figures/chapter4/contour_poly_200_1_9_3.pdf}\\kernel $9\times3\times3$
+      \includegraphics[scale=0.23]{figures/chapter5/contour_poly_200_1_9_3.pdf}\\kernel $9\times3\times3$
   \end{minipage}
   \begin{minipage}{.24\linewidth}
       \centering
-      \includegraphics[scale=0.23]{figures/chapter4/contour_poly_200_1_1_5.pdf}\\kernel $1\times5\times5$
+      \includegraphics[scale=0.23]{figures/chapter5/contour_poly_200_1_1_5.pdf}\\kernel $1\times5\times5$
   \end{minipage}
   \begin{minipage}{.24\linewidth}
       \centering
-      \includegraphics[scale=0.23]{figures/chapter4/contour_poly_200_1_9_5.pdf}\\kernel $9\times5\times5$
+      \includegraphics[scale=0.23]{figures/chapter5/contour_poly_200_1_9_5.pdf}\\kernel $9\times5\times5$
   \end{minipage}
   \caption{These figures represent the contour plot of multivariate trigonometric polynomials where the values of the coefficient are the values of a random convolutional kernel. The red dots in the figures represent the maximum modulus of the trigonometric polynomials.}
   \label{figure:contour_plot_trigonometric_polynomials}
@@ -588,7 +588,7 @@ where $\mathbf{k}_{\Mmat^{(n)}}$ is the  convolution kernel of the convolution d
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[scale=0.50]{figures/chapter4/convergence_bound.pdf}
+  \includegraphics[scale=0.50]{figures/chapter5/convergence_bound.pdf}
   \caption{This graph represents the function $\Gamma(n)$ defined in Section~\ref{section:analysis_tightness_bound} for different kernel size.}
   \label{figure:convergence_bound}
 \end{figure}
@@ -648,179 +648,6 @@ It achieves a near perfect accuracy while being very efficient to compute.
 
 We provide in the supplementary material a benchmark on the efficiency of $\lipbound$ on multiple convolutional architectures. 
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Application: Lipschitz Regularization for Adversarial Robustness}
-\label{section:experiments}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{table}[t]
-  \centering
-  \caption{This table shows the Accuracy under $\ltwo$ and $\linf$ attacks of CIFAR10 dataset. We compare vanilla Adversarial Training with the combination of Lipschitz regularization and Adversarial Training. We also compare the effectiveness of the power method by~\citet{farnia2018generalizable} and $\lipbound$. The parameters $\lambda_2$ from Equation~\ref{equation:objectif_function} is equal to $0.008$ for AT+PM and AT+LipReg. It has been chosen from a grid search among 10 values. The attacks below are computed with 200 iterations. }
-    \begin{tabular}{lcccc}
-    \toprule
-      & \textbf{Accuracy} & \textbf{PGD-$\linf$} & \textbf{C\&W-$\ltwo$ 0.6} & \textbf{C\&W-$\ltwo$ 0.8} \\
-    \midrule
-    \textbf{Baseline} & $\mathbf{0.953}\pm0.001$ & $\phantom{.}0.000\pm0.000$ & $\phantom{.}0.002\pm0.000$ & $\phantom{.}0.000\pm0.000$ \\
-    \textbf{AT} & $\phantom{.}0.864\pm0.001$ & $\phantom{.}0.426\pm0.000$ & $\phantom{.}0.477\pm0.000$ & $\phantom{.}0.334\pm0.000$ \\
-    \textbf{AT+PM} & $\phantom{.}0.788\pm0.010$ & $\phantom{.}0.434\pm0.007$ & $\phantom{.}0.521\pm0.005$	 & $\phantom{.}0.419\pm0.003$ \\
-    \textbf{AT+LipReg} & $\phantom{.}0.808\pm0.022$ & $\mathbf{0.457}\pm0.002$ & $\mathbf{0.547}\pm0.022$ & $\mathbf{0.438}\pm0.020$ \\
-    \bottomrule
-    \end{tabular}%
-  \label{tab:table_cifar10_robustness}%
-\end{table}%
-
-One promising application of Lipschitz regularization is in the area of adversarial robustness.
-Empirical techniques to improve robustness against adversarial examples such as Adversarial Training only impact the training data,  and often show poor generalization capabilities~\cite{schmidt2018adversarially}. 
-\citet{farnia2018generalizable} have shown that the adversarial generalization error depends on the Lipschitz constant of the network, which suggests that the adversarial test error can be improved by applying Lipschitz regularization in addition to adversarial training. 
-
-In this section, we illustrate the usefulness of LipBound by training a state-of-the-art Wide ResNet architecture~\cite{ZagoruykoK16} with Lipschitz regularization and adversarial training.
-Our regularization scheme is inspired by the one used by~\citet{yoshida2017spectral} but instead of using the power method, we use our \textbf{PloyGrid} algorithm presented in Section~\ref{subsection:computing_max_modulus_trig_polynomial} which efficiently computes an upper bound on the maximal singular value of convolutional layers. 
-
-We introduce the \textbf{AT+LipReg} loss to combine Adversarial Training and our Lipschitz regularization scheme in which layers with a large Lipschitz constant are penalized.
-We consider a neural network $\mathcal N_\theta : \mathcal X \rightarrow \mathcal Y$ with $\ell$ layers $\phi^{(1)}_{\theta_1}, \ldots, \phi^{(\ell)}_{\theta_\ell}$ where $\theta^{(1)}, \ldots, \theta^{(\ell -1)}$ are the kernels of the first $\ell - 1$ convolutional layers and $\theta_\ell$ is the weight matrix of the last fully-connected  layer $\phi^{(\ell)}_{\theta_\ell}$.
-Given a distribution $\mathcal D$ over $\mathcal X \times \mathcal Y$, we can train the parameters $\theta$ of the network by minimizing the AT+LipReg loss as follows:
-\begin{equation} \label{equation:objectif_function}
-    \min_{\theta} \mathbb E_{x,y \sim \mathcal D} \left[ \max_{\norm{\tau}_\infty \leq \epsilon} \mathcal{L}(\mathcal{N}_\theta(x + \tau), y)  + \lambda_1 \sum_{i=1}^\ell {\textstyle \norm{\theta_i}_\text{F}} + \lambda_2 \sum_{i=1}^{\ell-1} \log\left( \lipbound\left(\theta_i\right)\right) \right]
-\end{equation}
-where $\mathcal L$ is the cross-entropy loss function, and $\lambda_1$, $\lambda_2$ are two user-defined hyper-parameters.
-Note that regularizing the sum of logs is equivalent to regularizing the product of all the $\lipbound$ which is an upper bound on the global Lipschitz constant.
-In practice, we also include the upper bound on the Lipschitz of the batch normalization because we can compute it very efficiently (see C.4.1 of~\citet{tsuzuku2018lipschitz}) but we omit the last fully connected layer. 
-
-\begin{figure}[ht]
-   \centering
-   \begin{subfigure}[b]{0.49\textwidth}
-       \centering
-       \includegraphics[width=\textwidth]{figures/chapter4/jacobian_distribution_v1.pdf}\\(a)
-   \end{subfigure}
-   \hfill
-   \begin{subfigure}[b]{0.49\textwidth}
-       \centering
-       \includegraphics[width=\textwidth]{figures/chapter4/jacobian_distribution_v2.pdf}\\(b)
-   \end{subfigure}
-   \caption{These figures show the distribution of the norm of the Jacobian matrix w.r.t the CIFAR10 test set from a Wide Resnet trained with different schemes. Although Lipschitz regularization is not a Jacobian regularization, we can observe a clear shift in the distribution. This suggests that our method does not only work layer-wise, but also at the level of the entire network.}
-   \label{figure:jacobian_distribution}
-\end{figure}
-
-
-\begin{figure}[ht]
-   \centering
-   \begin{subfigure}[b]{0.49\textwidth}
-       \centering
-       \includegraphics[width=\textwidth]{figures/chapter4/attacks_iter_pgd.pdf}\\(a)
-   \end{subfigure}
-   \hfill
-   \begin{subfigure}[b]{0.49\textwidth}
-       \centering
-       \includegraphics[width=\textwidth]{figures/chapter4/attacks_iter_cw.pdf}\\(b)
-   \end{subfigure}
-   \caption{These figures show the Accuracy under attack on CIFAR10 test set with PGD-$\linf$ and C\&W-$\ltwo$ attacks for several classifiers trained with Adversarial Training given the number of iterations.}
-   \label{figure:attacks_iter}
-\end{figure}
-
-
-% \begin{figure*}[htb]
-%   \centering
-%   \begin{minipage}{.24\linewidth}
-%     \centering
-%     \includegraphics[scale=0.16]{figures/chapter4/jacobian_distribution_v1.pdf}\\{(a)}
-%   \end{minipage}
-%   \hfill
-%   \begin{minipage}{.24\linewidth}
-%     \centering
-%     \includegraphics[scale=0.16]{figures/chapter4/jacobian_distribution_v2.pdf}\\{(b)}
-%   \end{minipage}
-%   \hfill
-%   \begin{minipage}{.24\linewidth}
-%     \centering
-%     \includegraphics[scale=0.16]{figures/chapter4/attacks_iter_pgd.pdf}\\{(c)}
-%   \end{minipage}
-%   \hfill
-%   \begin{minipage}{.24\linewidth}
-%     \centering
-%     \includegraphics[scale=0.16]{figures/chapter4/attacks_iter_cw.pdf}\\{(d)}
-%   \end{minipage}
-%   \caption{Figures (a) and (b) show the distribution of the norm of the Jacobian matrix w.r.t the CIFAR10 test set from a Wide Resnet trained with different schemes. Although Lipschitz regularization is not a Jacobian regularization, we can observe a clear shift in the distribution. This suggests that our method does not only work layer-wise, but also at the level of the entire network. Figures (c) and (d) show the Accuracy under attack on CIFAR10 test set with PGD-$\linf$ and C\&W-$\ltwo$ attacks for several classifiers trained with Adversarial Training given the number of iterations.}
-%   \label{figure:dist_jacobian_attacks_iter}
-% \end{figure*}%
-
-
-In this section, we compare the robustness of Adversarial Training~\cite{goodfellow2014explaining, madry2018towards} against the combination of Adversarial Training and Lipschitz regularization.
-To regularize the Lipschitz constant of the network, we use the objective function defined in Equation~\ref{equation:objectif_function}.
-We train Lipschitz regularized neural network with LipBound (Theorem~\ref{theorem:bound_max_sv_convolution}) implemented with PolyGrid (Algorithm~\ref{algorithm:PolyGrid}) (AT+LipBound) with $S = 10$ or with the specific power method for convolutions introduced by~\citet{farnia2018generalizable} with 10 iterations (AT+PM). 
-
-Table~\ref{tab:table_cifar10_robustness} shows the gain in robustness against strong adversarial attacks.
-We can observe that both AT+LipBound and AT+PM offer a better defense against adversarial attacks and that AT+LipBound offers a further improvement over the Power Method.
-The Figure~\ref{figure:attacks_iter} (b) shows the Accuracy under attack with different number of iterations. 
-
-Finally, we also conducted an experiment to study the impact of the regularization on the gradients of the whole network by measuring the norm of the Jacobian matrix, averaged over the inputs from the test set.
-The results of this experiment are presented in Figure~\ref{figure:jacobian_distribution} (a) and show more concentrated gradients with Lipschitz regularization, which is the expected effect.
-This suggests that our method does not only work layer-wise, but also at the level of the entire network.
-A second experiment, using Adversarial Training, presented in Figure~\ref{figure:jacobian_distribution} (b) demonstrates that the effect is even stronger when the two techniques are combined together.
-This corroborates the work by~\cite{farnia2018generalizable}.
-It also demonstrates that Lipschitz regularization and Adversarial Training (or other Jacobian regularization techniques) are complementary.
-Hence they offer an increased robustness to adversarial attacks as demonstrated above.
-
-\paragraph{Experimental Settings}
-We use the Wide ResNet architecture introduced by~\citet{ZagoruykoK16} to train our classifiers (for details of the hyper-parameters used, see the supplementary material).
-For Adversarial Training ~\cite{madry2018towards}, we use Projected Gradient Descent with an $\epsilon = 8/255 (\approx 0.031)$, a step size of $\textstyle \frac{\epsilon}{5} (\approx 0.0062)$ and 10 iterations, we use a random initialization but run the attack only once.
-To evaluate the robustness of our classifiers, we rigorously followed the experimental protocol proposed by~\citet{tramer2020adaptive} and~\citet{carlini2019evaluating}.
-More precisely, as an $\linf$ attack, we use PGD with the same parameters ($\epsilon = 8/255$, a step size of $\textstyle \frac{\epsilon}{5}$) but we increase the number of iterations up to 200 with 10 restarts.
-For each image, we select the perturbation that maximizes the loss among all the iterations and the 10 restarts.
-As $\ltwo$ attacks, we use a bounded version of the~\cite{carlini2017towards} attack.
-We choose $0.6$ and $0.8$ as bounds for the $\ltwo$ perturbation. Note that the $\ltwo$ ball with a radius of $0.8$ has approximately the same volume as the $\linf$ ball with a radius of $0.031$ for the dimensionality of CIFAR10. 
-
-
-\subsection{Results on CIFAR100 dataset \& Hyper-parameters}
-
-\begin{table}[htb]
-  \centering
-  \caption{This table shows the Accuracy under $\ltwo$ and $\linf$ attacks of CIFAR100 dataset. We compare Adversarial Training with the combination of Lipschitz regularization and Adversarial Training \cite{madry2018towards}. The $\lambda_2$ parameters which control the Lipschitz regularization is $0.008$, it has been chosen among a grid search of 10 values. The attacks below are computed with 200 iterations.}
-    \begin{tabular}{lcccc}
-    \toprule
-      & \textbf{Accuracy} & \textbf{PGD-$\linf$} & \textbf{C\&W-$\ltwo$ 0.6} & \textbf{C\&W-$\ltwo$ 0.8} \\
-    \midrule
-    \textbf{Baseline} & $\mathbf{0.792}\pm0.000$ & $\phantom{.}0.000\pm0.000$ & $\phantom{.}0.001\pm0.000$ & $\phantom{.}0.000\pm0.000$ \\
-    \textbf{AT} & \phantom{.}$0.591\pm0.000$ & $\phantom{.}0.199\pm0.000$ & $\phantom{.}0.263\pm0.000$ & $\phantom{.}0.183\pm0.000$ \\
-    \textbf{AT+LipReg} & \phantom{.}$0.552\pm0.019$ & $\mathbf{0.215}\pm0.004$ & $\mathbf{0.294}\pm0.010$ & $\mathbf{0.226}\pm0.008$ \\
-    \bottomrule
-    \end{tabular}%
-  \label{tab:results_cifar100}%
-\end{table}%
-
-
-\paragraph{Hyper-parameters used for training classifiers on CIFAR10 \& CIFAR100 dataset}
-For all our experiments, we use the Wide Resnet architecture \cite{ZagoruykoK16} with 28 layers and a width factor of 10. We train our networks for 200 epochs with a batch size of $200$. We use Stochastic Gradient Descent with a momentum of $0.9$, an initial learning rate of $0.1$ with exponential decay of 0.1 (MultiStepLR gamma = 0.1) after the epochs $60$, $120$ and $160$. 
-
-\subsection{Results on ImageNet dataset \& Hyper-parameters}
-
-\begin{table}[htb]
-  \centering
-  \caption{This table shows the accuracy and accuracy under attack of ImageNet dataset with different training schemes. We compare Adversarial Training with the combination of Lipschitz regularization and Adversarial Training \cite{madry2018towards}. }
-    {\footnotesize
-    \begin{tabular}{lccccccccc}
-    \toprule
-      & \multicolumn{1}{c}{\multirow{2}[4]{*}{$\lambda_2$}} & \multicolumn{1}{c}{\multirow{2}[4]{*}{\textbf{Natural}}} &   & \multicolumn{2}{c}{\textbf{PGD-}$\linf$} &   & \multicolumn{3}{c}{\textbf{C\&W-}$\ltwo$} \\
-\cmidrule{5-6}\cmidrule{8-10}      &   &   &   & \multicolumn{1}{c}{0.02} & \multicolumn{1}{c}{0.031} &   & \multicolumn{1}{c}{1.00} & \multicolumn{1}{c}{2.00} & \multicolumn{1}{c}{3.00} \\
-    \midrule
-    \textbf{AT} & \multicolumn{1}{c}{-} & 0.509 &   & 0.251 & 0.118 &   & 0.307 & 0.168 & 0.099 \\
-    \textbf{AT+LipReg} & 0.0006 & \textbf{0.515} &   & \textbf{0.255} & \textbf{0.121} &   & \textbf{0.316} & \textbf{0.177} & \textbf{0.105} \\
-    \textbf{AT+LipReg} & 0.0010 & \textbf{0.519} &   & \textbf{0.259} & \textbf{0.123} &   & \textbf{0.338} & \textbf{0.204} & \textbf{0.129} \\
-    \bottomrule
-    \end{tabular}%
-    }
-\end{table}%
-
-
-\paragraph{Hyper-parameters used for training and attacking classifiers on ImageNet dataset}
-
-For all our experiments, we use the Resnet-101 architecture \cite{He_2016_CVPR}.
-We have used Stochastic Gradient Descent with a momentum of $0.9$, a weight decay of $0.0001$, label smoothing of $0.1$, an initial learning rate of $0.1$ with exponential decay of $0.1$ (MultiStepLR gamma = $0.1$) after the epochs $30$ and $60$.
-We have used Exponential Moving Average over the weights with a decay of $0.999$.
-We have trained our networks for 80 epochs with a batch size of $4096$.
-For Adversarial Training, we have used PGD with 5 iterations, $\epsilon = 8/255 (\approx 0.031)$ and a step size of $\frac{\epsilon}{5} (\approx 0.0062)$. 
-
-To evaluate the robustness of our classifiers in ImageNet, we have used an $\linf$ and an $\ltwo$ attacks. More precisely, as an $\linf$ attack, we use PGD with an epsilon of 0.02 and 0.031, a step size of $\textstyle \frac{\epsilon}{5}$) but we increase the number of iterations to 30 with 5 restarts. For each image, we select the perturbation that maximizes the loss among all the iterations and the 10 restarts. As $\ltwo$ attacks, we use a bounded version of the~\cite{carlini2017towards} attack. We have used $1$, $2$ and $3$ as bounds for the $\ltwo$ perturbation. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -900,7 +727,7 @@ Our future work will focus on investigating these fields.
 %
 % \begin{figure*}[htb]
 %     \centering
-%     \includegraphics[scale=0.55]{figures/chapter4/singular_values.pdf}
+%     \includegraphics[scale=0.55]{figures/chapter5/singular_values.pdf}
 %     \caption{This figure shows the maximal singular values of each convolution of a trained Wide ResNet on CIFAR10 dataset given different training scheme. The id 1 and 28 correspond to the first layer and last layer of the network.}
 %     \label{figure:singular_values}
 % \end{figure*}%
