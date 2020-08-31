@@ -13,7 +13,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-\label{section:ch4-introduction}
+\label{section:ch3-introduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -48,18 +48,17 @@ We introduce a new bound on the number of diagonal-circulant products required t
 Building on this result, we demonstrate that a DCNN with bounded width and small depth can approximate any dense networks with ReLU activations. 
 
 \paragraph{Outline of the chapter:}
-We present in Section~\ref{section:ch4-related_work} the related work on structured neural networks and several compression techniques.
-Section~\ref{section:circulant} introduces circulant matrices, our new result extending the one from \citet{Huhtanen2015}.
-Section~\ref{section:analysis_diagonal_circulant} proposes a theoretical analysis on the expressivity on DCNNs.
-Section~\ref{section:training} describes two efficient techniques for training deep diagonal circulant neural networks.
-Finally, Section~\ref{section:empirical_evaluation} presents extensive experiments to compare the performance of deep diagonal circulant neural networks in different settings with respect to other state of the art approaches.
-Section~\ref{section:ch4-conclusion} provides a discussion and concluding remarks.
+Section~\ref{section:ch3-a_primer_on_circulant_matrices_and_a_new_result} introduces circulant matrices, our new result extending the one from \citet{Huhtanen2015}.
+Section~\ref{section:ch3-analysis_of_diagonal_circulant_neural_networks} proposes a theoretical analysis on the expressivity on DCNNs.
+Section~\ref{section:ch3-how_to_train_deep_diagonal_circulant_neural_networks} describes two efficient techniques for training deep diagonal circulant neural networks.
+Finally, Section~\ref{section:ch3-experiments} presents extensive experiments to compare the performance of deep diagonal circulant neural networks in different settings with respect to other state of the art approaches.
+Section~\ref{section:ch3-conclusion} provides a discussion and concluding remarks.
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{A Primer on Circulant Matrices and a New Result}
-\label{section:circulant}
+\label{section:ch3-a_primer_on_circulant_matrices_and_a_new_result}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 An $n$-by-$n$ circulant matrix $\Cmat$ is a matrix where each row is a cyclic right shift of the previous one as illustrated below.
@@ -84,9 +83,9 @@ When they are combined with diagonal matrices, they can also be used as building
 \citet{Huhtanen2015} were able to bound the number of factors that is required to approximate any matrix $\Amat$ with arbitrary precision.
 
 \paragraph{Relation between diagonal circulant matrices and low rank matrices}
-We recall this result in Theorem~\ref{theorem:huhtanen} as it is the starting point of our theoretical analysis.
+We recall this result in Theorem~\ref{theorem:ch3-huhtanen} as it is the starting point of our theoretical analysis.
 
-\begin{theorem}[Reformulation from \citet{Huhtanen2015}] \label{theorem:huhtanen}
+\begin{theorem}[Reformulation from \citet{Huhtanen2015}] \label{theorem:ch3-huhtanen}
   For every matrix $\Amat \in \Cnn$, for any $\epsilon > 0$, there exists a sequence of matrices $\Bmat_1 \ldots \Bmat_{2n-1}$ where $\Bmat_{i}$ is a circulant matrix if $i$ is odd, and a diagonal matrix otherwise, such that $\norm{\Bmat_{1} \Bmat_{2} \ldots \Bmat_{2n-1} - \Amat} < \epsilon$.
 \end{theorem}
 
@@ -96,7 +95,7 @@ This is because: 1) the bound only depends on the dimension of the matrix $\Amat
 In the following theorem, we enhance the result by \citet{Huhtanen2015} by expressing the number of factors required to approximate $\Amat$, \emph{as a function of the rank of $\Amat$}.
 This is useful when one deals with low-rank matrices, which is common in machine learning problems. 
 
-\begin{theorem}[Rank-based circulant decomposition] \label{theorem:rank-decomposition}
+\begin{theorem}[Rank-based circulant decomposition] \label{theorem:ch3-rank-decomposition}
 Let $\Amat \in \Cnn$ be a matrix of rank at most $k$.
 Assume that $n$ can be divided by $k$.
 For any $\epsilon > 0$, there exists a sequence of $4k+1$ matrices $\Bmat_{1}, \ldots, \Bmat_{4k+1}$, where $\Bmat_{i}$ is a circulant matrix if $i$ is odd, and a diagonal matrix otherwise, such that $\norm{\Bmat_1 \Bmat_2 \ldots \Bmat_{4k+1} - \Amat} < \epsilon$.
@@ -104,7 +103,7 @@ For any $\epsilon > 0$, there exists a sequence of $4k+1$ matrices $\Bmat_{1}, \
 
 
 
-A direct consequence of Theorem~\ref{theorem:rank-decomposition}, is that if the number of diagonal-circulant factors is set to a value $K$, we can represent all linear transform $\Amat$ whose rank is $\frac{K - 1}{4}$.
+A direct consequence of Theorem~\ref{theorem:ch3-rank-decomposition}, is that if the number of diagonal-circulant factors is set to a value $K$, we can represent all linear transform $\Amat$ whose rank is $\frac{K - 1}{4}$.
 
 Compared to \citet{Huhtanen2015}, this result shows that structured matrices with fewer than $2n$ diagonal-circulant matrices (as it is the case in practice) can still represent a large class of matrices.
 As we will show in the following section, this result will be useful to analyze the expressivity of neural networks based on diagonal and circulant matrices.
@@ -112,7 +111,7 @@ As we will show in the following section, this result will be useful to analyze 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  \section{Analysis of Diagonal Circulant Neural Networks}
-\label{section:analysis_diagonal_circulant}
+\label{section:ch3-analysis_of_diagonal_circulant_neural_networks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \citet{pmlr-v70-zhao17b} have shown that circulant networks with 2 layers and unbounded width are universal approximators.
@@ -177,7 +176,7 @@ For any $\epsilon > 0$, there exists a DCNN $\mathcal{N}'$ of width $n$ and of d
 
 \begin{proof}[\proofreflem{lemma:dcnn_approx_neural_network}]
 Assume $\mathcal{N}=f_{W_{L},b_{L}} \circ \ldots \circ f_{W_{1},b_{1}}$.
-By Theorem~\ref{theorem:huhtanen}, for any $\epsilon '> 0$, any matrix $\Wmat_{i}$, there exists a sequence of $2n-1$ matrices $\Cmat_{i,n} \Dmat_{i,n-1} \Cmat_{i,n-1} \ldots \Dmat_{i,1} \Cmat_{i,1}$ such that 
+By Theorem~\ref{theorem:ch3-huhtanen}, for any $\epsilon '> 0$, any matrix $\Wmat_{i}$, there exists a sequence of $2n-1$ matrices $\Cmat_{i,n} \Dmat_{i,n-1} \Cmat_{i,n-1} \ldots \Dmat_{i,1} \Cmat_{i,1}$ such that 
 \begin{equation}
   \norm{\prod_{j=0}^{n-1} \Dmat_{i,n-j} \Cmat_{i,n-j} - \Wmat_{i}} < \epsilon' , 
 \end{equation}
@@ -208,17 +207,17 @@ It has been shown recently by~\citet{hanin2017universal} that for any continuous
 
 This is a first result, however $(2n+5)L$ is not a small depth (in our experiments, $n$ can be over 300~000), and a number of work provided empirical evidences that DCNN with small depth can offer good performances \cite{anca2018eccv,cheng}. To improve our result, we introduce our main theorem which studies the approximation properties of these small depth networks.
 
-\begin{theorem}[Rank-based expressive power of DCNNs] \label{theorem:low_rank_nn}
+\begin{theorem}[Rank-based expressive power of DCNNs] \label{theorem:ch3-low_rank_nn}
 Let $\mathcal{N}$ be a deep ReLU network of width $n$, depth $L$ and a total rank $k$ and assume $n$ is a power of $2$.
 Let $\mathcal{X} \subset \Cn$ be a bounded set.
 Then, for any $\epsilon > 0$, there exists a DCNN with ReLU activation $\mathcal{N}'$ of width $n$ such that $\norm{ \mathcal{N}(\xvec) - \mathcal{N}'(\xvec)} < \epsilon$ for all $\xvec \in \mathcal{X}$ and the depth of $\mathcal{N}'$ is bounded by $9k$.
 \end{theorem}
 
-\begin{proof}[\proofrefth{theorem:low_rank_nn}]
+\begin{proof}[\proofrefth{theorem:ch3-low_rank_nn}]
 Let $k_{1} \ldots k_{L}$ be the ranks of matrices $\Wmat_{1} \ldots \Wmat_{L}$, which are $n$-by-$n$ matrices.
 For all $i$, there exists $k_{i}' \in \{k_{i} \ldots 2k_{i}\}$ such that $k'_{i}$ is a power of $2$.
 Due to the fact that $n$ is also a power of $2$, $k'_{i}$ divides $n$.
-By Theorem~\ref{theorem:rank-decomposition}, for all $i$ each matrix $\Wmat_{i}$ can be decomposed as an alternating product of diagonal-circulant matrices $\Bmat_{i,1} \ldots \Bmat_{i,4k'_{i}+1}$ such that $\norm{ \Wmat_{i} - \Bmat_{i,1} \ldots \Bmat_{i,4k'_{i}+1}} < \epsilon$.
+By Theorem~\ref{theorem:ch3-rank-decomposition}, for all $i$ each matrix $\Wmat_{i}$ can be decomposed as an alternating product of diagonal-circulant matrices $\Bmat_{i,1} \ldots \Bmat_{i,4k'_{i}+1}$ such that $\norm{ \Wmat_{i} - \Bmat_{i,1} \ldots \Bmat_{i,4k'_{i}+1}} < \epsilon$.
 Using the exact same technique as in Lemma~\ref{lemma:dcnn_approx_neural_network}, we can build a DCNN $\mathcal{N}'$ using matrices $\Bmat_{1,1} \ldots \Bmat_{L,4k'_{L}+1}$, such that $\norm{ \mathcal{N}(\xvec) - \mathcal{N}'(\xvec)} < \epsilon$ for all $\xvec \in \mathcal{X}$.
 The total number of layers is $\sum_{i}\left(4k_{i}'+1\right)\le L+8\sum_{i}k_{i}\le L+8.
 \textrm{total rank} \le 9.\textrm{total rank}$.
@@ -295,7 +294,7 @@ where $R$ is an upper bound on the norm of the outputs of each layer in $\mathca
 Let $\tilde{\mathcal{N}} = f_{\tilde{\Wmat_{L}},\bvec_{L}} \circ \ldots \circ f_{\tilde{\Wmat_{1}},\bvec_{1}}$, where each $\tilde{\Wmat}_{i}$ is the matrix obtained by an SVD approximation of rank $k$ of matrix $\Wmat_{i}$.
 With Proposition~\ref{proposition:relu_to_svd}, we have an error bound on $\norm{\mathcal{N} \left(\xvec\right) - \tilde{\mathcal{N}} \left(\xvec\right)}$.
 Now each matrix $\tilde{\Wmat}_{i}$ can be replaced by a product of $k$ diagonal-circulant matrices.
-By Theorem~\ref{theorem:low_rank_nn}, this product yields a DCNN of depth $m = L(4k+1)$, strictly equivalent to $\tilde{\mathcal{N}}$ on $\mathcal{X}$.
+By Theorem~\ref{theorem:ch3-low_rank_nn}, this product yields a DCNN of depth $m = L(4k+1)$, strictly equivalent to $\tilde{\mathcal{N}}$ on $\mathcal{X}$.
 This conludes the proof.
 \end{proof}
 
@@ -313,15 +312,15 @@ Given an arbitrary fixed integer $n$, let $\mathcal{R}_{k}$ be the set of all fu
   \label{property:eq2} \forall l,\nexists k\, &\quad \mathcal{C}_{l} \subseteq \mathcal{R}_{k}
 \end{align}
 
-We illustrate the meaning of this properties using Figure~\ref{figure:circfig}.
-As we can see, the set $\mathcal R_{k}$ of all the functions representable by a deep $\relu$ network of total rank $k$ is strictly included in the set $\mathcal C_{9k}$ of all DCNN of depth $9k$ (as by Theorem~\ref{theorem:low_rank_nn}).
+We illustrate the meaning of this properties using Figure~\ref{figure:ch3-circfig}.
+As we can see, the set $\mathcal R_{k}$ of all the functions representable by a deep $\relu$ network of total rank $k$ is strictly included in the set $\mathcal C_{9k}$ of all DCNN of depth $9k$ (as by Theorem~\ref{theorem:ch3-low_rank_nn}).
 
 \begin{figure}[htb]
     \begin{center}
       \input{figures/chapter3/illustration_properties.tex}
     \end{center}
     \caption{Illustration of Properties \ref{property:eq1} and \ref{property:eq2}.}
-    \label{figure:circfig}
+    \label{figure:ch3-circfig}
 \end{figure}
 
 These properties are interesting for many reasons. 
@@ -335,7 +334,7 @@ This opens the possibility of learning compact and accurate diagonal-circulant n
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{How to Train Deep Diagonal Circulant Neural Networks}
-\label{section:training}
+\label{section:ch3-how_to_train_deep_diagonal_circulant_neural_networks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}
@@ -346,7 +345,7 @@ This opens the possibility of learning compact and accurate diagonal-circulant n
        \caption{
 	Impact of increasing the number of ReLU activations in a DCNN.
 	Deep DCNNs with fewer ReLUs are easier to train.}
-       \label{figure:cifar10_factor}
+       \label{figure:ch3-cifar10_factor}
    \end{subfigure}
    \hfill
    \begin{subfigure}[b]{0.49\textwidth}
@@ -355,7 +354,7 @@ This opens the possibility of learning compact and accurate diagonal-circulant n
        \caption{
         Impact of increasing the slope of a Leaky-ReLU in DCNNs.
         Deep DCNNs with a larger slope are easier to train.}
-       \label{figure:cifar10_leaky_relu}
+       \label{figure:ch3-cifar10_leaky_relu}
    \end{subfigure}
    \caption{Experiments on training DCNNs and other structured neural networks on CIFAR-10.}
 \end{figure}
@@ -457,15 +456,15 @@ To derive $\Cov(z_{i},z_{i'})$ and $\Cov(\bar{z}_{i},\bar{z}_{i'})$, the require
 We empirically found that reducing the number of non-linearities in the networks simplifies the training of deep neural networks.
 To support this claim, we conduct a series of experiments on various DCNNs with a varying number of ReLU activations (to reduce the number of non-linearities, we replace some ReLU activations with the identity function).
 In a second experiment, we replace the ReLU activations with Leaky-ReLU activations and vary the slope of the Leaky ReLU (a higher slope means an activation function that is closer to a linear function).
-The results of this experiment are presented in Figure~\ref{figure:cifar10_factor} and \ref{figure:cifar10_leaky_relu}.
-In Figure \ref{figure:cifar10_factor}, ``ReLU(DC)'' means that we interleave ReLU activation functions between every diagonal-circulant matrix, whereas ReLU(DCDC) means we interleave a ReLU activation every other block etc.
-In both Figure~\ref{figure:cifar10_factor} and  Figure~\ref{figure:cifar10_leaky_relu}, we observe that reducing the non-linearity of the networks can be used to train deeper networks.
+The results of this experiment are presented in Figure~\ref{figure:ch3-cifar10_factor} and \ref{figure:ch3-cifar10_leaky_relu}.
+In Figure \ref{figure:ch3-cifar10_factor}, ``ReLU(DC)'' means that we interleave ReLU activation functions between every diagonal-circulant matrix, whereas ReLU(DCDC) means we interleave a ReLU activation every other block etc.
+In both Figure~\ref{figure:ch3-cifar10_factor} and  Figure~\ref{figure:ch3-cifar10_leaky_relu}, we observe that reducing the non-linearity of the networks can be used to train deeper networks.
 This is an interesting result, since  we can use this technique to adjust the number of parameters in the network, without facing training difficulties. We obtain a maximum accuracy of 0.56 with one ReLU every three layers and leaky-ReLUs with a slope of 0.5.
 We hence rely on this setting in the experimental section. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Empirical evaluation}
-\label{section:empirical_evaluation}
+\section{Experiments}
+\label{section:ch3-experiments}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 This experimental section aims at answering the following questions:
@@ -478,7 +477,7 @@ This experimental section aims at answering the following questions:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Comparison with other structured approaches}
-\label{subsection:ch4-comparison_with_other_structured_approches}
+\label{subsection:ch3-comparison_with_other_structured_approches}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -488,14 +487,14 @@ This experimental section aims at answering the following questions:
        \centering
        \includegraphics[width=\textwidth]{figures/chapter3/acdc_regression.pdf}
        \caption{Evolution of the training loss on a regression task with synthetic data.}
-       \label{figure:acdc_regression}
+       \label{figure:ch3-acdc_regression}
    \end{subfigure}
    \hfill
    \begin{subfigure}[b]{0.49\textwidth}
        \centering
        \includegraphics[width=\textwidth]{figures/chapter3/acdc_cifar10.pdf}
        \caption{Test accuracy on the CIFAR-10 dataset.~\\ \phantom{.}}
-       \label{figure:acdc_cifar10}
+       \label{figure:ch3-acdc_cifar10}
    \end{subfigure}
    \caption{Comparison of DCNNs and \ACDC networks on two different tasks.}
 \end{figure}
@@ -503,15 +502,15 @@ This experimental section aims at answering the following questions:
 
 \paragraph{Comparison with \ACDC \citep{moczulski2015acdc}.}
 
-In Section~\ref{section:ch4-related_work}, we have discussed the differences between the \ACDC framework and our approach from a theoretical perspective.
+In Section~\ref{section:ch3-related_work}, we have discussed the differences between the \ACDC framework and our approach from a theoretical perspective.
 In this section, we conduct experiments to compare the performance of DCNNs with neural networks based on \ACDC layers. 
 We first reproduce the experimental setting from \citet{moczulski2015acdc}, and compare both approaches using only linear networks (\ie networks without any ReLU activations).
 The synthetic dataset has been created in order to reproduce the experiment on the regression linear problem proposed by~\citet{moczulski2015acdc}.
 We draw $\Xmat$ and $\Wmat$ from a uniform distribution between [-1, +1] and $\epsilon$ from a normal distribution with mean 0 and variance $0.01$.
 The relationship between $\Xmat$ and $\Ymat$ is define by $\Ymat = \Xmat\Wmat + \epsilon$. 
-The results are presented in Figure~\ref{figure:acdc_regression}.
+The results are presented in Figure~\ref{figure:ch3-acdc_regression}.
 On this simple setting, while both architectures demonstrate good performance, we can observe that DCNNs offer a better convergence rate.
-In Figure~\ref{figure:acdc_cifar10}, we compare neural networks with ReLU activations on CIFAR-10. 
+In Figure~\ref{figure:ch3-acdc_cifar10}, we compare neural networks with ReLU activations on CIFAR-10. 
 
 We found that networks which are based only on \ACDC layers are difficult to train and offer poor accuracy on CIFAR-10 (we have tried different initialization schemes including the one from the original paper, and the one we introduce in this chapter).
 \citet{moczulski2015acdc} manage to train a large VGG network  however these networks are generally highly redundant and the contribution of the structured layer is difficult to quantify. 
@@ -525,14 +524,14 @@ We can conclude that DCNNs are able to model complex relations at a low cost.
    \centering
    \input{figures/chapter3/cifar10_type.tex}
    \caption{Network size vs. Accuracy compared on Dense networks, DCNNs (our approach), DTNNs (our approach), neural networks based on Toeplitz matrices and neural networks based on Low Rank-based matrices. DCNNs outperforms alternatives structured approaches.}
-   \label{figure:cifar10_type}
+   \label{figure:ch3-cifar10_type}
 \end{figure}
 
 \begin{figure}
    \centering
    \input{figures/chapter3/scatterplot.tex}
    \caption{Accuracy of different structured architecture given the number of trainable parameters.}
-   \label{figure:cifar10_with_channels_xp}
+   \label{figure:ch3-cifar10_with_channels_xp}
 \end{figure}
 
 
@@ -546,7 +545,7 @@ Finally we conduct experiments using networks based on low-rank matrices as they
 For each approach, we report the accuracy of several networks with a varying depth ranging from 1 to 40 (DCNNs, Toeplitz networks) and from 1 to 30 (from DTNNs).
 For low-rank networks, we used a fixed depth network and increased the rank of each matrix from 7 to 40.
 We also tried to increase the depth of low rank matrices, but we found that deep low-rank networks are difficult to train so we do not report the results here.
-We compare all the networks based on the number of weights from 21K (0.2\% of the dense network) to 370K weights (4\% of the dense network) and we report the results in Figure~\ref{figure:cifar10_type}. 
+We compare all the networks based on the number of weights from 21K (0.2\% of the dense network) to 370K weights (4\% of the dense network) and we report the results in Figure~\ref{figure:ch3-cifar10_type}. 
 First we can see that the size of the networks correlates positively with their accuracy which demonstrate successful training in all cases.
 We can also see that the DCNNs achieves the maximum accuracy of 56\% with 20 layers ($\sim$ 200K weights) which is as good as the dense networks with only 2\% of the number of weights.
 Other approaches also offer good trade-off but they are not able to reach the accuracy of a dense network.
@@ -603,7 +602,7 @@ In this section we compare the accuracy of various structured networks, enhanced
 
 Our test architecture consists of 2 depth scattering on the RGB images followed by a batch norm and LDR or DC layer.
 To vary the number of parameters of Scattering+LDR architecture, we increase the rank of the matrix (stacking several LDR matrices quickly exhausted the memory).
-The Figure \ref{figure:cifar10_with_channels_xp} and \ref{table:xp_ldr_scattering} shows the accuracy of these architectures given the number of trainable parameters.
+The Figure \ref{figure:ch3-cifar10_with_channels_xp} and \ref{table:xp_ldr_scattering} shows the accuracy of these architectures given the number of trainable parameters.
 
 First, we can see that the DCNN architecture very much benefits from the scattering transform and is able to reach a competitive accuracy over 78\%.
 We can also see that scattering followed by a DC layer systematically outperforms scattering + LDR or scattering + Toeplitz-like with less parameters. 
@@ -611,7 +610,7 @@ We can also see that scattering followed by a DC layer systematically outperform
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Comparison with other compression based approaches}
-\label{subsection:ch4-comparison_with_other_compression_based_approaches}
+\label{subsection:ch3-comparison_with_other_compression_based_approaches}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -639,97 +638,97 @@ We provide a comparison with other compression based approaches such as HashNet 
 Table~\ref{tab:mnist} shows the test error of DCNN against other know compression techniques on the MNIST datasets. We can observe that DCNN outperform easily HashNet \cite{Chen_Hashing_Trick} and Dark Knowledge \cite{44873} with fewer number of parameters. The architecture with Fast Food (FF) \cite{7410530} achieves better performance but with convolutional layers and only $1$ Fast Food Layer as the last Softmax layer. 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Large-scale video classification on the \yt dataset}
-\label{subsection:ch4-large_scale_video_classification}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-To understand the performance of deep DCNNs on large scale applications, we conducted experiments on the \yt video classification with 3.8 training examples introduced by~\citet{abu2016youtube}.
-Notice that we favour this experiment over ImageNet applications because modern image classification architectures involve a large number of convolutional layers, and compressing convolutional layers is out of our scope. 
-Also, as mentioned earlier, testing the performance of DCNN architectures mixed with a large number of expressive layers makes little sense.
-The \yt includes two datasets describing 8 million labeled videos.
-Both datasets contain audio and video features for each video.
-In the first dataset (\emph{aggregated}) all audio and video features have been aggregated every 300 frames.
-The second dataset (\emph{full}) contains the descriptors for all the frames.
-To compare the models we use the GAP metric (Global Average Precision) proposed by~\citet{abu2016youtube}.
-On the simpler \emph{aggregated} dataset we compared off-the-shelf DCNNs with a dense baseline with 5.7M weights.
-On the full dataset, we designed three new compact architectures based on the state-of-the-art architecture introduced by~\citet{abu2016youtube}. 
-
-\paragraph{Experiments on the aggregated dataset with DCNNs:}
-We compared DCNNs with a dense baseline with 5.7 millions weights.
-The goal of this experiment is to discover a good trade-off between depth and model accuracy.
-To compare the models we use the GAP metric (Global Average Precision) following the experimental protocol in~\cite{abu2016youtube}, to compare our experiments. 
-
-Table~\ref{table:youtube_agg_xp} shows the results of our experiments on the {\em aggrgated} \yt dataset in terms of number of weights, compression rate and GAP.
-We can see that the compression ratio offered by the circulant architectures is high.
-This comes at the cost of a little decrease of GAP measure.
-The 32 layers DCNN is 46 times smaller than the original model in terms of number of parameters while having a close performance. 
-
-
-\begin{table}
-  \centering
-  \caption{This table shows the GAP score for the \yt dataset with DCNNs. We can see a large increase in the score with deeper networks.}
-  \begin{tabular}{lccc}
-    \toprule
-    \textbf{Architecture} & \textbf{\#Weights} &
-    \textbf{GAP@20} \\
-    \hline \\
-    \textit{original} & \textit{5.7M} & \textit{0.773} \\
-    4 DC & 25 410  (\textit{\textbf{0.44}}) & 0.599   \\
-    32 DC  & 122 178 \textit{(2.11)} & 0.685   \\
-    4 DC + 1 FC & 4.46M \textit{(77)} & \textbf{0.747} \\
-  \hline
-  \end{tabular}
-  \label{table:youtube_agg_xp}
-\end{table}
-
-\begin{table}
-  \centering
-  \caption{This table shows the GAP score for the \yt dataset with different layer represented with our DC decomposition.}
-  \begin{tabular}{lccc}
-  \toprule
-  \textbf{Architecture} & \textbf{\#Weights} & \textbf{GAP@20} \\
-  \hline \\
-  \textit{original} & \textit{45M} & \textit{0.846} \\
-  DBoF with DC   & 36M (\textit{80}) & 0.838 \\
-  FC with DC    & 41M (\textit{91}) & \textbf{0.845} \\
-  MoE with DC   & 12M (\textit{\textbf{26}}) & 0.805 \\
-  \hline
-  \end{tabular}
-  \label{table:youtube_full_xp}
-\end{table}
-
-\paragraph{Experiments with DCNNs Deep Bag-of-Frames Architecture:}
-The Deep Bag-of-Frames architecture can be decomposed into three blocks of layers, as illustrated in Figure~\ref{figure:archi_youtube}.
-The first block of layers, composed of the Deep Bag-of-Frames embedding (DBoF), is meant to model an embedding of these frames in order to make a simple representation of each video.
-A second block of fully connected layers (FC) reduces the dimensionality of the output of the embedding and merges the resulting output with a concatenation operation.
-Finally, the classification block uses a combination of Mixtures-of-Experts (MoE)~\cite{716791,abu2016youtube} and Context Gating~\cite{miech2017learnable} to calculate the final class probabilities.
-Table~\ref{table:youtube_full_xp} shows the results in terms of number of weights, size of the model (MB) and GAP on the full dataset, replacing the DBoF block reduces the size of the network without impacting the accuracy.
-We obtain the best compression ratio by replacing the MoE block with DCNNs (26\%) of the size of the original dataset with a GAP score of 0.805 (95\% of the score obtained with the original architecture).
-We conclude that DCNN are both theoretically sound and of practical interest in real, large scale applications.
-
-\begin{figure}[htb]
-  \centering
-  \input{figures/chapter3/archi_youtube.tex}
-  \caption{This figure shows the state-of-the-art neural network architecture, initially proposed by~\citet{abu2016youtube} and later improved by~\citet{miech2017learnable}, used in our experiment.}
-  \label{figure:archi_youtube}
-\end{figure}
-
-\paragraph{Architectures \& Hyper-Parameters:} 
-For the first set of our experiments (\emph{experiments on CIFAR-10}), we train all networks for 200 epochs, a batch size of 200, Leaky ReLU activation with a different slope.
-We minimize the Cross Entropy Loss with Adam optimizer and use a piecewise constant learning rate of $5 \times 10^{-5}$, $2.5\times10^{-5}$, $5\times10^{-6}$ and $1\times10^{-6}$ after respectively 40K, 60K and 80K steps.
-For the \yt dataset experiments, we built a neural network based on the SOTA architecture initially proposed by~\citet{abu2016youtube} and later improved by~\citet{miech2017learnable}.
-Remark that no convolution layer is involved in this application since the input vectors are embeddings of video frames processed using state-of-the-art convolutional neural networks trained on ImageNet.
-We trained our models with the CrossEntropy loss and used Adam optimizer with a 0.0002 learning rate and a 0.8 exponential decay every 4 million examples.
-All fully connected layers are composed of 512 units.
-DBoF, NetVLAD and NetFV are respectively 8192, 64 and 64 of cluster size for video frames and 4096, 32, 32 for audio frames.
-We used 4 mixtures for the MoE Layer.
-We used all the available 300 frames for the DBoF embedding.
-In order to stabilize and accelerate the training, we used batch normalization before each non linear activation and gradient clipping. 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{Large-scale video classification on the \yt dataset}
+% \label{subsection:ch3-large_scale_video_classification}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% To understand the performance of deep DCNNs on large scale applications, we conducted experiments on the \yt video classification with 3.8 training examples introduced by~\citet{abu2016youtube}.
+% Notice that we favour this experiment over ImageNet applications because modern image classification architectures involve a large number of convolutional layers, and compressing convolutional layers is out of our scope. 
+% Also, as mentioned earlier, testing the performance of DCNN architectures mixed with a large number of expressive layers makes little sense.
+% The \yt includes two datasets describing 8 million labeled videos.
+% Both datasets contain audio and video features for each video.
+% In the first dataset (\emph{aggregated}) all audio and video features have been aggregated every 300 frames.
+% The second dataset (\emph{full}) contains the descriptors for all the frames.
+% To compare the models we use the GAP metric (Global Average Precision) proposed by~\citet{abu2016youtube}.
+% On the simpler \emph{aggregated} dataset we compared off-the-shelf DCNNs with a dense baseline with 5.7M weights.
+% On the full dataset, we designed three new compact architectures based on the state-of-the-art architecture introduced by~\citet{abu2016youtube}. 
+%
+% \paragraph{Experiments on the aggregated dataset with DCNNs:}
+% We compared DCNNs with a dense baseline with 5.7 millions weights.
+% The goal of this experiment is to discover a good trade-off between depth and model accuracy.
+% To compare the models we use the GAP metric (Global Average Precision) following the experimental protocol in~\cite{abu2016youtube}, to compare our experiments. 
+%
+% Table~\ref{table:youtube_agg_xp} shows the results of our experiments on the {\em aggrgated} \yt dataset in terms of number of weights, compression rate and GAP.
+% We can see that the compression ratio offered by the circulant architectures is high.
+% This comes at the cost of a little decrease of GAP measure.
+% The 32 layers DCNN is 46 times smaller than the original model in terms of number of parameters while having a close performance. 
+%
+%
+% \begin{table}
+%   \centering
+%   \caption{This table shows the GAP score for the \yt dataset with DCNNs. We can see a large increase in the score with deeper networks.}
+%   \begin{tabular}{lccc}
+%     \toprule
+%     \textbf{Architecture} & \textbf{\#Weights} &
+%     \textbf{GAP@20} \\
+%     \hline \\
+%     \textit{original} & \textit{5.7M} & \textit{0.773} \\
+%     4 DC & 25 410  (\textit{\textbf{0.44}}) & 0.599   \\
+%     32 DC  & 122 178 \textit{(2.11)} & 0.685   \\
+%     4 DC + 1 FC & 4.46M \textit{(77)} & \textbf{0.747} \\
+%   \hline
+%   \end{tabular}
+%   \label{table:youtube_agg_xp}
+% \end{table}
+%
+% \begin{table}
+%   \centering
+%   \caption{This table shows the GAP score for the \yt dataset with different layer represented with our DC decomposition.}
+%   \begin{tabular}{lccc}
+%   \toprule
+%   \textbf{Architecture} & \textbf{\#Weights} & \textbf{GAP@20} \\
+%   \hline \\
+%   \textit{original} & \textit{45M} & \textit{0.846} \\
+%   DBoF with DC   & 36M (\textit{80}) & 0.838 \\
+%   FC with DC    & 41M (\textit{91}) & \textbf{0.845} \\
+%   MoE with DC   & 12M (\textit{\textbf{26}}) & 0.805 \\
+%   \hline
+%   \end{tabular}
+%   \label{table:youtube_full_xp}
+% \end{table}
+%
+% \paragraph{Experiments with DCNNs Deep Bag-of-Frames Architecture:}
+% The Deep Bag-of-Frames architecture can be decomposed into three blocks of layers, as illustrated in Figure~\ref{figure:ch3-archi_youtube}.
+% The first block of layers, composed of the Deep Bag-of-Frames embedding (DBoF), is meant to model an embedding of these frames in order to make a simple representation of each video.
+% A second block of fully connected layers (FC) reduces the dimensionality of the output of the embedding and merges the resulting output with a concatenation operation.
+% Finally, the classification block uses a combination of Mixtures-of-Experts (MoE)~\cite{716791,abu2016youtube} and Context Gating~\cite{miech2017learnable} to calculate the final class probabilities.
+% Table~\ref{table:youtube_full_xp} shows the results in terms of number of weights, size of the model (MB) and GAP on the full dataset, replacing the DBoF block reduces the size of the network without impacting the accuracy.
+% We obtain the best compression ratio by replacing the MoE block with DCNNs (26\%) of the size of the original dataset with a GAP score of 0.805 (95\% of the score obtained with the original architecture).
+% We conclude that DCNN are both theoretically sound and of practical interest in real, large scale applications.
+%
+% \begin{figure}[htb]
+%   \centering
+%   \input{figures/chapter3/archi_youtube.tex}
+%   \caption{This figure shows the state-of-the-art neural network architecture, initially proposed by~\citet{abu2016youtube} and later improved by~\citet{miech2017learnable}, used in our experiment.}
+%   \label{figure:ch3-archi_youtube}
+% \end{figure}
+%
+% \paragraph{Architectures \& Hyper-Parameters:} 
+% For the first set of our experiments (\emph{experiments on CIFAR-10}), we train all networks for 200 epochs, a batch size of 200, Leaky ReLU activation with a different slope.
+% We minimize the Cross Entropy Loss with Adam optimizer and use a piecewise constant learning rate of $5 \times 10^{-5}$, $2.5\times10^{-5}$, $5\times10^{-6}$ and $1\times10^{-6}$ after respectively 40K, 60K and 80K steps.
+% For the \yt dataset experiments, we built a neural network based on the SOTA architecture initially proposed by~\citet{abu2016youtube} and later improved by~\citet{miech2017learnable}.
+% Remark that no convolution layer is involved in this application since the input vectors are embeddings of video frames processed using state-of-the-art convolutional neural networks trained on ImageNet.
+% We trained our models with the CrossEntropy loss and used Adam optimizer with a 0.0002 learning rate and a 0.8 exponential decay every 4 million examples.
+% All fully connected layers are composed of 512 units.
+% DBoF, NetVLAD and NetFV are respectively 8192, 64 and 64 of cluster size for video frames and 4096, 32, 32 for audio frames.
+% We used 4 mixtures for the MoE Layer.
+% We used all the available 300 frames for the DBoF embedding.
+% In order to stabilize and accelerate the training, we used batch normalization before each non linear activation and gradient clipping. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
-\label{section:ch4-conclusion}
+\label{section:ch3-conclusion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 This chapter deals with the training of diagonal circulant neural networks.
