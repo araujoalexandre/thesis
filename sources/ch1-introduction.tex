@@ -42,7 +42,7 @@
 \label{subsection:ch1-introduction_to_supervised_learning}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-This thesis focus on the concept of \emph{supervised learning} which refers to the notion of learning the parameters of a specific function that maps an input to an output based on example input-output pairs.
+This thesis focuses on the concept of \emph{supervised learning} which refers to the notion of learning the parameters of a specific function that maps an input to an output based on example input-output pairs.
 For example, an image (input) associated with its content: label (output).
 % The choice of the function used for supervised learning is an active area of research and will be part of the focus of this thesis.
 
@@ -162,7 +162,7 @@ More precisely, a Neural Neural can be analytically described as a composition o
   \label{equation:neural_network}
 \end{equation}
 where the function $\phi_{\Wmat_i}$ is a linear function parameterized by $\Wmat_i$, $\rho$ is a non-linear function, $\Theta \triangleq ( \Wmat_1, \dots, \Wmat_p )$ and $p$ correspond to the \emph{depth} of the network (\ie, the number of layers).
-If the weight matrices are dense, this architecture is called \emph{Fully Connected Neural Network} because all the neurons from the first activation are connected to all the neurons from the second activation.
+If the weight matrices $\Wmat_i$ are dense, this architecture is called \emph{Fully Connected Neural Network} because all the neurons from the first activation are connected to all the neurons from the second activation.
 
 Therefore, a neural network is a function $f_\Theta:\Rbb^n \rightarrow \Rbb^m$ parameterized by weights and composed of at least two linear functions (layers) and one non-linear function (activation function).
 The input space $n$ is usually large and the output space $m$ corresponds to the number of classes the network has to classify; therefore, we have $m \ll n$.
@@ -196,7 +196,7 @@ then the learning procedure can be taken over $\Theta$ as follows:
 
 
 Fully connected neural networks can have a very large number of parameters with respect to the number of data points used in real-world datasets.
-For example, with the MNIST dataset~\cite{lecun1998gradient} which consists of $5 \times 10^4$ images of handwritten digits from 0 to 9, a two-layer fully connected neural network will have more than $6 \times 10^5$ parameters.
+For example, with the MNIST dataset~\cite{lecun1998gradient} which consist of $5 \times 10^4$ images of handwritten digits from 0 to 9, a two-layer fully connected neural network will have more than $6 \times 10^5$ parameters.
 Training such a large network has a number of significant drawbacks: they are hard to train, subject to overfitting and are computationally expensive.
 To overcome these limitations, \citet{vapnik1992principles} have proposed to replace the empirical risk minimization principle by \emph{structural risk minimization} (SRM) which consists of implementing ERM with the addition of a structure on the hypothesis space.
 Adding a structure on the hypothesis space can be done using two methods: constraining the architecture of the network, constraining the learning procedure by adding a regularization term. 
@@ -248,8 +248,8 @@ Hereafter, we present in more detail the two approaches.
   \label{figure:lenet_network}
 \end{figure}
 
-A perfect example of neural networks with a specific architecture are \emph{Convolutional Neural Networks} (CNN)~\cite{lecun1998gradient,krizhevsky2012imagenet,He_2016_CVPR,tan2019efficientnet} which consists of neural networks with specific structured linear transformations. 
-The structured linear transform used in convolutional layers is the discrete convolution which consists of a kernel sliding over the image and acting as a filter.
+A perfect example of neural networks with a specific architecture are \emph{Convolutional Neural Networks} (CNN)~\cite{lecun1998gradient,krizhevsky2012imagenet,He_2016_CVPR,tan2019efficientnet} which consists of neural networks with specific structured linear transform. 
+This transform used in convolutional layers is the discrete convolution which consists of a kernel sliding over the image and acting as a filter.
 % A perfect example of such efficient linear operation is the discrete convolution which consists of a kernel sliding over the image and acting as a filter.
 Let $\avec$ and $\bvec$ be two vectors indexed by the set $M = \{-m, -m+1, \dots, m-1, m\}$, the discrete convolution between the signals $\avec$ and $\bvec$ is given by: 
 \begin{equation}
@@ -275,7 +275,7 @@ Does the reduction of parameters reduce the performance of the network?
 \label{subsection:ch1-introducing_structured_into_the_learning_procedure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Instead of constraining the architecture of the network, we can constrain the learning procedure in order to reduce to search space.
+Instead of constraining the architecture of the network, we can constrain the learning procedure in order to reduce the search space.
 Consider the following hypothesis space $\mathcal{H} = \left\{ f_\Theta \ |\ \Theta = ( \Wmat_1, \cdots, \Wmat_p ) \right\}$ which define the set of neural networks with fixed architecture.
 We can introduce a structure in the hypothesis space by setting:
 \begin{equation}
@@ -294,7 +294,7 @@ For a convex loss function, the minimization of the empirical risk within the se
 \end{equation}
 where $\lambda$ is a Lagrange multiplier.
 
-Defining a regularization strategy is still an open problem in supervised learning. Recent works have proposed different form of regularization.  
+Defining a regularization strategy is still an open problem in supervised learning. Recent works have proposed different forms of regularization.  
 
 
 
@@ -407,7 +407,7 @@ In addition to offering a more compact representation, the structure of certain 
   \label{figure:example_structure_matrices}
 \end{figure}
 
-More specifically, we study the proprieties of structured matrices from the Toeplitz family to make two contributions presented below:
+More specifically, we study the properties of structured matrices from the Toeplitz family to make two contributions presented below:
 
 \paragraph{Contribution 1} (C1)
 We use circulant matrices, which are a particular case of Toeplitz matrices, to devise a new compact architecture replacing Fully Connected Neural Networks.
@@ -421,7 +421,7 @@ Finally, we train compact and accurate deep diagonal circulant networks on a rea
 \paragraph{Contribution 2} (C2)
 It is well known that a discrete convolution operation with a 2d kernel applied on a 2d signal is equivalent to a matrix multiplication with a doubly-block Toeplitz matrix~\cite{jain1989fundamentals} (see Appendix~\ref{xxx}). 
 Based on this knowledge and by leveraging the theory of Toeplitz matrices, we introduce a new upper bound on the Lipschitz constant for convolutional layers that is both tight and easy to compute.
-This bound allows us to tackle the problem of Lipschitz regularization of Convolutional Neural Networks which is established now established as a key property of modern deep learning with implications in training stability, generalization, robustness against adversarial examples, etc.
+This bound allows us to tackle the problem of Lipschitz regularization of Convolutional Neural Networks which is now established as a key property of modern deep learning with implications in training stability, generalization, robustness against adversarial examples, etc.
 
 % we leverage the properties of doubly-block Toeplitz matrices to devised a new fast and efficient method to compute the Lipschitz constant of convolutional layers. 
 %
