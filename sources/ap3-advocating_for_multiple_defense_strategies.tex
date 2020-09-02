@@ -158,7 +158,7 @@ In large dimensions, the volume of the corner of the $\linf$ ball is much bigger
 
 Our theoretical analysis shows that if adversarial examples were uniformly distributed in a high-dimensional space, then any mechanism that perfectly defends against $\linf$ adversarial examples has a null probability of protecting against $\ltwo$-bounded adversarial attacks.
 Although existing defense mechanisms do not necessarily assume such a distribution of adversarial examples, we demonstrate that whatever distribution they use, it offers no favorable bias with respect to the result of Theorem~\ref{theorem:ap3-nullvolume}.
-As we discussed in Section~\ref{section:ap3-preliminaries}, there are two distinct attack settings: loss maximization (PGD) and perturbation minimization (C\&W).
+As we discussed in Chapter~\ref{chapter:lipschitz_regularization_for_adversarial_robustness}, there are two distinct attack settings: loss maximization (PGD) and perturbation minimization (C\&W).
 Our analysis is mainly focusing on loss maximization attacks.
 However, these attacks have a very strict geometry\footnote{Due to the projection operator, all PGD attacks saturate the constraint, which makes them all lies in a very small part of the ball.}.
 This is why, to present a deeper analysis of the behavior of adversarial attacks and defenses, we also present a set of experiments that use perturbation minimization attacks.
@@ -231,7 +231,7 @@ This means that even after adversarial training, it is still easy to find good $
     PGD-$\ltwo$ &   & 0.00 &   & 0.37 & 0.52 &   & 0.50 & 0.55 &   & 0.34 & 0.36 &   & 0.43 & 0.39 &   & 0.34 & 0.37 \\
     \bottomrule
   \end{tabular}%
-  \caption{This table shows a comprehensive list of results consisting of the accuracy of several defense mechanisms against $\ltwo$ and $\linf$ attacks. This table main objective is to compare the overall performance of ‘single‘ norm defense mechanisms (AT and NI presented in the Section~\ref{subsection:ap3-defense_mechanisms}) against mixed norms defense mechanisms (MAT \& RAT mixed defenses presented in Section~\ref{section:ap3-reviewing_defenses_against_multiple_attacks}).}
+  \caption{This table shows a comprehensive list of results consisting of the accuracy of several defense mechanisms against $\ltwo$ and $\linf$ attacks. This table main objective is to compare the overall performance of ‘single‘ norm defense mechanisms (AT and NI presented in the Chapter~\ref{chapter:75748} Section~\ref{section:96537834}) against mixed norms defense mechanisms (MAT \& RAT mixed defenses presented in Section~\ref{section:ap3-reviewing_defenses_against_multiple_attacks}).}
   \label{table:ap3-results}
 \end{table}%
 
@@ -255,7 +255,7 @@ To evaluate defenses based on Noise Injection, we use {\em Expectation Over Tran
 To attack the models, we use state-of-the-art algorithms PGD.
 We run PGD with 20 iterations to generate adversarial examples and with 10 iterations when it is used for adversarial training.
 The maximum $\linf$ bound is fixed to $0.031$ and the maximum $\ltwo$ bound is fixed to $0.83$.
-As discussed in Section~\ref{section:ap3-preliminaries}, we chose these values so that the $\linf$ and the $\ltwo$ balls have similar volumes.
+We chose these values so that the $\linf$ and the $\ltwo$ balls have similar volumes.
 Note that $0.83$ is slightly above the values typically used in previous publications in the area, meaning the attacks are stronger, and thus  more difficult to defend against.
 
 All experiments are conducted on CIFAR-10 with the Wide-Resnet 28-10 architecture.
@@ -306,7 +306,7 @@ The corresponding loss function is defined as follows:
 \begin{equation}
   \min_{\theta} \Ebb_{(\xvec, y) \sim \mathcal{D}} \left[ \max_{\norm{\tau}_p \leq \epsilon} \mathcal{L} \left( \tilde{f}_{\theta}(\xvec+\tau), y)  \right) \right].
 \end{equation}
-where $\tilde{f}_\theta$ is a randomized neural network with noise injection as described in Section~\ref{subsection:ap3-randomized_training}, and $\norm{\ \cdot\ }_p$ define which kind of AT is used.
+where $\tilde{f}_\theta$ is a randomized neural network with noise injection as described in Section~\ref{subsection:ch6-randomized_training}, and $\norm{\ \cdot\ }_p$ define which kind of AT is used.
 For each setting, we consider two noise distributions, Gaussian and Uniform as we did with NI.
 We also consider two different Adversarial training AT-$\linf$ as well as AT-$\ltwo$. 
 
