@@ -201,7 +201,7 @@ The Renyi divergence is a generalized measure defined on the interval $(1,\infty
 It also has the very special property of being non decreasing \wrt $\lambda$.
 This divergence is very common in machine learning, especially in its Kullback-Leibler form as it is widely used as the loss function (cross entropy) of classification algorithms.
 It enjoys the desired properties  since it bounds the TV distance, and is tractable.
-Furthermore, Proposition~\ref{propsition:ap2-RobustTV} proves that Renyi-robustness implies TV-robustness, making it a suitable surrogate for the trivial distance. 
+Furthermore, Proposition~\ref{proposition:ap2-RobustTV} proves that Renyi-robustness implies TV-robustness, making it a suitable surrogate for the trivial distance.
 
 \begin{proposition}[Renyi-robustness implies TV-robustness]
   Let $\probmap$ be a probabilistic mapping, then $\forall\lambda\geq1$:
@@ -212,7 +212,7 @@ Furthermore, Proposition~\ref{propsition:ap2-RobustTV} proves that Renyi-robustn
   \begin{equation}
     \textnormal{ with } \epsilon' = \min \left(\frac{3}{2}\left(\sqrt{1 + \frac{4\epsilon}{9}} - 1\right)^{1/2}, \frac{\exp(\epsilon +1) -1}{\exp(\epsilon +1) +1}\right) \enspace.
   \end{equation}
-  \label{propsition:ap2-RobustTV}
+  \label{proposition:ap2-RobustTV}
 \end{proposition}
 
 A crucial property of Renyi-robustness is the \textit{Data processing inequality}.
@@ -224,7 +224,7 @@ In our case, if we consider a Renyi-robust probabilistic mapping, composing it w
   If $U \sim \probmap(x)$ then the probability measure $M'(x)$ s.t $\rho(U) \sim M'(x)$ defines a probabilistic mapping $M':\mathcal{X}\rightarrow\mathcal{P}(\mathcal{Y}')$.
 
   For any $\lambda>1$ if $\probmap$ is $d_{R,\lambda}$-$(\alpha,\epsilon,\gamma)$ robust then $M'$ is also is $d_{R,\lambda}$-$(\alpha,\epsilon,\gamma)$ robust.
-  \label{propsition:ap2-:postprocessing} 
+  \label{proposition:ap2-postprocessing}
 \end{proposition}
 
 Data processing inequality will allow us later to inject some additive noise in any layer of a neural network and to ensure Renyi-robustness.
@@ -851,7 +851,7 @@ Where $x \oplus r$ is the Minkowski sum between $\{x\}$ and $\{r \text{~s.t.~} \
   \caption{(a) Impact of the standard deviation of the injected noise on accuracy in a randomized model on CIFAR-100 dataset with a Wide ResNet architecture. (b) and (c) illustration of the guaranteed accuracy of different randomized models with Gaussian (b) and Laplace (c) noises given the norm of the adversarial perturbation.}
 \end{figure}
 
-Figure~\ref{figure:ap2-acc_sd_CIFAR100-appendix} presents the trade-off accuracy versus intensity of noise for the CIFAR-100 dataset. As for CIFAR-10, we observe that the accuracy decreases from 0.79 with a small noise (0.01) to $\sim$0.55 with a higher noise (0.5). The Figures~\ref{figure:ap2-gauss_certif_CIFAR100-appendix} and \ref{figure:ap2-laplace_certif_CIFAR100-appendix} are coherent with the theoretical guarantee of accuracy (Theorem~\ref{theorem:ap2-bound-appendix}) that the model can achieve under attack with a given perturbation and noise.   
+Figure~\ref{figure:ap2-acc_sd_CIFAR100-appendix} presents the trade-off accuracy versus intensity of noise for the CIFAR-100 dataset. As for CIFAR-10, we observe that the accuracy decreases from 0.79 with a small noise (0.01) to $\sim$0.55 with a higher noise (0.5). The Figures~\ref{figure:ap2-gauss_certif_CIFAR100-appendix} and \ref{figure:ap2-laplace_certif_CIFAR100-appendix} are coherent with the theoretical guarantee of accuracy (Theorem~\ref{theorem:ap2-bound}) that the model can achieve under attack with a given perturbation and noise.
 
 
 Table~\ref{table:ap2-cifar10-appendix} and~\ref{table:ap2-cifar100-appendix} summarize the results on the accuracy and accuracy under attack of CIFAR-10 and CIFAR-100 datasets with a Randomized Wide ResNet architecture given the standard deviation of the injected noise and the number of iterations of the attack. For PGD, we use an epsilon max of 0.06 and a step size of 0.006 for an input space of between -1 and +1. We show that injecting noise empirically helps defending neural networks against adversarial attacks.
@@ -964,7 +964,7 @@ Our randomized neural network with $\EoT$ attacks offers a small robustness on $
 \subsection{Experiments with noise on the first activation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The aim of the following experiments is empirically illustrate the \textit{Data processing inequality} in Proposition~\ref{propsition:ap2-:postprocessing-appendix}. 
+The aim of the following experiments is empirically illustrate the \textit{Data processing inequality} in Proposition~\ref{proposition:ap2-postprocessing}.
 
 Table~\ref{table:ap2-acc_noise_activation-appendix} and \ref{table:ap2-attack_noise_activation-appendix} present the experiments conducted with the same set of parameters as the previous ones  on CIFAR-10 and CIFAR-100, but with the noise injected in the first activation layer instead of directly in the image. We observe from  Table~\ref{table:ap2-acc_noise_activation-appendix} that we can inject more noise with a marginal loss on accuracy. The accuracy under attack is presented in Table \ref{table:ap2-attack_noise_activation-appendix} for a selection of models. 
 
