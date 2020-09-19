@@ -69,16 +69,52 @@ Table~\ref{table:ch1-networks_parameters} shows the different architectures that
 While most new architectures have been proposed based on intuition and test and learn approaches, recent research \cite{tan2019efficientnet,rosenfeld2020a} have examined the relationship between the number of parameters (model size), the size of the dataset and the accuracy.
 For computer vision models, \citet{tan2019efficientnet} have shown that the relation between model size and accuracy seems to obey a power law. 
 This discovery leads them to propose an efficient neural network with similar or higher accuracy than existing ones.  
+% In computer vision, \citet{tan2019efficientnet} have shown that this relationship seems to obey a power law leading them to propose an efficient neural network with similar or higher accuracy.
 For Natural Language Processing (NLP) neural networks, this relationship has also been observed and given the availability of large-scale datasets (Common Crawl dataset~\cite{raffel2019exploring} constitutes nearly a trillion words), researchers have been able to scale their models culminating in the 175 billion parameters GPT-3 model proposed by~\citet{brown2020language}. 
 
 As a result, higher performing models in computer vision and natural language processing have enabled the deployment and use of these models in real-world applications such as autonomous vehicles~\cite{fagnant2015preparing}, translation~\cite{wu2016google}, vocal assistants~\cite{li2017acoustic}.
 Translation and voice assistants are now used by millions of people around the world and the autonomous vehicles could reshape the transportation industry over the next decade.
 
 
+
+
+
+% Since large scale neural networks have the ability to \emph{memorize} their training data and demonstrate generalization abilities \cite{zhang2016understanding}, building models with hundreds of millions or even billions of parameters leads naturally to an increase in the accuracy of the task at hand.
+% This simple fact is certainly the reason for the race of bigger and bigger models.
+
+
+% Although, it has been known for quite some time \cite{} that scaling dataset size 
+%
+% EfficientNets[TL19] also appear to obey an approximate power-law relation between accuracy and model size. 
+%
+% => power-law scalings between performance and dataset size. 
+% [BB01] Scaling to very very large corpora for natural language disambiguation
+% \cite{banko2001scaling}
+% [Goo01] A Bit of Progress in Language Modeling
+% \cite{goodman2001bit}
+%
+% \cite{banko2001scaling,goodman2001bit}
+%
+% => caling between model size and data size; their work is perhaps the closest to ours in the literature
+% [HNA+17] Deep learning scaling is predictable, empirically
+% \cite{hestness2017deep}
+% [HAD19] Beyond human-level accuracy: Computational challenges in deep learning
+% \cite{hestness2019beyond}
+%
+% Very recent work [RRBS19b] studies scaling with both dataset size and model size for a variety of datasets, and fits an
+% ansatz similar to ours.
+% \cite{rosenfeld2020a}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Motivation}
 \label{subsection:ch1-motivation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Pourquoi j'ai fait cette thèse
+
+% -> consomation energétique,
+% -> robustesse aux attaques
+% -> complexité, analyse.
 
 
 In recent years, researchers have searched for networks with higher and higher accuracy in order to build models that can be deployed into real-world applications. 
@@ -105,14 +141,52 @@ Thus, building efficient neural networks can reduce training time, cost and allo
 \end{figure}
 
 \paragraph{Secure and Interpretable Neural Networks}
+% Some specific use cases can tolerate a few mistakes by an automatic system.
+% Autonomous vehicle aren't one of it.
 A mistake by the neural network governing the drive of an autonomous vehicle can lead to injuries or even death, hence a model with perfect accuracy is required.
 However, it is difficult to guarantee that no errors will be made.
+% Having the possibility to interpret and to understand the error made is important to correct it.
 Having the ability to interpret and understand the error is therefore essential to prevent its recurrence.
 Very large neural networks with millions, or more, parameters act as a kind of black box and are difficult to interpret.
+% Recently, \citet{lundberg2017unified} proposed an algorithm to interpret the decision of machine learning models,   
 Algorithms \cite{lundberg2017unified} for interpreting the decision of a machine learning models scale exponentially with the number of parameters making it impractical for large neural networks. 
+% interpretation for machine learning models scale exponentially with the number of parameters making it impractical for large neural networks.
 Furthermore, large neural networks due to a high complexity and expressivity exhibit instability to small perturbations of their inputs.
 The best example of this phenomenon is the vulnerability of neural networks to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,Szegedy2013IntriguingPO} (see Figure~\ref{figure:adversarial_image_example}). 
 This behavior can cause serious security problems for neural networks used for critical decision-making for example self-driving cars.
+
+
+
+% The neural network governing the decision of an autonomous vehicle has to be accurate. A high accuracy will guarante 
+%
+% The accuracy the neural network of an autonomous vehicle govern the way it will drive and therefore its safety.
+% But when a wrong decision happens which could lead to injury of even death, affected parties will want to review and interpret the decision.
+% Large neural network have been known to act as a kind of black box  
+
+
+% First, large neural networks are computationally expensive and not energy efficient.
+% The training of a sate-of-the-art models on the ImageNet dataset needs gigabyte of memory and can takes several days to train on a single GPU.
+%
+
+
+% However, large neural network have a number of significant drawbacks and security flows and the accuracy cannot be the only metric to optimize. 
+
+
+% In the last few years, with the advent of performing Deep Learning models, large-scale consumption of neural network based products and services have surged. 
+% With large-scale consumption of neural network based products and services, researchers and engineers must ensure their correct functioning.  
+% However, recent research have shown that large neural networks have a number of significant drawbacks and security flows.  
+
+% We should emphasize the computational cost of this exponential increase in the number of parameters. It has been 
+
+% Large neural networks have a significant number of drawbacks  
+
+
+
+% NLP network proposed by~\citet{brown2020language} have 175 billions parameters, a 10x increase in the number of parameters of the previous model~\cite{rosset2020turingnlg} with 17 billions parameters. 
+
+% This increase in performance lead to a number of real-world deployment such as autonomous vehicle and facial recognition which  
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -129,21 +203,21 @@ A neural network $f_\Theta : \Rbb^n \rightarrow \Rbb^m$ can be defined as follow
 where $p$ corresponds to the \emph{depth} of the network (\ie, the number of layers), the function $\phi_{\Wmat_i}$ is a linear function parameterized by $\Wmat_i$, $\rho$ is a non-linear function and $\Theta \triangleq ( \Wmat_1, \dots, \Wmat_p )$.
 The input space $n$ corresponds to the dimension of the data and the output space $m$ corresponds to the number of classes the network has to classify.
 
-This thesis focuses on the concept of \emph{supervised learning} which refers to the notion of learning the parameters of a neural network in order to map an input to an output based on example input-output pairs.
+This thesis focuses on the concept of \emph{supervised learning} which refers to the notion of learning the parameters of a neural network in order to map an input to an output based an example input-output pairs.
 For example, an image (input) associated with its content: label (output).
-As we briefly saw in the previous section, accuracy should not be the only metric to optimize when training, developing and deploying neural networks, efficiency and security are also crucial factors to consider.
+As we briefly seen in the previous section, accuracy should not be the only metric to optimize when training, developing and deploying neural networks, efficiency and security are also crucial factors to consider.
 Hereafter, we review the two problems and some methods currently applied to address them. 
 
 \paragraph{Over-parameterized to Efficient Network Networks}
-Neural networks with dense matrices $\Wmat_i$ are called \emph{Fully Connected Neural Networks} because all the neurons from one activation are connected to all the neurons of the following activation.
+Neural networks with dense matrices $\Wmat_i$ are called \emph{Fully Connected Neural Networks} because all the neurons from one activation are connected to all the neurons of following activation.
+% The number of parameters of a fully connected neural network is dependent of three parameters: the dimension of the input (the resolution), the dimensions of the hidden layers and the depth of the network.
 Fully connected neural networks can have a very large number of parameters.
 For example, with the ImageNet Dataset of input dimension $224 \times 224$, a two-layer fully connected neural network will have more than $2.6 \times 10^9$ parameters.
-Generally, this type of neural network has been shown to perform poorly certainly due to the search space being too large for the learning procedure.
-Moreover, they are computationally expensive which makes them impractical for a number of use cases (smartphones, IoT devices, etc.).
-Indeed, instead of using fully connected neural networks, researchers have devised specific linear operations that reduce the number of parameters and have properties adapted for each use case. 
-An example of neural networks with specific linear operations are \emph{Convolutional Neural Networks} (CNN)~\cite{lecun1998gradient,krizhevsky2012imagenet,He_2016_CVPR,tan2019efficientnet} which are state-of-the-art for computer vision tasks.
-They use specific linear operations (\eg, convolution) which are specific to image processing and use very few parameters.  
-A classical linear layer with a dense matrix has $n \times n$ parameters, a convolution layer only has $k \times k$ parameters where $k$ is the kernel size and is usually small (\eg 3 or 5 for classical convolutional layers).
+This type of neural network have been shown to perform poorly in general certainly due to the search space been to large for the learning procedure.
+Moreover, they are computationally expensive which make them impractical for a number of uses cases (smartphones, IoT devices, etc.).
+Indeed, instead of using fully connected neural networks, researchers have devised specific linear operations that reduce the number of parameters and have properties adapted for each uses cases. 
+An example of neural network with specific linear operations are \emph{Convolutional Neural Networks} (CNN)~\cite{lecun1998gradient,krizhevsky2012imagenet,He_2016_CVPR,tan2019efficientnet} which are state-of-the-art for computer vision tasks. They used specific linear operations (\eg, convolution) which are specific to image processing and use very few parameters.  
+A classical linear layer with dense matrix has $n \times n$ parameters, a convolution layer only has $k \times k$ parameters where $k$ is the kernel size and is usually small (\eg 3 or 5 for classical convolutional layers).
 
 
 \begin{figure}[t]
@@ -203,33 +277,128 @@ A classical linear layer with a dense matrix has $n \times n$ parameters, a conv
   \label{figure:example_structure_matrices}
 \end{figure}
 
-Convolutional neural networks are a type of \emph{structured} neural networks because the convolution operation is a matrix multiplication with a structured matrix \ie, matrix that can be represented with less than $n^2$ parameters. 
-In addition to offering a more compact representation, the structure of certain matrices can be leveraged to obtain better algorithms for matrix-vector product, thus optimizing memory and computing operations. 
-Structured neural networks have been extensively studied in the field of deep learning \cite{moczulski2015acdc,sindhwani2015structured,NIPS2013_5025}.
-Figure~\ref{figure:example_structure_matrices} shows different types of structured matrices that can be used for deep learning.
-However, it remains unclear whether other types of structure can be beneficial to other types of applications and which structure can provide both accuracy and efficient computation.
+Convolutional neural networks are a type of \emph{structured} neural networks because the convolution operation is a matrix multiplication with a structured matrix.  
+Structured neural networks have been extensively studied in the field \cite{moczulski2015acdc,sindhwani2015structured,NIPS2013_5025}. Figure~\ref{figure:example_structure_matrices} show different type of structure matrices that can be used for deep learning.
+However, it remains unclear whether other types of structure can be beneficial to other types of applications and which structure can provided both accuracy and efficient computation.
 
-The phenomenon, that neural network with a smaller number of parameters, generalizes better has been theoretically justified \cite{vapnik1982estimation}.
-More precisely, \citeauthor{vapnik1982estimation} linked the generalization capability of neural networks to their VC-dimension which is a measure of expressivity of the class of functions.
-This complexity measure is based on the number of parameters, therefore, reducing the number of parameters leads to a smaller VC-Dimension, which could lead to better generalizations.
+The phenomenon that neural network with smaller number of parameters generalize better has been theoretically justified \cite{vapnik1982estimation}.
+More precisely, \citeauthor{vapnik1982estimation} linked the generalization capability of neural network to their VC-dimension which is a measure of expressivity of the class of functions.
+This complexity measure is based on the number of parameters, therefore, reducing the number of parameters lead to a smaller VC-Dimension, which could lead to better generalization.
 
 
 
 \paragraph{Robust Neural Networks}
 
-The instability of neural networks to small input perturbations has led them to be vulnerable to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models.
+The instability of neural network to small input perturbation has lead them to be vulnerable to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models.
 The study of security properties of learning algorithms is a research field known as \emph{adversarial machine learning} which dates back to 2004 \cite{dalvi2004adversarial}.
-More recently, the work of \citet{Szegedy2013IntriguingPO} has bought considerable attention to adversarial examples in the context of Deep Learning.
-Since then, a torrent of work has been published in designing attacks and defenses \cite{Szegedy2013IntriguingPO,goodfellow2014explaining,papernot2016limitations,madry2018towards,carlini2017towards,pinot2019theoretical}.
+More recently, the work of \citet{Szegedy2013IntriguingPO} has bought considerable attention for adversarial example in the context of Deep Learning. Since then, a torrent of work have been published on designing attacks and defenses \cite{Szegedy2013IntriguingPO,goodfellow2014explaining,papernot2016limitations,madry2018towards,carlini2017towards,pinot2019theoretical}.
 
-
-\emph{Adversarial Training}, one of the first effective methods, was introduced by \citet{goodfellow2014explaining} and later improved by \citet{madry2018towards}.
-% One of the first effective method is called \emph{Adversarial Training}.
-% It was introduced by \citet{goodfellow2014explaining} and later improved by \citet{madry2018towards}.
-It consists of augmenting training batches with adversarial examples generated during the training procedure.
-By \emph{seeing} adversarial examples correctly labeled during the training procedure, neural networks exhibit increased robustness during the inference phase.
+One of the first effective method is called \emph{Adversarial Training}.
+It was introduced by \citet{goodfellow2014explaining} and later improved by \citet{madry2018towards}.
+It consists in augmenting training batches with adversarial examples generated during the training procedure.
+By \emph{seeing} adversarial examples correctly labeled during the training procedure, neural network exhibit increased robustness during the inference phase.
 More recently, a new method \cite{farnia2018generalizable} based on the regularization of the Lipschitz constant of the network has been proposed.
-In this work, the authors linked the generalization capabilities of neural networks trained with Adversarial Training to their Lipschitz constant; therefore, a reduced Lipschitz constant could lead to a better generalization.
+In this work, the authors linked the generalization capabilities of neural networks trained with Adversarial Training to their Lipschitz constant, therefore, a reduced Lipschitz constant could lead to a better generalization.
+
+
+
+
+
+
+
+% The link between complexity of the class of function and generalization have been the focus of a lot of work in theoretical machine learning \cite{xxx}.
+%
+% Later, \citet{vapnik1992principles} have proposed to replace the empirical risk minimization (ERM) principle by the \emph{structural risk minimization} (SRM) which consists of implementing ERM with the addition of adding a structure on the network and on the learning procedure.
+%
+% One of the most common form of regularization \cite{tikhonov_arsenin_1977, krogh1992simple} consists of adjusting the weights during the learning procedure under the constraint to keep their magnitude small. 
+
+
+% problem of neural network:
+% - over parameterized neural network lead to computationally expensive neural network and impractical in a number of use case
+% - over complex neural network lead to instability and vulnerability to adversarial attacks
+
+
+
+% To overcome these limitations, \citet{vapnik1992principles} have proposed to replace the empirical risk minimization (ERM) principle which the learning procedure is based on by the \emph{structural risk minimization} (SRM) which consists of implementing ERM with the addition of adding a structure on the network or on the learning procedure.
+
+
+
+
+% To overcome these limitations, \citet{vapnik1992principles} have proposed to replace the empirical risk minimization (ERM) principle which the learning procedure is based on by the \emph{structural risk minimization} (SRM) which consists of implementing ERM with the addition of adding a structure on the network or on the learning procedure.
+%
+%
+% An interesting goal would be to reduce the number of parameters to make the computations more practical.
+% However, a neural network with too few parameters would have too little expressive power to correctly learn the relationship between the input and the output.
+% Furthermore, even with a reduction of the number of parameters, the network still exhibit instability to small perturbations. 
+%
+%
+% The goal of supervised learning is to \emph{learn} the best parameters $\Theta$ such that the neural network outputs the correct label from a given input.
+% In practice, neural networks are trained using the \emph{empirical risk minimization} principle which consist of minimizing the empirical error between the output of the network and the true label.
+%
+% XXX can be done using two methods: constraining the architecture of the network or constraining the learning procedure by adding a regularization term. 
+%
+
+
+
+
+
+% \paragraph{Structural Risk Minimization} (SRM).
+% The ERM principle assumes that the function $\hat{h}^*$ minimizing $E(h, n)$ leads to the risk $R(\hat{h}^*)$ being close to the minimum.
+% This assumption mean that as the \emph{size} of the training set increase the minimization becomes more accurate. More formally, the ERM principle assumes that $R(\hat{h}^*)$ converge to its minimum value on the set $h \in \mathcal{H}$ when $n \rightarrow \infty$.  
+% \citet{Vapnik1991TheNA} have shown that this equivalent to say that the empirical risk $E(h, n)$ \emph{converge uniformly} to the actual risk $R(h)$ over $h \in \mathcal{H}$ where the \emph{uniform convergence} is defined as follows:
+% \begin{equation}
+%   \Pbb \left[ \sup_{h \in \mathcal{H}} \left| R(h) - E(h, n) \right| < \epsilon \right] \rightarrow 0 \quad \text{ when } \quad n \rightarrow \infty, \quad \forall \epsilon > 0 
+% \end{equation}
+
+
+
+
+
+% The input space $n$ corresponds to the dimension of the data and the output space $m$ corresponds to the number of classes the network has to classify. In classical use cases, the dimension of the data is large with respect to the number of classes.
+
+
+
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{Structure Given by the Architecture of the Neural Network}
+% \label{subsection:ch1-introducing_structured_into_the_architecture_of_neural_networks}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+% An example of neural networks with a specific architecture are \emph{Convolutional Neural Networks} (CNN)~\cite{lecun1998gradient,krizhevsky2012imagenet,He_2016_CVPR,tan2019efficientnet} which consists of neural networks with specific structured linear transform. 
+% This transform used in convolutional layers is the discrete convolution which consists of a kernel sliding over the image and acting as a filter.
+% % A perfect example of such efficient linear operation is the discrete convolution which consists of a kernel sliding over the image and acting as a filter.
+% Let $\avec$ and $\bvec$ be two vectors, the discrete convolution between the signals $\avec$ and $\bvec$ denoted $a \ast b$ is given by: 
+% \begin{equation}
+%   (\avec \ast \bvec)_i \triangleq \sum_{j = -m}^m \avec_j \cdot \bvec_{i - j}
+% \end{equation}
+% The convolution operation has translation invariance characteristics \cite{zhang1990parallel} which is perfectly suited for image classification (objects can be at different positions in images).  
+% \citet{lecun1998gradient} was one of the first to successfully train a convolutional neural network, achieving state-of-the-art performance on the MNIST dataset.
+% Convolution neural networks achieve a good performance for two main reasons:
+% first, CNNs are similar to the connectivity pattern of neurons in the visual cortex of the human brain. 
+% Secondly, CNNs are very efficient due to the sharing of parameters. 
+% While a classical linear operation with dense matrix has $n \times n$ parameters, a convolution only has $k \times k$ parameters where $k$ is the kernel size and is usually small (\eg 3 or 5 for classical convolution layers use in neural networks).
+% This weight sharing reduces the number of weights with respect to the fully connected neural network. The LeNet architecture (see Figure~\ref{figure:lenet_network}) has only $6 \times 10^4$ parameters.  
+%
+% Although, convolutional neural networks have demonstrated good results on a specific type of applications (in particular image processing). 
+% It remains unclear whether other types of structure can be beneficial to other types of applications.
+% Can we use other types of structure for neural networks?  
+% Does the reduction of parameters reduce the performance of the network?
+%
+%
+%
+%
+%
+%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{Structure Given by the Learning Procedure}
+% \label{subsection:ch1-introducing_structured_into_the_learning_procedure}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% xxx
+
 
 
 
@@ -238,16 +407,19 @@ In this work, the authors linked the generalization capabilities of neural netwo
 \label{section:ch1-main_contributions_and_outline_of_the_thesis}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Main Contributions}
+\label{subsection:ch1-main_contributions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% In this thesis, we leverage the properties of \emph{structured matrices} for the problems mentioned in Section~\ref{subsection:ch1-introducing_structured_into_the_architecture_of_neural_networks} and \ref{subsection:ch1-introducing_structured_into_the_learning_procedure}.
-%
-% More specifically, we study the properties of structured matrices from the Toeplitz family to make two contributions presented below:
+In this thesis, we leverage the properties of \emph{structured matrices} for the problems mentioned in Section~\ref{subsection:ch1-introducing_structured_into_the_architecture_of_neural_networks} and \ref{subsection:ch1-introducing_structured_into_the_learning_procedure}. A $n \times n$ structure matrix can be represented with less than $n^2$ parameters, Figure~\ref{figure:example_structure_matrices} shows an example of structured matrices.
+In addition to offering a more compact representation, the structure of certain matrices can be leveraged to obtain better algorithms for matrix-vector product leading in memory and computationally operations. 
 
-In this thesis, we leverage the properties of structured matrices from the Toeplitz family to make contributions in the field of deep neural networks.
-More precisely, we focus on building efficient and robust neural networks. 
 
-This thesis is organized in two parts.
-First, we use circulant matrices, which are a particular case of Toeplitz matrices, to devise a new compact architecture replacing Fully Connected Neural Networks.
+More specifically, we study the properties of structured matrices from the Toeplitz family to make two contributions presented below:
+
+\paragraph{Contribution 1} (Part 1)
+We use circulant matrices, which are a particular case of Toeplitz matrices, to devise a new compact architecture replacing Fully Connected Neural Networks.
 More precisely, we study deep diagonal circulant neural networks, which are deep neural networks in which weight matrices are the product of diagonal and circulant ones.
 Besides making a theoretical analysis of their expressivity, we introduce principled techniques for training these models: we devise an initialization scheme and propose a smart use of non-linearity functions in order to train deep diagonal circulant networks. 
 Furthermore, we show that these networks outperform recently introduced deep networks with other types of structured layers.
@@ -255,44 +427,35 @@ We conduct a thorough experimental study to compare the performance of deep diag
 We show that our models achieve better accuracy than other structured approaches while requiring 2x fewer weights than the next best approach.
 Finally, we train compact and accurate deep diagonal circulant networks on a real-world video classification dataset with over 3.8 million training examples. 
 
-In the second part of this thesis, we leveraged the properties of the structure of convolution to devise a new upper bound on the largest singular value of convolution layers that is both tight and easy to compute. 
-Our work is based on the result \cite{gray2006toeplitz} that an upper bounded on the singular value of Toeplitz matrices can be computed from the inverse Fourier transform of the characteristic sequence of these matrices.
-From our analysis immediately follows an algorithm for bounding the Lipschitz constant of a convolutional layer, and by extension the Lipschitz constant of the whole network.
-Finally, we illustrate our approach on adversarial robustness. 
-Recent work has shown that empirical methods such as adversarial training (AT) offer poor generalization~\cite{schmidt2018adversarially}, and can be improved by applying Lipschitz regularization~\cite{farnia2018generalizable}.
-To illustrate the benefit of our new method, we train neural networks with Lipschitz regularization and show that it offers a significant improvement over adversarial training alone.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-% It is well known that a discrete convolution operation with a 2d kernel applied on a 2d signal is equivalent to a matrix multiplication with a doubly-block Toeplitz matrix~\cite{jain1989fundamentals} (see Appendix~\ref{xxx}). 
-
-
-% Instead of using the power method to iteratively approximate this value, we rely on Toeplitz matrix theory and its links with Fourier analysis.
-%
-% Based on this knowledge and by leveraging the theory of Toeplitz matrices, we introduce a new upper bound on the Lipschitz constant for convolutional layers that is both tight and easy to compute.
-%
-%
-% We first extend this result to doubly-block Toeplitz matrices (\ie, block Toeplitz matrices where each block is Toeplitz) and then to convolutional operators, which can be represented as stacked sequences of doubly-block Toeplitz matrices.
-% We theoretically study the approximation of this algorithm and experimentally show that it is more efficient and more accurate than competing approaches. 
-%
-
-
+\paragraph{Contribution 2} (Part 2)
+It is well known that a discrete convolution operation with a 2d kernel applied on a 2d signal is equivalent to a matrix multiplication with a doubly-block Toeplitz matrix~\cite{jain1989fundamentals} (see Appendix~\ref{xxx}). 
+Based on this knowledge and by leveraging the theory of Toeplitz matrices, we introduce a new upper bound on the Lipschitz constant for convolutional layers that is both tight and easy to compute.
+This bound allows us to tackle the problem of Lipschitz regularization of Convolutional Neural Networks which is now established as a key property of modern deep learning with implications in training stability, generalization, robustness against adversarial examples, etc.
 
 % we leverage the properties of doubly-block Toeplitz matrices to devised a new fast and efficient method to compute the Lipschitz constant of convolutional layers. 
 %
 % However, computing the exact value of the Lipschitz constant of a neural network is known to be NP-hard.
 % Recent attempts from the literature introduce upper bounds to approximate this constant that are either efficient but loose or accurate but computationally expensive.
+% In this work, Based on this result we devise an algorithm to train Lipschitz regularized Convolutional Neural Networks.
+%
+% The contributions of this Thesis are based on structured matrices from the Toeplitz family.
+%
+% More specifically, in Chapter~\ref{chapter:diagonal_circulant_neural_network}, In Chapter~\ref{chapter:lipschitz_bound}, we leverage the structure of convolutional layers to devise a new regularization scheme for neural networks. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Outline of the Thesis}
+\label{subsection:ch1-outline_of_the_thesis}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo{update this paragraph at the end of the writing}
+
+% The thesis is organized as follows. The first Chapter (Chapter~\ref{chapter:related_work}) is dedicated to enumerating state-of-the-art approaches on both contributions. In a first part, we review approaches on compact neural networks. In a second part, we review  
+%
+% Chapter~\ref{chapter:related_work} present a related work in two parts: first we review existing techniques for on building compact neural network architecture. Then, we present different techniques to constraint the learning procedure. 
+%
+% The following two chapters contains the main contributions of the Thesis.  
+% Finally, Chapter~\ref{chapter:conclusion} provides concluding remarks and a discussion.
 
 
 
