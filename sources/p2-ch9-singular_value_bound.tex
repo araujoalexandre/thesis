@@ -89,31 +89,31 @@
 An $n\times n$ Toeplitz matrix $\mathbf A$ is fully determined by a two-sided sequence of scalars: $\{a_\seqidx\}_{\seqidx \in \seqsetN}$, whereas an $nm\times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat_\seqidx\}_{\seqidx \in \seqsetN}$ and where each block $\Bmat_\seqidx$ is an $m \times m$ matrix.  
 
 \begin{equation}
-    \Amat \triangleq  \begin{psmallmatrix}
-      a_0 & a_{1}   & a_{2} & \cdots & \cdots & a_{n-1}  \\
-      a_{-1} & a_0 & a_{1} & \ddots & & \vdots \\
-      a_{-2} & a_{-1} & \ddots & \ddots & \ddots & \vdots \\ 
-     \vdots & \ddots & \ddots & \ddots & a_{1} & a_{2}\\
-     \vdots & & \ddots & a_{-1} & a_{0} & a_{1} \\
-    a_{-n+1} & \cdots & \cdots & a_{-2} & a_{-1} & a_0
-    \end{psmallmatrix} \quad \quad
-    \Bmat \triangleq  \begin{psmallmatrix}
-      \Bmat_0 & \Bmat_{1}   & \Bmat_{2} & \cdots & \cdots & \Bmat_{n-1}  \\
-      \Bmat_{-1} & \Bmat_0 & \Bmat_{1} & \ddots & & \vdots \\
-      \Bmat_{-2} & \Bmat_{-1} & \ddots & \ddots & \ddots & \vdots \\ 
-     \vdots & \ddots & \ddots & \ddots & \Bmat_{1} & \Bmat_{2}\\
-     \vdots & & \ddots & \Bmat_{-1} & \Bmat_{0} & \Bmat_{1} \\
-    \Bmat_{-n+1} & \cdots & \cdots & \Bmat_{-2} & \Bmat_{-1} & \Bmat_0
-    \end{psmallmatrix}
+  \Amat \triangleq \begin{psmallmatrix}
+    a_0 & a_{1}   & a_{2} & \cdots & \cdots & a_{n-1}  \\
+    a_{-1} & a_0 & a_{1} & \ddots & & \vdots \\
+    a_{-2} & a_{-1} & \ddots & \ddots & \ddots & \vdots \\ 
+   \vdots & \ddots & \ddots & \ddots & a_{1} & a_{2}\\
+   \vdots & & \ddots & a_{-1} & a_{0} & a_{1} \\
+  a_{-n+1} & \cdots & \cdots & a_{-2} & a_{-1} & a_0
+  \end{psmallmatrix} \quad \quad
+  \Bmat \triangleq  \begin{psmallmatrix}
+    \Bmat_0 & \Bmat_{1}   & \Bmat_{2} & \cdots & \cdots & \Bmat_{n-1}  \\
+    \Bmat_{-1} & \Bmat_0 & \Bmat_{1} & \ddots & & \vdots \\
+    \Bmat_{-2} & \Bmat_{-1} & \ddots & \ddots & \ddots & \vdots \\ 
+   \vdots & \ddots & \ddots & \ddots & \Bmat_{1} & \Bmat_{2}\\
+   \vdots & & \ddots & \Bmat_{-1} & \Bmat_{0} & \Bmat_{1} \\
+  \Bmat_{-n+1} & \cdots & \cdots & \Bmat_{-2} & \Bmat_{-1} & \Bmat_0
+  \end{psmallmatrix}
 \end{equation}
 
 The trigonometric polynomial that \emph{generates} the Toeplitz matrix $\Amat$ can be defined as follows:
 \begin{equation}
-    f_{\Amat}(\omega) \triangleq \sum_{h \in N} a_h e^{\ci h \omega}
+  f_{\Amat}(\omega) \triangleq \sum_{h \in N} a_h e^{\ci h \omega}
 \end{equation}
 The function $f_{\Amat}$ is said to be the \emph{generating function} of $\Amat$. To recover the Toeplitz matrix from its generating function, we have the following operator presented in Section~\ref{subsection:generating_function} of the main paper:
 \begin{equation} \label{equation:toeplitz_operator}
-    \leftmat \Tmat(f) \rightmat_{i, j} \triangleq  \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i - j)\omega} f(\omega) \,d\omega .
+  \leftmat \Tmat(f) \rightmat_{i, j} \triangleq  \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i - j)\omega} f(\omega) \,d\omega .
 \end{equation}
 We can now show that $\Tmat(f_{\Amat}) = \Amat$: 
 \begingroup
@@ -138,7 +138,7 @@ Because:
 
 The same reasoning can be applied to block Toeplitz matrices. Instead of being complex-valued, the trigonometric polynomial that {\em generates} the block Toeplitz $\Bmat$ is matrix-valued and can be defined as follows:
 \begin{equation}
-    f_{\Bmat}(\omega) \triangleq \sum_{h \in N} \Bmat_h e^{\ci h \omega}
+  f_{\Bmat}(\omega) \triangleq \sum_{h \in N} \Bmat_h e^{\ci h \omega}
 \end{equation}
 
 The function $f_{\Bmat}$ is said to be the \emph{generating function} of $\Bmat$. To recover the block Toeplitz matrix from its generating function, we use the Toeplitz operator defined in Equation~\ref{equation:toeplitz_operator}. We can show that $\Tmat(f_\Bmat) = \Bmat$:
@@ -512,19 +512,19 @@ Finally, we compare the efficiency and the accuracy of our bound against the sta
   \centering
   \begin{minipage}{.24\linewidth}
     \centering
-    \includegraphics[scale=0.23]{figures/chapter5/contour_poly_200_1_1_3.pdf}\\kernel $1\times3\times3$
+    \includegraphics[scale=0.23]{figures/part2/ch9-singular_value_bound/contour_poly_200_1_1_3.pdf}\\kernel $1\times3\times3$
   \end{minipage}
   \begin{minipage}{.24\linewidth}
       \centering
-      \includegraphics[scale=0.23]{figures/chapter5/contour_poly_200_1_9_3.pdf}\\kernel $9\times3\times3$
+      \includegraphics[scale=0.23]{figures/part2/ch9-singular_value_bound/contour_poly_200_1_9_3.pdf}\\kernel $9\times3\times3$
   \end{minipage}
   \begin{minipage}{.24\linewidth}
       \centering
-      \includegraphics[scale=0.23]{figures/chapter5/contour_poly_200_1_1_5.pdf}\\kernel $1\times5\times5$
+      \includegraphics[scale=0.23]{figures/part2/ch9-singular_value_bound/contour_poly_200_1_1_5.pdf}\\kernel $1\times5\times5$
   \end{minipage}
   \begin{minipage}{.24\linewidth}
       \centering
-      \includegraphics[scale=0.23]{figures/chapter5/contour_poly_200_1_9_5.pdf}\\kernel $9\times5\times5$
+      \includegraphics[scale=0.23]{figures/part2/ch9-singular_value_bound/contour_poly_200_1_9_5.pdf}\\kernel $9\times5\times5$
   \end{minipage}
   \caption{These figures represent the contour plot of multivariate trigonometric polynomials where the values of the coefficient are the values of a random convolutional kernel. The red dots in the figures represent the maximum modulus of the trigonometric polynomials.}
   \label{figure:contour_plot_trigonometric_polynomials}
@@ -588,7 +588,7 @@ where $\mathbf{k}_{\Mmat^{(n)}}$ is the  convolution kernel of the convolution d
 
 \begin{figure}[ht]
   \centering
-  \includegraphics[scale=0.50]{figures/chapter5/convergence_bound.pdf}
+  \includegraphics[scale=0.50]{figures/part2/ch9-singular_value_bound/convergence_bound.pdf}
   \caption{This graph represents the function $\Gamma(n)$ defined in Section~\ref{section:analysis_tightness_bound} for different kernel size.}
   \label{figure:convergence_bound}
 \end{figure}
@@ -612,7 +612,7 @@ Therefore $\lipbound$ gives an almost exact value of the maximal singular value 
       &   & \multicolumn{2}{c}{\textbf{1x3x3}} &   & \multicolumn{2}{c}{\textbf{32x3x3}} \\
     \cmidrule{3-4}\cmidrule{6-7}  &   & \textbf{Ratio} & \textbf{Time (ms)} &   & \textbf{Ratio} & \textbf{Time (ms)} \\
     \midrule
-    \citeauthor{sedghi2018iclr} &   & $\phantom{.}0.431\pm0.042$ & $1088\pm251$ &   & $\phantom{.}0.666\pm0.123$ & $1729\pm399$ \\
+    \citeauthor{sedghi2018singular} &   & $\phantom{.}0.431\pm0.042$ & $1088\pm251$ &   & $\phantom{.}0.666\pm0.123$ & $1729\pm399$ \\
     \citeauthor{singla2019bounding} &   & $\phantom{.}1.293\pm0.126$ & $\phantom{..}1.90\pm0.48$ &   & $\phantom{.}1.441\pm0.188$ & $\phantom{..}1.90\pm0.46$ \\
     \citeauthor{farnia2018generalizable} (10 iter) &   & $\phantom{.}0.973\pm0.006$ & $\phantom{..}4.30\pm0.64$ &   & $\phantom{.}0.972\pm0.004$ & $\phantom{..}4.93\pm0.67$ \\
     \midrule
@@ -626,7 +626,7 @@ Therefore $\lipbound$ gives an almost exact value of the maximal singular value 
 
 
 In this section we compare our PolyGrid algorithm with the values obtained using alternative approaches.
-We consider the 3 alternative techniques by~\citet{sedghi2018iclr,singla2019bounding,farnia2018generalizable} which have been described in Section~\ref{section:ch5-related_work}. 
+We consider the 3 alternative techniques by~\citet{sedghi2018singular,singla2019bounding,farnia2018generalizable} which have been described in Section~\ref{section:ch5-related_work}. 
 
 To compare the different approaches, we extracted 20 kernels from a trained model.
 For each kernel we construct the corresponding doubly-block Toeplitz matrix and compute its largest singular value.
@@ -636,7 +636,7 @@ The results of this experiment are presented in Table~\ref{table:comparaison}.
 The comparison has been made on a Tesla V100 GPU. 
 The time was computed with the PyTorch CUDA profiler and we warmed up the GPU before starting the timer.
 
-The method introduced by~\citet{sedghi2018iclr} computes an approximation of the singular values of convolutional layers.
+The method introduced by~\citet{sedghi2018singular} computes an approximation of the singular values of convolutional layers.
 We can see in Table~\ref{table:comparaison} that the value is off by an important margin.
 This technique is also computationally expensive as it requires computing the SVD of $n^2$ small matrices where $n$ is the size of inputs.
 \citet{singla2019bounding} have shown that the singular value of the reshape kernel is a bound on the maximal singular value of the convolution layer.
@@ -698,7 +698,7 @@ Our future work will focus on investigating these fields.
 %       & \textbf{VGG 16} & \phantom{..}$21.92\pm1.94$ & \phantom{..}$132.29\pm5.99$ & \textbf{6.03 }\\
 %       & \textbf{VGG 19} & \phantom{..}$29.05\pm0.66$ & \phantom{..}$162.28\pm4.87$ & \textbf{5.58 }\\
 %     \midrule
-%     \cite{ZagoruykoK16} & \textbf{WideResnet 50-2} & $113.28\pm45.44$ & \phantom{..}$468.74\pm6.54$ & \textbf{4.13 }\\
+%     \cite{zagoruyko2016wide} & \textbf{WideResnet 50-2} & $113.28\pm45.44$ & \phantom{..}$468.74\pm6.54$ & \textbf{4.13 }\\
 %     \midrule
 %     \multirow{2}[2]{*}{\cite{iandola2016squeezenet}} & \textbf{SqueezeNet 1-0} & \phantom{..}$18.44\pm5.93$ & \phantom{....}$222.4\pm25.49$ & \textbf{12.05} \\
 %       & \textbf{SqueezeNet 1-1} & \phantom{..}$18.26\pm6.65$ & \phantom{....}$209.8\pm3.59$ & \textbf{11.48} \\
@@ -710,11 +710,11 @@ Our future work will focus on investigating these fields.
 %
 % The comparison of Table~\ref{table:comparaison} of Section~\ref{subsection:comparaison_sota} of the main paper has been made with the following code provided by the authors: 
 % \begin{itemize}
-%     \item \makebox[3.2cm]{\cite{sedghi2018iclr}\hfill} \url{https://github.com/brain-research/conv-sv}
+%     \item \makebox[3.2cm]{\cite{sedghi2018singular}\hfill} \url{https://github.com/brain-research/conv-sv}
 %     \item \makebox[3.2cm]{\cite{singla2019bounding}\hfill} \url{https://github.com/singlasahil14/CONV-SV}
 %     \item \makebox[3.2cm]{\cite{farnia2018generalizable}\hfill} \url{https://github.com/jessemzhang/dl_spectral_normalization}
 % \end{itemize}
-% We translated the code of \cite{sedghi2018iclr} from TensorFlow to PyTorch in order to use the PyTorch CUDA Profiler.
+% We translated the code of \cite{sedghi2018singular} from TensorFlow to PyTorch in order to use the PyTorch CUDA Profiler.
 %
 % We extended the experiments presented in Table~\ref{table:comparaison} of Section~\ref{subsection:comparaison_sota} with Table~\ref{tab:efficiency_lipbound_full_model}.
 % This table shows the efficiency of LipBound computation vs the Power Method with 10 iterations on the full network (\ie on all the convolutions of each network).
@@ -727,7 +727,7 @@ Our future work will focus on investigating these fields.
 %
 % \begin{figure*}[htb]
 %     \centering
-%     \includegraphics[scale=0.55]{figures/chapter5/singular_values.pdf}
+%     \includegraphics[scale=0.55]{figures/part2/ch9-singular_value_bound/singular_values.pdf}
 %     \caption{This figure shows the maximal singular values of each convolution of a trained Wide ResNet on CIFAR10 dataset given different training scheme. The id 1 and 28 correspond to the first layer and last layer of the network.}
 %     \label{figure:singular_values}
 % \end{figure*}%

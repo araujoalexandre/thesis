@@ -1,0 +1,89 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Introduction of Part~\ref{part1}}
+\label{chapter:p1-ch2-introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\localtableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Context and Motivation}
+\label{section:p1-ch2-context_and_motivation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% The deep learning revolution has yielded models of increasingly large size. 
+In recent years, designing compact and accurate neural networks with a small number of trainable parameters has been an active research topic.
+It is motivated by practical applications in embedded systems to reduce memory footprint \cite{sainath2015convolutional}, federated and distributed learning to reduce communication between devices and increase user privacy \cite{konecny2016federated}, derivative-free optimization in reinforcement learning to simplify the computation of the approximated gradient \cite{choromanski2018structured}, etc.
+Besides a number of practical applications, it is also an important research question whether or not neural networks really need to be this large or if smaller networks can achieve similar accuracy~\cite{ba2014deep}.
+
+An approach to compress large models into smaller ones is to use \emph{model distillation}~\cite{hinton2015distilling}.
+Model distillation is a two-step training procedure: first, a large model (or an ensemble model) is trained to be as accurate as possible.
+Then, a second compact model is trained to approximate the first one, while satisfying the given size constraints.
+The success of model distillation and other model compression techniques begs an important question: \emph{is it possible to devise models that are compact by nature while exhibiting the same generalization properties as large ones?}
+
+In linear algebra, it is common to exploit structural properties of matrices to reduce the memory footprint of an algorithm. 
+\citet{cheng2015exploration} have used this principle in the context of deep neural networks to design compact network architectures by imposing a structure on weight matrices of fully connected layers.
+They were able to replace large, unstructured weight matrices with structured \emph{circulant matrices} without significantly impacting the accuracy.
+And because a $n \times n$ circulant matrix is fully determined by a vector of dimension $n$, they were able to train a neural network using only a fraction of the memory required to train the original network.
+
+Structured matrices are at the heart of most work on compact networks.
+In these models, dense weight matrices are replaced by matrices with a prescribed structure (\emph{low rank, Toeplitz, Vandermonde, circulant, diagonal matrices, etc.}).
+Convolutional neural networks are a perfect example of \emph{structured} neural networks because the convolutional operation is equivalent to a matrix multiplication with a doubly-block Toeplitz matrix~\cite{jain1989fundamentals}.
+However, convolution is a specific structure particularly adapted to image classification and object detection.
+Other types of structured neural networks exist but, despite substantial efforts \cite{cheng2015exploration,moczulski2016acdc}, their performance of compact models is still far from achieving an acceptable accuracy motivating their use in real-world scenarios.
+It remains unclear whether structured layers alone are expressive enough to replace all dense layers in deep feed-forward neural networks.
+This raises several questions about the effectiveness of such models and about our ability to train them.
+In particular three main questions call for investigation:
+\begin{itemize}
+  \item[\textbf{Q1}] What is the expressive power of structured layers compared to dense layers?
+  \item[\textbf{Q2}] How to train deep neural networks with a large number of structured layers?
+  \item[\textbf{Q3}] What is the effectiveness of structured neural networks on a real-world use case?
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Contributions and Outline of the Part}
+\label{section:p1-ch2-contributions_and_outline_of_the_part}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This contribution provides principled answers to the questions above for the particular case of deep neural networks based on diagonal and circulant matrices (\aka \emph{Diagonal Circulant Neural Networks} or DCNNs).
+The idea of using diagonal and circulant matrices together comes from a series of results in linear algebra by \citet{muller1998algorithmic,huhtanen2015factoring}.
+The most recent result from \citet{huhtanen2015factoring} demonstrates that any matrix $\Amat \in \Cnn$ can be decomposed into the product of $2n-1$ alternating diagonal and circulant matrices.
+The diagonal-circulant decomposition inspired \citet{moczulski2016acdc} to design the \emph{Structured Efficient Linear Layers} (SELL), which is the building block of DCNNs.
+
+This contribution is divided into two chapters.
+First, Chapter~\ref{chapter:diagonal_circulant_neural_network} answers the questions \textbf{Q1} and \textbf{Q2}.
+We provide an analysis of the expressivity of DCNNs and an extension of the results presented by \citet{huhtanen2015factoring}.
+More precisely, we introduce a new bound on the number of diagonal-circulant products required to approximate a matrix that depends on its rank.
+Building on this result, we demonstrate that a DCNN with bounded width and small depth can approximate any dense networks with ReLU activations.
+Then, we provide a number of empirical insights to explain the behavior of DCNNs during training.
+We show that the number of non-linearities in the network has an important impact on the convergence and the accuracy of the network.
+To facilitate the training, we provide a theoretically sound initialization procedure for DCNN which allows the signal to propagate through the network without vanishing nor exploding.
+These insights allow us to train, for the first time, large and deep DCNNs.
+
+Finally, Chapter~\ref{chapter:diagonal_circulant_neural_networks_for_video_classification} answers the question on the effectiveness of structured neural networks on a real-world use case;
+we focus on the problem of large-scale video classification. 
+The top-3 most accurate approaches proposed during the first \yt\footnote{https://www.kaggle.com/c/youtube8m} video classification challenge  were all ensemble models~\cite{miech2017learnable,wang2017monkeytyping,li2017temporal}.
+Ensembles are accurate, but they are not ideal: their size makes them difficult to train, maintain and deploy, especially on mobile and IoT devices. 
+Based on the analysis and insight of the previous chapter, we use diagonal and circulant layers to design several compact neural network architectures for video classification based on standard video architectures such as NetVLAD, DBoF, NetFV and we evaluated them on the large \yt dataset.
+As we will show, this approach exhibits good results on the video classification task at hand. 
+
+
+
+% We follow the same line of research as~\citet{moczulski2016acdc} and bring new contributions. Remarkably, we were able to train deep DCNNs (up to 40 layers) and apply this framework in the context of a large-scale real-world scenario (the \yt video classification dataset). 
+%
+% More precisely, we make the following contributions:
+% \begin{enumerate}
+%     \item We enhance the results by \citet{huhtanen2015factoring} by introducing a new bound on the number diagonal-circulant required to approximate a matrix that depends on its rank.
+%     \item We introduce several results regarding DCNNs with ReLU activations. In particular, we are able to demonstrate that a DCNN with bounded width and small depth can approximate any dense networks with ReLU activations.
+%     \item We describe a theoretically sound initialization procedure for DCNN. These results simplify the training and removes a large number of complex hyperparameters which made DCNNs difficult to train in practice up to now.
+%     \item We provide a number of empirical insights to explain the behaviour of DCNNs. More specifically, we show the impact of the number of the non-linearities in the network on the convergence rate and the  accuracy of the network. 
+%     \item By combining all these insights, we are able to train large and deep DCNNs. We demonstrate the good performance of DCNNs on a large-scale application (the \yt video classification problem) and obtain very competitive accuracy .
+% \end{enumerate}
+%
+
+% This part provide two contributions to 
+%
+% In this paper, we provide principled answers to these questions for the particular case of deep neural networks based on diagonal and circulant matrices (\aka Diagonal-circulant neural networks or DCNNs). 
+
+
+
+

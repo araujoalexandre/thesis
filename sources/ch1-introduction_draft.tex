@@ -17,7 +17,7 @@
 With the surge in data collection and computing resources over the last 20 years, the interest and use cases for Machine Learning have grown exponentially.
 More specifically, Deep Learning, a subfield of Machine Learning, consisting of training Deep Neural Networks on high-level
 data (images, sounds, texts) have shown great achievements.
-In recent years, Deep Neural Networks achieve state-of-the-art performances in a variety of domains such as image recognition~\cite{lecun1998gradient,krizhevsky2012imagenet,He_2016_CVPR,tan2019efficientnet}, object detection~\cite{redmon2016you,liu2016ssd,redmon2017yolo9000}, natural language processing~\cite{merity2016pointer,radford2018Language,brown2020language}, speech recognition~\cite{hinton2012deep,abdel2014convolutional,yu2016automatic}, etc.
+In recent years, Deep Neural Networks achieve state-of-the-art performances in a variety of domains such as image recognition~\cite{lecun1998gradient,krizhevsky2012imagenet,he2016deep,tan2019efficientnet}, object detection~\cite{redmon2016you,liu2016ssd,redmon2017yolo9000}, natural language processing~\cite{merity2016pointer,radford2018Language,brown2020language}, speech recognition~\cite{hinton2012deep,abdel2014convolutional,yu2016automatic}, etc.
 
 \begin{figure}[t]
   \centering
@@ -28,7 +28,7 @@ In recent years, Deep Neural Networks achieve state-of-the-art performances in a
 
 One of the first breakthroughs of Deep Learning was during the 2012 ImageNet Large-Scale Visual Recognition Challenge~\cite{ILSVRC15} which consists of evaluating algorithms for object detection and image classification.
 In this challenge, \citet{krizhevsky2012imagenet} achieved \nth{1} place and beat every other participants by a 10.8\% margin with a neural network architecture called \emph{AlexNet} (see Figure~\ref{figure:ch1-alexnet_network}). 
-The main reasons for such performance are three fold: first, they used a network architecture with more than 60 million parameters which was significant for the computational resources of the time; they used the ImageNet database~\cite{imagenet_cvpr09} which consists of 1.2 million labeled images with 1000 different classes for training their network; finally, they used graphics processing units (GPUs) to speed up the mathematical operations, reducing training time from several months to just a few days. 
+The main reasons for such performance are three fold: first, they used a network architecture with more than 60 million parameters which was significant for the computational resources of the time; they used the ImageNet database~\cite{deng2009imagenet} which consists of 1.2 million labeled images with 1000 different classes for training their network; finally, they used graphics processing units (GPUs) to speed up the mathematical operations, reducing training time from several months to just a few days. 
 
 \begin{table}[t]
   \centering
@@ -152,7 +152,7 @@ Very large neural networks with millions, or more, parameters act as a kind of b
 Algorithms \cite{lundberg2017unified} for interpreting the decision of a machine learning models scale exponentially with the number of parameters making it impractical for large neural networks. 
 % interpretation for machine learning models scale exponentially with the number of parameters making it impractical for large neural networks.
 Furthermore, large neural networks due to a high complexity and expressivity exhibit instability to small perturbations of their inputs.
-The best example of this phenomenon is the vulnerability of neural networks to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,Szegedy2013IntriguingPO} (see Figure~\ref{figure:adversarial_image_example}). 
+The best example of this phenomenon is the vulnerability of neural networks to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,szegedy2013intriguing} (see Figure~\ref{figure:adversarial_image_example}). 
 This behavior can cause serious security problems for neural networks used for critical decision-making for example self-driving cars.
 
 
@@ -216,7 +216,7 @@ For example, with the ImageNet Dataset of input dimension $224 \times 224$, a tw
 This type of neural network have been shown to perform poorly in general certainly due to the search space been to large for the learning procedure.
 Moreover, they are computationally expensive which make them impractical for a number of uses cases (smartphones, IoT devices, etc.).
 Indeed, instead of using fully connected neural networks, researchers have devised specific linear operations that reduce the number of parameters and have properties adapted for each uses cases. 
-An example of neural network with specific linear operations are \emph{Convolutional Neural Networks} (CNN)~\cite{lecun1998gradient,krizhevsky2012imagenet,He_2016_CVPR,tan2019efficientnet} which are state-of-the-art for computer vision tasks. They used specific linear operations (\eg, convolution) which are specific to image processing and use very few parameters.  
+An example of neural network with specific linear operations are \emph{Convolutional Neural Networks} (CNN)~\cite{lecun1998gradient,krizhevsky2012imagenet,he2016deep,tan2019efficientnet} which are state-of-the-art for computer vision tasks. They used specific linear operations (\eg, convolution) which are specific to image processing and use very few parameters.  
 A classical linear layer with dense matrix has $n \times n$ parameters, a convolution layer only has $k \times k$ parameters where $k$ is the kernel size and is usually small (\eg 3 or 5 for classical convolutional layers).
 
 
@@ -278,7 +278,7 @@ A classical linear layer with dense matrix has $n \times n$ parameters, a convol
 \end{figure}
 
 Convolutional neural networks are a type of \emph{structured} neural networks because the convolution operation is a matrix multiplication with a structured matrix.  
-Structured neural networks have been extensively studied in the field \cite{moczulski2015acdc,sindhwani2015structured,NIPS2013_5025}. Figure~\ref{figure:example_structure_matrices} show different type of structure matrices that can be used for deep learning.
+Structured neural networks have been extensively studied in the field \cite{moczulski2016acdc,sindhwani2015structured,denil2013predicting}. Figure~\ref{figure:example_structure_matrices} show different type of structure matrices that can be used for deep learning.
 However, it remains unclear whether other types of structure can be beneficial to other types of applications and which structure can provided both accuracy and efficient computation.
 
 The phenomenon that neural network with smaller number of parameters generalize better has been theoretically justified \cite{vapnik1982estimation}.
@@ -291,7 +291,7 @@ This complexity measure is based on the number of parameters, therefore, reducin
 
 The instability of neural network to small input perturbation has lead them to be vulnerable to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models.
 The study of security properties of learning algorithms is a research field known as \emph{adversarial machine learning} which dates back to 2004 \cite{dalvi2004adversarial}.
-More recently, the work of \citet{Szegedy2013IntriguingPO} has bought considerable attention for adversarial example in the context of Deep Learning. Since then, a torrent of work have been published on designing attacks and defenses \cite{Szegedy2013IntriguingPO,goodfellow2014explaining,papernot2016limitations,madry2018towards,carlini2017towards,pinot2019theoretical}.
+More recently, the work of \citet{szegedy2013intriguing} has bought considerable attention for adversarial example in the context of Deep Learning. Since then, a torrent of work have been published on designing attacks and defenses \cite{szegedy2013intriguing,goodfellow2014explaining,papernot2016limitations,madry2018towards,carlini2017towards,pinot2019theoretical}.
 
 One of the first effective method is called \emph{Adversarial Training}.
 It was introduced by \citet{goodfellow2014explaining} and later improved by \citet{madry2018towards}.
@@ -367,7 +367,7 @@ In this work, the authors linked the generalization capabilities of neural netwo
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 %
-% An example of neural networks with a specific architecture are \emph{Convolutional Neural Networks} (CNN)~\cite{lecun1998gradient,krizhevsky2012imagenet,He_2016_CVPR,tan2019efficientnet} which consists of neural networks with specific structured linear transform. 
+% An example of neural networks with a specific architecture are \emph{Convolutional Neural Networks} (CNN)~\cite{lecun1998gradient,krizhevsky2012imagenet,he2016deep,tan2019efficientnet} which consists of neural networks with specific structured linear transform. 
 % This transform used in convolutional layers is the discrete convolution which consists of a kernel sliding over the image and acting as a filter.
 % % A perfect example of such efficient linear operation is the discrete convolution which consists of a kernel sliding over the image and acting as a filter.
 % Let $\avec$ and $\bvec$ be two vectors, the discrete convolution between the signals $\avec$ and $\bvec$ denoted $a \ast b$ is given by: 
@@ -564,7 +564,7 @@ This bound allows us to tackle the problem of Lipschitz regularization of Convol
 % \end{equation}
 % The learning algorithm is adapted to discovers the hypothesis $\hat{f}^*_\Theta$ that minimizes the empirical risk instead of the actual risk.
 %
-% In recent years, Deep Neural Networks have achieved state-of-the-art performances in a variety of domains such as image recognition~\cite{lecun1998gradient,krizhevsky2012imagenet,He_2016_CVPR,tan2019efficientnet}, object detection~\cite{redmon2016you}, natural language processing~\cite{radford2018Language, xxx}, speech recognition~\cite{hinton2012deep, xxx}, etc. 
+% In recent years, Deep Neural Networks have achieved state-of-the-art performances in a variety of domains such as image recognition~\cite{lecun1998gradient,krizhevsky2012imagenet,he2016deep,tan2019efficientnet}, object detection~\cite{redmon2016you}, natural language processing~\cite{radford2018Language, xxx}, speech recognition~\cite{hinton2012deep, xxx}, etc. 
 % However, these performance have been \todo{continue here}
 %
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -602,7 +602,7 @@ This bound allows us to tackle the problem of Lipschitz regularization of Convol
 %   \label{figure:lenet_network}
 % \end{figure}
 %
-% An example of neural networks with a specific architecture are \emph{Convolutional Neural Networks} (CNN)~\cite{lecun1998gradient,krizhevsky2012imagenet,He_2016_CVPR,tan2019efficientnet} which consists of neural networks with specific structured linear transform. 
+% An example of neural networks with a specific architecture are \emph{Convolutional Neural Networks} (CNN)~\cite{lecun1998gradient,krizhevsky2012imagenet,he2016deep,tan2019efficientnet} which consists of neural networks with specific structured linear transform. 
 % This transform used in convolutional layers is the discrete convolution which consists of a kernel sliding over the image and acting as a filter.
 % % A perfect example of such efficient linear operation is the discrete convolution which consists of a kernel sliding over the image and acting as a filter.
 % Let $\avec$ and $\bvec$ be two vectors, the discrete convolution between the signals $\avec$ and $\bvec$ denoted $a \ast b$ is given by: 

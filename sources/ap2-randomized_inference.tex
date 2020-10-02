@@ -20,11 +20,11 @@
 
 Adversarial attacks are some of the most puzzling and burning issues in modern machine learning.
 An adversarial attack refers to a small, imperceptible change of an input maliciously designed to fool the result of a machine learning algorithm.
-Since the seminal work of~\cite{Szegedy2013IntriguingPO} exhibiting this intriguing phenomenon in the context of deep learning, a wealth of results have been published on designing attacks~\cite{goodfellow2014explaining,Papernot2016TheLO,moosavi2016deepfool,kurakin2016adversarial,carlini2017towards,moosavi2017universal} and defenses~\cite{goodfellow2014explaining,papernot2016distillation,guo2017countering,meng2017magnet,Samangouei2018DefenseGAN,madry2018towards}), or on trying to understand the very nature of this phenomenon~\cite{fawzi2018empirical,simon2018adversarial,NIPS2018Fawzi,Moosavi2016Robustnessofaclassifier}.
+Since the seminal work of~\cite{szegedy2013intriguing} exhibiting this intriguing phenomenon in the context of deep learning, a wealth of results have been published on designing attacks~\cite{goodfellow2014explaining,Papernot2016TheLO,moosavi2016deepfool,kurakin2016adversarial,carlini2017towards,moosavi2017universal} and defenses~\cite{goodfellow2014explaining,papernot2016distillation,guo2017countering,meng2017magnet,samangouei2018defense,madry2018towards}), or on trying to understand the very nature of this phenomenon~\cite{fawzi2018empirical,simon2018adversarial,fawzi2018adversarial,moosavi2016robustness}.
 Most methods remain unsuccessful to defend against powerful adversaries~\cite{carlini2017towards,madry2018towards,athalye2018obfuscated}.
 Among the defense strategies, randomization has proven effective in some contexts.
 It consists in injecting random noise (both during training and inference phases) inside the network architecture, \ie, at a given layer of the network.
-Noise can be drawn either from Gaussian~\cite{Xuang2018,lecuyer2018certified,rakin2018parametricnoiseinjection}, Laplace~\cite{lecuyer2018certified}, Uniform~\cite{Xie2017MitigatingAE}, or Multinomial~\cite{pruningDefenseICLR2018} distributions.
+Noise can be drawn either from Gaussian~\cite{Xuang2018,lecuyer2018certified,rakin2018parametric}, Laplace~\cite{lecuyer2018certified}, Uniform~\cite{xie2017mitigating}, or Multinomial~\cite{dhillon2018stochastic} distributions.
 Remarkably, most of the considered distributions belong to the Exponential family.
 Albeit these significant efforts, several theoretical questions remain unanswered.
 Among these, we tackle the following, for which we provide principled and theoretically-founded answers:
@@ -63,27 +63,27 @@ Section~\ref{section:ap2-conclusion} provides concluding remarks.
 
 
 Injecting noise into algorithms to improve their robustness has been used for ages in detection and signal processing tasks~\cite{ZozoA99,ChapR04,MitaK98}.
-It has also been extensively studied in several machine learning and optimization fields, \eg robust optimization~\cite{ben2009robust} and data augmentation techniques~\cite{Perez2017TheEO}.
+It has also been extensively studied in several machine learning and optimization fields, \eg robust optimization~\cite{ben2009robust} and data augmentation techniques~\cite{perez2017effectiveness}.
 Recently, noise injection techniques have been adopted by the adversarial defense community, especially for neural networks, with very promising results.
 Randomization techniques are generally oriented towards one of the following objectives: experimental robustness or provable robustness.
 
 \paragraph{Experimental robustness:}
-The first technique explicitly using randomization at inference time as a defense appeared during the 2017 NIPS defense challenge~\cite{Xie2017MitigatingAE}.
+The first technique explicitly using randomization at inference time as a defense appeared during the 2017 NIPS defense challenge~\cite{xie2017mitigating}.
 This method uniformly samples over geometric transformations of the image to select a substitute image to feed the network.
-Then~\cite{pruningDefenseICLR2018} proposed to use stochastic activation pruning based on a multinomial distribution for adversarial defense.
-Several papers~\cite{Xuang2018,rakin2018parametricnoiseinjection} propose to inject Gaussian noise directly on the activation of selected layers both at training and inference time.
+Then~\cite{dhillon2018stochastic} proposed to use stochastic activation pruning based on a multinomial distribution for adversarial defense.
+Several papers~\cite{Xuang2018,rakin2018parametric} propose to inject Gaussian noise directly on the activation of selected layers both at training and inference time.
 While these works hypothesize that noise injection makes the network robust to adversarial perturbations, they do not provide any formal justification on the nature of the noise they use or on the loss of accuracy/robustness of the  network.
 
 \paragraph{Provable robustness:}
 In~\cite{lecuyer2018certified}, the authors proposed a randomization method by exploiting the link between differential privacy~\cite{dwork2014algorithmic} and adversarial robustness.
-Their framework, called ``randomized smoothing'' \footnote{Name introduced in~\cite{KolterRandomizedSmoothing} which came later than~\cite{lecuyer2018certified}.}, inherits some theoretical results from the differential privacy community allowing them to evaluate the level of accuracy under attack of their method.
-Initial results from~\cite{lecuyer2018certified} have been refined in~\cite{SecondOrdercertifiedrobustness}, and~\cite{KolterRandomizedSmoothing}.
+Their framework, called ``randomized smoothing'' \footnote{Name introduced in~\cite{cohen2019certified} which came later than~\cite{lecuyer2018certified}.}, inherits some theoretical results from the differential privacy community allowing them to evaluate the level of accuracy under attack of their method.
+Initial results from~\cite{lecuyer2018certified} have been refined in~\cite{li2018second}, and~\cite{cohen2019certified}.
 Our work belongs to this line of research.
 However, our framework does not treat exactly the same class of defenses.
 Notably, we provide theoretical arguments supporting the defense strategy based on randomization techniques relying on the exponential family, and derive a new bound on the adversarial generalization gap, which completes the results obtained so far on certified robustness.
 Furthermore, our focus is on the network randomized by noise injection, ``randomized smoothing'' instead uses this network to create a \emph{new} classifier robust to attacks.
 
-Since the initial discovery of adversarial examples, a wealth of non randomized defense approaches have also been proposed, inspired by various machine learning domains such as adversarial training~\cite{goodfellow2014explaining,madry2018towards}, image reconstruction~\cite{meng2017magnet,Samangouei2018DefenseGAN} or robust learning~\cite{goodfellow2014explaining,madry2018towards}.
+Since the initial discovery of adversarial examples, a wealth of non randomized defense approaches have also been proposed, inspired by various machine learning domains such as adversarial training~\cite{goodfellow2014explaining,madry2018towards}, image reconstruction~\cite{meng2017magnet,samangouei2018defense} or robust learning~\cite{goodfellow2014explaining,madry2018towards}.
 Even if these methods have their own merits, a thorough evaluation made by~\cite{athalye2018obfuscated} shows that most defenses can be easily broken with known powerful attacks~\cite{madry2018towards,carlini2017towards,chen2018ead}.
 Adversarial training, which consists in training a model directly on adversarial examples, came out as the best defense in average.
 Defense based on randomization could be overcome by the Expectation Over Transformation technique proposed by~\cite{athalye2017synthesizing} which consists in taking the expectation over the network to craft the perturbation.
@@ -114,8 +114,8 @@ To measure this risk "under attack" we define the notion of adversarial $\alpha$
 \end{align}
 
 In practice, the adversary does not have any access to the ground-truth distribution.
-The literature proposed several surrogate versions of $\advRisk(h)$ (see~\cite{NIPS2018Mahloujifar} for more details) to overcome this issue.
-We focus our analysis on the one used in \eg~\cite{Szegedy2013IntriguingPO}, or~\cite{NIPS2018Fawzi} denoted $\alpha$-radius prediction-change risk of $h$ \wrt $\mathcal{D}_{\mathcal{X}}$ (marginal of $\mathcal{D}$ for $\mathcal{X}$), and defined as   
+The literature proposed several surrogate versions of $\advRisk(h)$ (see~\cite{diochnos2018adversarial} for more details) to overcome this issue.
+We focus our analysis on the one used in \eg~\cite{szegedy2013intriguing}, or~\cite{fawzi2018adversarial} denoted $\alpha$-radius prediction-change risk of $h$ \wrt $\mathcal{D}_{\mathcal{X}}$ (marginal of $\mathcal{D}$ for $\mathcal{X}$), and defined as   
 \begin{align}
     \PCadvRisk(h) \triangleq \mathbb{P}_{x\sim \mathcal{D}_{\mathcal{X}}}\left[\exists \tau \in \B \text{ s.t. } h(x+\tau)\neq h(x) \right]
 \end{align}
@@ -129,11 +129,11 @@ To obtain a numerical output out of this \emph{probabilistic mapping}, one needs
 
 This definition does not depend on the nature of $\mathcal{Y}$ as long as $(\mathcal{Y},\mathcal{F}_{\mathcal{Y}})$ is measurable.
 In that sense, $\mathcal{Y}$ could be either the label space or any intermediate space corresponding to the output of an arbitrary hidden layer of a neural network.
-Moreover, any mapping can be considered as a probabilistic mapping, whether it explicitly injects noise (as in~\cite{lecuyer2018certified,rakin2018parametricnoiseinjection,pruningDefenseICLR2018}) or not.
+Moreover, any mapping can be considered as a probabilistic mapping, whether it explicitly injects noise (as in~\cite{lecuyer2018certified,rakin2018parametric,dhillon2018stochastic}) or not.
 In fact, any deterministic mapping can be considered as a probabilistic mapping, since it can be characterized by a Dirac measure.
 Accordingly, the definition of a probabilistic mapping is fully general and equally treats networks with or without noise injection.
 There exists no definition of robustness against adversarial attacks that comply with the notion of probabilistic mappings.
-We settle that by generalizing the notion of prediction-change risk initially introduced in~\cite{NIPS2018Mahloujifar} for deterministic classifiers.
+We settle that by generalizing the notion of prediction-change risk initially introduced in~\cite{diochnos2018adversarial} for deterministic classifiers.
 Let $\probmap$ be a probabilistic mapping from $\mathcal{X}$ to $\mathcal{Y}$, and $d_{\mathcal{P}(\mathcal{Y})}$ some metric/divergence on $\mathcal{P}(\mathcal{Y})$.
 We define the $(\alpha,\epsilon)$-radius prediction-change risk of $\probmap$ \wrt $\mathcal{D}_{\mathcal{X}}$ and $d_{\mathcal{P}(\mathcal{Y})}$ as 
 \begin{equation}
@@ -338,13 +338,13 @@ This section aims to answer \textbf{Q2} stated in the introduction, by tackling 
 \subsection{Experimental setup}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-We present our results and analysis on  CIFAR-10, CIFAR-100 \cite{krizhevsky2009learning} and ImageNet datasets \cite{imagenet_cvpr09}.
-For CIFAR-10 and CIFAR-100 \cite{krizhevsky2009learning}, we used a Wide ResNet architecture \cite{ZagoruykoK16} which is a variant of the ResNet model from \cite{He_2016_CVPR}.
+We present our results and analysis on  CIFAR-10, CIFAR-100 \cite{krizhevsky2009learning} and ImageNet datasets \cite{deng2009imagenet}.
+For CIFAR-10 and CIFAR-100 \cite{krizhevsky2009learning}, we used a Wide ResNet architecture \cite{zagoruyko2016wide} which is a variant of the ResNet model from \cite{he2016deep}.
 We use 28 layers with a widen factor of 10.
 We train all networks for 200 epochs, a batch size of 400, dropout 0.3 and Leaky Relu activation with a slope on $\mathbb{R}^-$ of 0.1.
 We minimize the Cross Entropy Loss with Momentum 0.9 and use a piecewise constant learning rate of 0.1, 0.02, 0.004 and 0.00008 after respectively 7500, 15000 and 20000 steps.
 The networks achieve for CIFAR10 and 100 a TOP-1 accuracy of 95.8\% and 79.1\% respectively on test images.
-For ImageNet \cite{imagenet_cvpr09}, we use an Inception ResNet v2 \cite{szegedy2017inception} which is the sate of the art architecture for this dataset and achieve a TOP-1 accuracy of 80\%.
+For ImageNet \cite{deng2009imagenet}, we use an Inception ResNet v2 \cite{szegedy2017inception} which is the sate of the art architecture for this dataset and achieve a TOP-1 accuracy of 80\%.
 For the training of ImageNet, we use the same hyper parameters setting as the original implementation.
 We train the network for 120 epochs with a batch size of 256, dropout 0.8 and Relu as activation function.
 All evaluations were done with a single crop on the non-blacklisted subset of the validation set.
@@ -499,12 +499,12 @@ We conduct experiments with 3 different dataset:
     \item ImageNet dataset, which is composed of $\sim1.2$M training examples, $50K$ test samples and $1000$ classes. Images are trained and evaluated with a resolution of 299 by 299 pixels. 
 \end{itemize}
 
-For CIFAR-10 and CIFAR-100 \cite{krizhevsky2009learning}, we used a Wide ResNet architecture \cite{ZagoruykoK16} which is a variant of the ResNet model from \cite{He_2016_CVPR}.
+For CIFAR-10 and CIFAR-100 \cite{krizhevsky2009learning}, we used a Wide ResNet architecture \cite{zagoruyko2016wide} which is a variant of the ResNet model from \cite{he2016deep}.
 We used 28 layers with a widen factor of 10.
 We trained all the networks for 200 epochs, a batch size of 400, dropout 0.3 and Leaky Relu activation with a slope on $\mathbb{R}^-$ of 0.1. We used the cross entropy loss with Momentum 0.9 and  a piecewise constant learning rate of 0.1, 0.02, 0.004 and 0.00008 after respectively 7500, 15000 and 20000 steps.
 The networks achieve for CIFAR10 and 100 a TOP-1 accuracy of 95.8\% and 79.1\% respectively on test images. 
 
-For ImageNet \cite{imagenet_cvpr09}, we used an Inception ResNet v2 \cite{szegedy2017inception} which is the sate of the art architecture for this dataset and achieved a TOP-1 accuracy of 80\%.
+For ImageNet \cite{deng2009imagenet}, we used an Inception ResNet v2 \cite{szegedy2017inception} which is the sate of the art architecture for this dataset and achieved a TOP-1 accuracy of 80\%.
 For the training of ImageNet, we used the same hyper parameters setting as the original implementation.
 We trained the network for 120 epochs with a batch size of 256, dropout 0.8, Relu as activation function.
 All evaluations were done with a single crop on the non-blacklisted subset of the validation set.
@@ -530,7 +530,7 @@ We choose the following one:
 \end{equation}
 where $F$ is the softmax function and $\kappa$ a positive constant.
 
-Instead of using box-constrained L-BFGS~\cite{Szegedy2013IntriguingPO} as in the original attack, the authors use instead a new variable for $x+r$:
+Instead of using box-constrained L-BFGS~\cite{szegedy2013intriguing} as in the original attack, the authors use instead a new variable for $x+r$:
 \begin{equation}
   x+r=\frac{1}{2} (\tanh(w)+1)
 \end{equation}

@@ -17,8 +17,8 @@
 \label{section:ch6-preliminaries_adversarial_attacks_and_defenses}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Deep neural networks achieve state-of-the-art performances in a variety of domains such as natural language processing~\cite{radford2018Language}, image recognition~\cite{He_2016_CVPR} and speech recognition~\cite{hinton2012deep}.
-However, it has been shown that such neural networks are vulnerable to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,Szegedy2013IntriguingPO}.
+Deep neural networks achieve state-of-the-art performances in a variety of domains such as natural language processing~\cite{radford2018Language}, image recognition~\cite{he2016deep} and speech recognition~\cite{hinton2012deep}.
+However, it has been shown that such neural networks are vulnerable to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,szegedy2013intriguing}.
 Since their discovery, a variety of algorithms have been developed to generate adversarial examples (\aka attacks), for example FGSM \cite{goodfellow2014explaining}, PGD \cite{madry2018towards} and C\&W \cite{carlini2017towards}, to mention the most popular ones.
 
 Because it is difficult to characterize the space of visually imperceptible variations of a natural image, existing adversarial attacks use surrogates that can differ from one attack to another.
@@ -94,21 +94,27 @@ In this paper, we focus on the \emph{Loss Maximization} setting using the PGD at
 \label{subsection:ch6-defense_mechanisms}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\paragraph{Adversarial Training (AT).}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Adversarial Training (AT).}
+\label{subsubsection:ch6:adversarial_training}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 Adversarial Training was introduced by \citep{goodfellow2014explaining} and later improved by \citep{madry2018towards} as a first defense mechanism to train robust neural networks.
 It consists in augmenting training batches with adversarial examples generated during the training procedure.
-The standard training procedure from Equation~\ref{equation:ch6-classification} is thus replaced by the following  $\min$ $\max$ problem, where the classifier tries to minimize the expected loss under maximum perturbation of its input:
+The risk minimization principled is thus replaced by the following $\min$ $\max$ problem, where the classifier tries to minimize the expected loss under maximum perturbation of its input:
 \begin{equation}
   \min_{\theta} \Ebb_{(\xvec, y) \sim \mathcal{D}} \left[ \max_{\norm{\pmb{\tau}}_p \leq \epsilon} L \left( f_{\theta}(\xvec + \pmb{\tau}), y \right) \right].
 \end{equation}
 
-In the case where $p=\infty$, this technique offers good robustness  against $\linf$ attacks \cite{athalye2018obfuscated}. AT can also be used with $\ltwo$ attacks but as we will discuss in Section~\ref{section:ch6-no_free_lunch}, AT with one norm offers poor protection against the other.
+In the case where $p=\infty$, this technique offers good robustness against $\linf$ attacks \cite{athalye2018obfuscated}.
+% AT can also be used with $\ltwo$ attacks but as we will discuss in Section~\ref{section:ch6-no_free_lunch}, AT with one norm offers poor protection against the other.
 The main weakness of Adversarial Training is its lack of formal guarantees.
 Despite some recent work providing great insights \cite{sinha2017certifying,zhang2019theoretically}, there is no worst case lower bound yet on the accuracy under attack of this method.
 
-
-\paragraph{Noise injection mechanisms (NI).}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Noise injection mechanisms (NI).}
 \label{subsection:ch6-randomized_training}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Another important technique to defend against adversarial examples is to use Noise Injection. 
 In contrast with Adversarial Training, Noise Injection mechanisms are usually deployed after training.
@@ -118,8 +124,9 @@ At inference time, given a unlabeled sample $x$, the network outputs
   \tilde{f}_\theta(\xvec) \triangleq f_\theta(\xvec + \eta) \ \ \ (\text{instead of  } f_\theta(\xvec)) 
 \end{equation}
 where $\eta$ is a random variable on $\mathbb{R}^d$.
-Even though, Noise Injection is often less efficient than Adversarial Training in practice (see \eg, Table~\ref{table:ch6-results}), it benefits from strong theoretical background.
-In particular, recent works \cite{lecuyer2018certified,NIPS2019_9143}, followed by \cite{KolterRandomizedSmoothing,pinot2019theoretical} demonstrated that noise injection from a Gaussian distribution can give provable defense against $\ltwo$ adversarial attacks.
+Even though, Noise Injection is often less efficient than Adversarial Training in practice (see \eg, Table~\ref{table:764774}), it benefits from strong theoretical background.
+\todo{review this sentence}
+In particular, recent works \cite{lecuyer2018certified,li2019certified}, followed by \cite{cohen2019certified,pinot2019theoretical} demonstrated that noise injection from a Gaussian distribution can give provable defense against $\ltwo$ adversarial attacks.
 In this work, besides the classical Gaussian noises already investigated in previous works, we evaluate the efficiency of Uniform distributions to defend against $\ltwo$ adversarial examples. 
 
 
@@ -149,7 +156,7 @@ One promising application of Lipschitz regularization is in the area of adversar
 Empirical techniques to improve robustness against adversarial examples such as Adversarial Training only impact the training data,  and often show poor generalization capabilities~\cite{schmidt2018adversarially}. 
 \citet{farnia2018generalizable} have shown that the adversarial generalization error depends on the Lipschitz constant of the network, which suggests that the adversarial test error can be improved by applying Lipschitz regularization in addition to adversarial training. 
 
-In this section, we illustrate the usefulness of LipBound by training a state-of-the-art Wide ResNet architecture~\cite{ZagoruykoK16} with Lipschitz regularization and adversarial training.
+In this section, we illustrate the usefulness of LipBound by training a state-of-the-art Wide ResNet architecture~\cite{zagoruyko2016wide} with Lipschitz regularization and adversarial training.
 Our regularization scheme is inspired by the one used by~\citet{yoshida2017spectral} but instead of using the power method, we use our \textbf{PloyGrid} algorithm presented in Section~\ref{subsection:computing_max_modulus_trig_polynomial} which efficiently computes an upper bound on the maximal singular value of convolutional layers. 
 
 We introduce the \textbf{AT+LipReg} loss to combine Adversarial Training and our Lipschitz regularization scheme in which layers with a large Lipschitz constant are penalized.
@@ -166,12 +173,12 @@ In practice, we also include the upper bound on the Lipschitz of the batch norma
    \centering
    \begin{subfigure}[b]{0.49\textwidth}
        \centering
-       \includegraphics[width=\textwidth]{figures/chapter5/jacobian_distribution_v1.pdf}\\(a)
+       \includegraphics[width=\textwidth]{figures/part2/ch10-lipschitz_bound_adversarial/jacobian_distribution_v1.pdf}\\(a)
    \end{subfigure}
    \hfill
    \begin{subfigure}[b]{0.49\textwidth}
        \centering
-       \includegraphics[width=\textwidth]{figures/chapter5/jacobian_distribution_v2.pdf}\\(b)
+       \includegraphics[width=\textwidth]{figures/part2/ch10-lipschitz_bound_adversarial/jacobian_distribution_v2.pdf}\\(b)
    \end{subfigure}
    \caption{These figures show the distribution of the norm of the Jacobian matrix w.r.t the CIFAR10 test set from a Wide Resnet trained with different schemes. Although Lipschitz regularization is not a Jacobian regularization, we can observe a clear shift in the distribution. This suggests that our method does not only work layer-wise, but also at the level of the entire network.}
    \label{figure:jacobian_distribution}
@@ -182,12 +189,12 @@ In practice, we also include the upper bound on the Lipschitz of the batch norma
    \centering
    \begin{subfigure}[b]{0.49\textwidth}
        \centering
-       \includegraphics[width=\textwidth]{figures/chapter5/attacks_iter_pgd.pdf}\\(a)
+       \includegraphics[width=\textwidth]{figures/part2/ch10-lipschitz_bound_adversarial/attacks_iter_pgd.pdf}\\(a)
    \end{subfigure}
    \hfill
    \begin{subfigure}[b]{0.49\textwidth}
        \centering
-       \includegraphics[width=\textwidth]{figures/chapter5/attacks_iter_cw.pdf}\\(b)
+       \includegraphics[width=\textwidth]{figures/part2/ch10-lipschitz_bound_adversarial/attacks_iter_cw.pdf}\\(b)
    \end{subfigure}
    \caption{These figures show the Accuracy under attack on CIFAR10 test set with PGD-$\linf$ and C\&W-$\ltwo$ attacks for several classifiers trained with Adversarial Training given the number of iterations.}
    \label{figure:attacks_iter}
@@ -198,22 +205,22 @@ In practice, we also include the upper bound on the Lipschitz of the batch norma
 %   \centering
 %   \begin{minipage}{.24\linewidth}
 %     \centering
-%     \includegraphics[scale=0.16]{figures/chapter5/jacobian_distribution_v1.pdf}\\{(a)}
+%     \includegraphics[scale=0.16]{figures/part2/ch10-lipschitz_bound_adversarial/jacobian_distribution_v1.pdf}\\{(a)}
 %   \end{minipage}
 %   \hfill
 %   \begin{minipage}{.24\linewidth}
 %     \centering
-%     \includegraphics[scale=0.16]{figures/chapter5/jacobian_distribution_v2.pdf}\\{(b)}
+%     \includegraphics[scale=0.16]{figures/part2/ch10-lipschitz_bound_adversarial/jacobian_distribution_v2.pdf}\\{(b)}
 %   \end{minipage}
 %   \hfill
 %   \begin{minipage}{.24\linewidth}
 %     \centering
-%     \includegraphics[scale=0.16]{figures/chapter5/attacks_iter_pgd.pdf}\\{(c)}
+%     \includegraphics[scale=0.16]{figures/part2/ch10-lipschitz_bound_adversarial/attacks_iter_pgd.pdf}\\{(c)}
 %   \end{minipage}
 %   \hfill
 %   \begin{minipage}{.24\linewidth}
 %     \centering
-%     \includegraphics[scale=0.16]{figures/chapter5/attacks_iter_cw.pdf}\\{(d)}
+%     \includegraphics[scale=0.16]{figures/part2/ch10-lipschitz_bound_adversarial/attacks_iter_cw.pdf}\\{(d)}
 %   \end{minipage}
 %   \caption{Figures (a) and (b) show the distribution of the norm of the Jacobian matrix w.r.t the CIFAR10 test set from a Wide Resnet trained with different schemes. Although Lipschitz regularization is not a Jacobian regularization, we can observe a clear shift in the distribution. This suggests that our method does not only work layer-wise, but also at the level of the entire network. Figures (c) and (d) show the Accuracy under attack on CIFAR10 test set with PGD-$\linf$ and C\&W-$\ltwo$ attacks for several classifiers trained with Adversarial Training given the number of iterations.}
 %   \label{figure:dist_jacobian_attacks_iter}
@@ -237,7 +244,7 @@ It also demonstrates that Lipschitz regularization and Adversarial Training (or 
 Hence they offer an increased robustness to adversarial attacks as demonstrated above.
 
 \paragraph{Experimental Settings}
-We use the Wide ResNet architecture introduced by~\citet{ZagoruykoK16} to train our classifiers (for details of the hyper-parameters used, see the supplementary material).
+We use the Wide ResNet architecture introduced by~\citet{zagoruyko2016wide} to train our classifiers (for details of the hyper-parameters used, see the supplementary material).
 For Adversarial Training ~\cite{madry2018towards}, we use Projected Gradient Descent with an $\epsilon = 8/255 (\approx 0.031)$, a step size of $\textstyle \frac{\epsilon}{5} (\approx 0.0062)$ and 10 iterations, we use a random initialization but run the attack only once.
 To evaluate the robustness of our classifiers, we rigorously followed the experimental protocol proposed by~\citet{tramer2020adaptive} and~\citet{carlini2019evaluating}.
 More precisely, as an $\linf$ attack, we use PGD with the same parameters ($\epsilon = 8/255$, a step size of $\textstyle \frac{\epsilon}{5}$) but we increase the number of iterations up to 200 with 10 restarts.
@@ -265,7 +272,7 @@ We choose $0.6$ and $0.8$ as bounds for the $\ltwo$ perturbation. Note that the 
 
 
 \paragraph{Hyper-parameters used for training classifiers on CIFAR10 \& CIFAR100 dataset}
-For all our experiments, we use the Wide Resnet architecture \cite{ZagoruykoK16} with 28 layers and a width factor of 10. We train our networks for 200 epochs with a batch size of $200$. We use Stochastic Gradient Descent with a momentum of $0.9$, an initial learning rate of $0.1$ with exponential decay of 0.1 (MultiStepLR gamma = 0.1) after the epochs $60$, $120$ and $160$. 
+For all our experiments, we use the Wide Resnet architecture \cite{zagoruyko2016wide} with 28 layers and a width factor of 10. We train our networks for 200 epochs with a batch size of $200$. We use Stochastic Gradient Descent with a momentum of $0.9$, an initial learning rate of $0.1$ with exponential decay of 0.1 (MultiStepLR gamma = 0.1) after the epochs $60$, $120$ and $160$. 
 
 \subsection{Results on ImageNet dataset \& Hyper-parameters}
 
@@ -289,7 +296,7 @@ For all our experiments, we use the Wide Resnet architecture \cite{ZagoruykoK16}
 
 \paragraph{Hyper-parameters used for training and attacking classifiers on ImageNet dataset}
 
-For all our experiments, we use the Resnet-101 architecture \cite{He_2016_CVPR}.
+For all our experiments, we use the Resnet-101 architecture \cite{he2016deep}.
 We have used Stochastic Gradient Descent with a momentum of $0.9$, a weight decay of $0.0001$, label smoothing of $0.1$, an initial learning rate of $0.1$ with exponential decay of $0.1$ (MultiStepLR gamma = $0.1$) after the epochs $30$ and $60$.
 We have used Exponential Moving Average over the weights with a decay of $0.999$.
 We have trained our networks for 80 epochs with a batch size of $4096$.

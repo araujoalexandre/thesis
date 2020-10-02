@@ -19,8 +19,8 @@
 \label{section:ap3-introduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Deep neural networks achieve state-of-the-art performances in a variety of domains such as natural language processing~\cite{radford2018Language}, image recognition~\cite{He_2016_CVPR} and speech recognition~\cite{hinton2012deep}.
-However, it has been shown that such neural networks are vulnerable to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,Szegedy2013IntriguingPO}.
+Deep neural networks achieve state-of-the-art performances in a variety of domains such as natural language processing~\cite{radford2018Language}, image recognition~\cite{he2016deep} and speech recognition~\cite{hinton2012deep}.
+However, it has been shown that such neural networks are vulnerable to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,szegedy2013intriguing}.
 Since their discovery, a variety of algorithms have been developed to generate adversarial examples (\aka attacks), for example FGSM \cite{goodfellow2014explaining}, PGD \cite{madry2018towards} and C\&W \cite{carlini2017towards}, to mention the most popular ones.
 
 Because it is difficult to characterize the space of visually imperceptible variations of a natural image, existing adversarial attacks use surrogates that can differ from one attack to another.
@@ -235,7 +235,7 @@ This means that even after adversarial training, it is still easy to find good $
   \label{table:ap3-results}
 \end{table}%
 
-Adversarial attacks have been an active topic in the machine learning community since their discovery~\cite{globerson2006nightmare, biggio2013evasion,Szegedy2013IntriguingPO}.
+Adversarial attacks have been an active topic in the machine learning community since their discovery~\cite{globerson2006nightmare, biggio2013evasion,szegedy2013intriguing}.
 Many attacks have been developed.
 Most of them solve a loss maximization problem with either $\linf$~\cite{goodfellow2014explaining,kurakin2016adversarial,madry2018towards}, $\ltwo$~\cite{carlini2017towards,kurakin2016adversarial,madry2018towards}, $\lone$~\cite{tramer2019adversarial} or $\lzero$~\cite{papernot2016limitations} surrogate norms.
 As we showed, these norms are really different in high dimension.
@@ -259,7 +259,7 @@ We chose these values so that the $\linf$ and the $\ltwo$ balls have similar vol
 Note that $0.83$ is slightly above the values typically used in previous publications in the area, meaning the attacks are stronger, and thus  more difficult to defend against.
 
 All experiments are conducted on CIFAR-10 with the Wide-Resnet 28-10 architecture.
-We use the training procedure and the hyper-parameters described in the original paper by~\cite{ZagoruykoK16}.
+We use the training procedure and the hyper-parameters described in the original paper by~\cite{zagoruyko2016wide}.
 Training time varies from 1 day (AT) to 2 days (MAT) on 4 GPUs-V100 servers. 
 
 

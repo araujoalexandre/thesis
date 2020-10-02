@@ -5,40 +5,81 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \localtableofcontents
 
-\todo{write small header}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\label{section:ch2-introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The problems addressed in this thesis are from the field of \emph{supervised} machine learning and \emph{neural networks}.  
+As stated in Chapter~\ref{chapter:introduction}, fully connected neural networks learned with the empirical risk minimization principle can be hard to train and subject to overfitting.
+The common denominator of these problems is the very large number of parameters used in fully connected neural networks.  
+To overcome these challenges, \citet{vapnik1992principles} have proposed to replaced the ERM principle by the \emph{structural risk minimization} procedure.
+Structural risk minimization can be implemented using two methods as stated in the work 
+\begin{enumerate}
+  \item designing compact neural network architecture in order to reduce the number of parameters;
+  \item constraining the hypothesis space with a \emph{regularization} in order to reduce the search space of the learning procedure.
+\end{enumerate}
+Both methods introduce \emph{structure} on the set of functions implemented by neural networks. 
+
+In this thesis, by leveraging the properties of matrices from the Toeplitz family, we contribute of designing and better understanding a new neural network architecture based on circulant and diagonal matrices. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Compression of Neural Networks}
-\label{section:ch3-compression_of_neural_networks}
+\subsection{Theoretical Intuition Behind Structural Risk Minimization}
+\label{subsection:ch2-xxx}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Structured matrices exhibit a number of good properties which have been exploited by deep learning practitioners, mainly to compress large neural networks architectures into smaller ones.
-For example, \citet{hinrichs2011johnson} have demonstrated that a single circulant matrix can be used to approximate the Johnson-Lindenstrauss transform, often used in machine learning to perform dimensionality reduction.
-Building upon this result, \citet{cheng} proposed to replace the weight matrix of a fully connected layer by a circulant matrix effectively replacing the complex transform modeled by the fully connected layer by a simple dimensionality reduction.
-Despite the reduction of expressivity, the resulting network demonstrated good accuracy using only a fraction of its original size (90\% reduction).
+The ERM principle assumes that the function $\hat{h}^*$ minimizing $E(h, n)$ leads to the risk $R(\hat{h}^*)$ being close to the minimum.
+This assumption mean that as the \emph{size} of the training set increase the minimization becomes more accurate. More formally, the ERM principle assumes that $R(\hat{h}^*)$ converge to its minimum value on the set $h \in \mathcal{H}$ when $n \rightarrow \infty$.  
+\citet{Vapnik1991TheNA} have shown that this equivalent to say that the empirical risk $E(h, n)$ \emph{converge uniformly} to the actual risk $R(h)$ over $h \in \mathcal{H}$ where the \emph{uniform convergence} is defined as follows:
+\begin{equation}
+  \Pbb \left[ \sup_{h \in \mathcal{H}} \left| R(h) - E(h, n) \right| < \epsilon \right] \rightarrow 0 \quad \text{ when } \quad n \rightarrow \infty, \quad \forall \epsilon > 0 
+\end{equation}
 
 
-\paragraph{Comparison with \ACDC.}
-\citet{moczulski2015acdc} have introduced two \emph{Structured Efficient Linear Layers} (SELL) called \AFDF and \ACDC, where $\Amat$ and $\Dmat$ are diagonal matrices and $\Fmat$ and $\Cmat$ are the Fourier and cosine transform respectively.
-The \AFDF structured layer benefits from the theoretical results introduced by \citet{Huhtanen2015} and can be seen as the building block of DCNNs.
-However, \citet{moczulski2015acdc} only experiment using \ACDC, a different type of layer that does not involve circulant matrices.
-As far as we can tell, the theoretical guarantees available for the \AFDF layer do not apply on the \ACDC layer since the cosine transform does not diagonalize circulant matrices \cite{sanchez1995diagonalizing}.
-Another possible limit of the \ACDC paper is that they only train large neural networks involving \ACDC layers combined with many other expressive layers.
-Although the resulting network demonstrates good accuracy, it is difficult the characterize the true contribution of the \ACDC layers in this setting. 
+The study of uniform convergence of empirical risk to actual risk has become one of the important problems of Machine Learning Theory over the last 40 years \cite{}.
+This study includes a description of necessary and sufficient conditions as well as bounds for the rate of convergence \cite{vapnik1982estimation}. 
 
-\paragraph{Comparison with Low displacement rank structures.}
-More recently, \citet{Thomas_NIPS2018_8119} have generalized these works by proposing neural networks with low-displacement rank matrices (LDR), that are structured matrices encompassing a large family of structured matrices, including Toeplitz-like, Vandermonde-like, Cauchy-like and more notably DCNNs.
-To obtain this result, LDR represents a structured matrix using two displacement operators and a low-rank residual.
-Despite being elegant and general, we found that the LDR framework suffers from several limits which are inherent to its generality and makes it difficult to use in the context of large and deep neural networks.
-First, the training procedure for learning LDR matrices is highly involved and implies many complex mathematical objects such as Krylov matrices.
-Then, as acknowledged by the authors, the number of parameters required to represent a given structured matrix (a \emph{Toeplitz matrix}) in practice is unnecessarily high (higher than required in theory). 
 
-\paragraph{Other compression techniques.}
-Besides structured matrices, a variety of techniques have been proposed to build more compact deep learning models.
-These include \emph{model distillation}~\cite{44873}, Tensor Train~\cite{novikov2015tensorizing}, Low-rank decomposition~\cite{NIPS2013_5025}, to mention a few.
-However, circulant networks show good performances in several contexts (the interested reader can refer to the results reported by \citet{moczulski2015acdc} and \citet{Thomas_NIPS2018_8119}).
 
+
+The theory of uniform convergence O
+
+
+It would be of interest to bound the 
+
+
+
+\begin{equation}
+  \Pbb \left[ \sup_{h \in \mathcal{H}} \left| R(h) - E(h, n) \right| < \epsilon \right] \leq \left( \frac{2 n e}{\mu} \right)^\mu \exp\{ -\epsilon ^2 n\} 
+\end{equation}
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Outline of the Chapter}
+\label{subsection:ch2-outline_of_the_chapter}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todo{write this outline at the end of the writing}
+
+In this chapter we review state-of-the-art approaches on these two methods. 
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Structure given by the learning procedure}
+\label{section:ch2-xxx}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -56,8 +97,8 @@ Building on this observation, they use the power method to compute an upper boun
 Finally, \citet{scaman2018lipschitz} have used automatic differentiation combined with the power method to compute a tighter bound on the global Lipschitz constant of neural networks.
 Despite a number of interesting results, using the power method is expensive and results in prohibitive training times. 
 
-Other approaches to regularize the Lipschitz constant of neural networks have been proposed by~\citet{sedghi2018iclr} and~\citet{singla2019bounding}.
-The method of~\citet{sedghi2018iclr} exploits the properties of circulant matrices to approximate the maximal singular value of a convolutional layer.
+Other approaches to regularize the Lipschitz constant of neural networks have been proposed by~\citet{sedghi2018singular} and~\citet{singla2019bounding}.
+The method of~\citet{sedghi2018singular} exploits the properties of circulant matrices to approximate the maximal singular value of a convolutional layer.
 Although interesting, this method results in a loose approximation of the maximal singular value of a convolutional layer.
 Furthermore, the complexity of their algorithm is dependent on the convolution input which can be high for large datasets such as ImageNet.
 More recently, \citet{singla2019bounding} have successfully bounded the operator norm of the Jacobian matrix of a convolution layer by the Frobenius norm of the reshaped kernel.

@@ -23,6 +23,8 @@
 \usepackage[nomaketitle
 	   ]{psl-cover}     % package for PSL cover
 
+\usepackage[super]{nth}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Minitoc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -123,20 +125,23 @@
 % if present, will be initialized. DOIs and URLs will be preserved.
 
 \usepackage[%
-  autocite     = plain,
+  style        = authoryear-comp, % autocite=inline, sortcites=true, labeldateparts=true, uniquename=full, uniquelist=true.
   backend      = biber,
+  autocite     = plain,
+  uniquename   = false,
+  uniquelist   = false,
+  sorting      = ynt,
+  sortcites    = true,
   doi          = false,
   url          = false,
-  uniquename   = init,
   giveninits   = true,
   hyperref     = true,
   maxbibnames  = 99,
   maxcitenames = 2,
-  sortcites    = false,
-  style        = authoryear-comp,
   natbib       = true,
   backref      = true,
   abbreviate   = true,
+  dashed       = false,
   ]{biblatex}
 
 \makeatletter
@@ -178,6 +183,7 @@
 \addbibresource{bibliography/springer.bib}
 \addbibresource{bibliography/neurips.bib}
 \addbibresource{bibliography/linear_algebra.bib}
+\addbibresource{bibliography/aaai.bib}
 \addbibresource{bibliography/icml.bib}
 \addbibresource{bibliography/iclr.bib}
 \addbibresource{bibliography/iccv.bib}
@@ -186,7 +192,7 @@
 \addbibresource{bibliography/arxiv.bib}
 \addbibresource{bibliography/other.bib}
 
-\setlength\bibitemsep{10pt}
+\setlength\bibitemsep{5pt}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fonts
@@ -207,6 +213,14 @@
 \usepackage{todonotes}
 \let\todoorg\todo
 \renewcommand{\todo}[1]{\todoorg[inline]{#1}}
+\newcommand{\Omit}[1]{}
+
+\newcommand{\drawline}{
+  \begin{center}
+    \rule{0.5\linewidth}{1pt}
+  \end{center}
+}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % algorithm
@@ -228,10 +242,14 @@
 
 \renewcommand\qedsymbol{$\blacksquare$}
 
+
 \newcommand\proofrefth[1]   {\textbf{Proof of Theorem}~\ref{#1}}
 \newcommand\proofrefcor[1]  {\textbf{Proof of Corollary}~\ref{#1}}
 \newcommand\proofreflem[1]  {\textbf{Proof of Lemma}~\ref{#1}}
 \newcommand\proofrefprop[1] {\textbf{Proof of Proposition}~\ref{#1}}
+
+% \newcommand{\beginproof}{#1}{\begin{proof}[\proofreflem{#1}]}
+% \newcommand{\endproof}{\end{proof}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Specific Operators
@@ -256,6 +274,7 @@
 \DeclareMathOperator*{\B}{B(\alpha)}
 \DeclareMathOperator*{\probmap}{M}
 \DeclareMathOperator*{\EoT}{EoT}
+\DeclareMathOperator*{\diag}{diag}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -293,14 +312,25 @@
 \newcommand{\Cbb}{\ensuremath \mathbb{C}}
 \newcommand{\Pbb}{\ensuremath \mathbb{P}}
 \newcommand{\Ebb}{\ensuremath \mathbb{E}}
-\newcommand{\Rnn}{\Rbb^{n \times n}}
 \newcommand{\Cnn}{\Cbb^{n \times n}}
-% \newcommand{\Rn}{\Rbb^{n}}
 \newcommand{\Cn}{\Cbb^{n}}
-\newcommand{\Nxx}[2]{{\ensuremath \Nbb^{#1 \times #2}}}
-\newcommand{\Zxx}[2]{{\ensuremath \Zbb^{#1 \times #2}}}
-\newcommand{\Cxx}[2]{{\ensuremath \Cbb^{#1 \times #2}}}
-\newcommand{\Rxx}[2]{{\ensuremath \Rbb^{#1 \times #2}}}
+\newcommand{\Xset}{\mathcal{X}}
+
+% \newcommand{\Rn}{\Rbb^{n}}
+% \newcommand{\Rnn}{\Rbb^{n \times n}}
+
+% \newcommand{\Nxx}[2]{{\ensuremath \Nbb^{#1 \times #2}}}
+% \newcommand{\Zxx}[2]{{\ensuremath \Zbb^{#1 \times #2}}}
+% \newcommand{\Cxx}[2]{{\ensuremath \Cbb^{#1 \times #2}}}
+% \newcommand{\Rxx}[2]{{\ensuremath \Rbb^{#1 \times #2}}}
+
+% Vector of ones
+\newcommand{\vecones}[1]{\ensuremath \mathbf{1}_{#1}}
+
+
+% functions
+\newcommand{\nn}{F}
+\newcommand{\dcnn}{H}
 
 % command for matrices
 \newcommand{\Amat}{\ensuremath \mathbf{A}}
@@ -359,10 +389,12 @@
 \newcommand{\zvec}{\ensuremath \mathbf{z}}
 
 % matrix brackets
-\newcommand{\leftmatrix}  {\begin{pmatrix}}
-\newcommand{\rightmatrix} {\end{pmatrix}}
-\newcommand{\leftmat}     {\left(}
-\newcommand{\rightmat}    {\right)}
+\newcommand{\leftmatrix}       {\begin{pmatrix}}
+\newcommand{\rightmatrix}      {\end{pmatrix}}
+\newcommand{\leftmatrixsmall}  {\begin{psmallmatrix}}
+\newcommand{\rightmatrixsmall} {\end{psmallmatrix}}
+\newcommand{\leftmat}          {\left(}
+\newcommand{\rightmat}         {\right)}
 
 % circulant & diagonal
 \newcommand{\circulant}   {\ensuremath \mathrm{circ}}
@@ -379,15 +411,15 @@
 % Text shortcut
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\yt}    {\textit{YouTube-8M}\xspace}
+\newcommand{\yt}    {\textit{\mbox{YouTube-8M}}\xspace}
 \newcommand{\eg}    {\textit{e.g.}\xspace}
 \newcommand{\ie}    {\textit{i.e.}\xspace}
 \newcommand{\aka}   {\textit{a.k.a}\xspace}
 \newcommand{\vs}    {\textit{vs.}\xspace}
 \newcommand{\wrt}   {w.r.t.\xspace}
 \newcommand{\st}    { s.t.\xspace}
-\newcommand{\ACDC}  {ACDC\xspace}
-\newcommand{\AFDF}  {AFCF\xspace}
+\newcommand{\ACDC}  {$\mathbf{ACDC}^{-1}$\xspace}
+\newcommand{\AFDF}  {$\mathbf{AFDF}^{-1}$\xspace}
 
 % \newcommand{\drn}{Deep ReLU network\xspace}
 % \newcommand{\drns}{Deep ReLU networks\xspace}
@@ -395,5 +427,8 @@
 % \newcommand{\DCRNs}{DCRNs\xspace}
 % \newcommand{\divisiblerank}{divisible rank}
 % \newcommand{\totalrank}{total rank}
+
+
+
 
 

@@ -1,11 +1,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Introduction}
-\label{chapter:introduction}
+\chapter{Introduction of the Thesis}
+\label{chapter:ch1-introduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \localtableofcontents
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Context \& Motivation}
+\section{Context and Motivation}
 \label{section:ch1-context_and_motivation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -17,18 +17,18 @@
 With the surge in data collection and computing resources over the last 20 years, the interest and use cases for Machine Learning have grown exponentially.
 More specifically, Deep Learning, a subfield of Machine Learning, consisting of training Deep Neural Networks on high-level
 data (images, sounds, texts) have shown great achievements.
-In recent years, Deep Neural Networks achieve state-of-the-art performances in a variety of domains such as image recognition~\cite{lecun1998gradient,krizhevsky2012imagenet,He_2016_CVPR,tan2019efficientnet}, object detection~\cite{redmon2016you,liu2016ssd,redmon2017yolo9000}, natural language processing~\cite{merity2016pointer,radford2018Language,brown2020language}, speech recognition~\cite{hinton2012deep,abdel2014convolutional,yu2016automatic}, etc.
+In recent years, Deep Neural Networks achieve state-of-the-art performances in a variety of domains such as image recognition~\cite{lecun1998gradient,krizhevsky2012imagenet,he2016deep,tan2019efficientnet}, object detection~\cite{redmon2016you,liu2016ssd,redmon2017yolo9000}, natural language processing~\cite{merity2016pointer,radford2018Language,brown2020language}, speech recognition~\cite{hinton2012deep,abdel2014convolutional,yu2016automatic}, etc.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[scale=0.2]{figures/chapter1/alexnet.png}
+  \includegraphics[scale=0.2]{figures/ch1-introduction/alexnet.png}
   \caption{This figure shows the neural network architecture (AlexNet) proposed by~\citet{krizhevsky2012imagenet} which won the ImageNet Large-Scale Visual Recognition Challenge in 2012.}
   \label{figure:ch1-alexnet_network}
 \end{figure}
 
 One of the first breakthroughs of Deep Learning was during the 2012 ImageNet Large-Scale Visual Recognition Challenge~\cite{ILSVRC15} which consists of evaluating algorithms for object detection and image classification.
 In this challenge, \citet{krizhevsky2012imagenet} achieved \nth{1} place and beat every other participants by a 10.8\% margin with a neural network architecture called \emph{AlexNet} (see Figure~\ref{figure:ch1-alexnet_network}). 
-The main reasons for such performance are three fold: first, they used a network architecture with more than 60 million parameters which was significant for the computational resources of the time; they used the ImageNet database~\cite{imagenet_cvpr09} which consists of 1.2 million labeled images with 1000 different classes for training their network; finally, they used graphics processing units (GPUs) to speed up the mathematical operations, reducing training time from several months to just a few days. 
+The main reasons for such performance are three fold: first, they used a network architecture with more than 60 million parameters which was significant for the computational resources of the time; they used the ImageNet database~\cite{deng2009imagenet} which consists of 1.2 million labeled images with 1000 different classes for training their network; finally, they used graphics processing units (GPUs) to speed up the mathematical operations, reducing training time from several months to just a few days. 
 
 \begin{table}[t]
   \centering
@@ -99,9 +99,9 @@ Thus, building efficient neural networks can reduce training time, cost and allo
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=\textwidth]{figures/chapter1/ExampleAdversarialCatDog.pdf}
+  \includegraphics[width=\textwidth]{figures/ch1-introduction/ExampleAdversarialCatDog.pdf}
   \caption{Example of Adversarial Attack on an image. The small perturbation (center) is added to the original image (left) leading to an adversarial image (right).}
-  \label{figure:adversarial_image_example}
+  \label{figure:ch1-adversarial_image_example}
 \end{figure}
 
 \paragraph{Secure and Interpretable Neural Networks}
@@ -111,7 +111,7 @@ Having the ability to interpret and understand the error is therefore essential 
 Very large neural networks with millions, or more, parameters act as a kind of black box and are difficult to interpret.
 Algorithms \cite{lundberg2017unified} for interpreting the decision of a machine learning models scale exponentially with the number of parameters making it impractical for large neural networks. 
 Furthermore, large neural networks due to a high complexity and expressivity exhibit instability to small perturbations of their inputs.
-The best example of this phenomenon is the vulnerability of neural networks to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,Szegedy2013IntriguingPO} (see Figure~\ref{figure:adversarial_image_example}). 
+The best example of this phenomenon is the vulnerability of neural networks to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,szegedy2013intriguing} (see Figure~\ref{figure:ch1-adversarial_image_example}). 
 This behavior can cause serious security problems for neural networks used for critical decision-making for example self-driving cars.
 
 
@@ -121,12 +121,12 @@ This behavior can cause serious security problems for neural networks used for c
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Neural networks, which find their roots in the work of \citet{mcculloch1943logical,rosenblatt1958perceptron}, can be analytically described as a composition of linear functions interlaced with non-linear functions (also called activation functions).
-A neural network $f_\Theta : \Rbb^n \rightarrow \Rbb^m$ can be defined as follows:
+A neural network $f_{\Theta,\Bmat} : \Rbb^n \rightarrow \Rbb^m$ can be defined as follows:
 \begin{equation}
-  f_\Theta(\xvec) \triangleq \phi_{\Wmat_p} \circ \rho \circ \phi_{\Wmat_{p-1}} \circ \cdots \circ \phi_{\Wmat_2} \circ \rho \circ \phi_{\Wmat_1}(\xvec)
-  \label{equation:neural_network}
+  f_{\Theta,\Bmat}(\xvec) \triangleq \phi_{\Wmat^{(L)}, \bvec^{(L)}} \circ \cdots \circ \phi_{\Wmat^{(1)}, \bvec^{(1)}}(\xvec)
+  \label{equation:ch1-neural_network}
 \end{equation}
-where $p$ corresponds to the \emph{depth} of the network (\ie, the number of layers), the function $\phi_{\Wmat_i}$ is a linear function parameterized by $\Wmat_i$, $\rho$ is a non-linear function and $\Theta \triangleq ( \Wmat_1, \dots, \Wmat_p )$.
+where $L$ corresponds to the \emph{depth} of the network (\ie, the number of layers), $\Theta$ is the set of weights matrices $\Theta \triangleq \left( \Wmat^{(1)}, \dots, \Wmat^{(L)} \right)$, $\Bmat$ is the set of bias vectors $\Bmat \triangleq \left( \bvec^{(1)}, \dots, \bvec^{(L)} \right)$ and the function $\phi_{\Wmat^{(i)},\bvec^{(i)}}$ is define by: $\phi_{\Wmat^{(i)},\bvec^{(i)}} \triangleq \rho\left(\Wmat^{(i)}\xvec + \bvec^{(i)}\right)$ where $\rho$ is a non-linear function.
 The input space $n$ corresponds to the dimension of the data and the output space $m$ corresponds to the number of classes the network has to classify.
 
 This thesis focuses on the concept of \emph{supervised learning} which refers to the notion of learning the parameters of a neural network in order to map an input to an output based on example input-output pairs.
@@ -135,13 +135,13 @@ As we briefly saw in the previous section, accuracy should not be the only metri
 Hereafter, we review the two problems and some methods currently applied to address them. 
 
 \paragraph{Over-parameterized to Efficient Network Networks}
-Neural networks with dense matrices $\Wmat_i$ are called \emph{Fully Connected Neural Networks} because all the neurons from one activation are connected to all the neurons of the following activation.
+Neural networks with dense matrices $\Wmat^{(i)}$ are called \emph{Fully Connected Neural Networks} because all the neurons from one activation are connected to all the neurons of the following activation.
 Fully connected neural networks can have a very large number of parameters.
 For example, with the ImageNet Dataset of input dimension $224 \times 224$, a two-layer fully connected neural network will have more than $2.6 \times 10^9$ parameters.
 Generally, this type of neural network has been shown to perform poorly certainly due to the search space being too large for the learning procedure.
 Moreover, they are computationally expensive which makes them impractical for a number of use cases (smartphones, IoT devices, etc.).
 Indeed, instead of using fully connected neural networks, researchers have devised specific linear operations that reduce the number of parameters and have properties adapted for each use case. 
-An example of neural networks with specific linear operations are \emph{Convolutional Neural Networks} (CNN)~\cite{lecun1998gradient,krizhevsky2012imagenet,He_2016_CVPR,tan2019efficientnet} which are state-of-the-art for computer vision tasks.
+An example of neural networks with specific linear operations are \emph{Convolutional Neural Networks} (CNN)~\cite{lecun1998gradient,krizhevsky2012imagenet,he2016deep,tan2019efficientnet} which are state-of-the-art for computer vision tasks.
 They use specific linear operations (\eg, convolution) which are specific to image processing and use very few parameters.  
 A classical linear layer with a dense matrix has $n \times n$ parameters, a convolution layer only has $k \times k$ parameters where $k$ is the kernel size and is usually small (\eg 3 or 5 for classical convolutional layers).
 
@@ -200,13 +200,13 @@ A classical linear layer with a dense matrix has $n \times n$ parameters, a conv
        \caption*{Vandermonde}
    \end{subfigure}
   \caption{Examples of structured matrices.}
-  \label{figure:example_structure_matrices}
+  \label{figure:ch1-example_structure_matrices}
 \end{figure}
 
 Convolutional neural networks are a type of \emph{structured} neural networks because the convolution operation is a matrix multiplication with a structured matrix \ie, matrix that can be represented with less than $n^2$ parameters. 
 In addition to offering a more compact representation, the structure of certain matrices can be leveraged to obtain better algorithms for matrix-vector product, thus optimizing memory and computing operations. 
-Structured neural networks have been extensively studied in the field of deep learning \cite{moczulski2015acdc,sindhwani2015structured,NIPS2013_5025}.
-Figure~\ref{figure:example_structure_matrices} shows different types of structured matrices that can be used for deep learning.
+Structured neural networks have been extensively studied in the field of deep learning \cite{moczulski2016acdc,sindhwani2015structured,denil2013predicting}.
+Figure~\ref{figure:ch1-example_structure_matrices} shows different types of structured matrices that can be used for deep learning.
 However, it remains unclear whether other types of structure can be beneficial to other types of applications and which structure can provide both accuracy and efficient computation.
 
 The phenomenon, that neural network with a smaller number of parameters, generalizes better has been theoretically justified \cite{vapnik1982estimation}.
@@ -219,8 +219,8 @@ This complexity measure is based on the number of parameters, therefore, reducin
 
 The instability of neural networks to small input perturbations has led them to be vulnerable to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models.
 The study of security properties of learning algorithms is a research field known as \emph{adversarial machine learning} which dates back to 2004 \cite{dalvi2004adversarial}.
-More recently, the work of \citet{Szegedy2013IntriguingPO} has bought considerable attention to adversarial examples in the context of Deep Learning.
-Since then, a torrent of work has been published in designing attacks and defenses \cite{Szegedy2013IntriguingPO,goodfellow2014explaining,papernot2016limitations,madry2018towards,carlini2017towards,pinot2019theoretical}.
+More recently, the work of \citet{szegedy2013intriguing} has bought considerable attention to adversarial examples in the context of Deep Learning.
+Since then, a torrent of work has been published in designing attacks and defenses \cite{szegedy2013intriguing,goodfellow2014explaining,papernot2016limitations,madry2018towards,carlini2017towards,pinot2019theoretical}.
 
 
 \emph{Adversarial Training}, one of the first effective methods, was introduced by \citet{goodfellow2014explaining} and later improved by \citet{madry2018towards}.

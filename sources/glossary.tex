@@ -17,7 +17,7 @@
 
 \newglossaryentry{integer set}{%
   name        = {$[n]$},
-  description = {The set of natural numbers from 1 to n},
+  description = {The set of natural numbers from $1$ to $n$},
 }
 
 \newglossaryentry{imaginary number}{%
@@ -61,7 +61,7 @@
 }
 
 \newglossaryentry{vector of ones}{%
-  name        = {$\mathbf{1}_n$},
+  name        = {$\vecones{n}$},
   description = {\emph{n-}vector of ones},
 }
 
@@ -77,13 +77,18 @@
 
 \newglossaryentry{Matrix p-norm}{%
   name        = {$\norm{\Mmat}_p$},
-  description = {Norm $p$ of matrix $\Mmat$, \ie 
+  description = {Norm $p$ of matrix $\Mmat$, \ie, 
  $\norm{\Mmat}_p = \sup_{\norm{\xvec}_p \neq 0} \frac{\norm{\Mmat \xvec}_p}{\norm{\xvec}_p}$},
+}
+
+\newglossaryentry{Frobenius Norm}{%
+  name        = {$\norm{\Mmat}_\mathrm{F}$},
+  description = {Frobenius Norm of matrix $\Mmat$},
 }
 
 \newglossaryentry{Vector p-norm}{%
   name        = {$\norm{\xvec}_p$},
-  description = {Norm $p$ of vector $\xvec$, \ie
+  description = {Norm $p$ of vector $\xvec$, \ie,
   $\norm{\xvec}_p = \left( \sum_{i=0}^n \xvec_i^p \right)^\frac{1}{p} $},
 }
 
