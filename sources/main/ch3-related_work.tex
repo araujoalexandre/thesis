@@ -154,15 +154,16 @@ However, in practice, hashing techniques are difficult to use because of their i
 
 
 Another way of constraining the weight representation and reduce the memory requirement of neural networks is to impose a \emph{structure} on weight matrices. 
-The layers of a neural network are a simple linear transform combined with a non-linear function (\eg, ReLU function). 
-The neural network $f_\Theta$ presented in Equation~\ref{equation:p1-ch3_neural_network} can be described with the recurrent relation as follows:
-\begin{align}
-  \xvec^{(1)} &= \xvec \\
-  \xvec^{(i+1)} &= \rho\left( \Wmat^{(i)} \xvec^{(i)} \right) \\
-  f_\Theta(\xvec) &= \xvec^{(p)}
-\end{align}
-$\xvec^{(i)}$ is the $i$ layer of the neural network $f_\Theta$.
+% The layers of a neural network are a simple linear transform combined with a non-linear function (\eg, ReLU function). 
+% The neural network $f_\Theta$ presented in Equation~\ref{equation:p1-ch3_neural_network} can be described with the recurrent relation as follows:
+% \begin{align}
+%   \xvec^{(1)} &= \xvec \\
+%   \xvec^{(i+1)} &= \rho\left( \Wmat^{(i)} \xvec^{(i)} \right) \\
+%   f_\Theta(\xvec) &= \xvec^{(p)}
+% \end{align}
+% $\xvec^{(i)}$ is the $i$ layer of the neural network $f_\Theta$.
 The idea of building compact neural networks with structured matrices consists of replacing the weight matrices $\Wmat^{(i)}$ with \emph{structured matrices}.
+
 A structured matrix is a $n \times n$ matrix whose entries have a formulaic relationship, allowing the matrix to be represented with fewer than $n^2$ parameters.
 The formulaic relationship between entries is an important feature to consider, for example, a sparse matrix has fewer than $n^2$ parameters but does not have a clear relationship between its entries.
 
@@ -176,24 +177,24 @@ They replaced the dense weight matrices $\Wmat^{(i)}$ with a product of two rect
 By replacing the dense weight matrices $\Wmat^{(i)}$ with the product of two rectangular matrices and learning them instead of the dense matrices, they \emph{impose} on the learning procedure the low-rank constraint.
 We can remark that the matrix resulting from the product of $\Umat^{(i)\top} \Vmat^{(i)}$ has $n^2$ unique values but can still be represented with only $2nm$ values in memory.
 
-In linear algebra, many structures have been discovered and studied~\cite{pan2001structured}. 
-For example, circulant matrices have been used to efficiently solve linear systems~\cite{golub1996matrix} and years later were used to perform dimensionality reduction~\cite{hinrichs2011johnson,vybiral2011variant}, binary embedding~\cite{yu2014circulant} and kernel approximation~\cite{yu2015compact} in the context of pattern recognition and machine learning.
-An $n \times n$ circulant matrix $\Cmat$ is a matrix where each row is a cyclic right shift of the previous one:
+in linear algebra, many structures have been discovered and studied~\cite{pan2001structured}. 
+for example, circulant matrices have been used to efficiently solve linear systems~\cite{golub1996matrix} and years later were used to perform dimensionality reduction~\cite{hinrichs2011johnson,vybiral2011variant}, binary embedding~\cite{yu2014circulant} and kernel approximation~\cite{yu2015compact} in the context of pattern recognition and machine learning.
+an $n \times n$ circulant matrix $\cmat$ is a matrix where each row is a cyclic right shift of the previous one:
 \begin{equation}
-  \Cmat = \leftmatrix
+  \cmat = \leftmatrix
   \cvec_{0} & \cvec_{n-1} & \dots & \cvec_{1} \\
   \cvec_{1} & \cvec_{0} & \dots & \cvec_{2} \\
   \vdots & \vdots & \ddots & \vdots \\
   \cvec_{n-1} & \cvec_{n-2} & \dots & \phantom{0}\cvec_{0}\phantom{0}
   \rightmatrix
 \end{equation}
-Because the circulant matrix $\Cmat$ is fully determined by the vector $\cvec$, it can be compactly represented in memory using only $n$ values instead of $n^2$.
-Circulant matrices can also be characterized by noting that the $(k,j)$ entry of $\Cmat$, $\Cmat_{j,k}$ is given by
+because the circulant matrix $\cmat$ is fully determined by the vector $\cvec$, it can be compactly represented in memory using only $n$ values instead of $n^2$.
+circulant matrices can also be characterized by noting that the $(k,j)$ entry of $\cmat$, $\cmat_{j,k}$ is given by
 \begin{equation}
-  \Cmat_{j,k} = \cvec_{\left(k-j\right) \mod n} \enspace.
+  \cmat_{j,k} = \cvec_{\left(k-j\right) \mod n} \enspace.
 \end{equation}
-Circulant matrices exhibit several interesting properties which are based on the fact that they can be diagonalized by the discrete Fourier transform (DFT)~\cite{davis1979circulant}.
-More precisely, the eigenvalues $\psi_k$ of the matrix $\Cmat$ correspond to the discrete Fourier transform of the vector characteristic $\cvec$:
+circulant matrices exhibit several interesting properties which are based on the fact that they can be diagonalized by the discrete fourier transform (dft)~\cite{davis1979circulant}.
+more precisely, the eigenvalues $\psi_k$ of the matrix $\cmat$ correspond to the discrete fourier transform of the vector characteristic $\cvec$:
 \begin{equation}
   \mathbf{\psi}_k = \sum_{j=0}^{n-1} c_j e^{-\frac{2 \pi \ci}{n} jk}
 \end{equation}
@@ -201,12 +202,12 @@ and the eigenvectors $\yvec^{(k)}$ can be expressed as follows:
 \begin{equation}
   \yvec^{(k)} = \frac{1}{\sqrt{n}} \leftmatrix 1, e^{-\frac{2 \pi \ci k}{n}}, \dots, e^{-\frac{2 \pi \ci k(n-1)}{n}} \rightmatrix^\top
 \end{equation}
-In matrix form, we can diagonalize the matrix $\Cmat$ as follows:
+in matrix form, we can diagonalize the matrix $\cmat$ as follows:
 \begin{equation}
-  \Cmat = \frac{1}{n} \Umat_n^{-1} \diag(\Umat_n \cvec) \Umat_n
+  \cmat = \frac{1}{n} \umat_n^{-1} \diag(\umat_n \cvec) \umat_n
 \end{equation}
-where $\Umat_n = \leftmatrix e^{-\frac{2 \pi \ci jk}{n}} \rightmatrix_{j,k = 0}^{n-1}$ is the DFT matrix.
-The complexity of the matrix-vector product between a circulant matrix $\Cmat$ and a vector $\xvec$ can be reduced from $O(n^2)$ to $O(n \log n)$ with the \emph{Fast Fourier Transform} algorithm~\cite{cooley1965algorithm}.
+where $\umat_n = \leftmatrix e^{-\frac{2 \pi \ci jk}{n}} \rightmatrix_{j,k = 0}^{n-1}$ is the dft matrix.
+the complexity of the matrix-vector product between a circulant matrix $\cmat$ and a vector $\xvec$ can be reduced from $o(n^2)$ to $o(n \log n)$ with the \emph{fast fourier transform} algorithm~\cite{cooley1965algorithm}.
 
 
 % An additional benefit of circulant matrices, is that they are computationally efficient, especially on GPU devices.
@@ -422,7 +423,7 @@ Although, this approach can be interesting for deployment purposes, it is still 
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.81\textwidth]{figures/part1/ch3-related_work/scalecompare.pdf}
+  \includegraphics[width=0.81\textwidth]{figures/main/ch3-related_work/scalecompare.pdf}
   \caption{Illustration of the scaling of the EfficientNet architecture \cite{tan2019efficientnet}.}
   \label{figure:p1-ch3-illustration_efficientnet}
 \end{figure}

@@ -15,7 +15,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-\label{section:ap2-introduction}
+\label{section:ap3-introduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Adversarial attacks are some of the most puzzling and burning issues in modern machine learning.
@@ -38,27 +38,27 @@ As this mechanism can be  described as a non-deterministic querying process, cal
 A key question arises then about the appropriate metric/divergence for our context.
 This requires tools for comparing divergences \wrt the introduced robustness definition.
 Renyi divergence turned out to be a measure of choice, since it satisfies most of the desired properties  (coherence, strength, and computational tractability).
-Finally, thanks to the existing links between the Renyi divergence and the Exponential family, we were able to prove  that methods based on noise injection from the Exponential family  ensures robustness to adversarial examples (cf Theorem~\ref{theorem:ap2-netrob}). 
+Finally, thanks to the existing links between the Renyi divergence and the Exponential family, we were able to prove  that methods based on noise injection from the Exponential family  ensures robustness to adversarial examples (cf Theorem~\ref{theorem:ap3-netrob}). 
 \begin{itemize}
     \item[\textbf{Q2:}] Can we guarantee a good accuracy under attack for classifiers defended with this kind of noise? 
 \end{itemize}
 
 \paragraph{A2:}
-We present an upper bound on  the drop of accuracy (under attack) of the methods defended with noise drawn from the Exponential family (cf. Theorem~\ref{theorem:ap2-bound}).
+We present an upper bound on  the drop of accuracy (under attack) of the methods defended with noise drawn from the Exponential family (cf. Theorem~\ref{theorem:ap3-bound}).
 Then, we illustrate this result by training different randomized models with Laplace and Gaussian distributions on CIFAR10/CIFAR100.
 These experiments highlight the trade-off between accuracy and robustness that depends on the amount of noise one injects in the network.
 Our theoretical and experimental conclusion is that randomized defenses are competitive (with the current state-of-the-art~\cite{madry2018towards}) given the intensity of noise injected in the network. 
 
 \paragraph{Outline of the chapter:}
-We present in Section~\ref{section:ap2-relatedwork} the related work on randomized defenses to adversarial examples.
-Section~\ref{section:ap2-definition} introduces the definition of robustness relying on a metric/divergence between probability measures, and discusses the key role of the Renyi divergence.
+We present in Section~\ref{section:ap3-relatedwork} the related work on randomized defenses to adversarial examples.
+Section~\ref{section:ap3-definition} introduces the definition of robustness relying on a metric/divergence between probability measures, and discusses the key role of the Renyi divergence.
 We state in Section~\ref{sec:main_result} our main results on the robustness and accuracy of Exponential family-based defenses.
-Section~\ref{section:ap2-experiment} presents extensive experiments supporting our theoretical findings.
-Section~\ref{section:ap2-conclusion} provides concluding remarks.
+Section~\ref{section:ap3-experiment} presents extensive experiments supporting our theoretical findings.
+Section~\ref{section:ap3-conclusion} provides concluding remarks.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Related works}
-\label{section:ap2-relatedwork}
+\label{section:ap3-relatedwork}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -92,7 +92,7 @@ We show that randomized defenses are still competitive given the intensity of no
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{General definitions of risk and robustness}
-\label{section:ap2-definition}
+\label{section:ap3-definition}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -140,7 +140,7 @@ We define the $(\alpha,\epsilon)$-radius prediction-change risk of $\probmap$ \w
   \PCadvRisk(\probmap,\epsilon) \triangleq  \mathbb{P}_{x\sim \mathcal{D}_{\mathcal{X}}}\left[ \exists \tau \in B(\alpha) \text{ s.t. } d_{\mathcal{P}(\mathcal{Y})}(\probmap(x+\tau),\probmap(x)) > \epsilon \right] \enspace.
 \end{equation}
 
-These three generalized notions allow us to analyze noise injection defense mechanisms (Theorems~\ref{theorem:ap2-netrob}, and~\ref{theorem:ap2-bound}).
+These three generalized notions allow us to analyze noise injection defense mechanisms (Theorems~\ref{theorem:ap3-netrob}, and~\ref{theorem:ap3-bound}).
 We can also define adversarial robustness (and later adversarial gap) thanks to these notions. 
 
 \begin{definition}[Adversarial robustness]
@@ -150,7 +150,7 @@ We can also define adversarial robustness (and later adversarial gap) thanks to 
 \end{definition}
 
 It is difficult in general to show that a classifier is $d_{\mathcal{P}(\mathcal{Y})}$-$(\alpha, \epsilon, \gamma)$ robust.
-However, we can  derive some bounds for particular divergences that will ensure robustness up to a certain level (Theorem~\ref{theorem:ap2-netrob}).
+However, we can  derive some bounds for particular divergences that will ensure robustness up to a certain level (Theorem~\ref{theorem:ap3-netrob}).
 It is worth noting that our definition of robustness depends on the considered metric/divergence between probability measures.
 Lemma~\ref{th::PropimpliesRobustness} gives some insights on the monotony of the robustness according to the parameters, and the probability metric/divergence at hand.
 
@@ -201,7 +201,7 @@ The Renyi divergence is a generalized measure defined on the interval $(1,\infty
 It also has the very special property of being non decreasing \wrt $\lambda$.
 This divergence is very common in machine learning, especially in its Kullback-Leibler form as it is widely used as the loss function (cross entropy) of classification algorithms.
 It enjoys the desired properties  since it bounds the TV distance, and is tractable.
-Furthermore, Proposition~\ref{proposition:ap2-RobustTV} proves that Renyi-robustness implies TV-robustness, making it a suitable surrogate for the trivial distance.
+Furthermore, Proposition~\ref{proposition:ap3-RobustTV} proves that Renyi-robustness implies TV-robustness, making it a suitable surrogate for the trivial distance.
 
 \begin{proposition}[Renyi-robustness implies TV-robustness]
   Let $\probmap$ be a probabilistic mapping, then $\forall\lambda\geq1$:
@@ -212,7 +212,7 @@ Furthermore, Proposition~\ref{proposition:ap2-RobustTV} proves that Renyi-robust
   \begin{equation}
     \textnormal{ with } \epsilon' = \min \left(\frac{3}{2}\left(\sqrt{1 + \frac{4\epsilon}{9}} - 1\right)^{1/2}, \frac{\exp(\epsilon +1) -1}{\exp(\epsilon +1) +1}\right) \enspace.
   \end{equation}
-  \label{proposition:ap2-RobustTV}
+  \label{proposition:ap3-RobustTV}
 \end{proposition}
 
 A crucial property of Renyi-robustness is the \textit{Data processing inequality}.
@@ -224,7 +224,7 @@ In our case, if we consider a Renyi-robust probabilistic mapping, composing it w
   If $U \sim \probmap(x)$ then the probability measure $M'(x)$ s.t $\rho(U) \sim M'(x)$ defines a probabilistic mapping $M':\mathcal{X}\rightarrow\mathcal{P}(\mathcal{Y}')$.
 
   For any $\lambda>1$ if $\probmap$ is $d_{R,\lambda}$-$(\alpha,\epsilon,\gamma)$ robust then $M'$ is also is $d_{R,\lambda}$-$(\alpha,\epsilon,\gamma)$ robust.
-  \label{proposition:ap2-postprocessing}
+  \label{proposition:ap3-postprocessing}
 \end{proposition}
 
 Data processing inequality will allow us later to inject some additive noise in any layer of a neural network and to ensure Renyi-robustness.
@@ -261,11 +261,11 @@ To show the robustness of randomized networks with noise injected from the Expon
 
 Let us consider an  $n$-layer feedforward neural network  $\mathcal{N}(\ \cdot\ ) = \phi^n \circ \cdots \circ \phi^1(\ \cdot\ )$.
 For any $i\in\left[n\right]$, we define $\mathcal{N}_{|i}(\ \cdot\ ) = \phi^i\circ \cdots \circ \phi^1(\ \cdot\ )$ the neural network truncated at layer $i$.
-Theorem~\ref{theorem:ap2-netrob} shows that, injecting noise drawn from an Exponential family distribution ensures robustness to adversarial example attacks in the sense of Definition~\ref{def::GeneralizedRobustness}.
+Theorem~\ref{theorem:ap3-netrob} shows that, injecting noise drawn from an Exponential family distribution ensures robustness to adversarial example attacks in the sense of Definition~\ref{def::GeneralizedRobustness}.
 
 
 \begin{theorem}[Exponential family ensures robustness]
-\label{theorem:ap2-netrob}
+\label{theorem:ap3-netrob}
 Let us denote $\mathcal{N}_{X}^i(\ \cdot\ ) = \phi^n\circ \cdots \circ\phi^{i+1}(\mathcal{N}_{|i}(\ \cdot\ )+X)$ with $X$ a random variable.
 Let us also consider two arbitrary norms $\norm{\ \cdot\ }_{A}$ and $\norm{\ \cdot\ }_{B}$  respectively on $\mathcal{X}$ and on the output space of $\mathcal{N}_{X}^i$.
 
@@ -303,7 +303,7 @@ The notions of risk and adversarial risk can easily be generalized to encompass 
 The definition of adversarial risk for a probabilistic mapping can be matched with the concept of Expectation over Transformation (EoT) attacks~\cite{athalye2018obfuscated}.
 Indeed, EoT attacks aim at computing the best opponent in expectation for a given random transformation.
 In the adversarial risk definition, the adversary chooses the perturbation which has the greatest probability to fool the model, which is a stronger objective than the EoT objective.
-Theorem~\ref{theorem:ap2-bound} provides a bound on the gap between the adversarial risk and the regular risk:
+Theorem~\ref{theorem:ap3-bound} provides a bound on the gap between the adversarial risk and the regular risk:
 
 \begin{theorem}[Adversarial generalization gap bound in the randomized setting]
   Let $\probmap$ be the probabilistic mapping at hand.
@@ -312,7 +312,7 @@ Theorem~\ref{theorem:ap2-bound} provides a bound on the gap between the adversar
     |\advRisk(\probmap)-\Risk(\probmap)|\leq 1-e^{-\epsilon}\mathbb{E}_x\left[e^{-H(\probmap(x))}\right]
   \end{equation}
   where $H$ is the Shannon entropy $H(p)=-\sum_i p_i \log(p_i)\enspace.$
-\label{theorem:ap2-bound}
+\label{theorem:ap3-bound}
 \end{theorem}
 
 This theorem gives a control on the loss of accuracy under attack \wrt the robustness parameter $\epsilon$ and the entropy of the predictor.
@@ -320,11 +320,11 @@ It provides a tradeoff between the quantity of noise added in the network and th
 Intuitively, when the noise increases, for any input, the output distribution tends towards the uniform distribution, then, $\epsilon\rightarrow0$ and $H(\probmap(x))\rightarrow \log(K)$, and the risk and the adversarial risk both tends to $\frac{1}{K}$ where $K$ is the number of classes in the classification problem.
 On the opposite, if no noise is injected, for any input, the output distribution is a  Dirac distribution, then, if the prediction for the adversarial example is not the same as for the regular one, $\epsilon\rightarrow\infty$ and $H(\probmap(x))\rightarrow 0$.
 Hence, the noise needs to be designed both to preserve accuracy and robustness to adversarial attacks.
-In the Section~\ref{section:ap2-experiment}, we give an illustration of this bound when $\probmap$ is a neural network with noise injection at input level as presented in Theorem~\ref{theorem:ap2-netrob}.
+In the Section~\ref{section:ap3-experiment}, we give an illustration of this bound when $\probmap$ is a neural network with noise injection at input level as presented in Theorem~\ref{theorem:ap3-netrob}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Numerical experiments}
-\label{section:ap2-experiment}
+\label{section:ap3-experiment}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 To illustrate our theoretical findings, we train randomized neural networks with a simple method which consists in injecting a noise drawn from an Exponential family distribution in the image during training and inference.
@@ -371,42 +371,42 @@ This technique is called Expectation Over Transformation ($\EoT$) and we use a M
   \centering
   \begin{subfigure}[t]{0.31\textwidth}
       \centering
-      \includegraphics[scale=0.32]{figures/appendix2/acc_sd_CIFAR10.pdf}
+      \includegraphics[scale=0.32]{figures/appendix/ap3-randomized_inference/acc_sd_CIFAR10.pdf}
       \caption{}
-      \label{figure:ap2-acc_sd_CIFAR10}
+      \label{figure:ap3-acc_sd_CIFAR10}
   \end{subfigure}
   \begin{subfigure}[t]{0.31\textwidth}
       \centering
-      \includegraphics[scale=0.32]{figures/appendix2/gauss_certif_CIFAR10.pdf}
+      \includegraphics[scale=0.32]{figures/appendix/ap3-randomized_inference/gauss_certif_CIFAR10.pdf}
       \caption{}
-      \label{figure:ap2-gauss_certif_CIFAR10}
+      \label{figure:ap3-gauss_certif_CIFAR10}
   \end{subfigure}
   \begin{subfigure}[t]{0.31\textwidth}
       \centering
-      \includegraphics[scale=0.32]{figures/appendix2/laplace_certif_CIFAR10.pdf}
+      \includegraphics[scale=0.32]{figures/appendix/ap3-randomized_inference/laplace_certif_CIFAR10.pdf}
       \caption{}
-      \label{figure:ap2-laplace_certif_CIFAR10}
+      \label{figure:ap3-laplace_certif_CIFAR10}
   \end{subfigure}
   \caption{(a) Impact of the standard deviation of the injected noise on accuracy in a randomized model on CIFAR-10 dataset with a Wide ResNet architecture. (b) and (c) illustration of the guaranteed accuracy of different randomized models with Gaussian (b) and Laplace (c) noises given the norm of the adversarial perturbation.}
-  \label{figure:ap2-cifar10_results}
+  \label{figure:ap3-cifar10_results}
 \end{figure}
 
-When injecting noise as a defense mechanism, regardless of the distribution it is drawn from, we observe (as in Figure~\ref{figure:ap2-acc_sd_CIFAR10}) that the accuracy decreases when the noise intensity grows.
+When injecting noise as a defense mechanism, regardless of the distribution it is drawn from, we observe (as in Figure~\ref{figure:ap3-acc_sd_CIFAR10}) that the accuracy decreases when the noise intensity grows.
 In that sense, noise needs to be calibrated to preserve both accuracy and robustness against adversarial attacks, \ie, it needs to be large enough to preserve robustness and small enough to preserve accuracy.
-Figure~\ref{figure:ap2-acc_sd_CIFAR10} shows the loss of accuracy on CIFAR10 from $0.95$ to $0.82$ (respectively $0.95$ to $0.84$) with noise drawn from a Gaussian distribution (respectively Laplace) with a standard deviation from $0.01$ to $0.5$.
-Figure~\ref{figure:ap2-gauss_certif_CIFAR10} and \ref{figure:ap2-laplace_certif_CIFAR10} illustrate the theoretical lower bound on accuracy under attack of Theorem~\ref{theorem:ap2-bound} for different distributions and standard deviations.
-The term in entropy of Theorem~\ref{theorem:ap2-bound} has been estimated using a Monte Carlo method with $10^4$ simulations.
-The trade-off between accuracy and robustness from Theorem~\ref{theorem:ap2-bound} thus appears \wrt the noise intensity.
+Figure~\ref{figure:ap3-acc_sd_CIFAR10} shows the loss of accuracy on CIFAR10 from $0.95$ to $0.82$ (respectively $0.95$ to $0.84$) with noise drawn from a Gaussian distribution (respectively Laplace) with a standard deviation from $0.01$ to $0.5$.
+Figure~\ref{figure:ap3-gauss_certif_CIFAR10} and \ref{figure:ap3-laplace_certif_CIFAR10} illustrate the theoretical lower bound on accuracy under attack of Theorem~\ref{theorem:ap3-bound} for different distributions and standard deviations.
+The term in entropy of Theorem~\ref{theorem:ap3-bound} has been estimated using a Monte Carlo method with $10^4$ simulations.
+The trade-off between accuracy and robustness from Theorem~\ref{theorem:ap3-bound} thus appears \wrt the noise intensity.
 With small noises, the accuracy is high, but the guaranteed accuracy drops fast \wrt the magnitude of the adversarial perturbation.
 Conversely, with bigger noises, the accuracy is lower but decreases slowly \wrt the magnitude of the adversarial perturbation.
-These Figures also show that Theorem~\ref{theorem:ap2-bound} gives strong accuracy guarantees against small adversarial perturbations.
+These Figures also show that Theorem~\ref{theorem:ap3-bound} gives strong accuracy guarantees against small adversarial perturbations.
 Next paragraph shows that in practice, randomized networks achieve much higher accuracy under attack than the theoretical bound, and keep this accuracy against much larger perturbations.
 
 
 \paragraph{Performance of randomized networks under attacks and comparison to state of the art (Q2.2):}
 \label{sec:perf_under_attack}
 
-While Figure~\ref{figure:ap2-gauss_certif_CIFAR10} and \ref{figure:ap2-laplace_certif_CIFAR10} illustrated a theoretical robustness against growing adversarial perturbations, Table~\ref{table:ap2-accuracy_under_attack} illustrates this trade-off experimentally.
+While Figure~\ref{figure:ap3-gauss_certif_CIFAR10} and \ref{figure:ap3-laplace_certif_CIFAR10} illustrated a theoretical robustness against growing adversarial perturbations, Table~\ref{table:ap3-accuracy_under_attack} illustrates this trade-off experimentally.
 It compares the accuracy obtained under attack by a deterministic network with the one obtained by randomized networks with Gaussian and Laplace noises both with low ($0.01$) and high ($0.5$) standard deviations.
 Randomized networks with a small noise lead to no loss in accuracy with a small robustness while high noise leads to a higher robustness at the expense of loss of accuracy ($\sim11$ points). 
 
@@ -426,7 +426,7 @@ Randomized networks with a small noise lead to no loss in accuracy with a small 
           & 0.50 & 0.846 & 0.464 & 0.494 & 0.589 \\
     \bottomrule
     \end{tabular}%
-  \label{table:ap2-accuracy_under_attack}%
+  \label{table:ap3-accuracy_under_attack}%
 \end{table}%
 
 \begin{table}[t]
@@ -453,11 +453,11 @@ As with all the experiments, to construct an EoT attack,  we use 80 Monte Carlo 
 These experiments show that randomized defenses can be competitive given the intensity of noise injected in the network.
 Note that these experiments have been led with $\EoT$ of size 80.
 For much bigger sizes of $\EoT$ these results would be mitigated.
-Nevertheless, the accuracy would never drop under the bounds illustrated in Figure~\ref{figure:ap2-cifar10_results}, since Theorem~\ref{theorem:ap2-bound} gives a bound that on the worst case attack strategy (including $\EoT$).
+Nevertheless, the accuracy would never drop under the bounds illustrated in Figure~\ref{figure:ap3-cifar10_results}, since Theorem~\ref{theorem:ap3-bound} gives a bound that on the worst case attack strategy (including $\EoT$).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion and future works}
-\label{section:ap2-conclusion}
+\label{section:ap3-conclusion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 This paper brings new contributions to the field of provable defenses to adversarial attacks. Principled answers have been provided to key questions on the interest of randomization techniques, and on their loss of accuracy under attack. The obtained bounds have been illustrated in practice by conducting thorough experiments on baseline datasets such as CIFAR and ImageNet. We show in particular that a simple method based on injecting noise drawn from the Exponential family is competitive compared to baseline approaches while leading to provable guarantees. Future work will focus on investigating other noise distributions belonging or not to the Exponential family, combining randomization with more sophisticated defenses and on devising new tight bounds on the adversarial generalization gap.
@@ -556,36 +556,36 @@ Where $x \oplus r$ is the Minkowski sum between $\{x\}$ and $\{r \text{~s.t.~} \
   \centering
   \begin{subfigure}[t]{0.31\textwidth}
     \centering
-    \includegraphics[scale=0.32]{figures/appendix2/acc_sd_CIFAR100.pdf}
+    \includegraphics[scale=0.32]{figures/appendix/ap3-randomized_inference/acc_sd_CIFAR100.pdf}
     \caption{}
-    \label{figure:ap2-acc_sd_CIFAR100-appendix}
+    \label{figure:ap3-acc_sd_CIFAR100-appendix}
   \end{subfigure}
   \begin{subfigure}[t]{0.31\textwidth}
     \centering
-    \includegraphics[scale=0.32]{figures/appendix2/gauss_certif_CIFAR100.pdf}
+    \includegraphics[scale=0.32]{figures/appendix/ap3-randomized_inference/gauss_certif_CIFAR100.pdf}
     \caption{}
-    \label{figure:ap2-gauss_certif_CIFAR100-appendix}
+    \label{figure:ap3-gauss_certif_CIFAR100-appendix}
   \end{subfigure}
   \begin{subfigure}[t]{0.31\textwidth}
     \centering
-    \includegraphics[scale=0.32]{figures/appendix2/laplace_certif_CIFAR100.pdf}
+    \includegraphics[scale=0.32]{figures/appendix/ap3-randomized_inference/laplace_certif_CIFAR100.pdf}
     \caption{}
-    \label{figure:ap2-laplace_certif_CIFAR100-appendix}
+    \label{figure:ap3-laplace_certif_CIFAR100-appendix}
   \end{subfigure}
   \caption{(a) Impact of the standard deviation of the injected noise on accuracy in a randomized model on CIFAR-100 dataset with a Wide ResNet architecture. (b) and (c) illustration of the guaranteed accuracy of different randomized models with Gaussian (b) and Laplace (c) noises given the norm of the adversarial perturbation.}
 \end{figure}
 
-Figure~\ref{figure:ap2-acc_sd_CIFAR100-appendix} presents the trade-off accuracy versus intensity of noise for the CIFAR-100 dataset. As for CIFAR-10, we observe that the accuracy decreases from 0.79 with a small noise (0.01) to $\sim$0.55 with a higher noise (0.5). The Figures~\ref{figure:ap2-gauss_certif_CIFAR100-appendix} and \ref{figure:ap2-laplace_certif_CIFAR100-appendix} are coherent with the theoretical guarantee of accuracy (Theorem~\ref{theorem:ap2-bound}) that the model can achieve under attack with a given perturbation and noise.
+Figure~\ref{figure:ap3-acc_sd_CIFAR100-appendix} presents the trade-off accuracy versus intensity of noise for the CIFAR-100 dataset. As for CIFAR-10, we observe that the accuracy decreases from 0.79 with a small noise (0.01) to $\sim$0.55 with a higher noise (0.5). The Figures~\ref{figure:ap3-gauss_certif_CIFAR100-appendix} and \ref{figure:ap3-laplace_certif_CIFAR100-appendix} are coherent with the theoretical guarantee of accuracy (Theorem~\ref{theorem:ap3-bound}) that the model can achieve under attack with a given perturbation and noise.
 
 
-Table~\ref{table:ap2-cifar10-appendix} and~\ref{table:ap2-cifar100-appendix} summarize the results on the accuracy and accuracy under attack of CIFAR-10 and CIFAR-100 datasets with a Randomized Wide ResNet architecture given the standard deviation of the injected noise and the number of iterations of the attack. For PGD, we use an epsilon max of 0.06 and a step size of 0.006 for an input space of between -1 and +1. We show that injecting noise empirically helps defending neural networks against adversarial attacks.
+Table~\ref{table:ap3-cifar10-appendix} and~\ref{table:ap3-cifar100-appendix} summarize the results on the accuracy and accuracy under attack of CIFAR-10 and CIFAR-100 datasets with a Randomized Wide ResNet architecture given the standard deviation of the injected noise and the number of iterations of the attack. For PGD, we use an epsilon max of 0.06 and a step size of 0.006 for an input space of between -1 and +1. We show that injecting noise empirically helps defending neural networks against adversarial attacks.
 
 
 \begin{table}[htb]
   \centering
   \tiny
   \caption{Accuracy and Accuracy under attack of CIFAR-10 dataset}
-  \label{table:ap2-cifar10-appendix}%
+  \label{table:ap3-cifar10-appendix}%
     \begin{tabular}{rcccccccccccc}
     \toprule
           & \multirow{2}[3]{*}{\textbf{Natural}} & \multicolumn{3}{c}{\textbf{$\ell_1$ -- EAD}} &       & \multicolumn{3}{c}{\textbf{$\ell_2$ -- C\&W}} &       & \multicolumn{3}{c}{\textbf{$\ell_\infty$ -- PGD}} \\
@@ -625,7 +625,7 @@ Table~\ref{table:ap2-cifar10-appendix} and~\ref{table:ap2-cifar100-appendix} sum
   \centering
   \tiny
   \caption{Accuracy and Accuracy under attack of CIFAR-100 dataset.}
-  \label{table:ap2-cifar100-appendix}%
+  \label{table:ap3-cifar100-appendix}%
     \begin{tabular}{rcccccccccccc}
     \toprule
           & \multirow{2}[3]{*}{\textbf{Natural}} & \multicolumn{3}{c}{\textbf{$\ell_1$ -- EAD}} &       & \multicolumn{3}{c}{\textbf{$\ell_2$ -- C\&W}} &       & \multicolumn{3}{c}{\textbf{$\ell_\infty$ -- PGD}} \\
@@ -665,14 +665,14 @@ Table~\ref{table:ap2-cifar10-appendix} and~\ref{table:ap2-cifar100-appendix} sum
 
 Adversarial training fails to generalize to higher dimensional datasets such as ImageNet.
 We conducted experiments with the large scale ImageNet dataset and compared our randomized neural network against large scale adversarial training proposed by~\citet{kurakin2016adversarial}.
-One can observe from Table~\ref{table:ap2-adv_imagenet-appendix} that the model from ~\citet{kurakin2016adversarial} is neither robust against recent $\ell_1$ nor $\ell_2$ iterative attacks such as EAD and C\&W.
+One can observe from Table~\ref{table:ap3-adv_imagenet-appendix} that the model from ~\citet{kurakin2016adversarial} is neither robust against recent $\ell_1$ nor $\ell_2$ iterative attacks such as EAD and C\&W.
 Moreover, it offers a small robustness against $\ell_\infty$ PGD attack.
 Our randomized neural network with $\EoT$ attacks offers a small robustness on $\ell_1$ and $\ell_2$ attacks while being less robust against PGD. 
 
 \begin{table}[htb]
   \centering
   \caption{Accuracy under attack of the Adversarial model training by \citet{kurakin2016adversarial} and an Inception Resnet v2 model training with normal 0.1 noise injected in the image on the ImageNet dataset.}
-  \label{table:ap2-adv_imagenet-appendix}
+  \label{table:ap3-adv_imagenet-appendix}
   \centering
   \begin{tabular}{lcccccc}
     \toprule
@@ -688,14 +688,14 @@ Our randomized neural network with $\EoT$ attacks offers a small robustness on $
 \subsection{Experiments with noise on the first activation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The aim of the following experiments is empirically illustrate the \textit{Data processing inequality} in Proposition~\ref{proposition:ap2-postprocessing}.
+The aim of the following experiments is empirically illustrate the \textit{Data processing inequality} in Proposition~\ref{proposition:ap3-postprocessing}.
 
-Table~\ref{table:ap2-acc_noise_activation-appendix} and \ref{table:ap2-attack_noise_activation-appendix} present the experiments conducted with the same set of parameters as the previous ones  on CIFAR-10 and CIFAR-100, but with the noise injected in the first activation layer instead of directly in the image. We observe from  Table~\ref{table:ap2-acc_noise_activation-appendix} that we can inject more noise with a marginal loss on accuracy. The accuracy under attack is presented in Table \ref{table:ap2-attack_noise_activation-appendix} for a selection of models. 
+Table~\ref{table:ap3-acc_noise_activation-appendix} and \ref{table:ap3-attack_noise_activation-appendix} present the experiments conducted with the same set of parameters as the previous ones  on CIFAR-10 and CIFAR-100, but with the noise injected in the first activation layer instead of directly in the image. We observe from  Table~\ref{table:ap3-acc_noise_activation-appendix} that we can inject more noise with a marginal loss on accuracy. The accuracy under attack is presented in Table \ref{table:ap3-attack_noise_activation-appendix} for a selection of models. 
 
 \begin{table}[htbp]
   \centering
   \caption{Impact of the distribution and the intensity of the noise with randomized networks with noise injected on the first activation}
-  \label{table:ap2-acc_noise_activation-appendix}%
+  \label{table:ap3-acc_noise_activation-appendix}%
     \begin{tabular}{rcrrcrrc}
     \toprule
     \multicolumn{1}{c}{\textbf{Sd}} & \textbf{Normal} &       & \multicolumn{1}{c}{\textbf{Sd}} & \textbf{Laplace} &       & \multicolumn{1}{c}{\textbf{Sd}} & \textbf{Exponential} \\
@@ -716,7 +716,7 @@ Table~\ref{table:ap2-acc_noise_activation-appendix} and \ref{table:ap2-attack_no
 
 \begin{table}[htbp]
   \caption{Accuracy and Accuracy under attack of selected models with noise on the first activation}
-   \label{table:ap2-attack_noise_activation-appendix}%
+   \label{table:ap3-attack_noise_activation-appendix}%
     \begin{tabular}{llcccccccccccc}
     \toprule
       & & & \multirow{2}[3]{*}{\textbf{Natural}} & \multicolumn{3}{c}{\textbf{$\ell_1$ -- EAD}} & & \multicolumn{3}{c}{\textbf{$\ell_2$ -- C\&W}} & & \multicolumn{2}{c}{\textbf{$\ell_\infty$ -- PGD}} \\
@@ -744,7 +744,7 @@ For the sake of completeness and reproducibility, we give some additional insigh
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{On the need for injecting noise in the training phase}
-\label{section:ap2-covariateshift-appendix}
+\label{section:ap3-covariateshift-appendix}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Robustness has always been thought as a property to be enforced at inference time and it is tempting to focus only on injecting noise at inference.

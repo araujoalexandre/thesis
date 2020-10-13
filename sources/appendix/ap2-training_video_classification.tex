@@ -154,7 +154,7 @@ We demonstrate the benefit of circulant matrices using a base model which has be
 This architecture can be decomposed into three blocks of layers, as illustrated in Figure~\ref{figure:ch4-model_baseline}. 
 \begin{figure}[htb]
   \centering
-  \input{figures/part1/ch5-training_video_classification/fig_baseline}
+  \input{figures/appendix/ap2-training_video_classification/fig_baseline}
   \caption{This figure shows the architecture used for the experiences. The network samples at random video and audio frames from the input. The sample goes through an embedding layer and is reduced with a Fully Connected layer. The results are then concatenated and classified with a Mixture-of-Experts and Context Gating layer.}
   \label{figure:ch4-model_baseline}
 \end{figure}
@@ -258,7 +258,7 @@ For example, the diversity model with a NetVLAD embedding (cluster size of 256) 
 
 \begin{figure}[htb]
   \centering
-  \input{figures/part1/ch5-training_video_classification/fig_ensemble_with_fc}
+  \input{figures/appendix/ap2-training_video_classification/fig_ensemble_with_fc}
   \caption{This figure shows an evolution of the first architecture from figure~\ref{figure:ch4-model_baseline} with several embeddings. This architecture is made to leverage the diversity of an Ensemble in a single model.}
   \label{figure:ch4-diverstiy_architecture}
 \end{figure}
@@ -317,7 +317,7 @@ Figure~\ref{figure:ch4-learning_curve_bagging} shows that the proposed robust ma
 
 \begin{figure}[htb]
   \centering
-  \input{figures/part1/ch5-training_video_classification/graph_robust_dbof}
+  \input{figures/appendix/ap2-training_video_classification/graph_robust_dbof}
   \caption{This graphic shows the impact of \emph{robust DBoF} (\ie red line) with $n=10$ and $k=15$ on the Deep Bag-of-Frames embedding compared to max and average pooling.}
   \label{figure:ch4-learning_curve_bagging}
 \end{figure}
@@ -359,7 +359,7 @@ On the basis of this result, \ie given the performance and compression ratio, we
 
 \begin{figure}[htb]
   \centering
-  \input{figures/part1/ch5-training_video_classification/graph_layers}
+  \input{figures/appendix/ap2-training_video_classification/graph_layers}
   \caption{Validation GAP according to the number of epochs for different compact models.}
   \label{figure:ch4-learning_curve_layers}
 \end{figure}
@@ -394,7 +394,7 @@ Figure~\ref{figure:ch4-learning_dc_cd} shows the validation GAP according to the
 
 \begin{figure}[htb]
   \centering
-  \input{figures/part1/ch5-training_video_classification/graph_dc_cd}
+  \input{figures/appendix/ap2-training_video_classification/graph_dc_cd}
   \caption{This figure shows the GAP difference between the $CD$ approach proposed in~\cite{cheng2015exploration} and the more generalized $DC$ approach from section~\ref{subsection:ch4-compact}. Instead of having $D \in \{-1, +1\}$ fixed, the generalized approach allows $D$ to be learned.}
   \label{figure:ch4-learning_dc_cd}
 \end{figure}
@@ -410,7 +410,7 @@ Although the compression rate is higher, it is at the expense of accuracy.
 
 \begin{figure}[!htb]
   \centering
-  \input{figures/part1/ch5-training_video_classification/graph_fc_circulant_embeddings}
+  \input{figures/appendix/ap2-training_video_classification/graph_fc_circulant_embeddings}
   \caption{The figures above show the validation GAP of \textmd{compact} and \emph{Dense} fully connected layer with different embeddings according to the number of epochs.}
   \label{figure:ch4-learning_curve_circulant}
 \end{figure}
@@ -450,7 +450,7 @@ The results are presented in Figure~\ref{figure:ch4-models}.
 
 \begin{figure}[htb]
   \centering
-  \input{figures/part1/ch5-training_video_classification/graph_models}
+  \input{figures/appendix/ap2-training_video_classification/graph_models}
   \caption{Comparison between different models with compact fully connected layers.}
   \label{figure:ch4-models}
 \end{figure}

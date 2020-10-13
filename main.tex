@@ -73,7 +73,6 @@
   % \addcontentsline{toc}{chapter}{acknowledgments}
   % \input{sources/acknowledgments}
 
-
   \todo{Re-read and re-write all figures caption}
   \todo{Re-read and re-write all table caption}
   \todo{Decide where to place table caption (up or down) and check them all}
@@ -81,6 +80,7 @@
   \todo{Check all used notation and add them to List of Symbols}
   \todo{add frobinous norm}
   \todo{complete table nlp in introduction}
+  \todo{update notation with help from Understanding Machine Learning}
 
   % This ensures that the subsequent sections are being included as root
   % items in the bookmark structure of your PDF reader.
@@ -108,42 +108,26 @@
     \endgroup
     \printindex
 
+  % main
   \mainmatter
-
-  % introduction
-  \input{sources/ch1-introduction}
-  
-  % part-1
-  \part{Building Efficient Neural Networks}
-  \label{part1}
-  \input{sources/p1-ch2-introduction}
-  \input{sources/p1-ch3-related_work}
-  \input{sources/p1-ch4-diagonal_circulant}
-  \input{sources/p1-ch5-training_video_classification}
-  \input{sources/p1-ch6-conclusion}
-
-  % part-2
-  \part{Lipschitz Regularization of Convolution Neural Networks}
-  \label{part2}
-  \input{sources/p2-ch7-introduction}
-  \input{sources/p2-ch8-related_work}
-  \input{sources/p2-ch9-singular_value_bound}
-  \input{sources/p2-ch10-lipschitz_bound_adversarial}
-  \input{sources/p2-ch11-conclusion}
-
-  % conclusion
-  \input{sources/ch12-conclusion}
+  \input{sources/main/ch1-introduction}
+  \input{sources/main/ch2-background}
+  % \input{sources/main/ch3-related_work}
+  % \input{sources/main/ch4-diagonal_circulant}
+  % \input{sources/main/ch5-lipschitz_regularization}
+  % \input{sources/main/ch6-conclusion}
 
   % Appendix
-  \renewcommand\appendixpagename{\usekomafont{disposition}Appendices}
-  \begin{appendices}
-    \renewcommand\chaptername{Appendix}
-    \input{sources/ap1-technical_proofs.tex}
-    \input{sources/ap2-randomized_inference}
-    \input{sources/ap3-advocating_for_multiple_defense_strategies}
-    \input{sources/ap4-datasets.tex}
-    \input{sources/ap5-publications.tex}
-  \end{appendices} 
+  % \renewcommand\appendixpagename{\usekomafont{disposition}Appendices}
+  % \begin{appendices}
+  %   \renewcommand\chaptername{Appendix}
+  %   \input{sources/appendix/ap1-technical_proofs.tex}
+  %   \input{sources/appendix/ap2-training_video_classification}
+  %   \input{sources/appendix/ap3-randomized_inference}
+  %   \input{sources/appendix/ap4-advocating_for_multiple_defense_strategies}
+  %   \input{sources/appendix/ap5-datasets.tex}
+  %   \input{sources/appendix/ap6-publications.tex}
+  % \end{appendices} 
 
   \newrefcontext[sorting=nyt]
   \printbibliography[title=References]

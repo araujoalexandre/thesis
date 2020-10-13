@@ -15,6 +15,11 @@
   description = {The set of complex numbers},
 }
 
+\newglossaryentry{indicators function}{%
+  name        = {$\mathds{1}[\text{Boolean expression}]$},
+  description = {Indicator function (equals 1 if expression is true 0 otherwise)}
+}
+
 \newglossaryentry{integer set}{%
   name        = {$[n]$},
   description = {The set of natural numbers from $1$ to $n$},
@@ -75,6 +80,18 @@
   description = {Anti-identity matrix $n \times n$},
 }
 
+\newglossaryentry{Vector p-norm}{%
+  name        = {$\norm{\xvec}_p$},
+  description = {Norm $p$ of vector $\xvec$, \ie,
+  $\norm{\xvec}_p = \left( \sum_{i=0}^n \xvec_i^p \right)^\frac{1}{p} $},
+}
+
+\newglossaryentry{Vector inf-norm}{%
+  name        = {$\norm{\xvec}_\infty$},
+  description = {infinity Norm of vector $\xvec$, \ie,
+  $\norm{\xvec}_\infty = \max_i |\xvec_i|$},
+}
+
 \newglossaryentry{Matrix p-norm}{%
   name        = {$\norm{\Mmat}_p$},
   description = {Norm $p$ of matrix $\Mmat$, \ie, 
@@ -86,11 +103,6 @@
   description = {Frobenius Norm of matrix $\Mmat$},
 }
 
-\newglossaryentry{Vector p-norm}{%
-  name        = {$\norm{\xvec}_p$},
-  description = {Norm $p$ of vector $\xvec$, \ie,
-  $\norm{\xvec}_p = \left( \sum_{i=0}^n \xvec_i^p \right)^\frac{1}{p} $},
-}
 
 \newglossaryentry{largest singular value of matrix}{%
   name        = {$\sigma_1(\Mmat)$},
@@ -111,5 +123,16 @@
   name        = {$\Mmat > 0$},
   description = {$\Mmat$ is positive definite, \ie $\xvec^*\Mmat\xvec > 0 \text{ for all } \xvec \in \Cn$},
 }
+
+% \newglossaryentry{probability, expectation}{%
+%   name        = {$\Pbb, \Ebb$},
+%   description = {Probability and expectation of a random variable},
+% }
+
+
+
+
+
+
 
 

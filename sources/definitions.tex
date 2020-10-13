@@ -275,6 +275,8 @@
 \DeclareMathOperator*{\probmap}{M}
 \DeclareMathOperator*{\EoT}{EoT}
 \DeclareMathOperator*{\diag}{diag}
+\DeclareMathOperator*{\Ebb}{\ensuremath \mathbb{E}}
+\DeclareMathOperator*{\Pbb}{\ensuremath \mathbb{P}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -282,6 +284,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % \newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+
+\newlength{\marginbellowtable}
+\setlength{\marginbellowtable}{2em}
 
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
@@ -310,8 +315,8 @@
 \newcommand{\Zbb}{\ensuremath \mathbb{Z}}
 \newcommand{\Rbb}{\ensuremath \mathbb{R}}
 \newcommand{\Cbb}{\ensuremath \mathbb{C}}
-\newcommand{\Pbb}{\ensuremath \mathbb{P}}
-\newcommand{\Ebb}{\ensuremath \mathbb{E}}
+% \newcommand{\Pbb}{\ensuremath \mathbb{P}}
+% \newcommand{\Ebb}{\ensuremath \mathbb{E}}
 \newcommand{\Cnn}{\Cbb^{n \times n}}
 \newcommand{\Cn}{\Cbb^{n}}
 \newcommand{\Xset}{\mathcal{X}}
@@ -326,7 +331,6 @@
 
 % Vector of ones
 \newcommand{\vecones}[1]{\ensuremath \mathbf{1}_{#1}}
-
 
 % functions
 \newcommand{\nn}{F}
