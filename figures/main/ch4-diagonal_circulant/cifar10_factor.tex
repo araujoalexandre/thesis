@@ -9,15 +9,15 @@
     grid style=dashed,
 	]
     \addplot[mark=square, color=blue, line width=0.4mm] table [y=accuracy, x=layers]
-    {figures/part1/ch4-diagonal_circulant/data/cifar10/leaky_relu/slope_0.2.dat};
+    {figures/main/ch4-diagonal_circulant/data/cifar10/factor/1_factor.dat};
     \addplot[mark=triangle, color=brown, line width=0.4mm] table [y=accuracy, x=layers]
-    {figures/part1/ch4-diagonal_circulant/data/cifar10/leaky_relu/slope_0.3.dat};
+    {figures/main/ch4-diagonal_circulant/data/cifar10/factor/2_factor.dat};
     \addplot[mark=o, color=gray, line width=0.4mm] table [y=accuracy, x=layers]
-    {figures/part1/ch4-diagonal_circulant/data/cifar10/leaky_relu/slope_0.5.dat};
+    {figures/main/ch4-diagonal_circulant/data/cifar10/factor/3_factor.dat};
     \legend{
-      Leaky ReLU 0.2,
-      Leaky ReLU 0.3,
-      Leaky ReLU 0.5,
+      ReLU(DC),
+      ReLU(DCDC), 
+      ReLU(DCDCDC), 
      }
 \end{axis}
 \end{tikzpicture}

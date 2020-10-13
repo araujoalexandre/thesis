@@ -10,15 +10,15 @@
     grid style=dashed,
 	]
     \addplot[color=red, line width=0.25mm, dashed] table [y=accuracy, x=weights]
-    {figures/part1/ch4-diagonal_circulant/data/cifar10/type/dense.dat};
+    {figures/main/ch4-diagonal_circulant/data/cifar10/type/dense.dat};
     \addplot[mark=triangle, color=blue, line width=0.4mm] table [y=accuracy, x=weights]
-    {figures/part1/ch4-diagonal_circulant/data/cifar10/type/circulant.dat};
+    {figures/main/ch4-diagonal_circulant/data/cifar10/type/circulant.dat};
     \addplot[mark=square, color=red, line width=0.4mm] table [y=accuracy, x=weights]
-    {figures/part1/ch4-diagonal_circulant/data/cifar10/type/diag_toeplitz.dat};
+    {figures/main/ch4-diagonal_circulant/data/cifar10/type/diag_toeplitz.dat};
     \addplot[mark=o, color=gray, line width=0.4mm] table [y=accuracy, x=weights]
-    {figures/part1/ch4-diagonal_circulant/data/cifar10/type/toeplitz.dat};
+    {figures/main/ch4-diagonal_circulant/data/cifar10/type/toeplitz.dat};
     \addplot[mark=diamond, color=brown, line width=0.4mm] table [y=accuracy, x=weights]
-    {figures/part1/ch4-diagonal_circulant/data/cifar10/type/low_rank.dat};
+    {figures/main/ch4-diagonal_circulant/data/cifar10/type/low_rank.dat};
     \legend{
       Dense (9M weights),
       DCNN,
