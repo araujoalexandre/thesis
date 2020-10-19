@@ -95,13 +95,16 @@
 \DeclareSIUnit\px{px}
 
 \sisetup{%
+  separate-uncertainty,
   detect-all           = true,
   detect-family        = true,
   detect-mode          = true,
   detect-shape         = true,
   detect-weight        = true,
   detect-inline-weight = math,
+  multi-part-units     = single
 }
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Hyperlinks
@@ -209,7 +212,6 @@
 % Debugging
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{lineno}
-% \linenumbers
 \usepackage{todonotes}
 \let\todoorg\todo
 \renewcommand{\todo}[1]{\todoorg[inline]{#1}}
@@ -220,6 +222,8 @@
     \rule{0.5\linewidth}{1pt}
   \end{center}
 }
+
+\newcommand{\todotext}[1]{{\color{red} \noindent \textbf{#1}}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -335,6 +339,9 @@
 % functions
 \newcommand{\nn}{F}
 \newcommand{\dcnn}{H}
+
+% adversarial attack
+\newcommand{\adv}{\pmb{\tau}}
 
 % command for matrices
 \newcommand{\Amat}{\ensuremath \mathbf{A}}
