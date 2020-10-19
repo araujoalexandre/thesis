@@ -7,6 +7,7 @@
 \input{sources/definitions}
 \input{sources/acronyms}
 \input{sources/glossary}
+\input{sources/abstract-cover.tex}
 
 \makeindex
 \makeglossaries
@@ -25,44 +26,21 @@
 \date{XX Novembre 2020}
 \supervisor[Benjamin Negrevergne]{Jamal Atif}
 \jury{
-  Mme Prénom Nom \\
-  Etablissement, \\
-  Président
-
-  M Prénom Nom \\
-  Etablissement, \\
-  Rapporteur
-
-  M Prénom Nom \\
-  Etablissement,\\ 
-  Rapporteur
-
-  M Prénom Nom \\
-  Etablissement, \\
-  Membre du jury
-
-  M Prénom Nom \\
-  Etablissement,\\
-  Membre du jury
-
-  M Prénom Nom \\
-  Etablissement,\\
-  Membre du jury
-
-  M Prénom Nom \\
-  Etablissement,\\
-  Membre du jury
+  M Prénom Nom \\ Etablissement, \\ Président
+  M Prénom Nom \\ Etablissement, \\ Rapporteur
+  M Prénom Nom \\ Etablissement, \\ Rapporteur
+  M Prénom Nom \\ Etablissement, \\ Membre du jury
+  M Prénom Nom \\ Etablissement, \\ Membre du jury
+  M Prénom Nom \\ Etablissement, \\ Membre du jury
+  M Prénom Nom \\ Etablissement, \\ Membre du jury
 }
-\input{sources/abstract-cover.tex}
-
-
 
 \begin{document}
 
   \frontmatter
   % \pslcover{}
-  \input{sources/title}
-  \listoftodos
+  % \input{sources/title}
+  % \listoftodos
 
   % \input{sources/dedication.tex}
   % \input{sources/quote.tex}
@@ -73,42 +51,47 @@
   % \addcontentsline{toc}{chapter}{acknowledgments}
   % \input{sources/acknowledgments}
 
-  \todo{Re-read and re-write all figures caption}
-  \todo{Re-read and re-write all table caption}
-  \todo{Decide where to place table caption (up or down) and check them all}
-  \todo{Check all used acronyms and write the in Acronyms page}
-  \todo{Check all used notation and add them to List of Symbols}
-  \todo{add frobinous norm}
-  \todo{complete table nlp in introduction}
-  \todo{update notation with help from Understanding Machine Learning}
+  %% Old TODOs
+  % \todo{complete table nlp in introduction}
+  % \todo{add frobinous norm}
+  % \todo{update notation with help from Understanding Machine Learning}
+
+
+  % \todo{Re-read and re-write all figures caption}
+  % \todo{Re-read and re-write all table caption}
+  % \todo{Decide where to place table caption (up or down) and check them all}
+  % \todo{Check all used acronyms and write the in Acronyms page}
+  % \todo{Check all used notation and add them to List of Symbols}
+  % \todo{update image adversarial in introduction with real adversarial example}
 
   % This ensures that the subsequent sections are being included as root
   % items in the bookmark structure of your PDF reader.
-  \bookmarksetup{startatroot}
-  \backmatter
-    \begingroup
-      \let\clearpage\relax
-      \glsaddall
-      \etocsettocdepth{1}
-      \addcontentsline{toc}{chapter}{Table of Contents}
-      \begingroup
-        \etocsettocstyle{\addchap*{Table of Contents}}{}
-        \tableofcontents
-      \endgroup
-      \newpage
-      \addcontentsline{toc}{chapter}{\listfigurename}
-      \listoffigures
-      \newpage
-      \addcontentsline{toc}{chapter}{\listtablename}
-      \listoftables
-      \newpage
-      \printglossary[type=\acronymtype]
-      \newpage
-      \printglossary[title={List of Symbols}]
-    \endgroup
-    \printindex
+  % \bookmarksetup{startatroot}
+  % \backmatter
+  %   \begingroup
+  %     \let\clearpage\relax
+  %     \glsaddall
+  %     \etocsettocdepth{1}
+  %     \addcontentsline{toc}{chapter}{Table of Contents}
+  %     \begingroup
+  %       \etocsettocstyle{\addchap*{Table of Contents}}{}
+  %       \tableofcontents
+  %     \endgroup
+  %     \newpage
+  %     \addcontentsline{toc}{chapter}{\listfigurename}
+  %     \listoffigures
+  %     \newpage
+  %     \addcontentsline{toc}{chapter}{\listtablename}
+  %     \listoftables
+  %     \newpage
+  %     \printglossary[type=\acronymtype]
+  %     \newpage
+  %     \printglossary[title={List of Symbols}]
+  %   \endgroup
+  %   \printindex
 
   % main
+  \linenumbers
   \mainmatter
   \input{sources/main/ch1-introduction}
   \input{sources/main/ch2-background}
