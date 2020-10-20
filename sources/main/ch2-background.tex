@@ -389,7 +389,7 @@ We can formally define an adversarial example as follows:
   Given a dataset $\mathcal{S} = \mathcal{X} \times \mathcal{Y}$, a pair $(\xvec, y) \sim \mathcal{S}$ and a trained neural network $N_\Omega$ on $\mathcal{S}$ such that $\argmax_{i \in \{0, \dots, k\}} \{ N_\Omega(\xvec)_i \} = y$, let $\adv \in \mathcal{X}$ be an adversarial perturbation such that:
   \begin{align}
     &\argmax_{i \in \{0, \dots, k\}} \{ N_{\Omega} (\xvec + \adv)_i \} \neq y \\
-    \st\ &\norm{\adv} \leq \epsilon \notag
+    \st\ &\norm{\adv}_p \leq \epsilon \notag
   \end{align}
   where $\epsilon$ is a small value defined by the attacker. 
 \end{definition}
@@ -400,7 +400,7 @@ We can formally define an adversarial example as follows:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \noindent
-Since their discovery of adversarial perturbations, a variety of procedure, \aka \emph{adversarial attack}, have been developed to generate adversarial examples (\aka attacks), for example FGSM \cite{goodfellow2014explaining}, PGD \cite{madry2018towards} and C\&W \cite{carlini2017towards}, to mention the most popular ones.
+Since the discovery of adversarial perturbations, a variety of procedures, \aka \emph{adversarial attack}, have been developed to generate adversarial examples, for example FGSM \cite{goodfellow2014explaining}, PGD \cite{madry2018towards} and C\&W \cite{carlini2017towards}, to mention the most popular ones.
 To find the best perturbation $\adv$, existing attacks can adopt one of the two following strategies:
 \begin{itemize}
   \item \textbf{Loss maximization}: maximizing the loss $L(N_\Omega(\xvec + \adv), y)$ under some constraint on $\norm{\adv}_p$ with $p \in \{0, \dots, \infty\}$.;
@@ -458,7 +458,7 @@ The C\&W attack is currently used in the literature with $p \in \{1, 2, \infty \
 \label{subsection:ch2-defending_against_adversarial_attacks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Given the important security risk that adversarial attacks pose, it is important to design defenses to protect neural networks against this kind of attacks.
+Given the important security risks that adversarial attacks pose, it is important to design defenses to protect neural networks against these kinds of attacks.
 Adversarial Training was introduced by~\citet{goodfellow2014explaining} and later improved by~\citet{madry2018towards} as a first defense mechanism to train robust neural networks.
 It consists in augmenting training batches with adversarial examples generated during the training procedure.
 The structural risk minimization paradigm is thus replaced by the following $\min$ $\max$ problem, where the classifier tries to minimize the expected loss under maximum perturbation of its input:
