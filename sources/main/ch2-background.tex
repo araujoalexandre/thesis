@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Background}
-\label{chapter:background}
+\label{chapter:ch2-background}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \localtableofcontents
 \vspace{\marginbellowtable}
@@ -271,7 +271,7 @@ The SRM learning paradigm minimizes the empirical risk $R_\mathcal{S}(h)$ and th
 \newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Neural Networks}
+\section{Preliminaries on Neural Networks}
 \label{subsection:ch2-neural_networks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -281,31 +281,60 @@ In this thesis, we will focus on neural networks.
 Neural networks, which find their roots in the work of \citet{mcculloch1943logical,rosenblatt1958perceptron}, can be analytically described as a composition of linear functions interlaced with non-linear functions (also called activation functions).
 A neural network can be defined as follows:
 
+% \begin{definition}[Neural Network]
+%   Given a depth $\depth \in \Nbb$, 
+%   let $w = \{ w^{(i)} \}_{i \in [\depth]}$ and $b = \{ b^{(i)} \}_{i \in [\depth]}$ be sequences of ``dimension'',  
+%   $\weights = \left\{ \left( \Wmat^{(i)}, \bvec^{(i)} \right) \right\}_{i \in [\depth]}$ a set of weights matrices and bias vectors 
+%   such that $\Wmat^{(i)} \in \Rbb^{w^{(i)}}$ and $\bvec^{(i)} \in \Rbb^{b^{(i)}}$ and 
+%   sequence of activation functions $\act = \{\act_i \}_{i \in [\depth]}$.
+% %   Let $\dim^{w} = \{ \dim_1^w, \dots, \dim_\depth^w \}$ and $\dim^{b} = \{ \dim_1^b, \dots, \dim_\depth^b \}$ 
+% % be sequences of ``dimension'', let $\dim_{\text{in}} = \dim_\depth^w$ and $\dim_{\text{out}} = \dim_\depth^w$.
+%   Let $\mathcal{X} \subset \Rbb^{\dim_{\text{in}}}$ and 
+%   $\mathcal{Y} \subset \Rbb^{\dim_\text{out}^w}$ be the input space and output space respectively. 
+%   % Given a depth $\depth$, a set of weights matrices and bias vectors $\weights = \left\{ \left( \Wmat^{(i)}, \bvec^{(i)} \right) \right\}_{i \in [\depth]}$ and a sequence of activation functions $\act = \{\act_i \}_{i \in [\depth]}$, a neural network is a function $N^\act_\weights : \mathcal{X} \rightarrow \mathcal{Y}$ such that
+%   A neural network is a function $N^\act_\weights : \mathcal{X} \rightarrow \mathcal{Y}$ such that
+%   \begin{equation}
+%     \nn^\act_{\weights}(\xvec) \triangleq \phi^{\act_\depth}_{\Wmat^{(\depth)}, \bvec^{(\depth)}} \circ \cdots \circ \phi^{\act_1}_{\Wmat^{(1)}, \bvec^{(1)}}(\xvec)
+%   \end{equation}
+%   % where $d$ corresponds to the depth of the network (\ie, the number of layers), $\weights$ is the set of weights matrices and bias vectors $\weights = \left\{ \left( \Wmat^{(1)}, \bvec^{(1)} \right) \dots \left( \Wmat^{(d)}, \bvec^{(d)} \right) \right\}$.
+%   % $\Bmat$ is the set of bias vectors $\Bmat = \left\{ \right\}$. 
+%   where $\phi^{\act_i}_{\Wmat^{(i)},\bvec^{(i)}}: \Rbb^{w^{(i)}} \rightarrow \Rbb^{w^{(i+1)}}$ (also called layer) is a function parameterized by the weight matrix $\Wmat^{(i)}$, the bias vector $\bvec^{(i)}$ and the activation function $\act_i$ and can be expressed as follows: 
+%   \begin{equation}
+%     \phi^{\act_i}_{\Wmat^{(i)},\bvec^{(i)}} (\xvec) \triangleq \act_i \left(\Wmat^{(i)}\xvec + \bvec^{(i)}\right)
+%   \end{equation}
+% \end{definition}
+
 \begin{definition}[Neural Network]
-  Given a depth $d$, a set of weights matrices and bias vectors $\Omega = \left\{ \left( \Wmat^{(i)}, \bvec^{(i)} \right) \right\}_{i \in [d]}$ and a sequence of activation functions $\rho = \{\rho_i \}_{i \in [d]}$, a neural network is a function $N^\rho_\Omega : [0, 1]^n \rightarrow [0, 1]^k$ such that
+  Given a depth $\depth \in \Nbb$, 
+  let $\dimw = \{ \dimw^{(i)} \}_{i \in [\depth]}$ and $\dimb = \{ \dimb^{(i)} \}_{i \in [\depth]}$ be sequences of ``dimension'', $\weights = \left\{ \left( \Wmat^{(i)}, \bvec^{(i)} \right) \right\}_{i \in [\depth]}$ a set of weights matrices and bias vectors 
+  such that $\Wmat^{(i)} \in \Rbb^{\dimw^{(i)}}$ and $\bvec^{(i)} \in \Rbb^{\dimb^{(i)}}$ and sequence of activation functions $\act = \{\act_i \}_{i \in [\depth]}$.
+  Let $\mathcal{X} \subset \Rbb^{\dimw^{(1)}}$ and $\mathcal{Y} \subset \Rbb^{\dimw^{(\depth)}}$ be the input space and output space respectively. 
+  $\dimw^{(1)}$ refer to the input dimension and $\dimw^{(\depth)}$ refer to the output dimension.
+  
+  \noindent
+  A neural network is a function $\nn^\act_\weights : \mathcal{X} \rightarrow \mathcal{Y}$ such that
   \begin{equation}
-    N^\rho_{\Omega}(\xvec) \triangleq \phi^{\rho_d}_{\Wmat^{(d)}, \bvec^{(d)}} \circ \cdots \circ \phi^{\rho_1}_{\Wmat^{(1)}, \bvec^{(1)}}(\xvec)
+    \nn^\act_{\weights}(\xvec) \triangleq \phi^{\act_\depth}_{\Wmat^{(\depth)}, \bvec^{(\depth)}} \circ \cdots \circ \phi^{\act_1}_{\Wmat^{(1)}, \bvec^{(1)}}(\xvec)
   \end{equation}
-  % where $d$ corresponds to the depth of the network (\ie, the number of layers), $\Omega$ is the set of weights matrices and bias vectors $\Omega = \left\{ \left( \Wmat^{(1)}, \bvec^{(1)} \right) \dots \left( \Wmat^{(d)}, \bvec^{(d)} \right) \right\}$.
-  % $\Bmat$ is the set of bias vectors $\Bmat = \left\{ \right\}$. 
-  where $\phi^{\rho_i}_{\Wmat^{(i)},\bvec^{(i)}}$ (also called layer) is a function parameterized by the weight matrix $\Wmat^{(i)}$, the bias vector $\bvec^{(i)}$ and the activation function $\rho_i$ and can be expressed as follows: 
+  where $\phi^{\act_i}_{\Wmat^{(i)},\bvec^{(i)}}: \Rbb^{w^{(i)}} \rightarrow \Rbb^{w^{(i+1)}}$ (also called layer) is a function parameterized by the weight matrix $\Wmat^{(i)}$, the bias vector $\bvec^{(i)}$ and the activation function $\act_i$ and can be expressed as follows: 
   \begin{equation}
-    \phi^{\rho_i}_{\Wmat^{(i)},\bvec^{(i)}} (\xvec) \triangleq \rho_i \left(\Wmat^{(i)}\xvec + \bvec^{(i)}\right)
+    \phi^{\act_i}_{\Wmat^{(i)},\bvec^{(i)}} (\xvec) \triangleq \act_i \left(\Wmat^{(i)}\xvec + \bvec^{(i)}\right)
   \end{equation}
 \end{definition}
 
 
+
 \noindent
-Based on this definition, for a given training set $\mathcal{S} = \mathcal{X} \times \mathcal{Y}$, a set of activation functions $\rho$, a set of weights and biases $\Omega$ and a loss function $L: \mathcal{Y} \times \mathcal{Y} \rightarrow \Rbb_+$, the ERM learning paradigm for neural networks is given by
+Based on this definition, for a given training set $\mathcal{S} = \mathcal{X} \times \mathcal{Y}$, a set of activation functions $\act$, a set of weights and biases $\weights$ and a loss function $L: \mathcal{Y} \times \mathcal{Y} \rightarrow \Rbb_+$, the ERM learning paradigm for neural networks is given by
 \begin{equation}
-  \argmin_{\Omega} \frac{1}{|\mathcal{S}|} \sum_{(\xvec, y) \in \mathcal{S}} L(N^\rho_\Omega(\xvec), y) 
+  \argmin_{\weights} \frac{1}{|\mathcal{S}|} \sum_{(\xvec, y) \in \mathcal{S}} L(N^\act_\weights(\xvec), y) 
   \label{equation:ch2-erm_neural_network}
 \end{equation}
 For classification problem, the zero-one loss is known to be non-convex and non-smooth, and it has been shown that solving for the optimal solution is an NP-hard combinatorial optimization problem~\cite{feldman2012agnostic,bendavid2003difficulty}.
-Instead, a common approach is to used the softmax activation function as the last non-linear activation $\rho_d$ with the cross-entropy loss function and estimate the parameters with \emph{maximum likelihood}~\cite{hastie2009elements}.
-The softmax activation function, $\rho_d: \Rbb^k \rightarrow [0, 1]^k$, is defined as follows:
+Instead, a common approach is to used the softmax activation function as the last non-linear activation $\act_d$ with the cross-entropy loss function and estimate the parameters with \emph{maximum likelihood}~\cite{hastie2009elements}.
+The softmax activation function, $\act_d: \Rbb^k \rightarrow [0, 1]^k$, is defined as follows:
 \begin{equation}
-  \leftmat \rho_d(\xvec) \rightmat_i = \frac{e^{\xvec_i}}{\sum_{j=1}^{k} e^{\xvec_j}}, \quad \forall i \in [k]
+  \leftmat \act_d(\xvec) \rightmat_i = \frac{e^{\xvec_i}}{\sum_{j=0}^{k-1} e^{\xvec_j}}, \quad \forall i \in [k-1]_0
 \end{equation}
 The generic approach for minimizing the empirical risk in Equation~\ref{equation:ch2-erm_neural_network} is by \emph{gradient descent} with the \emph{backpropgation} algorithm ~\cite{rumelhart1986learning} which consists of computing the gradient with the help of the chain-rule.
 
@@ -319,7 +348,7 @@ It has been shown that the $\ell_2$ norm of the weights of a network can be used
 This \emph{regularization} \cite{tikhonov1977solutions,krogh1992simple}, also called \emph{weight decay}, prevents weights from growing too large unless it is necessary.
 The SRM learning algorithm with the weight decay regularization can be expressed as follows:
 \begin{equation}
-  \argmin_{\Omega} \frac{1}{|\mathcal{S}|} \sum_{(\xvec, y) \in \mathcal{S}} L(N^\rho_\Omega(\xvec), y) + \lambda \sum_{(\Wmat, \bvec) \in \Omega} \left( \norm{\Wmat}_\mathrm{F} + \norm{\bvec}_\mathrm{2} \right)
+  \argmin_{\weights} \frac{1}{|\mathcal{S}|} \sum_{(\xvec, y) \in \mathcal{S}} L(N^\act_\weights(\xvec), y) + \lambda \sum_{(\Wmat, \bvec) \in \weights} \left( \norm{\Wmat}_\mathrm{F} + \norm{\bvec}_\mathrm{2} \right)
 \end{equation}
 where $\lambda > 0$ is the regularization parameter.
 
@@ -351,17 +380,17 @@ Hereafter, we present 3 common activation functions used by practitioners.
 \begin{itemize}
   \item \textbf{Sigmoid activation} \cite{han1995influence}
     \begin{equation*}
-      \rho(x) = \frac{1}{1+e^{-x}} 
+      \act(x) = \frac{1}{1+e^{-x}} 
     \end{equation*}
     The sigmoid activation function is one of the first continuous non-linear function to be used in the context of neural network. It takes a real value as input and outputs another value between 0 and 1.
   \item \textbf{Hyperbolic Tangent activation} \cite{karlik2011performance}
     \begin{equation*}
-      \rho(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}
+      \act(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}
     \end{equation*}
     The hyperbolic tangent activation function is similar to the sigmoid activation function but instead of returning between 0 and 1, the function returns between -1 and 1.     
   \item \textbf{Leaky Rectified Linear activation (Leaky-ReLU)} \cite{maas2013rectifier}
     \begin{equation*}
-      \rho(x) = \max(\alpha, x)
+      \act(x) = \max(\alpha, x)
     \end{equation*}
     More recently, the ReLU~\cite{nair2010rectified} ($\alpha = 0$) and leaky-ReLU~\cite{maas2013rectifier} ($\alpha > 0$) activation function was proposed.
     The parameter $\alpha$ characterize the slope on $\Rbb_-$.
@@ -371,13 +400,56 @@ Hereafter, we present 3 common activation functions used by practitioners.
 \noindent
 The Figure~\ref{figure:ch2-activation_functions} present the graphical representation of the 3 activation functions presented above.
 In this thesis, we will exclusively use the Leaky-ReLU function with different $\alpha$ when we train deep neural networks.
-Therefore, we simplify the notation $N^\rho_\Omega$ with $N_\Omega$.
+Therefore, we simplify the notation $\nn^\act_\weights$ with $\nn_\weights$.
+
+
+The architecture of a neural network is governed by mainly two factors: the dimensions of the hidden layers and the depth of the network.
+Different types of scaling have been studied.
+Neural networks with large width have been studied both theoretically and experimentally.
+\citet{cybenko1989approximation,hornik1989multilayer} have shown that neural networks with a single hidden layer and sigmoid activation can approximate any function if the hidden layer is allowed to be arbitrary large. 
+However, wide and shallow networks tend to be difficult to train due to having difficulties in capturing higher-level features. 
+Indeed, it has been empirically observed that deep neural networks tend to achieve greater performance that large and shallow neural networks.
+More recently, the \emph{universal approximation result} have been extended to bounded width neural network with arbitrary depth~\cite{lu2017expressive,hanin2017universal}.
+More formally, we have the following result for neural networks with $\relu$ activations:
+\begin{theorem}[Universal Approximation Theorem for Neural Network \citet{hanin2017universal}]
+  For any continuous function $f:[0,1]^{n} \rightarrow \mathbb{R}_+$ of bounded supremum norm, for any $\epsilon>0$, there exists a neural network $\nn_\weights$ parametried by $\weights$ with an input layer of width $n$, an output layer of width $1$, hidden layers of width $n+3$ and ReLU activations such that 
+  \begin{equation}
+    \forall x \in [0,1]^n, \quad \left| f(\xvec) - \nn_\weights(\xvec) \right| < \epsilon \enspace.
+  \end{equation}
+\end{theorem}
+
+
+
+% From $\mathcal{N}$, we can easily build a deep ReLU network $\mathcal{N'}$ of width exactly $n+3$, such that $\forall x \in [0,1]^{n+3}$, $\left|f(\xvec_{1} \ldots \xvec_{n}) - \left(\mathcal{N}'\left(\xvec\right)\right)_{1}\right| < \epsilon$. Thanks to Lemma~\ref{lemma:dcnn_approx_neural_network}, this last network can be approximated arbitrarily well by a DCNN of width $n+3$.
+%
+% \begin{theorem}
+%   Let $\mathcal{X} \subset \Rbb^{w_{(1)}}$.
+%   For any continuous function $f: \mathcal{X} \rightarrow \Rbb^{w^{(\depth)}}$, then there exists a  
+%
+%   Let $\mathcal{X} \subset \Rbb^{w_{(1)}}$ and let $f: \Rbb^{w^{(1)}} \rightarrow \Rbb^{w^{(\depth)}}$ be a continuous function.
+%   Then, there exists a neural networks parameterized by $\weights$ with an input dimension $w^{(1)}$, an arbitrary depth $\depth$, and $\relu$ activation such that:
+%   \begin{equation}
+%     \norm{f(\xvec) - \nn(\xvec)} \leq \epsilon
+%   \end{equation}
+%   \label{theorem:ch2-universal_approximation_theorem}
+% \end{theorem}
+%
+
+
+% \citet{cybenko1989approximation} have shown that shallow neural networks with sigmoid activation can \emph{theoretically} approximate any decision boundary.
+%
+% The arbitrary depth case was also studied by number of authors, such as Zhou Lu et al in 2017,[11] 
+% \cite{lu2017expressive}
+%
+% Boris Hanin and Mark Sellke in 2018,[12] 
+% \cite{hanin2017universal}
+
 
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Preliminaries on Adversarial Attacks}
+\section{Adversarial Attacks \& Robustness of Neural Networks}
 \label{section:ch2-preliminaries_on_adversarial_attacks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -386,9 +458,9 @@ However, it has been shown that such neural networks are vulnerable to \emph{adv
 Because it is difficult to characterize the space of visually imperceptible variations of a natural image, existing adversarial attacks use $\ell_p$ norms as surrogates measure.
 We can formally define an adversarial example as follows:
 \begin{definition}[Adversarial Pertubation]
-  Given a dataset $\mathcal{S} = \mathcal{X} \times \mathcal{Y}$, a pair $(\xvec, y) \sim \mathcal{S}$ and a trained neural network $N_\Omega$ on $\mathcal{S}$ such that $\argmax_{i \in \{0, \dots, k\}} \{ N_\Omega(\xvec)_i \} = y$, let $\adv \in \mathcal{X}$ be an adversarial perturbation such that:
+  Given a dataset $\mathcal{S} = \mathcal{X} \times \mathcal{Y}$, a pair $(\xvec, y) \sim \mathcal{S}$ and a trained neural network $\nn_\weights$ on $\mathcal{S}$ such that $\argmax_{i \in [k-1]_0} \{ \nn_\weights(\xvec)_i \} = y$, let $\adv \in \mathcal{X}$ be an adversarial perturbation such that:
   \begin{align}
-    &\argmax_{i \in \{0, \dots, k\}} \{ N_{\Omega} (\xvec + \adv)_i \} \neq y \\
+    &\argmax_{i \in [k-1]_0} \{ \nn_\weights (\xvec + \adv)_i \} \neq y \\
     \st\ &\norm{\adv}_p \leq \epsilon \notag
   \end{align}
   where $\epsilon$ is a small value defined by the attacker. 
@@ -403,14 +475,14 @@ We can formally define an adversarial example as follows:
 Since the discovery of adversarial perturbations, a variety of procedures, \aka \emph{adversarial attack}, have been developed to generate adversarial examples, for example FGSM \cite{goodfellow2014explaining}, PGD \cite{madry2018towards} and C\&W \cite{carlini2017towards}, to mention the most popular ones.
 To find the best perturbation $\adv$, existing attacks can adopt one of the two following strategies:
 \begin{itemize}
-  \item \textbf{Loss maximization}: maximizing the loss $L(N_\Omega(\xvec + \adv), y)$ under some constraint on $\norm{\adv}_p$ with $p \in \{0, \dots, \infty\}$.;
-  \item \textbf{Perturbation minimization}: minimizing $\norm{\adv}_p$ under some constraint on the loss $L(N_\Omega(\xvec + \adv), y)$.
+  \item \textbf{Loss maximization}: maximizing the loss $L(\nn_\weights(\xvec + \adv), y)$ under some constraint on $\norm{\adv}_p$ with $p \in \{0, \dots, \infty\}$.;
+  \item \textbf{Perturbation minimization}: minimizing $\norm{\adv}_p$ under some constraint on the loss $L(\nn_\weights(\xvec + \adv), y)$.
 \end{itemize}
 
 \paragraph{Loss maximization.}
 In this scenario, the procedure maximizes the loss objective function, under the constraint that the $\lp$ norm of the perturbation remains bounded by some value $\epsilon$, as follows:  
 \begin{equation}
-  \argmax_{\adv:\norm{\adv}_p \leq \epsilon} L(N_\Omega(\xvec + \adv), y) \enspace.
+  \argmax_{\adv:\norm{\adv}_p \leq \epsilon} L(\nn_\weights(\xvec + \adv), y) \enspace.
   \label{equation:ch2-lossmax}
 \end{equation}
 The typical value of $\epsilon$ depends on the norm $\norm{\ \cdot\ }_p$ considered in the problem setting.
@@ -420,7 +492,7 @@ The current state-of-the-art method to solve Equation~\ref{equation:ch2-lossmax}
 Given a budget $\epsilon$, it recursively computes
 \begin{equation}
   \xvec^{(t+1)} = \prod_{\mathcal{B}_p(\xvec,\epsilon)}\left(\xvec^{(t)}
-    + \alpha \argmax_{\adv: \norm{\adv}_p \leq 1} \nabla_\xvec L\left( N_\Omega \left(\xvec^{(t)} + \adv \right), y \right)
+    + \alpha \argmax_{\adv: \norm{\adv}_p \leq 1} \nabla_\xvec L\left( \nn_\weights \left(\xvec^{(t)} + \adv \right), y \right)
 \right)
   \label{equation:ch2-projectionPGD}
 \end{equation}
@@ -429,17 +501,17 @@ The PGD attack is currently used in the literature with $p=2$ and $p=\infty$.
 The attack with the norm $p=\infty$ is state-of-the-art for the loss maximization problem. 
 
 \paragraph{Perturbation minimization.}
-This type of procedure search for the perturbation that has the minimal $\lp$ norm, under the constraint that $L(N_\Omega(\xvec + \adv), y)$ is bigger than a given bound $c$:
+This type of procedure search for the perturbation that has the minimal $\lp$ norm, under the constraint that $L(\nn_\weights(\xvec + \adv), y)$ is bigger than a given bound $c$:
 \begin{align}
   &\argmin_{\adv} \norm{\adv}_p \label{equation:ch2-normmin} \\
-  \st\ &L(N_\Omega(\xvec + \adv), y) \geq c \notag
+  \st\ &L(\nn_\weights(\xvec + \adv), y) \geq c \notag
 \end{align}
 The value of $c$ is typically chosen depending on the loss function $L$. For example, if $L$ is the $0-1$ loss, any $c > 0$ is acceptable.
 Equation~\ref{equation:ch2-normmin} has been tackled by~\citet{carlini2017towards}, leading to the following method, denoted C\&W attack in the rest of the chapter. It aims at solving the following Lagrangian relaxation of Equation~\ref{equation:ch2-normmin}:
 \begin{equation}
   \argmin_{\adv} \norm{\adv}_p + \lambda g(\xvec+\adv)
 \end{equation}
-where $g(\xvec + \adv)<0$ if and only if $L(N_\Omega(\xvec + \adv),y) \geq c$. 
+where $g(\xvec + \adv)<0$ if and only if $L(\nn_\weights(\xvec + \adv),y) \geq c$. 
 The authors use a change of variable $\adv = \tanh(\wvec) - \xvec$ to ensure that $\xvec + \adv \in \mathcal{X}$, a binary search to optimize the constant $c$, and Adam or SGD to compute an approximated solution.
 The C\&W attack is currently used in the literature with $p \in \{1, 2, \infty \}$ and is state-of-the-art with $p=2$ for the perturbation minimization problem
 % This attack with the norm $p=2$ is state-of-the-art for the perturbation minimization problem. 
@@ -463,7 +535,7 @@ Adversarial Training was introduced by~\citet{goodfellow2014explaining} and late
 It consists in augmenting training batches with adversarial examples generated during the training procedure.
 The structural risk minimization paradigm is thus replaced by the following $\min$ $\max$ problem, where the classifier tries to minimize the expected loss under maximum perturbation of its input:
 \begin{equation}
-\argmin_\Omega \argmax_{\adv: \norm{\adv} \leq \epsilon} \frac{1}{|\mathcal{S}|} \sum_{(\xvec, y) \in \mathcal{S}} L\left( N_\Omega \left(\xvec + \adv \right), y \right) + \lambda \sum_{(\Wmat, \bvec) \in \Omega} \left( \norm{\Wmat}_\mathrm{F} + \norm{\bvec}_\mathrm{2} \right)
+  \argmin_\weights \argmax_{\adv: \norm{\adv} \leq \epsilon} \frac{1}{|\mathcal{S}|} \sum_{(\xvec, y) \in \mathcal{S}} L\left( \nn_\weights \left(\xvec + \adv \right), y \right) + \lambda \sum_{(\Wmat, \bvec) \in \weights} \left( \norm{\Wmat}_\mathrm{F} + \norm{\bvec}_\mathrm{2} \right)
 \end{equation}
 % In the case where $p = \infty$, this technique offers good robustness against $\linf$ attacks \cite{athalye2018obfuscated}.
 Although adversarial training lacks formal guarantees, it is one of the few techniques that prove to be empirically very effective.
@@ -503,10 +575,9 @@ Although adversarial training lacks formal guarantees, it is one of the few tech
 \label{section:ch2-a_primer_on_toeplitz_and_circulant_matrices}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% $=>$ introduction on Toeplitz matrices and their generating function
-% $=>$ Circulant Matrix is a special case of Toeplitz matrices 
-% $=>$ Presenting block circulant and block Toeplitz
-% $=>$ After introduction circulant matrices, present theorem for bound the singular values of Toeplitz and Toeplitz matrices 
+In this thesis, we make contributions at the intersection between neural networks and structured matrices.
+We build neural networks with structured matrices and develop new algorithms for training neural networks based on certain properties of structured matrices. 
+Hereafter, we present some preliminaries on structured matrices that we will use later. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Toeplitz Matrices}
@@ -597,7 +668,7 @@ Because:
 Circulant matrices are a special case of Toeplitz matrices.
 In addition to having constant diagonals, each row of a circulant matrix is a cyclic right shift of the previous one.
 % Circulant matrices have been used to efficiently solve linear systems~\cite{golub1996matrix} and years later were used to perform dimensionality reduction~\cite{hinrichs2011johnson,vybiral2011variant}, binary embedding~\cite{yu2014circulant} and kernel approximation~\cite{yu2015compact} in the context of pattern recognition and machine learning.
-An $n \times n$ circulant matrix $\Cmat$ is fully determined by a sequence of scalars $\{c_h\}_{h \in \{0, \dots, n-1\}}$ as follows:
+An $n \times n$ circulant matrix $\Cmat$ is fully determined by a sequence of scalars $\{c_h\}_{h \in [n-1]_0}$ as follows:
 
 \begin{equation}
   \Cmat =
@@ -612,15 +683,36 @@ An $n \times n$ circulant matrix $\Cmat$ is fully determined by a sequence of sc
 \end{equation}
 
 \noindent
-because the circulant matrix $\Cmat$ is fully determined by the sequence $\{c_h\}_{h \in \{0, \dots, n-1\}}$, it can be compactly represented in memory using only $n$ values instead of $n^2$.
+because the circulant matrix $\Cmat$ is fully determined by the sequence $\{c_h\}_{h \in [n-1]_0}$, it can be compactly represented in memory using only $n$ values instead of $n^2$.
 Circulant matrices can also be characterized by noting that the $(k,j)$ entry of $\Cmat$, $\Cmat_{j,k}$ is given by
 \begin{equation}
   \Cmat_{j,k} = c_{\left(k-j\right) \mod n} \enspace.
 \end{equation}
 % We can also denote the sequence $\{c_h\}$ as a vector $\cvec$ such that $\forall i, \cvec_i = c_i$. The circulant matrices can then be expressed with $\Cmat = \circulant(\cvec)$.
 Circulant matrices exhibit several interesting properties which are based on the fact that they can be diagonalized by the Discrete Fourier Transform (DFT)~\cite{davis1979circulant}.
-More precisely, we have this important theorem regarding eigenvalues and eigenvectors of circulant matrices circulant matrices:
-\begin{theorem}[\citet{gray2006toeplitz}]
+First, we define the Fourier Matrix and then, we present an important theorem regarding eigenvalues and eigenvectors of circulant matrices circulant matrices.
+
+\begin{definition}[Fourier Matrix]
+  The Fourier matrix of order $n$ is defined as follows:
+  \begin{equation}
+    \Umat_n = 
+    \leftmatrix
+      1      & 1           & 1              & \cdots & 1           \\
+      1      & z_n       & z_d^2        & \cdots & z_d^{d-1} \\
+      1      & z_n^2     & z_d^4        & \cdots & z_d^{2(d-1)} \\
+      \vdots & \vdots      & \vdots         &        & \vdots      \\
+      1      & z_n^{n-1} & z_d^{2(n-1)} & \cdots & z_d^{(d-1)(d-1)}
+    \rightmatrix
+  \end{equation}
+  where $z_n = e^{-\frac{2\pi\ci}{n}}$ is an $n^{\text{th}}$ root of unity.
+  \label{definition:ch2-fourier_matrix}
+\end{definition}
+\noindent
+The matrix-vector product between the Fourier matrix above and a vector is equivalent to apply the Discrete Fourier Transform on the vector.
+This matrix-vector product can be efficiently computed with the \emph{Fast Fourier transform} (FFT) algorithm~\cite{cooley1965algorithm}.
+The complexity is reduced from from $O(n^2)$ to $O(n \log n)$.
+
+\begin{theorem}[Theorem 3.1 of \citet{gray2006toeplitz}]
   Every $n \times n$ circulant matrix $\Cmat$, has eigenvectors  
   \begin{equation}
     \yvec^{(k)} = \frac{1}{\sqrt{n}} \leftmatrix 1, e^{-\frac{2 \pi \ci k}{n}}, \dots, e^{-\frac{2 \pi \ci k(n-1)}{n}} \rightmatrix^\top
@@ -629,13 +721,34 @@ More precisely, we have this important theorem regarding eigenvalues and eigenve
   \begin{equation}
     \psi_k = \sum_{j=0}^{n-1} c_j e^{-\frac{2 \pi \ci}{n} jk}
   \end{equation}
-  A circulant matrix can be expressed in the form $\Cmat = \frac{1}{n} \Umat_n^{-1} \diag(\Umat_n \cvec) \Umat_n$ where $\Umat_n = \leftmatrix e^{-\frac{2 \pi \ci jk}{n}} \rightmatrix_{j,k = 0}^{n-1}$ is the DFT matrix and $\cvec$ is vector based of the scalars $\{c_h\}_{h \in \{0, \dots, n-1\}}$.
+  The circulant matrix $\Cmat$ can be expressed in the form 
+  \begin{equation}
+    \Cmat = \frac{1}{n} \Umat_n^{-1} \diag(\Umat_n \cvec) \Umat_n
+    \label{equation:ch2-diagonalization_circulant_matrix}
+  \end{equation}
+  where $\cvec$ is vector based of the scalars $\{c_h\}_{h \in [n-1]_0}$.
   In particular all circulant matrices share the same eigenvectors, the same matrix $\Umat_n$ works for all $n \times n$ circulant matrices.
   Also, if $\Cmat$ and $\Bmat$ are circulant matrices then $\Cmat$ and $\Bmat$ commute and $\Cmat + \Bmat$ is also a circulant matrix.
+  \label{theorem:ch2-diagonalization_circulant_matrix}
 \end{theorem}
+\noindent
+Base on the theorem above and of the \emph{Fast Fourier transform} (FFT) algorithm the matrix-vector product between a circulant matrix $\Cmat$ and a vector $\xvec$ can be reduced from $O(n^2)$ to $O(n \log n)$. 
+If we denote the Fast Fourier transform algorithm by \textbf{FFT} and the inverse by \textbf{IFFT}, the pseudocode for the matrix-product between a circulant matrix and a vector is as follows:
+\begin{algorithm}[h]
+  \begin{algorithmic}[1]
+    \Procedure{input}{$\cvec, \xvec$} \Comment{first column of the circulant matrix $\Cmat$, vector $\xvec$}
+      \State $\tilde{\xvec} \gets \textbf{FFT}(\xvec)$
+      \State $\tilde{\cvec} \gets \textbf{FFT}(\cvec)$
+      \State $\yvec \gets \textbf{IFFT}(\tilde{\xvec} * \tilde{\cvec})$ \Comment{element-wise vector-vector product}
+      \State \textbf{return} $\yvec$ \Comment{return the result of the product $\Cmat \xvec$}
+    \EndProcedure
+  \end{algorithmic}
+  \caption{Matrix-vector product with a circulant matrix}
+  \label{algorithm:matrix_vector_product_circulant_matrix}
+\end{algorithm}
 
-Base on the theorem above, the complexity of the matrix-vector product between a circulant matrix $\Cmat$ and a vector $\xvec$ can be reduced from $O(n^2)$ to $O(n \log n)$ with the \emph{Fast Fourier transform} (FFT) algorithm~\cite{cooley1965algorithm}.
 
+% the complexity of the matrix-vector product between a circulant matrix $\Cmat$ and a vector $\xvec$ can be reduced from $O(n^2)$ to $O(n \log n)$ with the \emph{Fast Fourier transform} (FFT) algorithm~\cite{cooley1965algorithm}.
 
 % More precisely, the eigenvalues $\psi_k$ of the matrix $\Cmat$ correspond to the discrete Fourier transform of the vector characteristic $\cvec$:
 % and the eigenvectors $\yvec^{(k)}$ can be expressed as follows:
@@ -655,28 +768,92 @@ Base on the theorem above, the complexity of the matrix-vector product between a
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Block Toeplitz Matrices}
-\label{subsection:ch2-block_toeplitz_matrices}
+\subsection{Block Toeplitz and Block Circulant Matrices}
+\label{subsection:ch2-block_toeplitz_and_block_circulant_matrices}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-We can extend the logic of Toeplitz to block Toeplitz matrices.
+We can extend the logic of Toeplitz and circulant matrices to block Toeplitz and block circulant matrices.
 A block Toeplitz matrix is a matrix in which each block is repeated identically along diagonals.
-A $nm\times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat_h\}_{h \in P}$ and where each block $\Bmat_h$ is an $m \times m$ matrix.  
+Equivalently, a block circulant matrix is a matrix in which each block is repeated identically along diagonals (like block Toeplitz matrices) and each ``row of blocks'' is cyclic right shift of the previous one.
+We show that block Toeplitz and block circulant matrices have similar properties that Toeplitz and circulant matrices.
 
+
+A $nm\times nm$ block circulant matrix $\Amat$ is fully determined by a sequence of blocks $\{\Amat_h\}_{h \in [n-1]_0}$ and where each block $\Amat_h$ is an $m \times m$ matrix.
+The circulant matrix $\Amat$ has the following form:
 \begin{equation}
-  \Bmat =
+  \Amat = \leftmat \Amat_{(k-j) \mod n} \rightmat_{i, j = 0}^{n-1} = 
   \leftmatrix
-    \Bmat_0 & \Bmat_{1}   & \Bmat_{2} & \cdots & \cdots & \Bmat_{n-1}  \\
-    \Bmat_{-1} & \Bmat_0 & \Bmat_{1} & \ddots & & \vdots \\
-    \Bmat_{-2} & \Bmat_{-1} & \ddots & \ddots & \ddots & \vdots \\ 
-   \vdots & \ddots & \ddots & \ddots & \Bmat_{1} & \Bmat_{2}\\
-   \vdots & & \ddots & \Bmat_{-1} & \Bmat_{0} & \Bmat_{1} \\
-  \Bmat_{-n+1} & \cdots & \cdots & \Bmat_{-2} & \Bmat_{-1} & \Bmat_0
+    \Amat_{0}   & \Amat_{n-1} & \Amat_{n-2} & \cdots    & \cdots      & \Amat_{1}   \\
+    \Amat_{1}   & \Amat_{0}   & \Amat_{n-1} & \ddots    &             & \vdots      \\
+    \Amat_{2}   & \Amat_{1}   & \ddots      & \ddots    & \ddots      & \vdots      \\ 
+    \vdots      & \ddots      & \ddots      & \ddots    & \Amat_{n-1} & \Amat_{n-2} \\
+    \vdots      &             & \ddots      & \Amat_{1} & \Amat_{0}   & \Amat_{n-1} \\
+    \Amat_{n-1} & \cdots      & \cdots      & \Amat_{2} & \Amat_{1}   & \Amat_{0}
   \rightmatrix
 \end{equation}
-
+% \begin{equation}
+%   \Amat = \leftmat \Amat_{(k-j) \mod n} \rightmat_{i, j = 0}^{n-1} =
+%   \leftmatrix
+%     \Amat_{0}   & \Amat_{n-1} & \cdots    & \Amat_{1}   \\
+%     \Amat_{1}   & \Amat_{0}   & \ddots    & \vdots      \\
+%     \vdots      & \ddots      & \ddots    & \Amat_{n-1} \\
+%     \Amat_{n-1} & \cdots      & \Amat_{1} & \Amat_{0}
+%   \rightmatrix
+% \end{equation}
 \noindent
-The same reasoning can be applied to block Toeplitz matrices.
+In a similar way to circulant matrices, block circulant matrices have a relation with the Discrete Fourier Transform.
+The next result characterizes this relation:
+\begin{theorem}[Lemma 5.1 of \citet{gutierrez2012block}]
+  Let $\Amat$ be a $nm\times nm$ block circulant matrix defined by the sequence of blocks $\{\Amat_h\}_{h \in [n-1]_0}$, then:
+  \begin{equation}
+    \Amat = (\Umat_n \otimes \Imat_n) \diag(\Psi_0, \dots, \Psi_{n-1}) (\Umat_n \otimes \Imat_n)^*
+  \end{equation}
+  where $\otimes$ is the Kronecker product, $\Umat_n$ is the Fourier matrix of size $n$ and
+  \begin{equation}
+    \leftmatrix
+      \Psi_{0} \\
+      \Psi_{1} \\
+      \vdots \\
+      \Psi_{n-1} \\
+    \rightmatrix = 
+    \sqrt{n}(\Umat_n \otimes \Imat_n)^* 
+    \leftmatrix
+      \Amat_{0} \\
+      \Amat_{1} \\
+      \vdots \\
+      \Amat_{n-1} \\
+    \rightmatrix
+  \end{equation}
+\end{theorem}
+\noindent
+One can remark that when the blocks are of size $1\times1$ \ie, scalar, this theorem coincide with Equation~\ref{equation:ch2-diagonalization_circulant_matrix} of Theorem~\ref{theorem:ch2-diagonalization_circulant_matrix}.
+
+
+In a similar way as Toeplitz matrices, block Toeplitz matrices can be expressed with the Toeplitz operator defined in Equation~\ref{equation:ch2-toeplitz_operator}.
+A $nm\times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat_h\}_{h \in P}$ and where each block $\Bmat_h$ is an $m \times m$ matrix.  
+The block Toeplitz matrix $\Bmat$ has the following form:
+\begin{equation}
+  \Bmat = \leftmat \Bmat_{k-j} \rightmat_{j,k = 0}^{n-1} = 
+  \leftmatrix
+    \Bmat_{0}    & \Bmat_{1}  & \Bmat_{2} & \cdots     & \cdots     & \Bmat_{n-1} \\
+    \Bmat_{-1}   & \Bmat_{0}  & \Bmat_{1} & \ddots     &            & \vdots      \\
+    \Bmat_{-2}   & \Bmat_{-1} & \ddots    & \ddots     & \ddots     & \vdots      \\ 
+    \vdots       & \ddots     & \ddots    & \ddots     & \Bmat_{1}  & \Bmat_{2}   \\
+    \vdots       &            & \ddots    & \Bmat_{-1} & \Bmat_{0}  & \Bmat_{1}   \\
+    \Bmat_{-n+1} & \cdots     & \cdots    & \Bmat_{-2} & \Bmat_{-1} & \Bmat_0
+  \rightmatrix
+\end{equation}
+% \begin{equation}
+%   \Bmat = \leftmat \Bmat_{k-j} \rightmat_{j,k = 0}^{n-1} = 
+%   \leftmatrix
+%     \Bmat_{0}    & \Bmat_{1}  & \cdots     & \Bmat_{n-1} \\
+%     \Bmat_{-1}   & \Bmat_{0}  & \ddots     & \vdots      \\
+%     \vdots       & \ddots     & \ddots     & \Bmat_{1}   \\
+%     \Bmat_{-n+1} & \cdots     & \Bmat_{-1} & \Bmat_{0}   \\
+%   \rightmatrix
+% \end{equation}
+\noindent
+% The same reasoning can be applied to block Toeplitz matrices.
 Instead of being complex-valued, the trigonometric polynomial that \emph{generates} the block Toeplitz $\Bmat$ is matrix-valued and can be defined as follows:
 \begin{equation}
   F_{\Bmat}(\omega) \triangleq \sum_{h \in P} \Bmat_h e^{\ci h \omega}
@@ -684,23 +861,28 @@ Instead of being complex-valued, the trigonometric polynomial that \emph{generat
 The function $F_{\Bmat}$ is said to be the \emph{generating function} of $\Bmat$.
 To recover the block Toeplitz matrix from its generating function, we use the Toeplitz operator defined in Equation~\ref{equation:ch2-toeplitz_operator}; therefore, we have $\Tmat(F_\Bmat) = \Bmat$.
 
-% \begin{align}
-%   \leftmat \Tmat(F_\Bmat) \rightmat_{i, j} 
-%   &= \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i-j)\omega} f_{\Bmat}(\omega) \,d\omega  \\
-%   &= \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i-j) \omega} \sum_{h \in N} \Bmat_h e^{\ci h \omega} \,d\omega  \\
-%   &= \frac{1}{2\pi} \int_0^{2\pi} \sum_{h \in N} \Bmat_h e^{\ci (j - i + h) \omega} \,d\omega  \\
-%   &= \sum_{h \in N} \Bmat_h \frac{1}{2\pi} \int_0^{2\pi} e^{\ci (j - i + h) \omega} \,d\omega 
-%   = \Bmat_{j-i} .
-% \end{align}
 
 
-% Block circulant matrices are matrices in which block is repeated identically along diagonals and the block exhibit the same circular pattern as circulant matrices. 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \comment{
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -734,130 +916,3 @@ Theorem~\ref{theorem:teoplitz_sup_singular} is a direct application of Lemma 4.1
 }
 
 
-
-
-
-\comment{
-
-
-% An $n\times n$ Toeplitz matrix $\mathbf A$ is fully determined by a two-sided sequence of scalars: $\{a_h\}_{h \in P}$, whereas an $nm\times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat_h\}_{h \in P}$ and where each block $\Bmat_h$ is an $m \times m$ matrix.  
-%
-% \begin{equation}
-%   \Amat \triangleq \begin{psmallmatrix}
-%     a_0 & a_{1}   & a_{2} & \cdots & \cdots & a_{n-1}  \\
-%     a_{-1} & a_0 & a_{1} & \ddots & & \vdots \\
-%     a_{-2} & a_{-1} & \ddots & \ddots & \ddots & \vdots \\ 
-%    \vdots & \ddots & \ddots & \ddots & a_{1} & a_{2}\\
-%    \vdots & & \ddots & a_{-1} & a_{0} & a_{1} \\
-%   a_{-n+1} & \cdots & \cdots & a_{-2} & a_{-1} & a_0
-%   \end{psmallmatrix} \quad \quad
-%   \Bmat \triangleq  \begin{psmallmatrix}
-%     \Bmat_0 & \Bmat_{1}   & \Bmat_{2} & \cdots & \cdots & \Bmat_{n-1}  \\
-%     \Bmat_{-1} & \Bmat_0 & \Bmat_{1} & \ddots & & \vdots \\
-%     \Bmat_{-2} & \Bmat_{-1} & \ddots & \ddots & \ddots & \vdots \\ 
-%    \vdots & \ddots & \ddots & \ddots & \Bmat_{1} & \Bmat_{2}\\
-%    \vdots & & \ddots & \Bmat_{-1} & \Bmat_{0} & \Bmat_{1} \\
-%   \Bmat_{-n+1} & \cdots & \cdots & \Bmat_{-2} & \Bmat_{-1} & \Bmat_0
-%   \end{psmallmatrix}
-% \end{equation}
-
-% The trigonometric polynomial that \emph{generates} the Toeplitz matrix $\Amat$ can be defined as follows:
-% \begin{equation}
-%   f_{\Amat}(\omega) \triangleq \sum_{h \in N} a_h e^{\ci h \omega}
-% \end{equation}
-% The function $f_{\Amat}$ is said to be the \emph{generating function} of $\Amat$.
-% To recover the Toeplitz matrix from its generating function, we have the following operator presented in Section~\ref{subsection:generating_function} of the main paper:
-% \begin{equation} \label{equation:toeplitz_operator}
-%   \leftmat \Tmat(f) \rightmat_{i, j} \triangleq  \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i - j)\omega} f(\omega) \,d\omega .
-% \end{equation}
-% We can now show that $\Tmat(f_{\Amat}) = \Amat$: 
-% \begingroup
-% \allowdisplaybreaks
-% \begin{align}
-%     \leftmat \Tmat(f_\Amat) \rightmat_{i, j} &= \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i-j)\omega} f_{\Amat}(\omega) \,d\omega  \\
-%     &= \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i-j) \omega} \sum_{h \in N} a_h e^{\ci h \omega} \,d\omega  \\
-%     &= \frac{1}{2\pi} \int_0^{2\pi} \sum_{h \in N} a_h e^{\ci (j - i + h) \omega} \,d\omega  \\
-%     &= \sum_{h \in N} a_h \frac{1}{2\pi} \int_0^{2\pi} e^{\ci (j - i + h) \omega} \,d\omega 
-%     = a_{j-i} .
-% \end{align}
-% \endgroup
-% Because:
-% \begin{equation}
-%     \frac{1}{2\pi} \int_0^{2\pi} e^{\ci k \omega} \,d\omega = \left\{
-%                 \begin{array}{ll}
-%                   1, & \text{if}\ k = 0, \\
-%                   0, & \text{if}\ k\ \text{is a non-zero integer number.}
-%                 \end{array}
-%                 \right.
-% \end{equation}
-
-The same reasoning can be applied to block Toeplitz matrices. Instead of being complex-valued, the trigonometric polynomial that {\em generates} the block Toeplitz $\Bmat$ is matrix-valued and can be defined as follows:
-\begin{equation}
-  f_{\Bmat}(\omega) \triangleq \sum_{h \in N} \Bmat_h e^{\ci h \omega}
-\end{equation}
-
-The function $f_{\Bmat}$ is said to be the \emph{generating function} of $\Bmat$. To recover the block Toeplitz matrix from its generating function, we use the Toeplitz operator defined in Equation~\ref{equation:toeplitz_operator}. We can show that $\Tmat(f_\Bmat) = \Bmat$:
-
-\begingroup
-\allowdisplaybreaks
-\begin{align}
-    \leftmat \Tmat(f_\Bmat) \rightmat_{i, j} &= \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i-j)\omega} f_{\Bmat}(\omega) \,d\omega  \\
-    &= \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i-j) \omega} \sum_{h \in N} \Bmat_h e^{\ci h \omega} \,d\omega  \\
-    &= \frac{1}{2\pi} \int_0^{2\pi} \sum_{h \in N} \Bmat_h e^{\ci (j - i + h) \omega} \,d\omega  \\
-    &= \sum_{h \in N} \Bmat_h \frac{1}{2\pi} \int_0^{2\pi} e^{\ci (j - i + h) \omega} \,d\omega 
-    = \Bmat_{j-i} .
-\end{align}
-\endgroup
-
-
-
-
-In order to devise a bound on the Lipschitz constant of a convolution layer as used by the Deep Learning community, we study the properties of doubly-block Toeplitz matrices.
-In this section, we first introduce the necessary background on Toeplitz and block Toeplitz matrices, and introduce a new result on doubly-block Toeplitz matrices.
-
-% Toeplitz matrices and block Toeplitz matrices are well-known types of structured matrices.
-% A Toeplitz matrix  (respectively a block Toeplitz matrix) is a matrix in which each scalar (respectively block) is repeated identically along diagonals.
-
-
-An $n \times n$ Toeplitz matrix $\Amat$ is fully determined by a two-sided sequence of scalars: $\{a_h\}_{h \in P}$, whereas an $nm\times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat_h\}_{h \in P}$, where $P = \{-n+1,\dots, n-1 \}$ and where each block $\Bmat_h$ is an $m \times m$ matrix.  
-
-\begin{equation*}
-  \Amat = \leftmatrix
-    a_0 & a_{1} & \cdots & a_{n-1} \\ \vspace{0.1cm}
-    a_{-1} & a_0 & \ddots & \vdots \\ \vspace{0.3cm}
-   \vdots & \ddots & a_{0} & a_{1} \\ 
-  a_{-n+1} & \cdots  & a_{-1}    & a_0 
-  \rightmatrix \quad \quad \quad \quad 
-    \Bmat = \leftmatrix
-    \Bmat_0 & \Bmat_{1} & \cdots & \Bmat_{n-1} \\ \vspace{0.1cm}
-    \Bmat_{-1} & \Bmat_0 & \ddots & \vdots \\ \vspace{0.3cm}
-   \vdots & \ddots & \Bmat_0 & \Bmat_{1} \\ 
-  \Bmat_{-n+1} & \cdots  & \Bmat_{-1}  & \Bmat_0 
-  \rightmatrix.
-\end{equation*}
-
-Finally, a doubly-block Toeplitz matrix is a block Toeplitz matrix in which each block is itself a Toeplitz matrix.
-In the remainder, we will use the standard notation $\leftmat\ \cdot\ \rightmat_{i,j \in \{0,\ldots,n-1\}}$ to construct (block) matrices.
-For example, $\Amat = \leftmat a_{j-i} \rightmat_{i,j \in \{0,\ldots,n-1\}}$ and $\Bmat = \leftmat \Bmat_{j-i} \rightmat_{i,j \in \{0,\ldots,n-1\}}$.
-
-A standard tool for manipulating (block) Toeplitz matrices is the use of Fourier analysis.
-Let $\{a_h\}_{h \in P}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \mathbb{R}^{n\times n}$ and let $\{\Bmat_h\}_{h \in P}$ be the sequence of $m\times m$ blocks of the block Toeplitz matrix $\Bmat$.
-The complex-valued function $f(\omega) = \sum_{h \in P} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in P} \Bmat_h e^{\ci h \omega}$ are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in P}$ and $\{\Bmat_h\}_{h \in P}$, with $\omega \in \mathbb{R}$.
-From these two functions, one can recover these two sequences using the standard Fourier transform:
-
-\begin{equation}
-  a_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} f(\omega) d\omega \quad \quad \Bmat_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} F(\omega) d\omega .
-\end{equation}
-
-From there, similarly to the work done by~\citet{gray2006toeplitz,gutierrez2012block}, we can define an operator $\Tmat$ mapping integrable functions to matrices:
-
-\begin{equation}
-  \Tmat(g)  \triangleq\leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j\in\{0,\ldots,n-1\}} . \label{equation:expression_toeplitz_matrix}
-\end{equation}
-
-Note that if $f$ is the inverse Fourier transform of $\{a_h\}_{h \in P}$, then $\Tmat(f)$ is equal to $\Amat$.
-Also, if $F$ is the inverse Fourier transform of $\{\Bmat_h\}_{h \in P}$ as defined above, then the integral in Equation~\ref{equation:expression_toeplitz_matrix} is matrix-valued, and thus $\Tmat(F) \in \mathbb{R}^{mn \times mn}$ is the block matrix $\Bmat$.
-
-
-
-}
