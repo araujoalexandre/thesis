@@ -15,14 +15,14 @@
   description = {The set of complex numbers},
 }
 
-\newglossaryentry{indicators function}{%
-  name        = {$\mathds{1}[\text{Boolean expression}]$},
-  description = {Indicator function (equals 1 if expression is true 0 otherwise)}
-}
-
 \newglossaryentry{integer set}{%
   name        = {$[n]$},
   description = {The set of natural numbers from $1$ to $n$},
+}
+
+\newglossaryentry{integer set with 0}{%
+  name        = {$[n]_0$},
+  description = {The set of numbers \{0, \dots, n\}},
 }
 
 \newglossaryentry{imaginary number}{%
@@ -43,6 +43,11 @@
 \newglossaryentry{complex modulus}{%
   name        = {$|z|$},
   description = {Modulus of complex number z},
+}
+
+\newglossaryentry{indicators function}{%
+  name        = {$\mathds{1}[\text{Boolean expression}]$},
+  description = {Indicator function (equals 1 if expression is true 0 otherwise)}
 }
 
 \newglossaryentry{Matrix}{%
@@ -71,13 +76,19 @@
 }
 
 \newglossaryentry{identity}{%
-  name        = {$\Imat_{n \times n}$},
+  name        = {$\Imat_n$},
   description = {Identity matrix of size $n \times n$},
 }
 
 \newglossaryentry{anti-identity}{%
-  name        = {$\Qmat_{n \times n}$},
-  description = {Anti-identity matrix $n \times n$},
+  name        = {$\Qmat_n$},
+  description = {Anti-identity matrix of size $n \times n$},
+}
+
+\newglossaryentry{discrete fourier transform}{%
+  name        = {$\Umat_n$},
+  description = {DFT matrix of size $n \times n$, \ie, 
+  $\Umat_n = \leftmatrix e^{-\frac{2 \pi \ci jk}{n}} \rightmatrix_{j,k = 0}^{n-1}$},
 }
 
 \newglossaryentry{Vector p-norm}{%
@@ -88,7 +99,7 @@
 
 \newglossaryentry{Vector inf-norm}{%
   name        = {$\norm{\xvec}_\infty$},
-  description = {infinity Norm of vector $\xvec$, \ie,
+  description = {Infinity Norm of vector $\xvec$, \ie,
   $\norm{\xvec}_\infty = \max_i |\xvec_i|$},
 }
 

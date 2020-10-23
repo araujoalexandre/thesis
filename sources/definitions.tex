@@ -336,12 +336,23 @@
 % Vector of ones
 \newcommand{\vecones}[1]{\ensuremath \mathbf{1}_{#1}}
 
-% functions
-\newcommand{\nn}{F}
-\newcommand{\dcnn}{H}
-
-% adversarial attack
+% neural networks
+\newcommand{\nn}{N}
+\newcommand{\dcnn}{DCNN}
+\newcommand{\act}{\rho}
+\newcommand{\weights}{\Omega}
+\newcommand{\depth}{p}
+\newcommand{\dimw}{w}
+\newcommand{\dimb}{b}
 \newcommand{\adv}{\pmb{\tau}}
+
+
+% operator low displacement rank
+\newcommand{\triangleopup}{\bigtriangleup}
+\newcommand{\triangleopdown}{\rotatebox[x=0pt,y=4pt]{180}{$\bigtriangleup$}}
+
+% count page number
+\newcommand{\countpages}[2]{\the\numexpr\getpagerefnumber{#2}-\getpagerefnumber{#1}\relax}
 
 % command for matrices
 \newcommand{\Amat}{\ensuremath \mathbf{A}}
@@ -425,7 +436,7 @@
 \newcommand{\yt}    {\textit{\mbox{YouTube-8M}}\xspace}
 \newcommand{\eg}    {\textit{e.g.}\xspace}
 \newcommand{\ie}    {\textit{i.e.}\xspace}
-\newcommand{\aka}   {\textit{a.k.a}\xspace}
+\newcommand{\aka}   {\textit{a.k.a.}\xspace}
 \newcommand{\vs}    {\textit{vs.}\xspace}
 \newcommand{\wrt}   {w.r.t.\xspace}
 \newcommand{\st}    { s.t.\xspace}
