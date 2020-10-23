@@ -66,29 +66,29 @@
 
   % This ensures that the subsequent sections are being included as root
   % items in the bookmark structure of your PDF reader.
-  % \bookmarksetup{startatroot}
-  % \backmatter
-  %   \begingroup
-  %     \let\clearpage\relax
-  %     \glsaddall
-  %     \etocsettocdepth{1}
-  %     \addcontentsline{toc}{chapter}{Table of Contents}
-  %     \begingroup
-  %       \etocsettocstyle{\addchap*{Table of Contents}}{}
-  %       \tableofcontents
-  %     \endgroup
-  %     \newpage
-  %     \addcontentsline{toc}{chapter}{\listfigurename}
-  %     \listoffigures
-  %     \newpage
-  %     \addcontentsline{toc}{chapter}{\listtablename}
-  %     \listoftables
-  %     \newpage
-  %     \printglossary[type=\acronymtype]
-  %     \newpage
-  %     \printglossary[title={List of Symbols}]
-  %   \endgroup
-  %   \printindex
+  \bookmarksetup{startatroot}
+  \backmatter
+    \begingroup
+      \let\clearpage\relax
+      \glsaddall
+      \etocsettocdepth{1}
+      \addcontentsline{toc}{chapter}{Table of Contents}
+      \begingroup
+        \etocsettocstyle{\addchap*{Table of Contents}}{}
+        \tableofcontents
+      \endgroup
+      \newpage
+      % \addcontentsline{toc}{chapter}{\listfigurename}
+      % \listoffigures
+      % \newpage
+      % \addcontentsline{toc}{chapter}{\listtablename}
+      % \listoftables
+      % \newpage
+      % \printglossary[type=\acronymtype]
+      % \newpage
+      \printglossary[title={List of Symbols}]
+    \endgroup
+    \printindex
 
   % main
   \linenumbers
