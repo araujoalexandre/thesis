@@ -47,7 +47,6 @@
 % Mathematical packages
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\usepackage{amsmath}        % Basic mathematical typography
 \usepackage{mathtools}      % Mathematical tools to use with amsmath
 \usepackage{amssymb}
 \usepackage{amsthm}         % Basic mathematical environments for proofs etc.
@@ -56,6 +55,25 @@
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{physics}        % typesetting equations for physics simpler
 \usepackage{bm}             % Access bold symbols in maths mode
+\usepackage{centernot}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Fonts
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\DeclareFontFamily{T1}{calligra}{}
+\DeclareFontShape{T1}{calligra}{m}{n}{<->s*[1.44]callig15}{}
+\DeclareMathAlphabet\mathcalligra   {T1}{calligra} {m} {n}
+\DeclareMathAlphabet\mathzapf       {T1}{pzc} {mb} {it}
+\DeclareMathAlphabet\mathchorus     {T1}{qzc} {m} {n}
+\DeclareMathAlphabet\mathrsfso      {U}{rsfso}{m}{n}
+
+\usepackage{bbding}
+\newcommand{\drawstar}{
+  \begin{center}
+    \color{mydarkblue}{\FourStar}
+  \end{center}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Graphics packages
@@ -110,13 +128,19 @@
 % Hyperlinks
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\definecolor{mydarkblue}{rgb}{0,0.08,0.45}
+% \definecolor{mydarkblue}{rgb}{0,0.08,0.45}
+% \definecolor{mydarkblue}{rgb}{0,0.14,0.45}
+% \definecolor{mydarkblue}{rgb}{0.25, 0.41, 0.88}
+% \definecolor{mydarkblue}{rgb}{0.0, 0.22, 0.66}
+\definecolor{mydarkblue}{rgb}{0.02, 0.40, 0.62}
 \usepackage[%
   colorlinks = true,
-  citecolor  = mydarkblue,
-  linkcolor  = mydarkblue,
-  urlcolor   = mydarkblue,
+  % citecolor  = mydarkblue,
+  % linkcolor  = mydarkblue,
+  % urlcolor   = mydarkblue,
+  allcolors    = mydarkblue
   ]{hyperref}
+\usepackage{cleveref}
 \usepackage{bookmark}       % Bookmarks in the resulting PDF
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -150,19 +174,67 @@
 \makeatletter
 \let\abx@macro@citeOrig\abx@macro@cite
 \renewbibmacro{cite}{%
-\bibhyperref{%
-\let\bibhyperref\relax\relax%
-\abx@macro@citeOrig%
-  }%
-}
-\let\abx@macro@textciteOrig\abx@macro@textcite
-\renewbibmacro{textcite}{%
   \bibhyperref{%
-    \let\bibhyperref\relax\relax%
-    \abx@macro@textciteOrig%
-  }%
-}%
+  \let\bibhyperref\relax\relax%
+  \abx@macro@citeOrig%
+    }%
+}
+% \let\abx@macro@textciteOrig\abx@macro@textcite
+% \renewbibmacro{textcite}{%
+%   \bibhyperref{%
+%     \let\bibhyperref\relax\relax%
+%     \abx@macro@textciteOrig%
+%   }%
+% }%
+
+% code that fix the color of the last bracket
+% https://tex.stackexchange.com/a/25972
+\DeclareCiteCommand{\textcite}
+ {\boolfalse{cbx:parens}}
+  {\usebibmacro{citeindex}%
+    \printtext[bibhyperref]{\printnames{labelname}%
+      \printtext{ (\printfield{year}\printtext{)}}}}
+ {\ifbool{cbx:parens}
+  {\bibcloseparen\global\boolfalse{cbx:parens}}
+  {}%
+ \textcitedelim}
+{\usebibmacro{textcite:postnote}}
+
+% code that fix the color of the last bracket
+% https://tex.stackexchange.com/a/425289
+
+% \newcommand*{\linkblx@startlink}[1]{%
+%   \blx@sfsave\hyper@natlinkstart{\the\c@refsection @#1}\blx@sfrest}
+% \newcommand*{\linkblx@startlinkentry}{%
+%   \linkblx@startlink{\abx@field@entrykey}}
+% \newcommand*{\linkblx@endlink}{%
+%   \blx@sfsave\hyper@natlinkend\blx@sfrest}
+
+% \DeclareCiteCommand{\textcite}
+%   {\boolfalse{cbx:parens}}
+%   {\DeclareFieldFormat{bibhyperref}{####1}%
+%    \linkblx@startlinkentry
+%    \usebibmacro{citeindex}%
+%    \iffirstcitekey
+%      {\setcounter{textcitetotal}{1}}
+%      {\stepcounter{textcitetotal}}%
+%    \printtext[bibhyperref]{\usebibmacro{textcite}}%
+%    \iflastcitekey
+%      {}
+%      {\ifbool{cbx:parens}
+%         {\bibcloseparen\global\boolfalse{cbx:parens}}
+%         {}}%
+%    \ifnumequal
+%      {\value{citecount}}{\value{citetotal}}
+%      {\usebibmacro{textcite:postnote}}
+%      {}%
+%    \linkblx@endlink}
+%   {}
+%   {}
+
 \makeatother
+
+
 
 \DefineBibliographyStrings{english}{and={and}}
 \DefineBibliographyStrings{english}{in={in}}
@@ -173,6 +245,7 @@
 \DefineBibliographyStrings{english}{volume={volume}}
 \DefineBibliographyStrings{english}{backrefpage={see page}}
 \DefineBibliographyStrings{english}{backrefpages={see pages}}
+\DefineBibliographyStrings{english}{phdthesis={PhD Thesis}}
 \renewcommand{\cite}[1]{\citep{#1}}
 \renewcommand{\finalnamedelim}{ \& }
 \renewcommand{\textcitedelim}{
@@ -181,8 +254,8 @@
   }{
   \addcomma}\space}
 
-\input{bibliography-mimosis}
 
+\input{bibliography-mimosis}
 \addbibresource{bibliography/springer.bib}
 \addbibresource{bibliography/neurips.bib}
 \addbibresource{bibliography/linear_algebra.bib}
@@ -221,36 +294,137 @@
   \begin{center}
     \rule{0.5\linewidth}{1pt}
   \end{center}
+  \newpage
 }
 
 \newcommand{\todotext}[1]{{\color{red} \noindent \textbf{#1}}}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % algorithm
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage{algorithm}
+\usepackage[chapter]{algorithm}
 \usepackage{algpseudocode}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Theorems
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newtheorem{definition}   {Definition}
-\newtheorem{theorem}      {Theorem}
-\newtheorem{corollary}    {Corollary}
-\newtheorem{lemma}        {Lemma}
-\newtheorem{proposition}  {Proposition}
-\newtheorem{property}     {Property}
-\newtheorem{remark}       {Remark}
 
-\renewcommand\qedsymbol{$\blacksquare$}
+\usepackage{thmtools}
+
+\declaretheoremstyle[
+  % headfont=\color{mydarkblue}\sffamily\bfseries,
+  % notefont=\mdseries, notebraces={(}{)},
+  spaceabove=6pt, spacebelow=6pt,
+  bodyfont=\normalfont,
+  postheadspace=1em,
+  qed=,
+]{style}
+
+\declaretheoremstyle[
+  % headfont=\color{mydarkblue}\sffamily\bfseries,
+  % notefont=\mdseries, notebraces={(}{)},
+  spaceabove=6pt, spacebelow=6pt,
+  bodyfont=\normalfont,
+  postheadspace=1em,
+  qed=,
+  shaded={
+    rulecolor=mydarkblue,
+    rulewidth=2pt,
+    bgcolor=white,
+    padding=0.02\textwidth,
+    textwidth=0.96\textwidth}
+]{maintheoremstyle}
+
+\declaretheorem[
+  numberwithin=chapter,
+  name=Theorem,
+  style=maintheoremstyle,
+  refname={theorem,theorems},
+  Refname={Theorem,Theorems}]{maintheorem}
+\declaretheorem[
+  numberwithin=chapter,
+  name=Theorem,
+  style=style,
+  refname={theorem,theorems},
+  Refname={Theorem,Theorems}]{theorem}
+\declaretheorem[
+  numberwithin=chapter,
+  name=Definition,
+  style=style,
+  refname={definition,definitions},
+  Refname={Definition,Definitions}]{definition}
+\declaretheorem[
+  numberwithin=chapter,
+  name=Lemma,
+  style=style,
+  refname={lemma,lemmas},
+  Refname={Lemma,Lemmas}]{lemma}
+\declaretheorem[
+  numberwithin=chapter,
+  name=Proposition,
+  style=style,
+  refname={proposition,propositions},
+  Refname={Proposition,Propositions}]{proposition}
+\declaretheorem[
+  numberwithin=chapter,
+  numbered=no,
+  name=Remark,
+  style=style,
+  refname={remark,remarks},
+  Refname={Remark,Remarks}]{remark}
+\declaretheorem[
+  numberwithin=chapter,
+  name=Problem,
+  style=style,
+  refname={problem,problems},
+  Refname={Problem,Problems}]{problem}
+
+\let\proof\relax
+\let\endproof\relax
+
+\declaretheoremstyle[
+  notebraces={}{},
+  headfont=\bfseries\itshape,
+  notefont=\bfseries\itshape,
+  postheadspace=1em,
+  qed=$\blacksquare$,
+  mdframed={
+    topline=false,
+    bottomline=false,
+    rightline=false,
+    linecolor=lightgray,
+    linewidth=3pt,
+    backgroundcolor=white,
+    innerleftmargin=0.02\textwidth,
+    innerrightmargin=0pt}
+]{proofstyle}
+
+\declaretheorem[
+  numbered=no,
+  name=Proof of,
+  style=proofstyle,
+  refname={proof,proofs},
+  Refname={Proof,Proofs}
+]{proof}
 
 
-\newcommand\proofrefth[1]   {\textbf{Proof of Theorem}~\ref{#1}}
-\newcommand\proofrefcor[1]  {\textbf{Proof of Corollary}~\ref{#1}}
-\newcommand\proofreflem[1]  {\textbf{Proof of Lemma}~\ref{#1}}
-\newcommand\proofrefprop[1] {\textbf{Proof of Proposition}~\ref{#1}}
+% \newtheorem{definition}   {Definition}
+% \newtheorem{theorem}      {Theorem}
+% \newtheorem{corollary}    {Corollary}
+% \newtheorem{lemma}        {Lemma}
+% \newtheorem{proposition}  {Proposition}
+% \newtheorem{property}     {Property}
+% \newtheorem{problem}      {Problem}
+% \newtheorem{example}      {Example}
+% \newtheorem*{remark}      {Remark}
+
+% \renewcommand\qedsymbol{$\blacksquare$}
+%
+% \newcommand\proofrefth[1]   {\textbf{Proof of Theorem}~\ref{#1}}
+% \newcommand\proofrefcor[1]  {\textbf{Proof of Corollary}~\ref{#1}}
+% \newcommand\proofreflem[1]  {\textbf{Proof of Lemma}~\ref{#1}}
+% \newcommand\proofrefprop[1] {\textbf{Proof of Proposition}~\ref{#1}}
 
 % \newcommand{\beginproof}{#1}{\begin{proof}[\proofreflem{#1}]}
 % \newcommand{\endproof}{\end{proof}}
@@ -259,28 +433,30 @@
 % Specific Operators
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\DeclareMathOperator{\reshape}   {vec}
-\DeclareMathOperator{\pad}       {pad}
-\DeclareMathOperator{\lip}       {Lip}
-\DeclareMathOperator{\lipbound}  {LipBound}
-\DeclareMathOperator{\relu}      {ReLU}
-\DeclareMathOperator*{\argmax}   {arg\,max}
-\DeclareMathOperator*{\argmin}   {arg\,min}
-\DeclareMathOperator*{\Vol}      {Vol}
-
-\DeclareMathOperator{\sign}{sign}
-\DeclareMathOperator*{\Risk}{Risk}
-\DeclareMathOperator*{\advRisk}{Risk_{\alpha}}
-\DeclareMathOperator*{\PCadvRisk}{PC-Risk_{\alpha}}
-\DeclareMathOperator*{\randRisk}{Rand-Risk}
-\DeclareMathOperator*{\randadvRisk}{Rand-Risk_{\alpha}}
+\DeclareMathOperator{\reshape}       {vec}
+\DeclareMathOperator{\pad}           {pad}
+\DeclareMathOperator{\relu}          {ReLU}
+\DeclareMathOperator*{\argmax}       {arg\,max}
+\DeclareMathOperator*{\argmin}       {arg\,min}
+\DeclareMathOperator*{\Vol}          {Vol}
+\DeclareMathOperator*{\Ebb}          {\ensuremath \mathbb{E}}
+\DeclareMathOperator*{\Pbb}          {\ensuremath \mathbb{P}}
+\DeclareMathOperator*{\EoT}          {EoT}
+\DeclareMathOperator*{\diag}         {diag}
+\DeclareMathOperator{\sign}          {sign}
+\DeclareMathOperator*{\Risk}         {Risk}
+\DeclareMathOperator*{\advRisk}      {Risk_{\alpha}}
+\DeclareMathOperator*{\PCadvRisk}    {PC-Risk_{\alpha}}
+\DeclareMathOperator*{\randRisk}     {Rand-Risk}
+\DeclareMathOperator*{\randadvRisk}  {Rand-Risk_{\alpha}}
 \DeclareMathOperator*{\ranfPCadvRisk}{Rand-PC-Risk_{\alpha}}
-\DeclareMathOperator*{\B}{B(\alpha)}
-\DeclareMathOperator*{\probmap}{M}
-\DeclareMathOperator*{\EoT}{EoT}
-\DeclareMathOperator*{\diag}{diag}
-\DeclareMathOperator*{\Ebb}{\ensuremath \mathbb{E}}
-\DeclareMathOperator*{\Pbb}{\ensuremath \mathbb{P}}
+\DeclareMathOperator*{\B}            {B(\alpha)}
+\DeclareMathOperator*{\probmap}      {M}
+
+\DeclareMathOperator{\lipop}{Lip}
+\DeclareMathOperator{\lipbound}{LipBound}
+\newcommand{\lip}[1]{\lipop{(#1)}}
+% \newcommand{\lipbound}[1]{\lipboundop{(#1)}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -319,22 +495,14 @@
 \newcommand{\Zbb}{\ensuremath \mathbb{Z}}
 \newcommand{\Rbb}{\ensuremath \mathbb{R}}
 \newcommand{\Cbb}{\ensuremath \mathbb{C}}
-% \newcommand{\Pbb}{\ensuremath \mathbb{P}}
-% \newcommand{\Ebb}{\ensuremath \mathbb{E}}
 \newcommand{\Cnn}{\Cbb^{n \times n}}
 \newcommand{\Cn}{\Cbb^{n}}
 \newcommand{\Xset}{\mathcal{X}}
 
-% \newcommand{\Rn}{\Rbb^{n}}
-% \newcommand{\Rnn}{\Rbb^{n \times n}}
-
-% \newcommand{\Nxx}[2]{{\ensuremath \Nbb^{#1 \times #2}}}
-% \newcommand{\Zxx}[2]{{\ensuremath \Zbb^{#1 \times #2}}}
-% \newcommand{\Cxx}[2]{{\ensuremath \Cbb^{#1 \times #2}}}
-% \newcommand{\Rxx}[2]{{\ensuremath \Rbb^{#1 \times #2}}}
 
 % Vector of ones
-\newcommand{\vecones}[1]{\ensuremath \mathbf{1}_{#1}}
+\newcommand{\onevec}[1]{\ensuremath \mathbf{1}_{#1}}
+\newcommand{\zerovec}[1]{\ensuremath \mathbf{0}_{#1}}
 
 % neural networks
 \newcommand{\nn}{N}
@@ -348,8 +516,8 @@
 
 
 % operator low displacement rank
-\newcommand{\triangleopup}{\bigtriangleup}
-\newcommand{\triangleopdown}{\rotatebox[x=0pt,y=4pt]{180}{$\bigtriangleup$}}
+\newcommand{\triangleopup}{\pmb{\bigtriangleup}}
+\newcommand{\triangleopdown}{\rotatebox[x=0pt,y=4pt]{180}{$\triangleopup$}}
 
 % count page number
 \newcommand{\countpages}[2]{\the\numexpr\getpagerefnumber{#2}-\getpagerefnumber{#1}\relax}
@@ -421,6 +589,7 @@
 % circulant & diagonal
 \newcommand{\circulant}   {\ensuremath \mathrm{circ}}
 \newcommand{\diagonal}    {\ensuremath \mathrm{diag}}
+\newcommand{\krylov}      {\ensuremath \mathrm{krylov}}
 
 % variance and covariance
 \newcommand{\Cov}{\ensuremath \mathrm{Cov}}
@@ -440,6 +609,7 @@
 \newcommand{\vs}    {\textit{vs.}\xspace}
 \newcommand{\wrt}   {w.r.t.\xspace}
 \newcommand{\st}    { s.t.\xspace}
+\newcommand{\DC}    {$\mathbf{DC}$\xspace}
 \newcommand{\ACDC}  {$\mathbf{ACDC}^{-1}$\xspace}
 \newcommand{\AFDF}  {$\mathbf{AFDF}^{-1}$\xspace}
 
@@ -449,8 +619,5 @@
 % \newcommand{\DCRNs}{DCRNs\xspace}
 % \newcommand{\divisiblerank}{divisible rank}
 % \newcommand{\totalrank}{total rank}
-
-
-
 
 

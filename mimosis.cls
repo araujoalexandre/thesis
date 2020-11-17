@@ -203,20 +203,24 @@
 % Typefaces for parts, chapters, and sections
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\KOMAoption{chapterprefix}{true}
 \renewcommand{\partformat}{\huge\partname~\thepart\autodot}
 \renewcommand{\raggedpart}{\flushleft}
 
+% Large number for chapter
+\renewcommand*{\chapterformat}{%
+  \fontsize{50}{55}\selectfont\chaptername~\thechapter\autodot\enskip
+}
+\renewcommand*{\sectionformat}{%
+  \textcolor{mydarkblue}{\thesection}\autodot\enskip%
+}
+\renewcommand*{\subsectionformat}{%
+  \textcolor{mydarkblue}{\thesubsection}\autodot\enskip%
+}
+
 \setkomafont{part}{\normalfont\huge\scshape}
-
-\setkomafont{sectioning}{\normalfont\scshape}
+\setkomafont{sectioning}{\bfseries\scshape}
 \setkomafont{descriptionlabel}{\normalfont\bfseries}
-
 \setkomafont{caption}{\small}
 \setkomafont{captionlabel}{\usekomafont{caption}}
 
-% Large number for chapter
-\renewcommand*{\chapterformat}{%
-  \fontsize{50}{55}\selectfont \chaptername~\thechapter\autodot\enskip
-}
-
-\KOMAoption{chapterprefix}{true}
