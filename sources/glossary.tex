@@ -46,7 +46,7 @@
 }
 
 \newglossaryentry{indicators function}{%
-  name        = {$\mathds{1}[\text{Boolean expression}]$},
+  name        = {$\mathds{1}_{[\text{Boolean expres.}]}$},
   description = {Indicator function (equals 1 if expression is true 0 otherwise)}
 }
 
@@ -71,8 +71,18 @@
 }
 
 \newglossaryentry{vector of ones}{%
-  name        = {$\vecones{n}$},
+  name        = {$\onevec{n}$},
   description = {\emph{n-}vector of ones},
+}
+
+\newglossaryentry{vector of zeros}{%
+  name        = {$\zerovec{n}$},
+  description = {\emph{n-}vector of zeros},
+}
+
+\newglossaryentry{unit vector}{%
+  name        = {$\evec^{(i)}$},
+  description = {$i$-th unit vector in $\Rbb^n$}
 }
 
 \newglossaryentry{identity}{%
@@ -80,9 +90,14 @@
   description = {Identity matrix of size $n \times n$},
 }
 
-\newglossaryentry{anti-identity}{%
-  name        = {$\Qmat_n$},
-  description = {Anti-identity matrix of size $n \times n$},
+\newglossaryentry{reflection}{%
+  name        = {$\Jmat_n$},
+  description = {Reflection matrix of size $n \times n$, $\Jmat^2 = \Imat$},
+}
+
+\newglossaryentry{symmetric_matrix}{%
+  name        = {$\mathbb{S}^n$},
+  description = {The set of all symmetric matrices of size $n \times n$},
 }
 
 \newglossaryentry{discrete fourier transform}{%
