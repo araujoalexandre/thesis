@@ -33,7 +33,7 @@ First of all, they used a network architecture with more than 60 million paramet
 % Secondly, they used the ImageNet database~\cite{deng2009imagenet} which consists of 1.2 million labeled images with 1000 different classes for training their network;
 Secondly, with 1.2 million labeled images, the ImageNet database~\cite{deng2009imagenet} was an adequate dataset to train a neural network with so many parameters.
 Finally, they used graphics processing units (GPUs) to speed up the arithmetic operations, which enabled them to significantly reduce training time.
-The Figure~\ref{figure:ch1-alexnet_network} shows the AlexNet architecture which consists of five convolutional layers with a fully-connected layer at the end. 
+The \Cref{figure:ch1-alexnet_network} shows the AlexNet architecture which consists of five convolutional layers with a fully-connected layer at the end.
 The figure also shows the delineation of responsibilities between the two GPUs.
 
 
@@ -98,7 +98,7 @@ The figure also shows the delineation of responsibilities between the two GPUs.
   \end{subfigure}
   \caption{
     Tables showing the different network architectures developed in the years after AlexNet.
-    Table~\ref{table:ch1-networks_parameters_cv} shows networks developed for computer vision tasks and Table~\ref{table:ch1-networks_parameters_nlp} shows networks developed for natural language processing. 
+    \Cref{table:ch1-networks_parameters_cv} shows networks developed for computer vision tasks and \Cref{table:ch1-networks_parameters_nlp} shows networks developed for natural language processing.
   }
   \label{table:ch1-networks_parameters}
 \end{table}
@@ -109,11 +109,11 @@ The figure also shows the delineation of responsibilities between the two GPUs.
 % Since this result, many different architectures with a growing number of parameters have been developed.
 % This growth of number of parameters have lead to an increase in accuracy surpass human-level performance on the ImageNet Dataset and Computer Vision task in general.
 % near perfect accuracy on the ImageNet Dataset and Computer Vision task in general.
-% Table~\ref{table:ch1-networks_parameters} shows the different architectures that came out in the years after AlexNet.
+% \Cref{table:ch1-networks_parameters} shows the different architectures that came out in the years after AlexNet.
 
 Since this result, many architectures with an increasing number of parameters have been developed.
 This growth in the number of parameters has led to an increase in accuracy exceeding human performance on the ImageNet dataset~\cite{he2015delving}.
-Table~\ref{table:ch1-networks_parameters} shows an historic of the different state-of-the-art architectures along with their size, and accuracy, as we can see, the models have dramatically improved their size, generally at the cost of model size.
+\Cref{table:ch1-networks_parameters} shows an historic of the different state-of-the-art architectures along with their size, and accuracy, as we can see, the models have dramatically improved their size, generally at the cost of model size.
 This increase in model size as been possible with the increase in computational resources~\cite{huang2019gpipe} and the availability of high level deep learning frameworks~\cite{tensorflow2015-whitepaper,paszke2019pytorch}.
 While most new architectures have been proposed based on empirical studies, recent research \cite{tan2019efficientnet,rosenfeld2020a} have examined the relationship between the number of parameters (model size), the size of the dataset and the accuracy.
 For computer vision models, \citet{tan2019efficientnet} have shown that the relation between model size and accuracy seems to obey a power law. 
@@ -172,7 +172,7 @@ The goal of this algorithm is to explain the prediction of an instance by comput
 However, this method scale exponentially with the number of parameters making it impractical for large neural networks.
 Furthermore, large neural networks due to a high complexity and expressivity exhibit instability to small perturbations of their inputs.
 The best example of this phenomenon is the vulnerability of neural networks to \emph{adversarial examples}, \ie, imperceptible variations of natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,szegedy2013intriguing}.
-The Figure~\ref{figure:ch1-adversarial_image_example} gives an examples of an adversarial attacks on an image. The small perturbation (center) is added to the original image (left) leading to an adversarial image (right).
+The \Cref{figure:ch1-adversarial_image_example} gives an examples of an adversarial attacks on an image. The small perturbation (center) is added to the original image (left) leading to an adversarial image (right).
 This behavior can cause serious security problems for neural networks used for critical decision-making for example self-driving cars.
 
 
@@ -273,7 +273,7 @@ A convolutional neural networks is a type of \emph{structured} neural network be
 In addition to offering a more compact representation, the structure of certain matrices can be exploited to obtain better algorithms for the matrix-vector product, thus optimizing memory and computing operations.
 Based on the success of convolutional neural networks, researchers have studied and proposed other types of neural networks based on weight matrices with different structures~\cite{moczulski2016acdc,sindhwani2015structured,denil2013predicting}.
 % Structured neural networks have been extensively studied in the field of deep learning \cite{moczulski2016acdc,sindhwani2015structured,denil2013predicting}.
-Figure~\ref{figure:ch1-example_structure_matrices} shows different types of structured matrices that have been used for deep learning.
+\Cref{figure:ch1-example_structure_matrices} shows different types of structured matrices that have been used for deep learning.
 Although, convolutional neural networks have been state-of-the-art for computer vision tasks, it remains unclear whether other types of structured neural networks can be beneficial to other types of applications and which structure can provide both accuracy and efficient computation.
 The phenomenon, that neural network with a smaller number of parameters, generalizes better has been theoretically justified \cite{vapnik1982estimation}.
 \citeauthor{vapnik1982estimation} linked the generalization capability of neural networks to their VC-dimension which is a measure of expressivity of the class of functions.
@@ -307,7 +307,7 @@ Although, these methods improve the robustness of neural networks, the accuracy 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% In this thesis, we leverage the properties of \emph{structured matrices} for the problems mentioned in Section~\ref{subsection:ch1-introducing_structured_into_the_architecture_of_neural_networks} and \ref{subsection:ch1-introducing_structured_into_the_learning_procedure}.
+% In this thesis, we leverage the properties of \emph{structured matrices} for the problems mentioned in \Cref{subsection:ch1-introducing_structured_into_the_architecture_of_neural_networks} and \Cref{subsection:ch1-introducing_structured_into_the_learning_procedure}.
 %
 % More specifically, we study the properties of structured matrices from the Toeplitz family to make two contributions presented below:
 
