@@ -1,316 +1,53 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Related Work}
-\label{chapter:p1-ch3-related_work}
+\label{chapter:ch3-related_work}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \localtableofcontents
 \vspace{\marginbellowtable}
 
-\todotext{write intro here}
-
+This thesis makes contributions on building compact and robust neural networks with help from Toeplitz matrix theory.
+This chapter aims at presenting related techniques and works on how to build compact and robust neural networks. 
+Given that the scope of concurrent techniques is large, we choose to focus mainly on works which uses linear algebra tools and more particularly structured matrices.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Related Work on Compact Neural Networks}
 \label{section:ch3-related_work_on_compact_neural_networks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-In this chapter, we review the literature on the existing techniques for building compact neural networks.
-
-\todotext{write intro here}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Compact Neural Networks with Structured Matrices}
-\label{subsection:ch3-compact_neural_networks_with_structured_matrices}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Another way of constraining the weight representation and reduce the memory requirement of neural networks is to impose a \emph{structure} on weight matrices. 
-The idea of building compact neural networks with structured matrices consists of replacing the weight matrices $\Wmat^{(i)}$ with \emph{structured matrices}.
-
-\todotext{this paragraph makes no sense $\downarrow$}
-
-A structured matrix is a $n \times n$ matrix whose entries have a formulaic relationship, allowing the matrix to be represented with fewer than $n^2$ parameters.
-The formulaic relationship between entries is an important feature to consider, for example, a sparse matrix has fewer than $n^2$ parameters but does not have a clear relationship between its entries.
-
-\todotext{rewrite the paragraph with new neural network notation}
-
-A classic example of structured matrices are \emph{low-rank} matrices which result from the product of two rectangular matrices.
-Let $\Umat, \Vmat \in \Rbb^{n \times m}$ with $n < m$, the matrix $\Wmat = \Umat^\top \Vmat$ will be low-rank with rank $n$.
-\citet{denil2013predicting} were among the first to use low-rank matrices in deep learning contexts followed by the work of~\citet{jaderberg2014speeding,yu2017compressing}.
-They replaced the dense weight matrices $\Wmat^{(i)}$ with a product of two rectangular matrices $\Umat^{(i)}, \Vmat^{(i)} \in \Rbb^{n \times m}$ with $n < m$ which led to neural network layer defined as follows:
-\begin{equation}
-  \phi^{(i+1)} = \rho\left( \Umat^{(i)\top} \Vmat^{(i)} \xvec^{(i)} \right) .
-\end{equation}
-By replacing the dense weight matrices $\Wmat^{(i)}$ with the product of two rectangular matrices and learning them instead of the dense matrices, they \emph{impose} on the learning procedure the low-rank constraint.
-We can remark that the matrix resulting from the product of $\Umat^{(i)\top} \Vmat^{(i)}$ has $n^2$ unique values but can still be represented with only $2nm$ values in memory.
-
-In linear algebra, many structures have been discovered and studied~\cite{pan2001structured}. 
-for example, circulant matrices have been used to efficiently solve linear systems~\cite{golub1996matrix} and years later were used to perform dimensionality reduction~\cite{hinrichs2011johnson,vybiral2011variant}, binary embedding~\cite{yu2014circulant} and kernel approximation~\cite{yu2015compact} in the context of pattern recognition and machine learning.
-
-\todotext{complete articulation}
-
-From these properties and previous applications, \citet{cheng2015exploration} had the idea to replace the weight matrix of a fully connected layer by circulant and diagonal matrices where the circulant matrix is learned by a gradient-based optimization algorithm and the diagonal matrix entries are sampled at random in $\{-1, 1\}$.
-This effectively replaces the complex transform modeled by the fully connected layer by a simple dimensionality reduction.
-Despite the reduction of expressivity, their experiments demonstrated good accuracy using only a fraction of the original size of the network (90\% reduction).
-Indeed, the last 3 fully connected layers of the AlexNet~\cite{krizhevsky2012imagenet} architecture use 58M out of the 62M total trainable parameters ($> 90\%$ of the total number of parameters).
-
-\citet{moczulski2016acdc} build upon the work of~\citet{cheng2015exploration} and introduced two \emph{Structured Efficient Linear Layers} (SELL) called \AFDF and \ACDC, where $\Amat$ and $\Dmat$ are diagonal matrices and $\Fmat$ and $\Cmat$ are the Fourier and cosine transform respectively.
-Their work is two-fold, first, they theoretically study the \AFDF linear layer which consists of a diagonal matrix \eg, the matrix $\Dmat$ and a circulant matrix \eg, the decomposition $\mathbf{FDF}^{-1}$.
-Then they experiment using the \ACDC linear layer which consists of a diagonal matrices \eg, the matrices $\Amat$ and $\Dmat$ interlaced with the cosine transform.
-As far as we can tell, the theoretical guarantees available for the \AFDF layer do not apply to the \ACDC layer since the cosine transform does not diagonalize circulant matrices \cite{sanchez1995diagonalizing}.
-Although the resulting network demonstrates good accuracy, it is difficult to characterize the true contribution of the \ACDC layers in this setting. 
-
-\begin{figure}[t]
-   \centering
-   \begin{subfigure}[b]{0.32\textwidth}
-       \centering
-       \begin{equation*}
-	  \leftmatrix
-	    t_0 & t_{1} & \cdots & t_{n-1}  \\
-	    t_{-1} & t_0 & \ddots & \vdots \\
-	    \vdots & \ddots & \ddots & t_{1} \\
-	    t_{-n+1} & \cdots & t_{-1} & t_0
-	  \rightmatrix
-       \end{equation*}
-       \caption*{Toeplitz}
-   \end{subfigure}
-   \hfill
-   \begin{subfigure}[b]{0.32\textwidth}
-       \centering
-       \begin{equation*}
-	  \leftmatrix
-	    1 & v_0 & \cdots & v_0^{n-1} \\
-	    1 & v_1 & \cdots & v_1^{n-1} \\
-	    1 & \vdots & & \vdots \\
-	    1 & v_{n-1} & \cdots & v_{n-1}^{n-1}
-	  \rightmatrix
-       \end{equation*}
-       \caption*{Vandermonde}
-   \end{subfigure}
-   \hfill
-   \begin{subfigure}[b]{0.32\textwidth}
-       \centering
-       \begin{equation*}
-	  \leftmatrix
-	  \frac{1}{u_0 - v_{0}} & \cdots & \frac{1}{u_0 - v_{n-1}} \\
-	  \frac{1}{u_1 - v_{0}} & \cdots & \frac{1}{u_1 - v_{n-1}} \\
-	  \vdots & \cdots & \vdots \\
-	  \frac{1}{u_{n-1} - v_{0}} & \cdots & \frac{1}{u_{n-1} - v_{n-1}} \\
-	  \rightmatrix
-       \end{equation*}
-       \caption*{Cauchy}
-   \end{subfigure}
-   \caption{Structured matrices that can be characterized by a low displacement rank.}
-  \label{figure:p1-ch3_example_structure_matrices}
-\end{figure}
-
-Around the same time, \citet{sindhwani2015structured} used circulant matrices and other type of structured matrices \eg, Toeplitz, Vandermonde, and Cauchy matrices (see Figure~\ref{figure:p1-ch3_example_structure_matrices}) to train compact neural networks for keyword spotting applications in mobile speech recognition.
-They proposed a unified framework of structured matrices that are characterized by the notion of low displacement rank.
-Their methods demonstrate that compact neural networks with structured matrices are much more effective than standard linear low-rank bottleneck layers.
-
-More recently, \citet{thomas2018learning} have generalized these works by training neural networks with low-displacement rank matrices (LDR), that are structured matrices encompassing a large family of structured matrices, including Toeplitz-like, Vandermonde-like, Cauchy-like.
-To obtain this result, LDR represents a structured matrix using two displacement operators and a low-rank residual.
-Despite being elegant and general, we found that the LDR framework suffers from several limits which are inherent to its generality and makes it difficult to use in the context of large and deep neural networks.
-First, the training procedure for learning LDR matrices is highly involved and implies many complex mathematical objects such as Krylov matrices.
-Then, as acknowledged by the authors, the number of parameters required to represent a given structured matrix (a Toeplitz matrix) in practice is unnecessarily high (higher than required in theory). 
-
-Other, more complex, structured projections have been used in the context of compact neural networks.
-The Fastfood transform~\cite{le2013fastfood}, which was originally used for approximating kernel expansions, was later used in neural networks by~\citet{yang2015deep} leading to the Deep Fried Convnets architecture.
-The authors have replaced dense matrices of fully connected layers with adaptative structured matrices of the form: $\Smat\Hmat\Gmat\mathbf{\Pi}\Hmat\Bmat$ where $\Smat$, $\Gmat$, and $\Bmat$ are adaptive diagonal matrices, $\mathbf{\Pi}$ is a random permutation matrix, and $\Hmat$ is the Walsh-Hadamard matrix.
-Later, the \emph{Structured Spinners} transform of the form: $\Hmat\Dmat_3\Hmat\Dmat_2\Hmat\Dmat_1$, where $\Hmat$ is the Walsh-Hadamard matrix, and $\Dmat_i$ for $i \in {1, 2, 3}$ is a random $\pm1$-diagonal matrix, was originally proposed by~\citet{andoni2015practical} and used in deep learning settings by~\citet{bojarski2017structured}.
-In the same vein, \citet{novikov2015tensorizing} have proposed to replace the dense weight matrices of fully connected layers by the \emph{Tensor Train decomposition} allowing an important reduction of the number of parameters while preserving the expressive power of the layers.
-
-
-Finally, convolutional layers, which are widely used for image classification and detection for their translation invariance characteristics \cite{zhang1990parallel}, are structured layers.
-Indeed, a discrete convolution operation with a 2d kernel applied on a 2d signal is equivalent to a matrix multiplication with a doubly-block Toeplitz matrix~\cite{jain1989fundamentals} \ie, a block Toeplitz matrix where the blocks are also Toeplitz.
-If the 2-dimensional kernel used for the convolution is as follows:
-
-\begin{equation}
-  \leftmatrix
-    \kvec_{0} & \kvec_{1} & \kvec_{2} \\
-    \kvec_{3} & \kvec_{4} & \kvec_{5} \\
-    \kvec_{6} & \kvec_{7} & \kvec_{8} 
-  \rightmatrix
-\end{equation}
-then, the doubly-block Toeplitz matrix that performs the convolution can be represented as follows:
-\begin{equation}
-  \leftmatrix
-    \Tmat_0 & \Tmat_{1} &  &  & 0  \\
-    \Tmat_{2} & \Tmat_0 & \Tmat_{1} &  &  \\
-     & \Tmat_{2} & \scalebox{.70}{$\ddots$} & \scalebox{.70}{$\ddots$} & \\
-     &  & \scalebox{.70}{$\ddots$} & \Tmat_0 & \Tmat_{1}  \\
-    0 &  &  & \Tmat_{2} & \Tmat_0  \\
-  \rightmatrix
-\end{equation}
-where $\Tmat_j$ are banded Toeplitz matrices and the values of $\kvec$ are distributed in the Toeplitz blocks as follows:
-\begin{align}
-  \Tmat_0 = \leftmatrixsmall
-    \kvec_{4} & \kvec_{3} &  &  &  0 \\
-    \kvec_{5} & \kvec_{4} & \kvec_{3} &  &   \\
-     & \kvec_{5} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$}  \\
-     &  &  \scalebox{.40}{$\ddots$} & \kvec_{4} & \kvec_{3}  \\
-    0 &  &  & \kvec_{5} & \kvec_{4}  \\
-  \rightmatrixsmall &&
-  \Tmat_{1} = \leftmatrixsmall
-    \kvec_{7} & \kvec_{6} &  &  &  0 \\
-    \kvec_{8} & \kvec_{7} & \kvec_{6} &  &   \\
-     & \kvec_{8} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$} &    \\
-     &  &  \scalebox{.40}{$\ddots$} & \kvec_{7} & \kvec_{6}  \\
-    0 &  &  & \kvec_{8} & \kvec_{7}  \\
-  \rightmatrixsmall &&
-  \Tmat_{2} = \leftmatrixsmall
-    \kvec_{1} & \kvec_{0} &  &  &  0 \\
-    \kvec_{2} & \kvec_{1} & \kvec_{0} &  &   \\
-     & \kvec_{2} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$} &    \\
-     &  &  \scalebox{.40}{$\ddots$} & \kvec_{1} & \kvec_{0}  \\
-    0 &  &  & \kvec_{2} & \kvec_{1}  \\
-  \rightmatrixsmall
-\end{align}
-Although convolutional layers can be considered structured layers, researchers initially took inspiration from the receptive fields in the visual cortex of living organisms to use them in pattern recognition~\cite{hubel1959receptive,hubel1968receptive} and later in neural networks~\cite{fukushima1982neocognitron}.
-\citet{jain1989fundamentals} demonstrated the relationship between doubly-block Toeplitz matrices and convolutions.
-It is only recently that the structure of convolutional layers has been used to improve the training of neural networks~\cite{sedghi2018singular}.
-
-
-
-
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Other techniques for Building Compact Neural Networks}
-\label{subsection:ch3-other_techniques_for_building_compact_neural_networks}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\todotext{small intro}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Leveraging Memory Representations and Data Structures}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-An effective method to make a compact neural network is to use programming tools and techniques to reduce their memory representation. 
-Indeed, when we use a neural network in a computer system, we need to define the memory representation of the weights and the data structure to use.
-One of the most widely used memory representations for numerical values is the single-precision floating-point format which uses 32 bits of computer memory.
-Researchers have noticed that a high precision of neural networks weights might not be necessary and have tried to use different representations.
-\citet{gupta2015deep} were one of the first to train neural networks with limited numerical precision in order to save memory.
-They use half-precision floating-point format which used 16 bits instead of 32.
-This work offers a trade-off between the expressivity of the neural network governed by the weights precision and the accuracy.
-More recently, \citet{micikevicius2018mixed} have built on the work of~\citet{gupta2015deep} and proposed training neural networks with mixed precision floating format.
-They proposed to use both single and half precision in order to have a more fine-grained control over the trade-off compression/accuracy.
-
-Using half-precision floating-point format is not the only format available to computer scientists to reduce memory.
-Binary and integer formats can take even fewer bits in computer memory.
-Recently, \citet{courbariaux2015binaryconnect} have proposed a method to train neural networks with binary weights.
-While this approach can significantly reduce the memory footprint of neural networks, it is difficult to maintain the binary constraint during training. 
-Moreover, an important idea in model compression, proposed by~\citet{bucilua2006model}, is based on the observation that the model used for training is not required to be the same as the one used for inference, indeed, compressed models after training can be deployed on smartphones or IoT devices.
-Based on this idea, researchers \cite{mellempudi2017ternary,rastegariECCV16} have proposed a quantization procedure which consists of converting the weights into a binary or integer formats \emph{after} the training phase. 
-
-\begin{table}[t]
-  \centering
-  {\small
-  \begin{tabular}{llcc}
-    \toprule
-    \textbf{Authors} & \textbf{Models} & \textbf{Baseline} & \textbf{Mixed Precision} \\
-    \midrule
-    \citet{krizhevsky2012imagenet} & AlexNet & 56.77\% & 56.93\% \\
-    \citet{simonyan2014very} & VGG & 65.40\% & 65.43\% \\
-    \citet{szegedy2015going} & GoogLeNet & 68.33\% & 68.43\% \\
-    \citet{ioffe2015batch} & Inception v2 & 70.03\% & 70.02\% \\
-    \citet{szegedy2016rethinking} & Inception v3 & 73.85\% & 74.13\% \\
-    \citet{he2016deep} & Resnet50 & 75.92\% & 76.04\% \\
-    \bottomrule
-  \end{tabular}
-  }
-  \caption{Comparison of TOP-1 Accuracy on the ImageNet Dataset \cite{deng2009imagenet} between baseline training and mixed precision training \cite{micikevicius2018mixed}.}
-  \label{table:p1-ch3-basline_vs_mixed_precision}
-\end{table}
-
-Another widely used technique to compress neural network after the training phase is to use sparse data structures for weights matrices.
-Indeed, it has been observed that redundant parameters can be omitted from the model without significantly changing the accuracy.
-These observations have led to pruning techniques~\cite{dai2018compressing,han2015deep,lin2017runtime} or sparsity regularizers~\cite{collins2014memory,dai2018compressing,liu2015sparse} which consists of removing useless weights after training and leveraging the sparse structure of the weights matrices.
-Sparse neural networks have been extensively studied since the \emph{Lottery Ticket Hypothesis} proposed by \citet{frankle2018lottery}.
-This hypothesis states that it exists a sparse neural network \ie, a subnetwork of dense neural network, that when trained in isolation can match the test accuracy of the original dense network after training for at most the same number of iterations.
-This hypothesis led to a series of works on sparse neural networks \cite{zhou2019deconstructing,malach2019proving,evci2020rigging}.
-
-Other original techniques have been designed to reduce the number of parameters used in neural networks. 
-\citet{chen2015compressing} have proposed to compress weight matrices by using hash functions to map several matrix coefficients into the same memory cell.
-However, in practice, hashing techniques are difficult to use because of their irregular memory access patterns which makes them inadequate for GPU execution.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Compact Neural Networks Architecture}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Without consideration of specific memory representations, data structures or structured linear layers, it is still possible to design compact neural networks.
-The architecture of a neural network is governed by mainly two factors: the dimensions of the hidden layers and the depth of the network.
-Different types of scaling have been studied.
-Neural networks with large width have been studied both theoretically and experimentally.
-It is known that extremely wide but shallow neural networks can \emph{theoretically} approximate any decision boundary~\cite{cybenko1989approximation} but are very difficult to train and tend to have difficulties in capturing higher-level features. 
-However, researchers have demonstrated that increasing the width of shallow neural networks increased its performance~\cite{howard2017mobilenets,sandler2018mobilenetv2,tan2019mnasnet,zagoruyko2016wide} due to their capacity to capture more fine-grained features. 
-Finally, depth is a common and effective way to scale neural networks and many deep architectures have been proposed~\cite{he2016deep, huang2016deep, szegedy2016rethinking,szegedy2017inception,xiao2018dynamical}. 
-The intuition is that deep neural network can capture richer and more complex features.
-
-After observing that large and deep neural networks outperformed shallow ones \cite{huang2019gpipe,brown2020language} and the observation that a lot of parameters in large neural networks were redundant~\cite{dai2018compressing,frankle2018lottery}, an important question arises: \emph{do neural networks needs to be large \ie, deep and wide, and if not, which architecture provides the best accuracy?} 
-
-\citet{ba2014deep} tried to answer this question and empirically demonstrated that shallow neural networks can learn the complex functions previously learned by another neural network. 
-This observation was then leveraged by~\citet{hinton2015distilling} for compressing trained neural networks.
-Their technique, called \emph{model distillation}, consists to train a large complex model using all the available data and resources to be as accurate as possible, then a smaller and more compact model is trained to approximate the first model.
-Although, this approach can be interesting for deployment purposes, it is still required to train one large network and one shallow, which entails a significant training cost.
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.81\textwidth]{figures/main/ch3-related_work/scalecompare.pdf}
-  \caption{Illustration of the scaling of the EfficientNet architecture \cite{tan2019efficientnet}.}
-  \label{figure:p1-ch3-illustration_efficientnet}
-\end{figure}
-
-Instead of compressing the model after the training step, researchers still tried to design architectures that are compact by nature but finding the best trade-off between depth, width and performance has proved to be a tedious work.
-In order to scale the search, recent works have devised algorithms to automatically find the best architecture for a specific use case.
-\citet{zoph2018learning,real2019regularized} have tried to tune the wide and depth of neural network architectures to obtain the best trade-off between efficiency and accuracy but these methods required a lot of manual tuning.
-More recently, with a similar method, \citet{tan2019efficientnet} found a new compound scaling method to uniformly scales network width, depth, and resolution leading to groundbreaking result in terms of efficiency and accuracy (see Figure~\ref{figure:p1-ch3-illustration_efficientnet}).
-
-
-
-
-
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Position of the Contribution Regarding the State-of-the-Art}
-\label{subsection:ch3-position_of_the_contribution_regarding_the_state-of-the-art_1}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-In the previous sections, we show the current methods and techniques for designing compact and efficient neural networks. 
-Mainly, three techniques exist.
-The first one considers the use of specific memory representation as well as efficient data structures.
-This technique is interesting and has the advantage to be applicable to any neural networks, therefore is complementary to other methods.
-The second method consists of using structured linear layers to reduce the number of parameters and leverage fast matrix-product algorithms. 
-Finally, recent works devised efficient and compact neural network architectures by tuning the width and depth parameters of neural networks.
-It is now clear that convolutional neural networks are state-of-the-art for image classification and detection.
-Moreover, recent architectures~\cite{tan2019efficientnet} have been found with architecture search algorithms and have very competitive results. 
-However, neural networks based on structured matrices (different than convolution) can still be interesting for other use cases or small-footprint deep learning like smartphone or IoT devices. 
-
-Our contributions on \emph{Deep Diagonal Circulant Neural Networks} are a direct follow-up to the work of~\citet{cheng2015exploration,sindhwani2015structured,moczulski2016acdc,thomas2018learning} focusing on compact neural networks with \emph{structured matrices}.
-Although, this diagonal circulant layers fit in the low displacement rank framework, we demonstrate much better performances in practice.
-Indeed, thanks to a solid theoretical analysis and thorough experiments, we were able to train deep (up to 40 layers) circulant neural networks (see Chapter~\ref{chapter:diagonal_circulant_neural_network}), and apply, for the first time, this structured architecture in the context of large-scale video classification (see Chapter~\ref{chapter:diagonal_circulant_neural_networks_for_video_classification}).
-Note that we are able to train \emph{fully structured networks} (\ie, networks with structured layers only) hence demonstrating that diagonal circulant layers are able to model complex relations between inputs and outputs.
-This contrasts with previous experiments in which only one or a few dense layers were replaced inside a large redundant network such as VGG~\cite{simonyan2014very}.
-To the best of our knowledge, this is the first time such networks can be trained.  
-
-
-
-
-
+\input{sources/main/ch3-related_work_structured}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Related Work on Lipschitz Regularization}
 \label{section:ch3-related_work_on_lipschitz_regularization}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{sources/main/ch3-related_work_lipschitz}
 
-\todo{write related work Lipschitz bound}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Position of the Contribution Regarding the State-of-the-Art}
+\label{section:ch3-position_of_the_contribution_regarding_the_state-of-the-art}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todotext{complete}
+
+In the previous sections, we have shown current methods and techniques for designing compact neural networks with structured matrices. 
+Our contributions on \emph{Deep Diagonal Circulant Neural Networks} are a direct follow-up to the work of~\citet{cheng2015exploration,sindhwani2015structured,moczulski2016acdc,thomas2018learning} focusing on compact neural networks with \emph{structured matrices}.
+More precisely, we extend the work of \citet{moczulski2016acdc} by training \emph{fully structured networks} (\ie, networks with structured layers only) hence demonstrating that diagonal circulant layers are able to model complex relations between inputs and outputs.
+Although, this diagonal circulant layers fit in the low displacement rank framework, we demonstrate much better performances in practice.
+Indeed, thanks to a solid theoretical analysis and thorough experiments, we were able to train deep (up to 40 layers) circulant neural networks, and apply, for the first time, this structured architecture in the context of large-scale video classification.
+This contrasts with previous experiments in which only one or a few dense layers were replaced inside a large redundant network such as VGG~\cite{simonyan2014very}.
+% To the best of our knowledge, this is the first time such networks can be trained.  
+
+% The first one considers the use of specific memory representation as well as efficient data structures.
+% This technique is interesting and has the advantage to be applicable to any neural networks, therefore is complementary to other methods.
+% The second method consists of using structured linear layers to reduce the number of parameters and leverage fast matrix-product algorithms. 
+% Finally, recent works devised efficient and compact neural network architectures by tuning the width and depth parameters of neural networks.
+% It is now clear that convolutional neural networks are state-of-the-art for image classification and detection.
+% Moreover, recent architectures~\cite{tan2019efficientnet} have been found with architecture search algorithms and have very competitive results. 
+% However, neural networks based on structured matrices (different than convolution) can still be interesting for other use cases or small-footprint deep learning like smartphone or IoT devices. 
+
+
+
+
+\comment{
 
 A popular technique for approximating the maximal singular value of a matrix is the power method~\cite{golub2000eigenvalue}, an iterative algorithm which yields a good approximation of the maximum singular value when the algorithm is able to run for a sufficient number of iterations.
 
@@ -330,6 +67,7 @@ Furthermore, the complexity of their algorithm is dependent on the convolution i
 More recently, \citet{singla2019bounding} have successfully bounded the operator norm of the Jacobian matrix of a convolution layer by the Frobenius norm of the reshaped kernel.
 This technique has the advantage to be very fast to compute and to be independent of the input size but it also results in a loose approximation. 
 
+
 To build robust neural networks, \citet{cisse2017parseval} and ~\citet{li2019preventing} have proposed to constrain the Lipschitz constant of neural networks by using orthogonal convolutions.
 \citet{cisse2017parseval} use the concept of \emph{parseval tight frames}, to constrain their networks.
 \citet{li2019preventing} built upon the work of~\citet{cisse2017parseval} to propose an efficient construction method of orthogonal convolutions.  
@@ -340,34 +78,5 @@ Finally, in parallel to the development of the results in this paper, we discove
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Position of the Contribution Regarding the State-of-the-Art}
-\label{subsection:ch3-position_of_the_contribution_regarding_the_state-of-the-art_2}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-xxx
-
-
-
-
-
-\comment{
-
-
-In this chapter, we review the literature on the existing techniques for building compact neural networks.
-As stated in the introduction (Chapter~\ref{chapter:ch1-introduction}), a neural network is a function that can be analytically described as a composition of linear functions interlaced with non-linear functions (also called activation functions).
-
-The number of parameters in a neural network corresponds to the total number of values in each weight matrix of the network.
-The goal of building compact neural networks is to reduce the memory footprint, the number of parameters and the computational complexity of the network. 
-Mainly three methods exist to achieve this goal:
-\begin{itemize}
-  \item Leveraging memory representations and data structures;
-  \item Using structured matrices instead of dense matrices;
-  \item Building compact neural networks architecture.
-\end{itemize}
-Hereafter, we describe existing techniques that fall into these categories and we review their advantages and their drawbacks.
-
-
-
-
 }
+

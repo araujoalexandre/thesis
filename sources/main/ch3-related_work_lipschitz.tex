@@ -1,0 +1,511 @@
+
+The regularization of the Lipschitz constant of neural networks has been a growing interest in the training of neural networks.
+Indeed, numerous research have shown that neural networks with a low Lipschitz constant exhibit better generalization~\cite{bartlett2017spectrally} and higher robustness to adversarial attacks~\cite{szegedy2013intriguing,tsuzuku2018lipschitz, farnia2018generalizable}.
+The Lipschitz constant is a measure of the stability of the network, if the Lipschitz constant is high, the network will tend to be more sensitive to input perturbation.
+Formally, the Lipschitz constant of a function is defined as follows: 
+\begin{definition}[Lipschitz Constant]
+  The Lipschitz constant with respect to the $\ell_2$-norm of a function $f: \Rbb^n \rightarrow \Rbb^m$ is defined as follows:
+  \begin{equation}
+    \lip{f} \triangleq \sup_{\substack{\xvec, \yvec \in \Rbb^n \\ \xvec \neq \yvec}} \frac{\norm{f(\xvec) - f(\yvec)}_2}{\norm{\xvec - \yvec}_2}
+  \end{equation}
+  If $\lip{f}=k$, we denote the function $f$ as $k$-Lipschitz.
+  \label{definition:ch3-lipschitz_constant}
+\end{definition}
+\noindent
+Intuitively, the Lipschitz constant $k$ of a function $f$ is a bound on the slope of $f$.
+Meaning, if the input changes by $\epsilon$, the output changes by at most $k\epsilon$.
+Therefore, the Lipschitz constant of a function can also be expressed using the differential operator as follows:
+\begin{theorem}[Rademacher Theorem 3.1.6 of \citet{federer2014geometric}]
+  If $f: \Rbb^n \rightarrow \Rbb^m$ is a locally Lipschitz continuous function, then $f$ is differentiable almost everywhere. Moreover, if $f$ is Lipschitz continuous, then
+  \begin{align}
+    \lip{f} = \sup_{\xvec \in \Rbb^n} \norm{\mathrm{D}_\xvec f(\xvec)}_2
+  \end{align}
+  where $\mathrm{D}_\xvec$ is the differential operator of $f$ at $\xvec$.
+  \label{theorem:ch3-lipschitz_differential_op}
+\end{theorem}
+
+
+\citet{tsuzuku2018lipschitz} have studied the relationship between the robustness of a neural network and its Lipschitz constant. 
+By the definition of the Lipschitz constant, we have the following:
+\begin{equation}
+  \norm{N(\xvec) - N(\xvec + \adv)}_2 \leq \lip{N} \norm{\adv}_2
+\end{equation}
+Let us denote the margin of the neural network $N$ with respect to the tuple $(\xvec, y)$ as follows:
+\begin{equation}
+  \mathcal{M}^{N}_{(\xvec, y)} \triangleq N(\xvec)_y - \max_{i \neq y} \left( N(\xvec) \right)_i
+\end{equation}
+This margin has been studied in relationship to generalization bounds \cite{langford2002pac,bartlett2017spectrally,neyshabur2018pacbayesian}.
+Then, we have the following proposition:
+\begin{proposition}[\citet{tsuzuku2018lipschitz}]
+  \begin{equation}
+    \mathcal{M}^{N}_{(\xvec, y)} \geq \sqrt{2} \lip{N} \norm{\adv}_2 \quad \Longrightarrow \quad \mathcal{M}^{N}_{(\xvec + \adv, y)} \geq 0
+    \label{equation:ch3-margin_guarded_area}
+  \end{equation}
+\end{proposition}
+\noindent
+If the inequality on the right-hand side of \Cref{equation:ch3-margin_guarded_area} is verified then the adversarial margin is positive, \ie, the network correctly predicts the label. 
+From this proposition, we can conclude that for a given neural network with specific margins, a lower Lipschitz constant allow for an increase in robustness. 
+Note that the margin is already maximized in a multi-class setting with the cross-entropy loss as stated in~\citet{hein2017formal}.
+A multitude of work have tried to reduce the Lipschitz constant in order to improve adversarial robustness.
+However, \citet{scaman2018lipschitz} have shown that computing the exact Lipschitz constant of a neural network is NP-hard.
+\begin{problem}[\citet{scaman2018lipschitz}]
+  Let us define the problem associated to the exact computation of the Lipschitz constant of a $2$-layer neural network with $\relu$ activation:
+  \begin{itemize}
+    \item[] \textbf{Input:} Two matrices $\Wmat^{(1)} \in \Rbb^{l \times n}$ and $\Wmat^{(2)} \in \Rbb^{m \times l}$, and a constant $c \geq 0$.
+    \item[] \textbf{Question:} Let $N = \Wmat^{(2)} \circ \rho \circ \Wmat^{(1)}$ where $\rho$ is the $\relu$ activation function. \emph{Is the Lipschitz constant $\lip{N} \leq c$ ?}
+  \end{itemize}
+  \label{problem:ch3-lipschitz_computation}
+\end{problem}
+\noindent
+The following theorem shows that, even for shallow neural network, exact Lipschitz computation is not achievable in polynomial time (assuming that $\mathbf{P} \neq \textbf{NP}$):
+\begin{theorem}[\citet{scaman2018lipschitz}]
+  \Cref{problem:ch3-lipschitz_computation} is \textbf{NP}-hard.
+\end{theorem}
+
+
+\noindent
+To overcome this difficulty, researchers have relied on devising tight upper bound of the Lipschitz constant.
+For example, \citet{scaman2018lipschitz} have shown that the Lipschitz constant of neural network $N$ can be explicitly formulated using \Cref{theorem:ch3-lipschitz_differential_op} and the chain rule:
+\begin{equation}
+  \lip{\nn} = \sup_{x \in \Rbb^n} \norm{\Wmat^{(p)} \diag(\rho'_\depth(\theta_\depth)) \dots \Wmat^{(2)} \diag(\rho'_1(\theta_1)) \Wmat^{(1)}}_2,
+  \label{equation:ch3-decomposition_jacobian_lipschitz}
+\end{equation}
+where $\theta_i = \phi^{\act_i}_{\Wmat^{(i)}, \bvec^{(i)}} \circ \cdots \circ \phi^{\act_1}_{\Wmat^{(1)}, \bvec^{(1)}}(\xvec)$ is the intermediate output after $i$ layers.
+The Lipschitz of neural network $N$ can then be upper bounded as follows:
+\begin{align}
+  \lip{\nn} &\leq \max_{\forall i,\ \sigma_i \in [0, 1]^{w^{(i+1)}}} \norm{\Wmat^{(\depth)} \diag(\sigma_{\depth-1}) \dots \diag(\sigma_1) \Wmat^{(1)}}_2 \notag \\
+  &\leq \max_{\forall i,\ \sigma_i \in [0, 1]^{w^{(i+1)}}} \norm{ \pmb{\Sigma}^{(\depth)} \Vmat^{(\depth)\top} \diag(\sigma_{\depth-1}) \dots \diag(\sigma_1) \Umat^{(1)} \pmb{\Sigma}^{(1)}}_2 \notag \\
+  &\leq \prod_{i=1}^{\depth-1} \max_{\sigma_i \in [0, 1]^{w^{(i+1)}}} \norm{\widetilde{\pmb{\Sigma}}^{(i+1)} \Vmat^{(i+1)\top} \diag(\sigma_{i+1}) \Umat^{(i)} \widetilde{\pmb{\Sigma}}^{(i)}}_2 
+\end{align}
+where $\widetilde{\pmb{\Sigma}}^{(i)} = \pmb{\Sigma}^{(i)}$ if $i \in \{1, \depth\}$ and $\widetilde{\pmb{\Sigma}}^{(i)} = {\pmb{\Sigma}^{(i)}}^{1/2}$ otherwise.
+The first inequality is due to the fact that the derivatives of the activation functions are bounded, \ie, $\rho_i(\xvec) \in [0, 1]^{w^{(i+1)}}$, the second inequality is obtained by decomposing each weight matrix $\Wmat^{(i)}$ with the \emph{Singular Value Decomposition} such that $\Wmat^{(i)} = \Umat^{(i)} \pmb{\Sigma}^{(i)} \Vmat^{(i)\top}$ and finally, the last inequality is due to the submultiplicativity of the operator norm.
+Although accurate, this bound is still computationally expensive to compute due to the singular value decomposition and the optimization for each layer. 
+In the same line of research, recent work~\cite{fazlyab2019safety,fazlyab2019efficient,latorre2020lipschitz} has proposed a tight bound on the Lipschitz constant of the full network with the use of semi-definite programming.
+More precisely, \citet{fazlyab2019efficient} have demonstrated the following result:
+\begin{theorem}[Lipschitz bounds \citet{fazlyab2019efficient}]
+  Consider a neural network $N: \Rbb^n \rightarrow \Rbb^m$ such that $N(\xvec) = \Wmat^{(1)} \rho(\Wmat^{(0)} \xvec + \bvec^{(0)}) + \bvec^{(1)}$.
+  Suppose the activation function $\rho$ is \emph{slope-restricted} in the sector $[\alpha,\beta]$, more precisely:
+  \begin{equation}
+    \alpha \leq \frac{\rho(y) - \rho(x)}{y-x} \leq \beta \quad \forall x,y \in \mathbb{R}. 
+  \end{equation}
+  Define the set $\mathcal{T}_{n}$ as the following:
+  \begin{equation}
+    \mathcal{T}_n = \{\Tmat \in \mathbb{S}^n \mid \Tmat = \sum_{i=1}^{n} \lambda_{ii} \evec^{(i)} \evec^{(i)\top} + \sum_{1 \leq i<j \leq n} \lambda_{ij}(\evec^{(i)} - \evec^{(j)})(\evec^{(i)}-\evec^{(j)})^\top, \lambda_{ij} \geq 0 \}.
+  \end{equation}
+  Suppose there exists a constant $c>0$ such that the matrix inequality
+  \begin{align}
+    \Mmat(c,\Tmat) \triangleq
+      \leftmatrix
+      -2\alpha \beta \Wmat^{(0)\top} \Tmat \Wmat^{(0)} - c \Imat_n & (\alpha+\beta) \Wmat^{(0)\top} \Tmat  \\
+      (\alpha+\beta) \Tmat \Wmat^{(0)} & -2\Tmat+\Wmat^{(1)\top} \Wmat^{(1)}
+      \rightmatrix
+      \leq 0,
+  \end{align}
+  holds for some $\Tmat \in \mathcal{T}_{n}$. Then $\norm{N(\xvec)-N(\yvec)}_2 \leq \sqrt{c} \norm{\xvec-\yvec}_2$ for all  $\xvec,\yvec \in \mathbb{R}^n$.
+  \label{theorem:ch3-lipschite_semidefinite_programming}
+\end{theorem}
+\noindent
+From \Cref{theorem:ch3-lipschite_semidefinite_programming}, the constant $c$ is an upper bound on the Lipschitz constant of the network.
+The authors proposed to find the tightest bound by solving the following optimization problem (Semi-Definite Program):
+\begin{align} \label{eq: SDP one layer}
+  \textrm{minimize} \quad c \quad \text{ subject to} \quad \Mmat(c,\Tmat) \leq 0 \quad \text{and} \quad \Tmat \in \mathcal{T}_{n},
+\end{align}
+where the decision variables are $(c,\Tmat) \in \Rbb_+ \times \mathcal{T}_n$.
+Note that $\Mmat(c,\Tmat)$ is linear in $c$ and $\Tmat$ and the set $\mathcal{T}_n$ is convex.
+Although, these works on devising a global bound on the Lipschitz constant of a neural network are theoretically interesting, they lack scalability, they can only be computed on small networks and cannot be used during the training of a neural network for regularization purposes.
+
+\drawstar
+
+In order to constraint the Lipschitz constant of neural networks, researchers have devised techniques to reduce the Lipschitz constant of \emph{individual layers} instead. 
+The global Lipschitz of a neural network can easily be upper bound by the product of the spectral norm of each weight matrix as follows:
+\begin{proposition}[\citet{scaman2018lipschitz}] Let $N$ be a neural network of $\depth$ layers with 1-Lipschitz activation functions (\eg ReLU,
+  Leaky ReLU, Tanh, Sigmoid, etc.), then, the Lipschitz constant of the neural network can be upper bounded as follows:
+  \begin{equation}
+    \lip{N} \leq \prod_{i=1}^\depth \norm{\Wmat^{(i)}}_2 \enspace,
+    \label{equation:ch3-naive_upper_bound_lipschitz}
+  \end{equation}
+  where $\Wmat^{(i)}$ are the weights matrices of the neural network.
+  \label{proposition:ch3-naive_upper_bound_lipschitz}
+\end{proposition}
+
+\begin{remark}
+  The Lipschitz constant of a layer $\Phi_{\Wmat, \bvec}^\rho$ (with a 1-Lipschitz activation function) is equal to the spectral norm of the matrix $\Wmat$ (largest singular value).
+  Let $\Phi_{\Wmat, \bvec}^\rho: \Rbb^n \rightarrow \Rbb^m$ such that $\Phi_{\Wmat, \bvec}^\rho = \rho(\Wmat \xvec + \bvec)$ then by definition of the Lipschitz constant (\Cref{definition:ch3-lipschitz_constant}) and of the operator norm, we have:
+  \begin{equation}
+    \lip{\Phi_{\Wmat, \bvec}^\rho} = \sup_{\substack{\xvec \in \Rbb^n \\ \xvec \neq 0}} \frac{\norm{\Wmat \xvec}_2}{\norm{\xvec}_2} = \norm{\Wmat}_2
+  \end{equation}
+\end{remark}
+
+The trivial bound given by the product of layer-wise Lipschitz constants in \Cref{equation:ch3-naive_upper_bound_lipschitz} is known to be loose and pessimistic~\citet{combettes2019lipschitz}.
+Furthermore, we can show that reducing the Lipschitz of each layer independently does not imply that the global Lipschitz constant of the network will be reduced. 
+\begin{proposition}
+  Let $N_1(\xvec) = \Amat^{(2)} \rho(\Amat^{(1)} \xvec)$ and $N_2(\xvec) = \Bmat^{(2)} \rho(\Bmat^{(1)} \xvec)$ where $\rho$ is the $\relu$ activation function, then if $\norm{\Amat^{(1)}}_2 \leq \norm{\Bmat^{(1)}}_2$ and $\norm{\Amat^{(2)}}_2 \leq \norm{\Bmat^{(1)}}_2$, this does not implies that $\lip{N_1} \leq \lip{N_2}$.
+  \label{proposition:ch3-limit_bound_lipschitz}
+\end{proposition}
+\begin{proof}[\Cref{proposition:ch3-limit_bound_lipschitz}]
+  Let
+  \begin{align*}
+    \Amat^{(1)} &= \leftmatrix 
+      \phantom{+}0 & -1 \\ -1 & \phantom{+}0
+    \rightmatrix \quad
+    \Amat^{(2)}  = \leftmatrix
+      -1 & -1 \\ -1 & \phantom{+}0
+    \rightmatrix \\
+    \Bmat^{(1)} &= \leftmatrix
+      \phantom{+}0 & \phantom{+}0 \\ \phantom{+}0 & -1
+    \rightmatrix \quad
+    \Bmat^{(2)} = \leftmatrix
+      -1 & -1 \\ -1 & -1
+    \rightmatrix
+  \end{align*}
+  then:
+  \begin{equation*}
+    \norm{\Amat^{(1)}}_2 = 1,\ \norm{\Amat^{(2)}}_2 = \sqrt{2}
+    \quad \text{and} \quad
+    \norm{\Bmat^{(1)}}_2 = 1,\ \norm{\Bmat^{(2)}}_2 = 2
+  \end{equation*}
+  From \Cref{theorem:ch3-lipschitz_differential_op} and the chain rule, the Lipschitz constant of the networks $N_1$ and $N_2$ can be expressed as follows:
+  \begin{align*}
+    \lip{N_1} &= \sup_{\xvec \in [0, 1]^2} \norm{\Amat^{(2)} \diag\left(\xvec\right) \Amat^{(1)}}_2 \\
+    \lip{N_2} &= \sup_{\xvec \in [0, 1]^2} \norm{\Bmat^{(2)} \diag\left(\xvec\right) \Bmat^{(1)}}_2
+  \end{align*}
+  It is easy to verify that:
+  \begin{equation*}
+    \lip{N_1} = \frac{1 + \sqrt{5}}{2} \approx 1.618 \quad \text{and} \quad \lip{N_2} = \sqrt{2} \approx 1.414
+  \end{equation*}
+  which concludes the proof.
+\end{proof}
+
+\noindent
+\citet{huster2018limitations} have shown several limitations on the expressive power of neural networks where the product of layer-wise Lipschitz constants is constraint.
+However, the bound in \Cref{equation:ch3-naive_upper_bound_lipschitz} appear in multiple generalization bound~\cite{neyshabur2017,bartlett2017spectrally,golowich2018} and adversarial generalization~\cite{farnia2018generalizable} which could mean that reducing the bound would improve the generalization capabilities of neural networks.
+
+
+% the upper bound presented in Section 3 appears in multiple generalisation bounds (Neyshabur,
+% 2017; Bartlett et al., 2017; Golowich et al., 2018), and we show empirically in
+% this paper that it is an effective aide for controlling the generalisation performance of a deep network.
+
+% This observation as led researchers to develop several techniques to constraint the Lipschitz constant of a neural network.
+
+Based on this theoretical insight, researchers have developed several techniques to constraint the Lipschitz constant of each layer in order to improve the generalization and robustness of neural networks.
+A technique to enforce 1-Lipschitz layers is to impose or promote an orthogonality constraint on the weight matrices.
+A square orthogonal matrix $\Mmat$ is a matrix whose columns and rows are orthogonal unit vectors and all eigenvalues are equal to 1.
+\citet{cisse2017parseval} and more recently \citet{wang2020orthogonal,huang2020controllable} have proposed to minimize the following term:
+\begin{equation}
+  \frac{\beta}{2} \norm{\Wmat^\top \Wmat - \Imat}_2  \enspace, 
+\end{equation}
+to promote the orthogonality constraint.
+On the other hand, \citet{li2019preventing} used the orthogonal projection proposed by \citet{kautsky1994matrix} and \citet{xiao2018dynamical} to build convolutional neural networks with orthogonal convolutions.
+All works show an increase in robustness against adversarial attacks due to the decrease in network sensitivity.
+However, the expressivity of the network with orthogonal weight matrices is clearly limited, thus the natural accuracy obtained by these networks is far from being state-of-the-art. 
+
+
+\begin{algorithm}[ht]
+  \caption{Power method for producing the largest singular value, $\sigma_1$, of a non-square matrix, $\Wmat$ \cite{gouk2018regularisation,golub2000eigenvalue}}
+  \begin{algorithmic}[1]
+    \Require{affine function $f(\xvec) = \Wmat \xvec + \bvec$, number of iteration $N$}
+    \Ensure{approximation of the Lipschitz constant $\lip{f}$}
+    \State Randomly initialise $\xvec$
+    \For{$i = 1$ \textbf{to} $N$}
+      \State $\xvec \gets \Wmat^\top \Wmat \xvec / \norm{\xvec}_2$
+    \EndFor
+    \State \textbf{return} $\norm{\Wmat \xvec}_2 / \norm{\xvec}_2$
+  \end{algorithmic}
+  \label{algorithm:ch3-power_method}
+\end{algorithm}
+
+\begin{algorithm}[ht]
+  \caption{Convolutional power iteration \cite{farnia2018generalizable}}
+  \begin{algorithmic}[1]
+    \Require{2d-convolution function $f: \Rbb^{n \times n} \rightarrow \Rbb^{m \times m}$ with kernel $k$, 2d-convolution-transpose\protect\footnotemark~function $g: \Rbb^{n \times n} \rightarrow \Rbb^{m \times m}$ with kernel $k$ number of iteration $N$}
+    \Ensure{approximation of the Lipschitz constant $\lip{f}$}
+    \State Initialize $\xvec$ with a random vector matching the shape of the convolution input
+    \For{$i = 1$ \textbf{to} $N$}
+      \State $\xvec \gets f(\xvec) / \norm{f(\xvec)}_2 $
+      \State $\xvec \gets g(\xvec) / \norm{g(\xvec)}_2$
+    \EndFor
+    \State \textbf{return} $\norm{f(\xvec)}_2 / \norm{\xvec}_2$
+  \end{algorithmic}
+  \label{algorithm:ch3-power_method_generic}
+\end{algorithm}
+\footnotetext{As for the 2d-convolution function, the 2d-convolution-transpose is efficiently implemented in recent Deep Learning framework \cite{paszke2019pytorch,tensorflow2015-whitepaper}} 
+
+
+Another technique, called \emph{Spectral Normalization}, consists in normalizing each weight matrix by its largest singular value, thus imposing each layer to be 1-Lipschitz.
+This technique leads the network also having a Lipschitz constant of 1 by \Cref{proposition:ch3-naive_upper_bound_lipschitz}.
+\citet{yoshida2017spectral} were the first to propose such method to improve the generalization of neural networks.
+They use the power method~\cite{golub2000eigenvalue} to compute the largest singular value of each weight matrix.
+
+The power method (also known as the power iteration) is an iterative algorithm: given a matrix, the algorithm provably converges (with a sufficient number of iterations) to the largest singular value of the matrix.
+The rate of convergence of the algorithm depends on the ratio of the second-largest singular value to the largest singular value which can lead in certain cases to slow convergence.
+The pseudocode of the power method is presented in \Cref{algorithm:ch3-power_method}.
+
+In the context of deep learning, given that the algorithm is performed for each layer of the network at each step of the training, a small number of iterations is set in order to keep the overall computations feasible.
+Spectral Normalization has been shown to be an effective method for improving generalization and robustness against adversarial attacks \cite{miyato2018spectral,gouk2018regularisation,farnia2018generalizable}.
+\citet{farnia2018generalizable} extended the power method to convolutional layers where matrix $\Wmat$ is not explicitly constructed.
+They proposed a similar algorithm (\Cref{algorithm:ch3-power_method_generic}) for convolutional function.
+
+
+% \todotext{describe algo power method in text}
+% \todotext{dire que la power method trop couteux pour des réseaux profonds}
+
+\drawstar
+
+% Finally, convolutional layers, which are widely used for image classification and detection for their translation invariance characteristics \cite{zhang1990parallel}, are structured layers.
+
+In the context of convolutional neural networks, the power method is not the only technique available for approximating the largest singular value (Lipschitz constant) of a convolutional layer.
+Several work have devise bound or approximation on the largest singular value of convolutional layers by exp:loiting the \emph{structure} of the convolution operation \cite{sedghi2018singular,bibi2019deep,singla2019bounding}.
+Indeed, a discrete convolution operation with a 2-dimensional kernel applied on a 2-dimensional signal is equivalent to a matrix multiplication with a doubly-block Toeplitz matrix~\cite{jain1989fundamentals} \ie, a block Toeplitz matrix where the blocks are also Toeplitz.
+For example, if the 2-dimensional kernel used for the convolution is as follows:
+\begin{equation}
+  \leftmatrix
+    \kvec_{0} & \kvec_{1} & \kvec_{2} \\
+    \kvec_{3} & \kvec_{4} & \kvec_{5} \\
+    \kvec_{6} & \kvec_{7} & \kvec_{8} 
+  \rightmatrix
+\end{equation}
+then, the doubly-block Toeplitz matrix that performs the convolution can be represented as follows:
+\begin{equation}
+  \leftmatrix
+    \Tmat_0 & \Tmat_{1} &  &  & 0  \\
+    \Tmat_{2} & \Tmat_0 & \Tmat_{1} &  &  \\
+     & \Tmat_{2} & \scalebox{.70}{$\ddots$} & \scalebox{.70}{$\ddots$} & \\
+     &  & \scalebox{.70}{$\ddots$} & \Tmat_0 & \Tmat_{1}  \\
+    0 &  &  & \Tmat_{2} & \Tmat_0  \\
+  \rightmatrix
+\end{equation}
+where $\Tmat_j$ are banded Toeplitz matrices and the values of $\kvec$ are distributed in the Toeplitz blocks as follows:
+\begin{align}
+  \Tmat_0 = \leftmatrixsmall
+    \kvec_{4} & \kvec_{3} &  &  &  0 \\
+    \kvec_{5} & \kvec_{4} & \kvec_{3} &  &   \\
+     & \kvec_{5} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$}  \\
+     &  &  \scalebox{.40}{$\ddots$} & \kvec_{4} & \kvec_{3}  \\
+    0 &  &  & \kvec_{5} & \kvec_{4}  \\
+  \rightmatrixsmall &&
+  \Tmat_{1} = \leftmatrixsmall
+    \kvec_{7} & \kvec_{6} &  &  &  0 \\
+    \kvec_{8} & \kvec_{7} & \kvec_{6} &  &   \\
+     & \kvec_{8} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$} &    \\
+     &  &  \scalebox{.40}{$\ddots$} & \kvec_{7} & \kvec_{6}  \\
+    0 &  &  & \kvec_{8} & \kvec_{7}  \\
+  \rightmatrixsmall &&
+  \Tmat_{2} = \leftmatrixsmall
+    \kvec_{1} & \kvec_{0} &  &  &  0 \\
+    \kvec_{2} & \kvec_{1} & \kvec_{0} &  &   \\
+     & \kvec_{2} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$} &    \\
+     &  &  \scalebox{.40}{$\ddots$} & \kvec_{1} & \kvec_{0}  \\
+    0 &  &  & \kvec_{2} & \kvec_{1}  \\
+  \rightmatrixsmall
+\end{align}
+This relation between two-dimensional single-channel convolutional layer and doubly-block Toeplitz matrix have been pointed out by a number of previous works, \eg, \citet{goodfellow2016deep,wang2020orthogonal,appuswamy2016structured}.
+
+% \citet{sedghi2018singular} have observed that a doubly-block Toeplitz matrix can be approximated by a 
+%
+% \citet{sedghi2018singular} have exploited the properties 
+
+% \citet{gray2006toeplitz} have observed that band-Toeplitz matrices can be `approximated' by band-circulant matrices.
+% This `approximation' is formalized by a mathematical concept called \emph{}j
+
+
+\citet{gray2006toeplitz} have studied the asymptotic properties of sequences of Toeplitz matrices and have observed that a sequence of Toeplitz matrices can be approximated by a sequence of circulant matrices.
+Consider the infinte sequence $\{a_k\}$ and defined the corresponding $n \times n$ Toeplitz operator $\Tmat(n) = \leftmat a_{k-j} \rightmat_{k,j = 0}^{n-1}$.
+We call \emph{banded}-Toeplitz matrix, a Toeplitz matrix for which it exists an $m$ such that $a_k = 0$, for $|k| > m$.
+A banded-Toeplitz matrix can be represented as follows:
+
+
+\begin{equation}
+  \Tmat(n)  =
+  \leftmatrix
+    a_0    & a_1    & \cdots   & a_m    &        &        &        & 0      & \cdots & 0      \\
+    a_{-1} & a_0    & a_1      &        & \ddots &        &        &        & \ddots & \vdots \\
+    \vdots & a_{-1} & \ddots   & \ddots &        & \ddots &        &        &        & 0      \\
+    a_{-m} &        & \ddots   & \ddots & \ddots &        & a_m    &        &        &        \\ 
+           & \ddots &          & \ddots & a_0    & a_1    &        & \ddots &        &        \\
+	   &        & \ddots   &        & a_{-1} & \ddots & \ddots &        & \ddots &        \\
+	   &        &          & a_{-m} &        & \ddots & \ddots & \ddots &        & a_m    \\
+   0	   &        &          &        & \ddots &        & \ddots & \ddots & a_1    & \vdots \\
+   \vdots  & \ddots &          &        &        & \ddots &        & a_{-1}  & a_0    & a_1   \\  
+   0       & \cdots & 0        &        &        &        & a_{-m} & \cdots & a_{-1} & a_0    \\ 
+  \rightmatrix
+\end{equation}
+
+
+\begin{equation}
+  \Cmat(n)  =
+  \leftmatrix
+    a_0    & a_1    & \cdots   & a_m    &        &        &        & a_{-m} & \cdots & a_1    \\
+    a_{-1} & a_0    & a_1      &        & \ddots &        &        &        & \ddots & \vdots \\
+    \vdots & a_{-1} & \ddots   & \ddots &        & \ddots &        &        &        & a_{-m} \\
+    a_{-m} &        & \ddots   & \ddots & \ddots &        & a_m    &        &        &        \\ 
+           & \ddots &          & \ddots & a_0    & a_1    &        & \ddots &        &        \\
+	   &        & \ddots   &        & a_{-1} & \ddots & \ddots &        & \ddots &        \\
+	   &        &          & a_{-m} &        & \ddots & \ddots & \ddots &        & a_m    \\
+   a_m	   &        &          &        & \ddots &        & \ddots & \ddots & a_1    & \vdots \\
+   \vdots & \ddots &          &        &        & \ddots &        & a_{-1}  & a_0    & a_1    \\  
+    a_1    & \cdots & a_m      &        &        &        & a_{-m} & \cdots & a_{-1} & a_0    \\ 
+  \rightmatrix
+\end{equation}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% Fortunately, the structures of the linear transformation matrices can be exploited to reduce the computational complexity of SVDs.
+% Of particular relevance is the work by \citet{sedghi2018the,bibi2018deep}, in which the linear convolutional layer is treated as a circular one by a ``wrapping round'' operation.
+% In doing so, the linear transformation matrices are endowed with a circulant structure, by which efficient methods were proposed to compute a circular approximation of the convolutional layers with substantially reduced complexity.
+% To further reduce computational complexity, upper bounds of spectral norm of the circular convolutional layers were derived in \citet{Singla2019} at the expense of degraded accuracy.
+%
+% As a matter of fact, such a ``wrapping round'' operation is not always endowed in many convolutional layers, for which a linear, rather than circular, convolutional operation is applied.
+% With such a linear convolution, the linear transformation matrix has a Toeplitz structure, which includes the circulant one as a special case.
+% This has been pointed out by a number of previous works, e.g., \citet{goodfellow2016deep,wang2019orthogonal,appuswamy2016structured}, that the two-dimensional single-channel convolutional layer results in a doubly block Toeplitz matrix.
+% A question then arises as to how close is the circular approximation to the exact linear Toeplitz case.
+
+% Although some theoretical analysis bounded the gap between large Toeplitz and circulant matrices \citet{ZhuTIT2017}, it seems only applied to Hermitian matrices (or symmetric for real matrices). The linear transformation matrices of linear convolution are {\em asymmetric} real matrices, which are {\em non-Hermitian} matrices.
+% \citet{zhu2017asymptotic}
+
+
+
+
+
+
+
+
+
+\drawline
+
+
+
+% this concept of \emph{parseval tight frames} \cite{kovacevic2008introduction}, to constrain their networks.
+% More precisly, they folowing projection that they perfom after each gradient update:
+% \begin{equation}
+%   \Wmat \leftarrow (1 + \beta) \Wmat + \beta \Wmat \Wmat^T \Wmat 
+% \end{equation}
+% which is equivalent to apply one update for minimizing the following term: $\frac{\beta}{2} \norm{\Wmat^\top \Wmat - \Imat}_2$.
+%
+% Orthogonal Convolutional Neural Networks \citet{wang2020orthogonal}
+% Controllable Orthogonalization in Training DNNs \citet{huang2020controllable}
+%
+% \citet{li2019preventing} built upon the work of~\citet{cisse2017parseval} to propose an efficient construction method of orthogonal convolutions.  
+%
+% We first summarize the orthogonal convolution representations from Kautsky and Turcajová [27] and Xiao et al. [50]
+% [27] A matrix approach to discrete wavelets \citet{kautsky1994matrix}
+% [50] 10000 layers \citet{xiao2018dynamical}
+
+
+% \citet{miyato2018spectral} were the first to propose such method in the context of Generative Adversarial Networks, 
+% - first paper on spectral normalization \citet{gouk2018regularisation}
+% - \citet{yoshida2017spectral,miyato2018spectral}: with power method
+% - \citet{farnia2018generalizable}: with power method specific for convolutional layers
+
+% => Power method \citet{golub2000eigenvalue}
+%
+% =>> Enforcing Lipschitz constraint by normalization 
+% => \citet{miyato2018spectral}: normalization with power method for Generative Adversarial Networks
+% => \citet{gouk2018regularisation}: normalization with power method for generalization
+% => \citet{farnia2018generalizable}: normalization with power method for adversarial robustness 
+%
+% =>> Enforcing Lipschitz constraint by orthogonalization
+% => \citet{cisse2017parseval}
+% => \citet{li2019preventing}
+%
+% =>> Regularization: explain problem of regulzarization (\citet{}) but is justified by Adv Generalization Bartlett + Farnia 
+% => \citet{yoshida2017spectral}: regularization with power method for generalization
+% => \citet{wang2020orthogonal} (orthogonal convolution)
+%
+=> Upper bound on convolution
+- \citet{sedghi2018singular}
+- \citet{singla2019bounding}
+
+
+% Several recent papers have utilized this concept or an extension of it to additional layer types. [14] uses it to analyze the theoretical sensitivity of deep neural
+% networks. [4] and [12] enforce constraints on the singular values of matrices as
+% a way of increasing robustness to existing attacks. Finally, [16] penalizes the
+% spectral norms of matrices and uses equation 6 to compute a Lipschitz constant
+% for the network.
+
+% [4] Parseval networks: Improving robustness to adversarial examples
+% [12] L2-nonexpansive neural networks
+% [16] Lipschitz-margin training: Scalable certification of perturbation invariance for deep neural networks
+
+% =>> GLOBAL BOUND
+% =>> POWER METHOD 
+% =>> WORK ON CONVOLUTION
+%   => orthogonal convolutions
+%   => Upper bound on convolution
+
+% \todotext{normalization of weight matrices to force Lipschitz 1}
+% \citet{farnia2018generalizable,miyato2018spectral,yoshida2017spectral,li2019preventing}
+
+
+
+
+
+
+% => link between margin and robustness
+% - \citet{tsuzuku2018lipschitz}: use power method but do not normalize
+
+% =>> GLOBAL BOUND
+%
+% => global bound / semi-definite programming
+% - \citet{scaman2018lipschitz}
+% - \cite{fazlyab2019efficient}
+% - \citet{latorre2020lipschitz}
+%
+% =>> POWER METHOD 
+% => spectral normalization (they all use the power iteration method \citet{golub2000eigenvalue})
+% - first paper on spectral normalization \citet{gouk2018regularisation}
+% - \citet{yoshida2017spectral,miyato2018spectral}: with power method
+% - \citet{farnia2018generalizable}: with power method specific for convolutional layers
+% - \citet{tsuzuku2018lipschitz}: use power method but do not normalize
+%
+% =>> WORK ON CONVOLUTION
+%
+% => orthogonal convolutions
+% - \citet{cisse2017parseval}
+% - \citet{li2019preventing}
+% - \citet{wang2020Orthogonal} (orthogonal convolution)
+%
+% => Upper bound on convolution
+% - \citet{sedghi2018singular}
+% - \citet{singla2019bounding}
+
+
+% The product of the Lipschitz constant of each layer is an upper-bound for the Lipschitz constant of the entire network, and it can be used as a surrogate to perform Lipschitz regularization.
+% Since most common activation functions (such as ReLU) have a Lipschitz constant equal to one, the main bottleneck is to compute the Lipschitz constant of the underlying linear application which is equal to its maximal singular value.
+% The work in this line of research mainly relies on the celebrated iterative algorithm by~\citet{golub2000eigenvalue} used to approximate the maximum singular value of a linear function.
+
+% The last few years have witnessed a growing interest in Lipschitz regularization of neural networks, with the aim of improving their generalization~\cite{bartlett2017spectrally}, their robustness to adversarial attacks~\cite{tsuzuku2018lipschitz, farnia2018generalizable}, or their generation abilities (\eg for GANs: \citealt{miyato2018spectral,arjovsky2017wasserstein}).
+% Unfortunately computing  the exact Lipschitz constant of a neural network is NP-hard~\cite{scaman2018lipschitz} and in practice, existing techniques such as~\citet{scaman2018lipschitz, NIPS2019_9319} or~\citet{latorre2020lipschitz} are difficult to implement for neural networks with more than one or two layers, which hinders their use in deep learning applications.
+
+% To overcome this difficulty, most of the work has focused on computing the Lipschitz constant of \emph{individual layers} instead.
+% The product of the Lipschitz constant of each layer is an upper-bound for the Lipschitz constant of the entire network, and it can be used as a surrogate to perform Lipschitz regularization.
+% Since most common activation functions (such as ReLU) have a Lipschitz constant equal to one, the main bottleneck is to compute the Lipschitz constant of the underlying linear application which is equal to its maximal singular value.
+% The work in this line of research mainly relies on the celebrated iterative algorithm by~\citet{golub2000eigenvalue} used to approximate the maximum singular value of a linear function.
+% Although generic and accurate, this technique is also computationally expensive, which impedes its usage in large training settings. 
+
+
+
+
+
+
+
+
+
+
+
