@@ -287,6 +287,9 @@
     textwidth=0.96\textwidth}
 ]{maintheoremstyle}
 
+% \AtBeginEnvironment{teo}{\begin{minipage}{\textwidth}}
+% \AtEndEnvironment{teo}{\end{minipage}}
+
 \declaretheorem[
   numberwithin=chapter,
   name=Theorem,
@@ -592,6 +595,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{lineno}
 \usepackage{todonotes}
+\usepackage{printlen}
+
 \let\todoorg\todo
 \renewcommand{\todo}[1]{\todoorg[inline]{#1}}
 \newcommand{\Omit}[1]{}
