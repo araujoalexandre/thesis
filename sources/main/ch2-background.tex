@@ -750,12 +750,11 @@ If we denote the Fast Fourier transform algorithm by \textbf{FFT} and the invers
   \label{algorithm:ch2-matrix_vector_product_circulant_matrix}
 \end{algorithm}
 
-\todotext{expliquer plus ici, de plus f-circ are not circulant special case}
-An important special case of circulant matrices are called $f$-circulant matrices and are defined as follows:
+An important object based on circulant matrices are called \emph{$f$-circulant matrices} and are defined as follows:
 \begin{definition}[$f$-circulant matrix]
-  Given a vector $\xvec$, the $f$-circulant matrix, $\Cmat_f(\xvec)$, is defined as follows:
+  Given a vector $\xvec$, the $f$-circulant matrix, $\Zmat_f(\xvec)$, is defined as follows:
   \begin{equation}
-    \Cmat_f(\xvec) \triangleq
+    \Zmat_f(\xvec) \triangleq
     \leftmatrix
       \xvec_0 & $f$ \xvec_{n-1} & $f$ \xvec_{n-2} & \cdots & \cdots & $f$ \xvec_{1} \\
       \xvec_{1} & \xvec_0 & $f$ \xvec_{n-1} & \ddots & & \vdots \\
@@ -765,11 +764,12 @@ An important special case of circulant matrices are called $f$-circulant matrice
       \xvec_{n-1} & \cdots & \cdots & \xvec_{2} & \xvec_{1} & \xvec_0
     \rightmatrix
   \end{equation}
+  \label{definition:ch2-f_circulant_matrix}
 \end{definition}
 \noindent
-A $f$-unit-circulant, denoted $\Cmat_f$, is then a $f$-circulant matrix defined by the vector $\left(0, 1, \dots, 0 \right)$:
+A $f$-unit-circulant, denoted $\Zmat_f$, is a $f$-circulant matrix defined by the vector $\left(0, 1, \dots, 0 \right)$:
 \begin{equation}
-   \Cmat_f =
+  \Zmat_f = \circulant \left(e^{(1)} \right) + (f - 1) \evec^{(0)} \evec^{(n-1)\top} = 
     \leftmatrix
       0      & 0      & 0      & \cdots & \cdots & f      \\
       1      & 0      & 0      & \ddots &        & \vdots \\
@@ -780,6 +780,17 @@ A $f$-unit-circulant, denoted $\Cmat_f$, is then a $f$-circulant matrix defined 
     \rightmatrix
 \end{equation}
 
+\noindent
+As stated by~\citet{sindhwani2015structured}, the $f$-unit-circulant matrix performs a downward shift-and-scale transformation on a vector.
+More precisely, the matrix-vector product $\Zmat_f \xvec$ makes a circular shifts on the elements and scale the last element of the vector resulting in $\Zmat_f \xvec = \leftmat f \xvec_{n-1}, \xvec_0, \dots, \xvec_{n-2} \rightmat^\top$. 
+$f$-unit-circulant matrix are one of the building block of \emph{Low displacement rank operator} presented in \Cref{subsection:ch3-building_compact_neural_networks_with_structured_matrices}.
+
+
+% The f-unit-circulant matrix is associated with a basic downward shift-and-scale transformation, i.e.,
+% the matrix-vector product Zfv shifts the elements of the column vector v “downwards”, and scales
+% and brings the last element vn to the “top”, resulting in [fvn, v1, . . . vn−1] T .
+% It has several basic
+% algebraic properties (see Proposition 1.1 [1]) that are crucial for the results stated in this section
 
 
 
