@@ -963,13 +963,10 @@ Instead of being complex-valued, the trigonometric polynomial that \emph{generat
 The function $F_{\Bmat}$ is said to be the \emph{generating function} of $\Bmat$.
 To recover the block Toeplitz matrix from its generating function, we use the Toeplitz operator defined in \Cref{equation:ch2-toeplitz_operator}; therefore, we have $\Tmat_n(F_\Bmat) = \Bmat$.
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{The Structure of the Convolution Operator}
 \label{subsection:ch2-the_structure_of_the_convolution_operator}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 
 In this subsection, we describe the relation between structured matrices and convolutions.
 Recall that a discrete convolution can be seen as a kernel sliding over the image and acting as a filter.
@@ -978,12 +975,15 @@ It has been shown by~\citet{jain1989fundamentals} that the convolution operation
 Considering convolutions as a simple linear transformation with a structured matrix has allowed multiple results to be derived~\citet{appuswamy2016structured,wang2020orthogonal,sedghi2018singular,singla2019bounding}, including one of our main contributions presented in \Cref{chapter:ch5-lipschitz_bound}.
 
 
-\begin{figure}[ht]
+\begin{figure}[t]
     \centering
-    \includegraphics[width=0.24\textwidth]{figures/main/ch2-background/conv_00.pdf}
-    \includegraphics[width=0.24\textwidth]{figures/main/ch2-background/conv_01.pdf}
-    \includegraphics[width=0.24\textwidth]{figures/main/ch2-background/conv_02.pdf}
-    \includegraphics[width=0.24\textwidth]{figures/main/ch2-background/conv_03.pdf}
+    \includegraphics[width=0.21\textwidth]{figures/main/ch2-background/conv_00.pdf}
+    \hfill
+    \includegraphics[width=0.21\textwidth]{figures/main/ch2-background/conv_01.pdf}
+    \hfill
+    \includegraphics[width=0.21\textwidth]{figures/main/ch2-background/conv_02.pdf}
+    \hfill
+    \includegraphics[width=0.21\textwidth]{figures/main/ch2-background/conv_03.pdf}
     \caption{A convolution: a kernel sliding over an image and acting as a filter. \\Illustration taken from~\citet{dumoulin2016guide}}
     \label{figure:illustration_convolution}
 \end{figure}
@@ -1039,9 +1039,10 @@ where $\Tmat_j$ are banded-Toeplitz matrices and the values of the kernel are di
 \end{equation*}
 
 
-However, in practice, the signal can have multiple channel called feature maps (\eg images have 3 channels corresponding to the color Red, Green and Blue).
+However, in practice, the signal can have multiple channel called feature maps (\eg images have 3 channels corresponding to the colors red, green and blue).
 Let us denote by $\cin$ and $\cout$ the number of feature maps of the input and output respectively.
-Then the convolution operation takes an input of size $\cin \times n \times n$, is performed by a kernel of size $\cout \times \cin \times k \times k$ and the output signal will be of size $\cout \times m \times m$ with $m = n - k + 2p + 1$ where $p$ corresponds to the padding.
+Then the convolution % operation 
+takes an input of size $\cin \times n \times n$, is performed by a kernel of size $\cout \times \cin \times k \times k$ and the output signal will be of size $\cout \times m \times m$ with $m = n - k + 2p + 1$ where $p$ corresponds to the padding.
 The matrix for the multi-channel convolution is the concatenation of $\cout \cdot \cin$ doubly-block Toeplitz matrices.
 
 
