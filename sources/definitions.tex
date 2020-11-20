@@ -3,45 +3,24 @@
 % Basic packages
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\usepackage[utf8]{inputenc} % allow utf-8 input
-\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
-\usepackage{url}            % simple URL typesetting
-\usepackage{microtype}      % microtypography
-\usepackage{calc}           % perform arithmetic on the arguments
-\usepackage{xspace}         % commands that appear not to eat spaces
-\usepackage{enumitem}       % control layout of itemize, enumerate
-\usepackage{numprint}       % prints numbers with a separator every three digits
-\usepackage{epigraph}       % for citation
-
-\usepackage[title,
-            toc,
-	    titletoc,
-	    page,
-	    header,
-	  ]{appendix}       % extra control of appendices
-
-\usepackage[nomaketitle
-	   ]{psl-cover}     % package for PSL cover
-
-\usepackage[super]{nth}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Minitoc
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\usepackage{etoc}
-\newlength\tocrulewidth
-\setlength{\tocrulewidth}{0.8pt}
-\etocsettocstyle{
-\addsec*{Contents\\\vspace{-0.5cm}\rule{\textwidth}{\tocrulewidth}}}{
-\noindent\rule{\linewidth}{\tocrulewidth}}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Glossary
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\newlength\marginglossary
-\setlength{\marginglossary}{2.4cm}
+\usepackage[utf8]{inputenc}                                 % allow utf-8 input
+\usepackage[T1]{fontenc}                                    % use 8-bit T1 fonts
+\usepackage{url}                                            % simple URL typesetting
+\usepackage{microtype}                                      % microtypography
+\usepackage{calc}                                           % perform arithmetic on the arguments
+\usepackage{xspace}                                         % commands that appear not to eat spaces
+\usepackage{enumitem}                                       % control layout of itemize, enumerate
+\usepackage{numprint}                                       % prints numbers with a separator every three digits
+\usepackage{epigraph}                                       % for citation
+\usepackage[super]{nth}                                     % Generate English ordinal numbers
+\usepackage{bbding}                                         % A symbol font
+\usepackage[chapter]{algorithm}                             % Support for typesetting algorithms
+\usepackage{algpseudocode}                                  % Support for typesetting pseudocode
+\usepackage[title, toc, titletoc, page, header]{appendix}   % extra control of appendices
+\usepackage[nomaketitle]{psl-cover}                         % package for PSL cover
+\usepackage{etoc}                                           % Support for Mini Table of Contents
+\usepackage{etoolbox}                                       % toolbox
+\usepackage[binary-units=true]{siunitx}                     % A comprehensive (SI) units package
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Mathematical packages
@@ -55,25 +34,8 @@
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{physics}        % typesetting equations for physics simpler
 \usepackage{bm}             % Access bold symbols in maths mode
-\usepackage{centernot}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Fonts
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\DeclareFontFamily{T1}{calligra}{}
-\DeclareFontShape{T1}{calligra}{m}{n}{<->s*[1.44]callig15}{}
-\DeclareMathAlphabet\mathcalligra   {T1}{calligra} {m} {n}
-\DeclareMathAlphabet\mathzapf       {T1}{pzc} {mb} {it}
-\DeclareMathAlphabet\mathchorus     {T1}{qzc} {m} {n}
-\DeclareMathAlphabet\mathrsfso      {U}{rsfso}{m}{n}
-
-\usepackage{bbding}
-\newcommand{\drawstar}{
-  \begin{center}
-    \color{mydarkblue}{\FourStar}
-  \end{center}
-}
+\usepackage{centernot}      % The package provides \centernot
+\usepackage{thmtools}       % Extensions to theorem environments
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Graphics packages
@@ -98,20 +60,67 @@
 \usepackage{makecell}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Some of my favorite personal adjustments
+% Hyperlinks
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
+
+% \definecolor{mydarkblue}{rgb}{0,0.08,0.45}
+% \definecolor{mydarkblue}{rgb}{0,0.14,0.45}
+% \definecolor{mydarkblue}{rgb}{0.25, 0.41, 0.88}
+% \definecolor{mydarkblue}{rgb}{0.0, 0.22, 0.66}
+\definecolor{mydarkblue}{rgb}{0.02, 0.40, 0.62}
+\usepackage[
+  colorlinks=true,
+  allcolors=mydarkblue,
+  ]{hyperref}
+\usepackage{cleveref}       % Intelligent cross-referencing
+\usepackage{bookmark}       % Bookmarks in the resulting PDF
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Parameters
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Fonts
+\DeclareFontFamily{T1}{calligra}{}
+\DeclareFontShape{T1}{calligra}{m}{n}{<->s*[1.44]callig15}{}
+\DeclareMathAlphabet\mathcalligra   {T1} {calligra} {m}  {n}
+\DeclareMathAlphabet\mathzapf       {T1} {pzc}      {mb} {it}
+\DeclareMathAlphabet\mathchorus     {T1} {qzc}      {m}  {n}
+\DeclareMathAlphabet\mathrsfso      {U}  {rsfso}    {m}  {n}
+
+% Minitoc
+\newlength\tocrulewidth
+\setlength{\tocrulewidth}{0.8pt}
+\etocsettocstyle{
+  \addsec*{Contents \\ \vspace{-0.5cm}
+    \rule{\textwidth}{\tocrulewidth}
+    \vspace{-0.8cm}
+  }
+}{
+  \noindent\rule{\linewidth}{\tocrulewidth}
+}
+
+\newcommand{\localtoc}{
+  \begingroup
+    \setlength{\parskip}{0cm plus0mm minus0mm}
+    \localtableofcontents
+    \vspace{1cm}
+  \endgroup
+}
+
+
+% % Glossary
+% \newlength\marginglossary
+% \setlength{\marginglossary}{2.4cm}
+
+
 % These are the adjustments that I consider necessary for typesetting
 % a nice thesis. However, they are *not* included in the template, as
 % I do not want to force you to use them.
 
 % This ensures that I am able to typeset bold font in table while still aligning the numbers
 % correctly.
-\usepackage{etoolbox}
 
-\usepackage[binary-units=true]{siunitx}
 \DeclareSIUnit\px{px}
-
 \sisetup{%
   separate-uncertainty,
   detect-all           = true,
@@ -125,31 +134,8 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Hyperlinks
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% \definecolor{mydarkblue}{rgb}{0,0.08,0.45}
-% \definecolor{mydarkblue}{rgb}{0,0.14,0.45}
-% \definecolor{mydarkblue}{rgb}{0.25, 0.41, 0.88}
-% \definecolor{mydarkblue}{rgb}{0.0, 0.22, 0.66}
-\definecolor{mydarkblue}{rgb}{0.02, 0.40, 0.62}
-\usepackage[%
-  colorlinks = true,
-  % citecolor  = mydarkblue,
-  % linkcolor  = mydarkblue,
-  % urlcolor   = mydarkblue,
-  allcolors    = mydarkblue
-  ]{hyperref}
-\usepackage{cleveref}
-\usepackage{bookmark}       % Bookmarks in the resulting PDF
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Bibliography
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% I like the bibliography to be extremely plain, showing only a numeric
-% identifier and citing everything in simple brackets. The first names,
-% if present, will be initialized. DOIs and URLs will be preserved.
 
 \usepackage[%
   style        = authoryear-comp, % autocite=inline, sortcites=true, labeldateparts=true, uniquename=full, uniquelist=true.
@@ -254,7 +240,6 @@
   }{
   \addcomma}\space}
 
-
 \input{bibliography-mimosis}
 \addbibresource{bibliography/springer.bib}
 \addbibresource{bibliography/neurips.bib}
@@ -270,53 +255,19 @@
 
 \setlength\bibitemsep{5pt}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Fonts
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \ifxetexorluatex
-%   \setmainfont{Minion Pro}
-% \else
-%   \usepackage[lf]{ebgaramond}
-%   \usepackage[oldstyle,scale=0.7]{sourcecodepro}
-%   \singlespacing
-% \fi
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Debugging
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage{lineno}
-\usepackage{todonotes}
-\let\todoorg\todo
-\renewcommand{\todo}[1]{\todoorg[inline]{#1}}
-\newcommand{\Omit}[1]{}
-
-\newcommand{\drawline}{
-  \begin{center}
-    \rule{0.5\linewidth}{1pt}
-  \end{center}
-  \newpage
-}
-
-\newcommand{\todotext}[1]{{\color{red} \noindent \textbf{#1}}}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% algorithm
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage[chapter]{algorithm}
-\usepackage{algpseudocode}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Theorems
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\usepackage{thmtools}
 
 \declaretheoremstyle[
   % headfont=\color{mydarkblue}\sffamily\bfseries,
   % notefont=\mdseries, notebraces={(}{)},
   spaceabove=6pt, spacebelow=6pt,
-  bodyfont=\normalfont,
+  bodyfont=\itshape,
   postheadspace=1em,
   qed=,
 ]{style}
@@ -325,7 +276,7 @@
   % headfont=\color{mydarkblue}\sffamily\bfseries,
   % notefont=\mdseries, notebraces={(}{)},
   spaceabove=6pt, spacebelow=6pt,
-  bodyfont=\normalfont,
+  bodyfont=\itshape,
   postheadspace=1em,
   qed=,
   shaded={
@@ -368,6 +319,12 @@
   Refname={Proposition,Propositions}]{proposition}
 \declaretheorem[
   numberwithin=chapter,
+  name=Corollary,
+  style=style,
+  refname={corollary,corollaries},
+  Refname={Corollary,Corollaries}]{corollary}
+\declaretheorem[
+  numberwithin=chapter,
   numbered=no,
   name=Remark,
   style=style,
@@ -385,6 +342,8 @@
 
 \declaretheoremstyle[
   notebraces={}{},
+  % spaceabove=30pt,
+  % spacebelow=30pt,
   headfont=\bfseries\itshape,
   notefont=\bfseries\itshape,
   postheadspace=1em,
@@ -397,7 +356,10 @@
     linewidth=3pt,
     backgroundcolor=white,
     innerleftmargin=0.02\textwidth,
-    innerrightmargin=0pt}
+    innerrightmargin=0pt,
+    % innertopmargin=30pt,
+    % innerbottommargin=0pt
+  }
 ]{proofstyle}
 
 \declaretheorem[
@@ -480,8 +442,6 @@
 \newcommand{\seqsetM}{M}
 
 % channel-in and channels-out
-\newcommand{\cin}  {\mathrm{cin}}
-\newcommand{\cout} {\mathrm{cout}}
 
 % norms
 \newcommand{\lzero} {\ensuremath \ell_0 \xspace}
@@ -519,8 +479,6 @@
 \newcommand{\triangleopup}{\pmb{\bigtriangleup}}
 \newcommand{\triangleopdown}{\rotatebox[x=0pt,y=4pt]{180}{$\triangleopup$}}
 
-% count page number
-\newcommand{\countpages}[2]{\the\numexpr\getpagerefnumber{#2}-\getpagerefnumber{#1}\relax}
 
 % command for matrices
 \newcommand{\Amat}{\ensuremath \mathbf{A}}
@@ -585,21 +543,22 @@
 \newcommand{\rightmatrixsmall} {\end{psmallmatrix}}
 \newcommand{\leftmat}          {\left(}
 \newcommand{\rightmat}         {\right)}
+\newcommand{\smallddots}       {\scalebox{.40}{$\ddots$}}
 
-% circulant & diagonal
+% text in math environment 
 \newcommand{\circulant}   {\ensuremath \mathrm{circ}}
 \newcommand{\diagonal}    {\ensuremath \mathrm{diag}}
 \newcommand{\krylov}      {\ensuremath \mathrm{krylov}}
-
-% variance and covariance
-\newcommand{\Cov}{\ensuremath \mathrm{Cov}}
-\newcommand{\Var}{\ensuremath \mathrm{Var}}
+\newcommand{\Cov}         {\ensuremath \mathrm{Cov}}
+\newcommand{\Var}         {\ensuremath \mathrm{Var}}
+\newcommand{\cin}         {\ensuremath \mathrm{cin}}
+\newcommand{\cout}        {\ensuremath \mathrm{cout}}
 
 
 \newcommand{\F}{\ensuremath \mathcal{F}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Text shortcut
+% Text commands
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand{\yt}    {\textit{\mbox{YouTube-8M}}\xspace}
@@ -613,6 +572,13 @@
 \newcommand{\ACDC}  {$\mathbf{ACDC}^{-1}$\xspace}
 \newcommand{\AFDF}  {$\mathbf{AFDF}^{-1}$\xspace}
 
+% Star for separating paragraph
+\newcommand{\drawstar}{
+  \begin{center}
+    \color{mydarkblue}{\FourStar}
+  \end{center}
+}
+
 % \newcommand{\drn}{Deep ReLU network\xspace}
 % \newcommand{\drns}{Deep ReLU networks\xspace}
 % \newcommand{\DCRN}{DCRN\xspace}
@@ -620,4 +586,26 @@
 % \newcommand{\divisiblerank}{divisible rank}
 % \newcommand{\totalrank}{total rank}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Debugging
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{lineno}
+\usepackage{todonotes}
+\let\todoorg\todo
+\renewcommand{\todo}[1]{\todoorg[inline]{#1}}
+\newcommand{\Omit}[1]{}
+
+\newcommand{\drawline}{
+  \begin{center}
+    \rule{0.5\linewidth}{1pt}
+  \end{center}
+  \newpage
+}
+
+% todotext command 
+\newcommand{\todotext}[1]{{\color{red} \noindent \textbf{#1}}}
+
+% command to count page of chapter
+\newcommand{\countpages}[2]{\the\numexpr\getpagerefnumber{#2}-\getpagerefnumber{#1}\relax}
 
