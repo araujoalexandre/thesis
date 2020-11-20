@@ -2,8 +2,7 @@
 \chapter{Background}
 \label{chapter:ch2-background}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\localtableofcontents
-\vspace{\marginbellowtable}
+\localtoc
 
 This chapter gives a short introduction on the theory of supervised learning~\cite{shalev2014understanding} and Toeplitz matrices~\cite{gray2006toeplitz}.
 In the statistical learning framework, supervised learning refers to the problem of optimizing the parameters of a function in order to map an input to an output based on a series of input-output pairs.
@@ -269,7 +268,7 @@ The SRM learning paradigm minimizes the empirical risk $R_\mathcal{S}(h)$ and th
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Preliminaries on Neural Networks}
-\label{subsection:ch2-neural_networks}
+\label{section:ch2-preliminaries_on_neural_networks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -607,9 +606,9 @@ Let $P = \{-n+1, \dots, n-1\}$, an $n\times n$ Toeplitz matrix $\Amat$ is fully 
 \end{equation}
 \noindent
 Because the Toeplitz matrix $\Amat$ is fully determined by the sequence $\{a_h\}_{h \in P}$, it can be compactly represented in memory using only $2n-1$ values instead of $n^2$.
-Toeplitz matrices can also be characterized by noting that the $(k,j)$ entry of $\Amat$, $\Amat_{j,k}$ is given by
+Toeplitz matrices can also be characterized by noting that the $(k,j)$ entry of $\Amat$, $\leftmat \Amat \rightmat_{j,k}$ is given by
 \begin{equation}
-  \Amat_{j,k} = a_{k-j} \enspace.
+  \leftmat \Amat \rightmat_{j,k} = a_{k-j} \enspace.
 \end{equation}
 
 A standard tool for manipulating Toeplitz matrices is the use of Fourier analysis.
@@ -626,15 +625,16 @@ From this function, one can recover the sequence $\{a_h\}_{h \in P}$ using the s
 
 From there, similarly to the work done by~\citet{gray2006toeplitz}, we can define an operator $\Tmat$ mapping integrable functions to matrices:
 \begin{equation}
-  \Tmat(g) \triangleq \leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j\in\{0,\ldots,n-1\}} \enspace.
+  \Tmat_n(g) \triangleq \leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j\in\{0,\ldots,n-1\}} \enspace.
   \label{equation:ch2-toeplitz_operator}
 \end{equation}
 \noindent
-We can show that if $f$ is the inverse Fourier transform of $\{a_h\}_{h \in P}$, then $\Tmat(f)$ is equal to $\Amat$.
+In the following of this thesis, when it is clear from context, we will write $\Tmat(g)$ instead of $\Tmat_n(g)$.
+We can show that if $f$ is the inverse Fourier transform of $\{a_h\}_{h \in P}$, then $\Tmat_n(f)$ is equal to $\Amat$.
 \begingroup
 \allowdisplaybreaks
   \begin{align}
-      \leftmat \Tmat(f) \rightmat_{i, j} &= \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i-j)\omega} f(\omega) \,d\omega  \\
+      \leftmat \Tmat_n(f) \rightmat_{i, j} &= \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i-j)\omega} f(\omega) \,d\omega  \\
       &= \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i-j) \omega} \sum_{h \in N} a_h e^{\ci h \omega} \,d\omega  \\
       &= \frac{1}{2\pi} \int_0^{2\pi} \sum_{h \in N} a_h e^{\ci (j - i + h) \omega} \,d\omega  \\
       &= \sum_{h \in N} a_h \frac{1}{2\pi} \int_0^{2\pi} e^{\ci (j - i + h) \omega} \,d\omega 
@@ -687,9 +687,9 @@ An $n \times n$ circulant matrix $\Cmat$ is fully determined by a sequence of sc
 \end{equation}
 
 Because the circulant matrix $\Cmat$ is fully determined by the sequence $\{c_h\}_{h \in [n-1]_0}$, it can be compactly represented in memory using only $n$ values instead of $n^2$.
-Circulant matrices can also be characterized by noting that the $(k,j)$ entry of $\Cmat$, $\Cmat_{j,k}$ is given by
+Circulant matrices can also be characterized by noting that the $(k,j)$ entry of $\Cmat$, $\leftmat \Cmat \rightmat_{j,k}$ is given by
 \begin{equation}
-  \Cmat_{j,k} = c_{\left(k-j\right) \mod n} \enspace.
+  \leftmat \Cmat \rightmat_{j,k} = c_{\left(k-j\right) \mod n} \enspace.
 \end{equation}
 % We can also denote the sequence $\{c_h\}$ as a vector $\cvec$ such that $\forall i, \cvec_i = c_i$. The circulant matrices can then be expressed with $\Cmat = \circulant(\cvec)$.
 Circulant matrices exhibit several interesting properties which are based on the fact that they can be diagonalized by the Discrete Fourier Transform (DFT)~\cite{davis1979circulant}.
@@ -750,6 +750,7 @@ If we denote the Fast Fourier transform algorithm by \textbf{FFT} and the invers
   \label{algorithm:ch2-matrix_vector_product_circulant_matrix}
 \end{algorithm}
 
+\todotext{expliquer plus ici, de plus f-circ are not circulant special case}
 An important special case of circulant matrices are called $f$-circulant matrices and are defined as follows:
 \begin{definition}[$f$-circulant matrix]
   Given a vector $\xvec$, the $f$-circulant matrix, $\Cmat_f(\xvec)$, is defined as follows:
@@ -798,6 +799,62 @@ A $f$-unit-circulant, denoted $\Cmat_f$, is then a $f$-circulant matrix defined 
 % The following Theorem summarize the propreties for circulant matrices derived above.
 
 
+
+\comment{
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Relationship between Toeplitz and circulant matrices}
+\label{subsection:ch2-relationship_between_toeplitz_and_circulant_matrices}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todotext{completer ici}
+
+
+This assumption is justified by the work of \citet{gray2006toeplitz,gutierrez2012block} which states that a sequence of block Toeplitz matrices is asymptotically equivalent to a sequence of sequence of block circulant matrices.
+
+The concept of asymptotically equivalent sequences can be illustrated by the following. 
+Consider the infinite sequence $\{a_k\}$ and define the corresponding $n \times n$ Toeplitz operator $\Tmat(n) = \leftmat a_{k-j} \rightmat_{k,j = 0}^{n-1}$.
+We call \emph{banded}-Toeplitz matrix, a Toeplitz matrix for which it exists an $m$ such that $a_k = 0$, for $|k| > m$.
+A $n \times n$ banded-Toeplitz matrix can be represented as follows:
+\begin{equation}
+  \Tmat(n)  =
+  \leftmatrix
+    a_0    & a_1    & \cdots   & a_m    &        &        &        &        &        &        \\
+    a_{-1} & a_0    & a_1      &        & \ddots &        &        &        &        &        \\
+    \vdots & a_{-1} & \ddots   & \ddots &        & \ddots &        & 0      &        &        \\
+    a_{-m} &        & \ddots   & \ddots & \ddots &        & a_m    &        &        &        \\ 
+           & \ddots &          & \ddots & a_0    & a_1    &        & \ddots &        &        \\
+	   &        & \ddots   &        & a_{-1} & \ddots & \ddots &        & \ddots &        \\
+	   &        &          & a_{-m} &        & \ddots & \ddots & \ddots &        & a_m    \\
+    	   &        & 0        &        & \ddots &        & \ddots & \ddots & a_1    & \vdots \\
+           &        &          &        &        & \ddots &        & a_{-1}  & a_0    & a_1   \\  
+           &        &          &        &        &        & a_{-m} & \cdots & a_{-1} & a_0    \\ 
+  \rightmatrix
+\end{equation}
+\citet{gray2006toeplitz} has noted that the only difference between a $n \times n$ banded-Toeplitz matrix and a circulant matrix based on the same sequence is the values on the bottom-left and top-right corner of the matrix.
+The circulant matrix based on the same sequence $\{a_k\}$ can be represented as follows:
+\begin{equation}
+  \Cmat(n)  =
+  \leftmatrix
+    a_0    & a_1    & \cdots   & a_m    &        &        &        & a_{-m} & \cdots & a_{-1} \\
+    a_{-1} & a_0    & a_1      &        & \ddots &        &        &        & \ddots & \vdots \\
+    \vdots & a_{-1} & \ddots   & \ddots &        & \ddots &        & 0      &        & a_{-m} \\
+    a_{-m} &        & \ddots   & \ddots & \ddots &        & a_m    &        &        &        \\ 
+           & \ddots &          & \ddots & a_0    & a_1    &        & \ddots &        &        \\
+	   &        & \ddots   &        & a_{-1} & \ddots & \ddots &        & \ddots &        \\
+	   &        &          & a_{-m} &        & \ddots & \ddots & \ddots &        & a_m    \\
+    a_m	   &        & 0        &        & \ddots &        & \ddots & \ddots & a_1    & \vdots \\
+    \vdots & \ddots &          &        &        & \ddots &        & a_{-1} & a_0    & a_1    \\  
+    a_1    & \cdots & a_m      &        &        &        & a_{-m} & \cdots & a_{-1} & a_0    \\ 
+  \rightmatrix
+\end{equation}
+\noindent
+Thus, the greater the difference between $n$ and $m$, the `closer' the banded-Toeplitz matrix will be to the circulant one. 
+This concept of closeness between Toeplitz and a circulant matrix have been extensively studied and extended to block Toeplitz and block circulant matrices~\cite{Toeplitz1911,widom1976asymptotic,gazzah2001asymptotic,gray2006toeplitz,gutierrez2008asymptotically,gutierrez2011asymptotically,gutierrez2012block,zhu2017asymptotic,oudin2008asymptotic}.
+
+
+}
 
 
 
@@ -893,49 +950,113 @@ Instead of being complex-valued, the trigonometric polynomial that \emph{generat
   F_{\Bmat}(\omega) \triangleq \sum_{h \in P} \Bmat_h e^{\ci h \omega}
 \end{equation}
 The function $F_{\Bmat}$ is said to be the \emph{generating function} of $\Bmat$.
-To recover the block Toeplitz matrix from its generating function, we use the Toeplitz operator defined in \Cref{equation:ch2-toeplitz_operator}; therefore, we have $\Tmat(F_\Bmat) = \Bmat$.
-
-
-
-
-
-
-
-
-
-\comment{
+To recover the block Toeplitz matrix from its generating function, we use the Toeplitz operator defined in \Cref{equation:ch2-toeplitz_operator}; therefore, we have $\Tmat_n(F_\Bmat) = \Bmat$.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Bound on the Singular Values of Toeplitz and Block Toeplitz matrices}
-\label{subsection:ch2-bound_on_the_singular_values_of_toeplitz_and_block_toeplitz_matrices}
+\subsection{The Structure of the Convolution Operator}
+\label{subsection:ch2-the_structure_of_the_convolution_operator}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Using generating functions to represent Toeplitz and block Toeplitz matrices can have  
 
-\todo{complete this subsection}
 
-Now, we can state two known theorems which upper bound the maximal singular value of Toeplitz and block Toeplitz matrices with respect to their generating functions.
-% In the rest of the paper, we refer to $\sigma_1(\ \cdot\ )$ as the maximal singular value. 
+In this subsection, we describe the relation between structured matrices and convolutions.
+Recall that a discrete convolution can be seen as a kernel sliding over the image and acting as a filter.
+\Cref{figure:illustration_convolution} illustrates the convolution operation with the image (blue), the kernel (gray) and the resulting operation (green).
+It has been shown by~\citet{jain1989fundamentals} that the convolution operation is a linear transform `performed' by a doubly-block Toeplitz matrix (in the 2d case), \ie, a block Toeplitz matrix where the blocks are also Toeplitz.
+Considering convolutions as a simple linear transformation with a structured matrix has allowed multiple results to be derived~\citet{appuswamy2016structured,wang2020orthogonal,sedghi2018singular,singla2019bounding}, including one of our main contributions presented in \Cref{chapter:ch5-lipschitz_bound}.
 
-\begin{theorem}[Bound on the singular values of Toeplitz matrices]
-  Let $f: \mathbb{R} \rightarrow \mathbb{C}$, be continuous and $2\pi$-periodic. Let $\Tmat(f) \in \mathbb{R}^{n \times n}$ be a Toeplitz matrix generated by the function $f$, then:
-  \begin{align}
-    \sigma_1 \left( \Tmat(f) \right) \leq \sup_{\omega \in [0, 2\pi]} |f(\omega)|.
-  \end{align}
-  \label{theorem:toeplitz_sup_singular}
-\end{theorem}
 
-\Cref{theorem:toeplitz_sup_singular} is a direct application of Lemma 4.1 by~\citet{gray2006toeplitz} for real Toeplitz matrices. 
-\begin{theorem}[Bound on the singular values of block Toeplitz matrices ~\citet{gutierrez2012block}]
-  Let $F: \mathbb{R} \rightarrow \mathbb{C}^{m \times m}$ be a matrix-valued function which is continuous and $2 \pi$-periodic.
-  Let $\Tmat(F) \in \mathbb{R}^{mn \times mn}$ be a block Toeplitz matrix generated by the function $F$, then:
-  \begin{align}
-    \sigma_1 \left( \Tmat(F) \right) \leq \sup_{\omega \in [0, 2\pi]} \sigma_1 \left( F\left( \omega \right) \right) .
-  \end{align}
-\label{theorem:block_toeplitz_sup_singular}
-\end{theorem}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.24\textwidth]{figures/main/ch2-background/conv_00.pdf}
+    \includegraphics[width=0.24\textwidth]{figures/main/ch2-background/conv_01.pdf}
+    \includegraphics[width=0.24\textwidth]{figures/main/ch2-background/conv_02.pdf}
+    \includegraphics[width=0.24\textwidth]{figures/main/ch2-background/conv_03.pdf}
+    \caption{A convolution: a kernel sliding over an image and acting as a filter. \\Illustration taken from~\citet{dumoulin2016guide}}
+    \label{figure:illustration_convolution}
+\end{figure}
 
-}
+
+
+% This observation has been made by~\citet{jain1989fundamentals} and many works have been derived from it~\citet{appuswamy2016structured,wang2020orthogonal,sedghi2018singular,singla2019bounding}, including one of our main contributions presented in \Cref{chapter:ch5-lipschitz_bound}.
+
+A discrete convolution operation with a 2-dimensional kernel applied on a 2-dimensional signal is equivalent to a matrix multiplication with a doubly-block Toeplitz matrix.
+Let $\Kmat$ be a 2-dimensional kernel defined as follows:
+\begin{equation*}
+  \Kmat = \leftmatrix
+    k_0 & k_1 & k_2 \\
+    k_3 & k_4 & k_5 \\
+    k_6 & k_7 & k_8 
+  \rightmatrix
+\end{equation*}
+then, the doubly-block Toeplitz matrix $\Mmat$ that performs the convolution can be represented as:
+\begin{equation*}
+  \Mmat = \leftmatrix
+    \Tmat_0 & \Tmat_1 &         &         & 0       \\
+    \Tmat_2 & \Tmat_0 & \Tmat_1 &         &         \\
+            & \Tmat_2 & \ddots  & \ddots  &         \\
+            &         & \ddots  & \Tmat_0 & \Tmat_1 \\
+    0       &         &         & \Tmat_2 & \Tmat_0
+  \rightmatrix
+\end{equation*}
+where $\Tmat_j$ are banded-Toeplitz matrices and the values of the kernel are distributed in the Toeplitz blocks as follows:
+\begin{equation*}
+  \Tmat_0 = \leftmatrixsmall
+    k_4 & k_3 &         &         & 0       \\
+    k_5 & k_4 & k_3 &         &         \\
+            & k_5 & \smallddots  & \smallddots  &         \\
+            &         & \smallddots  & k_4 & k_3 \\
+    0       &         &         & k_5 & k_4
+  \rightmatrixsmall \quad 
+  \hfill
+  \Tmat_1 = \leftmatrixsmall
+    k_7 & k_6 &         &         & 0       \\
+    k_8 & k_7 & k_6 &         &         \\
+            & k_8 & \smallddots  & \smallddots  &         \\
+            &         & \smallddots  & k_7 & k_6 \\
+    0       &         &         & k_8 & k_7 \\
+  \rightmatrixsmall \quad
+  \hfill
+  \Tmat_2 = \leftmatrixsmall
+    k_1 & k_0 &         &         & 0       \\
+    k_2 & k_1 & k_0 &         &         \\
+            & k_2 & \smallddots  & \smallddots  &         \\
+            &         & \smallddots  & k_1 & k_0 \\
+    0       &         &         & k_2 & k_1 \\
+  \rightmatrixsmall
+\end{equation*}
+
+
+However, in practice, the signal can have multiple channel called feature maps (\eg images have 3 channels corresponding to the color Red, Green and Blue).
+Let us denote by $\cin$ and $\cout$ the number of feature maps of the input and output respectively.
+Then the convolution operation takes an input of size $\cin \times n \times n$, is performed by a kernel of size $\cout \times \cin \times k \times k$ and the output signal will be of size $\cout \times m \times m$ with $m = n - k + 2p + 1$ where $p$ corresponds to the padding.
+The matrix for the multi-channel convolution is the concatenation of $\cout \cdot \cin$ doubly-block Toeplitz matrices.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Summary of the Chapter}
+\label{section:ch2-summary_of_the_background}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+As explained in the Introduction (\Cref{chapter:ch1-introduction}), our contributions lie at the intersection between neural networks and structured matrices.
+In this chapter, we have reviewed the necessary concepts to present our contributions and some related work.
+
+First, in \Cref{section:ch2-introduction_on_supervised_learning}, we gave a quick overview of the concept of supervised learning, which presents the mathematical tools for optimizing a parameterized function in order to map an input to an output based on a series of input-output pairs. 
+Although the statistical learning framework considers generic hypothesis space, in this work we use a class of function called neural networks presented in \Cref{section:ch2-preliminaries_on_neural_networks}.
+We also present, in \Cref{section:ch2-preliminaries_on_adversarial_attacks}, the concept of adversarial attacks and robustness of neural networks.
+We show how a neural network can be sensitive to small perturbations to its input and thus vulnerable to adversarial examples.
+Reducing the sensitivity and therefore increasing the robustness of neural networks is the central theme of our second contribution presented in \Cref{chapter:ch5-lipschitz_bound}.
+
+Finally, \Cref{section:ch2-a_primer_on_toeplitz_and_circulant_matrices} introduce Toeplitz and Circulant matrices which are the main mathematical objects used in this thesis.
+Toeplitz and circulant matrices are structured matrices in which each descending diagonal, from left to right, is constant.
+The specific structured of these matrices allows linear transforms to be represented with fewer than $n^2$ parameters, which allows the construction of compact neural networks (contribution of \Cref{chapter:ch4-diagonal_circulant_neural_network}) and enables fast approximation of the Lipschitz constant of convolutional layers leading to a new regularization scheme (contribution of \Cref{chapter:ch5-lipschitz_bound}).
+
+
+
+
+
+
 
 
