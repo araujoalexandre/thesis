@@ -345,15 +345,26 @@ Based on this idea, multiple post-processing techniques have been developed: a q
 Sparse neural networks have also been extensively studied since the seminal paper of \citet{frankle2018lottery} in which he proposes the \emph{Lottery Ticket Hypothesis}. 
 This hypothesis states that it exists a sparse subnetwork of dense neural network that when trained in isolation can match the test accuracy of the original dense network after training for at most the same number of iterations. 
 This hypothesis led to a series of works on sparse neural networks \cite{zhou2019deconstructing,malach2019proving,evci2020rigging}.
+
 Moreover, \citet{ba2014deep} have empirically demonstrated that shallow neural networks can learn the complex functions previously learned by another deep neural networks.
 This result led \citet{hinton2015distilling} to propose a technique called \emph{model distillation} which consists in training a large complex model using all the available data and resources to be as accurate as possible, then a smaller and more compact model is trained to approximate the first model.
 Although interesting for deployment purposes, this approach still requires to train one large network and one shallow, which entails a significant training cost.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.80\textwidth]{figures/main/ch3-related_work/scalecompare.pdf}
+  \caption{Illustration of the scaling of the EfficientNet architecture \cite{tan2019efficientnet}.}
+  \label{figure:p1-ch3-illustration_efficientnet}
+\end{figure}
+
 More recently, \citet{zoph2018learning,real2019regularized} have designed algorithms that automatically tune the width and depth of neural network architectures to obtain the best trade-off between compactness and accuracy.
 With this approach, \citet{tan2019efficientnet} found a new compound scaling method that uniformly scales network width and depth leading to efficient and compact architectures.
+\Cref{figure:p1-ch3-illustration_efficientnet} illustrate the different scaling proposed by~\citet{tan2019efficientnet}.
 
-Finally, in the context of deep learning, compact representations have gained much attention over the past years as a way to compress models or to reduce memory requirements.
-In this thesis, we focus on building compact neural networks with structured matrices.
-Hereafter, we present a comprehensive overview of the existing techniques in this line of research.
+
+% Finally, in the context of deep learning, compact representations have gained much attention over the past years as a way to compress models or to reduce memory requirements.
+% In this thesis, we focus on building compact neural networks with structured matrices.
+% Hereafter, we present a comprehensive overview of the existing techniques in this line of research.
 
 
 
