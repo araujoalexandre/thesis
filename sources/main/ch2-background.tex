@@ -1010,44 +1010,81 @@ Let $\Kmat$ be a 2-dimensional kernel defined as follows:
   \rightmatrix
 \end{equation*}
 then, the doubly-block Toeplitz matrix $\Mmat$ that performs the convolution can be represented as:
+% The doubly-block Toeplitz encoding a convolution parameterized by a 2-dimensional kernel $\Kmat$ can be represented as follows: 
+% \begin{equation*}
+%   \Mmat = \leftmatrix
+%     \Tmat_0 & \Tmat_1 &         &         & 0       \\
+%     \Tmat_2 & \Tmat_0 & \Tmat_1 &         &         \\
+%             & \Tmat_2 & \ddots  & \ddots  &         \\
+%             &         & \ddots  & \Tmat_0 & \Tmat_1 \\
+%     0       &         &         & \Tmat_2 & \Tmat_0
+%   \rightmatrix
+% \end{equation*}
 \begin{equation*}
   \Mmat = \leftmatrix
-    \Tmat_0 & \Tmat_1 &         &         & 0       \\
-    \Tmat_2 & \Tmat_0 & \Tmat_1 &         &         \\
-            & \Tmat_2 & \ddots  & \ddots  &         \\
-            &         & \ddots  & \Tmat_0 & \Tmat_1 \\
-    0       &         &         & \Tmat_2 & \Tmat_0
+    \Tmat_0 & \Tmat_1 &         &  0       \\
+    \Tmat_2 & \Tmat_0 & \ddots  &          \\
+            & \ddots  & \Tmat_0 & \Tmat_1  \\
+    0       &         & \Tmat_2 &  \Tmat_0
   \rightmatrix
 \end{equation*}
-where $\Tmat_j$ are banded-Toeplitz matrices and the values of the kernel are distributed in the Toeplitz blocks as follows:
+where $\Tmat_j$ are banded-Toeplitz matrices and the values of the kernel $\Kmat$ are distributed in the Toeplitz blocks as follows:
+% \begin{equation*}
+%   \Tmat_0 = \leftmatrixsmall
+%     k_4 & k_3 &         &         & 0       \\
+%     k_5 & k_4 & k_3 &         &         \\
+%             & k_5 & \smallddots  & \smallddots  &         \\
+%             &         & \smallddots  & k_4 & k_3 \\
+%     0       &         &         & k_5 & k_4
+%   \rightmatrixsmall \quad 
+%   \hfill
+%   \Tmat_1 = \leftmatrixsmall
+%     k_7 & k_6 &         &         & 0       \\
+%     k_8 & k_7 & k_6 &         &         \\
+%             & k_8 & \smallddots  & \smallddots  &         \\
+%             &         & \smallddots  & k_7 & k_6 \\
+%     0       &         &         & k_8 & k_7 \\
+%   \rightmatrixsmall \quad
+%   \hfill
+%   \Tmat_2 = \leftmatrixsmall
+%     k_1 & k_0 &         &         & 0       \\
+%     k_2 & k_1 & k_0 &         &         \\
+%             & k_2 & \smallddots  & \smallddots  &         \\
+%             &         & \smallddots  & k_1 & k_0 \\
+%     0       &         &         & k_2 & k_1 \\
+%   \rightmatrixsmall
+% \end{equation*}
 \begin{equation*}
-  \Tmat_0 = \leftmatrixsmall
+  \Tmat_0 = \leftmatrix
     k_4 & k_3 &         &         & 0       \\
     k_5 & k_4 & k_3 &         &         \\
-            & k_5 & \smallddots  & \smallddots  &         \\
-            &         & \smallddots  & k_4 & k_3 \\
+            & k_5 & \ddots  & \ddots  &         \\
+            &         & \ddots  & k_4 & k_3 \\
     0       &         &         & k_5 & k_4
-  \rightmatrixsmall \quad 
+  \rightmatrix \quad 
   \hfill
-  \Tmat_1 = \leftmatrixsmall
+  \Tmat_1 = \leftmatrix
     k_7 & k_6 &         &         & 0       \\
     k_8 & k_7 & k_6 &         &         \\
-            & k_8 & \smallddots  & \smallddots  &         \\
-            &         & \smallddots  & k_7 & k_6 \\
+            & k_8 & \ddots  & \ddots  &         \\
+            &         & \ddots  & k_7 & k_6 \\
     0       &         &         & k_8 & k_7 \\
-  \rightmatrixsmall \quad
-  \hfill
-  \Tmat_2 = \leftmatrixsmall
+  \rightmatrix \quad
+\end{equation*}
+
+\begin{equation*}
+  \Tmat_2 = \leftmatrix
     k_1 & k_0 &         &         & 0       \\
     k_2 & k_1 & k_0 &         &         \\
-            & k_2 & \smallddots  & \smallddots  &         \\
-            &         & \smallddots  & k_1 & k_0 \\
+            & k_2 & \ddots  & \ddots  &         \\
+            &         & \ddots  & k_1 & k_0 \\
     0       &         &         & k_2 & k_1 \\
-  \rightmatrixsmall
+  \rightmatrix
 \end{equation*}
 
 
-However, in practice, the signal can have multiple channel called feature maps (\eg images have 3 channels corresponding to the colors red, green and blue).
+However, in practice, the signal can have multiple channel called feature maps (\eg images have 3 channels: RGB).
+% corresponding to the colors red, green and blue).
 Let us denote by $\cin$ and $\cout$ the number of feature maps of the input and output respectively.
 Then the convolution % operation 
 takes an input of size $\cin \times n \times n$, is performed by a kernel of size $\cout \times \cin \times k \times k$ and the output signal will be of size $\cout \times m \times m$ with $m = n - k + 2p + 1$ where $p$ corresponds to the padding.
