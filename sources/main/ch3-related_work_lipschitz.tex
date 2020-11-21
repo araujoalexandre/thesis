@@ -48,14 +48,17 @@ From this proposition, we can conclude that for a given neural network with spec
 Note that the margin is already maximized in a multi-class setting with the cross-entropy loss as stated in~\citet{hein2017formal}.
 A multitude of work have tried to reduce the Lipschitz constant in order to improve adversarial robustness.
 However, \citet{scaman2018lipschitz} have shown that computing the exact Lipschitz constant of a neural network is NP-hard.
+
 \begin{problem}[\citet{scaman2018lipschitz}]
   Let us define the problem associated to the exact computation of the Lipschitz constant of a $2$-layer neural network with $\relu$ activation:
-  \begin{itemize}
+  \begin{itemize}[topsep=0pt,noitemsep]
     \item[] \textbf{Input:} Two matrices $\Wmat^{(1)} \in \Rbb^{l \times n}$ and $\Wmat^{(2)} \in \Rbb^{m \times l}$, and a constant $c \geq 0$.
     \item[] \textbf{Question:} Let $N = \Wmat^{(2)} \circ \rho \circ \Wmat^{(1)}$ where $\rho$ is the $\relu$ activation function. \emph{Is the Lipschitz constant $\lip{N} \leq c$ ?}
   \end{itemize}
   \label{problem:ch3-lipschitz_computation}
 \end{problem}
+
+
 \noindent
 The following theorem shows that, even for shallow neural network, exact Lipschitz computation is not achievable in polynomial time (assuming that $\mathbf{P} \neq \textbf{NP}$):
 \begin{theorem}[\citet{scaman2018lipschitz}]
@@ -89,9 +92,10 @@ More precisely, \citet{fazlyab2019efficient} have demonstrated the following res
     \alpha \leq \frac{\rho(y) - \rho(x)}{y-x} \leq \beta \quad \forall x,y \in \mathbb{R}. 
   \end{equation}
   Define the set $\mathcal{T}_{n}$ as the following:
-  \begin{equation}
+  \begin{equation*}
     \mathcal{T}_n = \{\Tmat \in \mathbb{S}^n \mid \Tmat = \sum_{i=1}^{n} \lambda_{ii} \evec^{(i)} \evec^{(i)\top} + \sum_{1 \leq i<j \leq n} \lambda_{ij}(\evec^{(i)} - \evec^{(j)})(\evec^{(i)}-\evec^{(j)})^\top, \lambda_{ij} \geq 0 \}.
-  \end{equation}
+  \end{equation*}
+  where $\mathbb{S}$ is the set of all symmetric matrices of size $n \times n$.
   Suppose there exists a constant $c>0$ such that the matrix inequality
   \begin{align}
     \Mmat(c,\Tmat) \triangleq
@@ -116,6 +120,7 @@ Although, these works on devising a global bound on the Lipschitz constant of a 
 
 \drawstar
 
+\noindent
 In order to constraint the Lipschitz constant of neural networks, researchers have devised techniques to reduce the Lipschitz constant of \emph{individual layers} instead. 
 The global Lipschitz of a neural network can easily be upper bound by the product of the spectral norm of each weight matrix as follows:
 \begin{proposition}[\citet{scaman2018lipschitz}] Let $N$ be a neural network of $\depth$ layers with 1-Lipschitz activation functions (\eg ReLU,
@@ -158,7 +163,7 @@ Furthermore, we can show that reducing the Lipschitz of each layer independently
       -1 & -1 \\ -1 & -1
     \rightmatrix
   \end{align*}
-  then:
+  then: \vspace{-0.5cm}
   \begin{equation*}
     \norm{\Amat^{(1)}}_2 = 1,\ \norm{\Amat^{(2)}}_2 = \sqrt{2}
     \quad \text{and} \quad
@@ -242,63 +247,23 @@ The pseudocode of the power method is presented in \Cref{algorithm:ch3-power_met
 
 In the context of deep learning, given that the algorithm is performed for each layer of the network at each step of the training, a small number of iterations is set in order to keep the overall computations feasible.
 Spectral Normalization has been shown to be an effective method for improving generalization and robustness against adversarial attacks \cite{miyato2018spectral,gouk2018regularisation,farnia2018generalizable}.
-\citet{farnia2018generalizable} extended the power method to convolutional layers where matrix $\Wmat$ is not explicitly constructed.
+\citet{farnia2018generalizable,ryu2019plug} extended the power method to convolutional layers where matrix $\Wmat$ is not explicitly constructed.
 They proposed a similar algorithm (\Cref{algorithm:ch3-power_method_generic}) for convolutional function.
 
 
-% \todotext{describe algo power method in text}
-% \todotext{dire que la power method trop couteux pour des réseaux profonds}
 
 \drawstar
 
-% Finally, convolutional layers, which are widely used for image classification and detection for their translation invariance characteristics \cite{zhang1990parallel}, are structured layers.
-
+\noindent
 In the context of convolutional neural networks, the power method is not the only technique available for approximating the largest singular value (Lipschitz constant) of a convolutional layer.
-Several work have devise bound or approximation on the largest singular value of convolutional layers by exp:loiting the \emph{structure} of the convolution operation \cite{sedghi2018singular,bibi2019deep,singla2019bounding}.
-Indeed, a discrete convolution operation with a 2-dimensional kernel applied on a 2-dimensional signal is equivalent to a matrix multiplication with a doubly-block Toeplitz matrix~\cite{jain1989fundamentals} \ie, a block Toeplitz matrix where the blocks are also Toeplitz.
-For example, if the 2-dimensional kernel used for the convolution is as follows:
-\begin{equation}
-  \leftmatrix
-    \kvec_{0} & \kvec_{1} & \kvec_{2} \\
-    \kvec_{3} & \kvec_{4} & \kvec_{5} \\
-    \kvec_{6} & \kvec_{7} & \kvec_{8} 
-  \rightmatrix
-\end{equation}
-then, the doubly-block Toeplitz matrix that performs the convolution can be represented as follows:
-\begin{equation}
-  \leftmatrix
-    \Tmat_0 & \Tmat_{1} &  &  & 0  \\
-    \Tmat_{2} & \Tmat_0 & \Tmat_{1} &  &  \\
-     & \Tmat_{2} & \scalebox{.70}{$\ddots$} & \scalebox{.70}{$\ddots$} & \\
-     &  & \scalebox{.70}{$\ddots$} & \Tmat_0 & \Tmat_{1}  \\
-    0 &  &  & \Tmat_{2} & \Tmat_0  \\
-  \rightmatrix
-\end{equation}
-where $\Tmat_j$ are banded Toeplitz matrices and the values of $\kvec$ are distributed in the Toeplitz blocks as follows:
-\begin{align}
-  \Tmat_0 = \leftmatrixsmall
-    \kvec_{4} & \kvec_{3} &  &  &  0 \\
-    \kvec_{5} & \kvec_{4} & \kvec_{3} &  &   \\
-     & \kvec_{5} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$}  \\
-     &  &  \scalebox{.40}{$\ddots$} & \kvec_{4} & \kvec_{3}  \\
-    0 &  &  & \kvec_{5} & \kvec_{4}  \\
-  \rightmatrixsmall &&
-  \Tmat_{1} = \leftmatrixsmall
-    \kvec_{7} & \kvec_{6} &  &  &  0 \\
-    \kvec_{8} & \kvec_{7} & \kvec_{6} &  &   \\
-     & \kvec_{8} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$} &    \\
-     &  &  \scalebox{.40}{$\ddots$} & \kvec_{7} & \kvec_{6}  \\
-    0 &  &  & \kvec_{8} & \kvec_{7}  \\
-  \rightmatrixsmall &&
-  \Tmat_{2} = \leftmatrixsmall
-    \kvec_{1} & \kvec_{0} &  &  &  0 \\
-    \kvec_{2} & \kvec_{1} & \kvec_{0} &  &   \\
-     & \kvec_{2} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$} &    \\
-     &  &  \scalebox{.40}{$\ddots$} & \kvec_{1} & \kvec_{0}  \\
-    0 &  &  & \kvec_{2} & \kvec_{1}  \\
-  \rightmatrixsmall
-\end{align}
-This relation between two-dimensional single-channel convolutional layer and doubly-block Toeplitz matrix have been pointed out by a number of previous works, \eg, \citet{goodfellow2016deep,wang2020orthogonal,appuswamy2016structured}.
+Several work have devise bound or approximation on the largest singular value of convolutional layers by exploiting the \emph{structure} of the convolution operation \cite{sedghi2018singular,bibi2019deep,singla2019bounding}.
+
+
+
+
+
+
+
 
 % \citet{sedghi2018singular} have observed that a doubly-block Toeplitz matrix can be approximated by a 
 %
@@ -307,63 +272,89 @@ This relation between two-dimensional single-channel convolutional layer and dou
 % \citet{gray2006toeplitz} have observed that band-Toeplitz matrices can be `approximated' by band-circulant matrices.
 % This `approximation' is formalized by a mathematical concept called \emph{}j
 
+To approximate the singular values of a convolutional layer, \citet{sedghi2018singular} have exploited the properties of doubly-block circulant matrices (\ie, a circulant block matrix where each block is also a circulant matrix).
+Indeed, a doubly-block circulant matrice is the matrix representation of linear convolutional with circulant padding.
+In their work, \citet{sedghi2018singular} assume that the properties of doubly-block circulant matrices are `close' to the properties of a doubly-block Toeplitz matrix.
 
-\citet{gray2006toeplitz} have studied the asymptotic properties of sequences of Toeplitz matrices and have observed that a sequence of Toeplitz matrices can be approximated by a sequence of circulant matrices.
-Consider the infinte sequence $\{a_k\}$ and defined the corresponding $n \times n$ Toeplitz operator $\Tmat(n) = \leftmat a_{k-j} \rightmat_{k,j = 0}^{n-1}$.
-We call \emph{banded}-Toeplitz matrix, a Toeplitz matrix for which it exists an $m$ such that $a_k = 0$, for $|k| > m$.
-A banded-Toeplitz matrix can be represented as follows:
+To compute the singular values of doubly-block circulant matrices, \citet{sedghi2018singular} have demonstrated the following result:
+\begin{theorem}[Theorem 5 of \citet{sedghi2018singular}]
+  Let $\Amat$ be a doubly-block circulant matrix such that:
+  \begin{equation*}
+    \Amat = \leftmatrix
+      \Cmat_0     & \Cmat_{n-1} & \Cmat_{n-2} & \cdots  & \cdots      & \Cmat_1     \\
+      \Cmat_1     & \Cmat_0     & \Cmat_{n-1} & \ddots  &             & \vdots      \\
+      \Cmat_2     & \Cmat_1     & \ddots      & \ddots  & \ddots      & \vdots      \\
+      \vdots      & \ddots      & \ddots      & \ddots  & \Cmat_{n-1} & \Cmat_{n-2} \\
+      \vdots      &             & \ddots      & \Cmat_1 & \Cmat_{0}   & \Cmat_{n-1} \\
+      \Cmat_{n-1} & \cdots      & \cdots      & \Cmat_2 & \Cmat_{1}   & \Cmat_0
+    \rightmatrix
+  \end{equation*}
+  where $\Cmat_i = \circulant({\cvec_i}),\ \forall i \in \{0,\dots,n-1\}$.
+  Let $\Kmat = \leftmat \cvec_0, \cvec_1, \cdots, \cvec_{n-1} \rightmat^\top$ then, the singular values of the doubly-block circulant matrix $\Amat$ are the magnitudes of the entries of $\Umat_n^\top \Kmat \Umat_n$.
+  \label{theorem:ch3-singular_values_doubly_block_circulant}
+\end{theorem}
 
+\noindent
+To prove \Cref{theorem:ch3-singular_values_doubly_block_circulant}, \citet{sedghi2018singular} used the following \Cref{theorem:ch2-diaginalization_doubly_block_circulant_matrix} presented in \Cref{chapter:ch2-background}.
+The main advantage of this approach is that the singular values of a doubly-block circulant matrix can be computed with the Fast Fourier transform algorithm (see \Cref{subsection:ch2-circulant_matrices}) which offers a reduced complexity compare to classical approaches for computing the singular values of a matrix. 
+However, this approach exhibits several limitations.
+First, this method results in a loose approximation of the maximal singular value of a convolutional layer which does not use the circulant padding which is often the case in practical settings.
+Also, the complexity of their algorithm is dependent on the size of the input which can be high for large datasets.
+Finally, for multi-channel convolution, their method requires the computation of the spectral norm of $n^2$ matrices each of size $\cin \times \cout$ as stated in the following theorem:
 
-\begin{equation}
-  \Tmat(n)  =
-  \leftmatrix
-    a_0    & a_1    & \cdots   & a_m    &        &        &        & 0      & \cdots & 0      \\
-    a_{-1} & a_0    & a_1      &        & \ddots &        &        &        & \ddots & \vdots \\
-    \vdots & a_{-1} & \ddots   & \ddots &        & \ddots &        &        &        & 0      \\
-    a_{-m} &        & \ddots   & \ddots & \ddots &        & a_m    &        &        &        \\ 
-           & \ddots &          & \ddots & a_0    & a_1    &        & \ddots &        &        \\
-	   &        & \ddots   &        & a_{-1} & \ddots & \ddots &        & \ddots &        \\
-	   &        &          & a_{-m} &        & \ddots & \ddots & \ddots &        & a_m    \\
-   0	   &        &          &        & \ddots &        & \ddots & \ddots & a_1    & \vdots \\
-   \vdots  & \ddots &          &        &        & \ddots &        & a_{-1}  & a_0    & a_1   \\  
-   0       & \cdots & 0        &        &        &        & a_{-m} & \cdots & a_{-1} & a_0    \\ 
-  \rightmatrix
-\end{equation}
-
-
-\begin{equation}
-  \Cmat(n)  =
-  \leftmatrix
-    a_0    & a_1    & \cdots   & a_m    &        &        &        & a_{-m} & \cdots & a_1    \\
-    a_{-1} & a_0    & a_1      &        & \ddots &        &        &        & \ddots & \vdots \\
-    \vdots & a_{-1} & \ddots   & \ddots &        & \ddots &        &        &        & a_{-m} \\
-    a_{-m} &        & \ddots   & \ddots & \ddots &        & a_m    &        &        &        \\ 
-           & \ddots &          & \ddots & a_0    & a_1    &        & \ddots &        &        \\
-	   &        & \ddots   &        & a_{-1} & \ddots & \ddots &        & \ddots &        \\
-	   &        &          & a_{-m} &        & \ddots & \ddots & \ddots &        & a_m    \\
-   a_m	   &        &          &        & \ddots &        & \ddots & \ddots & a_1    & \vdots \\
-   \vdots & \ddots &          &        &        & \ddots &        & a_{-1}  & a_0    & a_1    \\  
-    a_1    & \cdots & a_m      &        &        &        & a_{-m} & \cdots & a_{-1} & a_0    \\ 
-  \rightmatrix
-\end{equation}
-
-
-
-
-
-
-
-
-
+\begin{theorem}[Theorem 6 of \citet{sedghi2018singular}] 
+  Let $\Mmat$ be the matrix encoding the linear transformation computed by a multi-channel convolutional layer.
+  Let $\Kmat \in \Rbb^{\cin \times \cout n \times n}$ such that $(\Kmat)_{i,j}$ for all $i,j$ be constructed as in \Cref{theorem:ch3-singular_values_doubly_block_circulant}, 
+  Let $\widetilde{\Kmat}_{i,j} = \Umat^\top \leftmat \Kmat \rightmat_{i,j} \Umat_n $ and define the following operator matrix 
+  \begin{equation}
+    \Pmat(i,j) = \leftmatrix 
+    \leftmat \widetilde{\Kmat}_{0,0} \rightmat_{i, j} & \cdots & \leftmat \widetilde{\Kmat}_{0, \cout-1} \rightmat_{i, j} \\
+    \vdots & & \vdots \\
+    \leftmat \widetilde{\Kmat}_{\cin-1, 0} \rightmat_{i, j} & \cdots & \leftmat \widetilde{\Kmat}_{\cin-1, \cout-1} \rightmat_{i, j}
+    \rightmatrix
+  \end{equation}
+  Then
+  \begin{equation}
+    \sigma(\Mmat) = \bigcup_{i, j = 0}^{n-1} \sigma \left(  \Pmat(i,j) \right).
+  \end{equation}
+\end{theorem}
 
 
 
+% , their method requires the computation of the spectral norm of n
+% 2 matrices (each matrix of
+% size cout × cin) for every convolution layer making it impractical to use during training.
+
+
+In the same line of research, \citet{singla2019bounding} have used the properties of convolution to devised several bound on the singular values of convolution layers.
+Recall from \Cref{subsection:ch2-the_structure_of_the_convolution_operator} that a convolution kernel is a 4 dimensional tensor of size $\cout \times \cin \times k_1 \times k_2$.
+\citet{singla2019bounding} have demonstrated that the largest singular value (Lipschitz constant) of a convolutional layers $\Phi_\Kmat$ parameterized by a kernel $\Kmat$ can be upper-bound as follows:
+
+\begin{theorem}[Reformulation of Theorem 1 of \citet{singla2019bounding}]
+  Let $\Kmat \in \Rbb^{\cout \times \cin \times k_1 \times k_2}$ be the kernel of a convolutional layer $\Phi_\Kmat$ then,  
+  \begin{equation}
+    \lip{\Phi_\Kmat} \leq \min \left\{ \sqrt{k_1 k_2} \norm{\Rmat}_2, \sqrt{k_2 k_2} \norm{\Smat}_2 \right\}
+  \end{equation}
+  where $\Rmat$ and $\Smat$ are matrices of size $k_1 \cout \times k_2 \cin$ and $k_2 \cout \times k_1 \cin$ respectively and are a `reshape' of the tensor kernel $\Kmat$.
+\end{theorem}
+
+
+On order to prove this result, \citet{singla2019bounding} build upon the work of \citet{sedghi2018singular} and have also only considered circulant convolution (performed by doubly-block circulant matrices).
+Instead of proposing a method to compute \emph{all} singular values of the equivalent doubly-block circulant matrix, their method is an upper-bound on the largest singular value of the Jacobian of the convolution. 
+Because this method is independent of the input dimension the computational complexity is substantially reduced compare to the approach of \citet{sedghi2018singular}, however, the reduction in computational complexity is at the expense of the accuracy.
+ 
 
 
 
 
 
 
+
+% Fortunately, the structures of the linear transformation matrices can be exploited to reduce the computational complexity of SVDs.
+% Of particular relevance is the work by \citet{sedghi2018the,bibi2018deep}, in which the linear convolutional layer is treated as a circular one by a ``wrapping round'' operation.
+% In doing so, the linear transformation matrices are endowed with a circulant structure, by which efficient methods were proposed to compute a circular approximation of the convolutional layers with substantially reduced complexity.
+
+% To further reduce computational complexity, upper bounds of spectral norm of the circular convolutional layers were derived in \citet{Singla2019} at the expense of degraded accuracy.
 
 
 % Fortunately, the structures of the linear transformation matrices can be exploited to reduce the computational complexity of SVDs.
@@ -379,15 +370,6 @@ A banded-Toeplitz matrix can be represented as follows:
 % Although some theoretical analysis bounded the gap between large Toeplitz and circulant matrices \citet{ZhuTIT2017}, it seems only applied to Hermitian matrices (or symmetric for real matrices). The linear transformation matrices of linear convolution are {\em asymmetric} real matrices, which are {\em non-Hermitian} matrices.
 % \citet{zhu2017asymptotic}
 
-
-
-
-
-
-
-
-
-\drawline
 
 
 
@@ -427,11 +409,10 @@ A banded-Toeplitz matrix can be represented as follows:
 % =>> Regularization: explain problem of regulzarization (\citet{}) but is justified by Adv Generalization Bartlett + Farnia 
 % => \citet{yoshida2017spectral}: regularization with power method for generalization
 % => \citet{wang2020orthogonal} (orthogonal convolution)
-%
-=> Upper bound on convolution
-- \citet{sedghi2018singular}
-- \citet{singla2019bounding}
 
+% => Upper bound on convolution
+% - \citet{sedghi2018singular}
+% - \citet{singla2019bounding}
 
 % Several recent papers have utilized this concept or an extension of it to additional layer types. [14] uses it to analyze the theoretical sensitivity of deep neural
 % networks. [4] and [12] enforce constraints on the singular values of matrices as

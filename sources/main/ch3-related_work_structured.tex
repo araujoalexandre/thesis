@@ -18,27 +18,8 @@
 
 As seen in the Introduction (\Cref{chapter:ch1-introduction}), scaling up networks can lead to better performance.
 Increasing the width of shallow neural networks can increase their performance~\cite{howard2017mobilenets,sandler2018mobilenetv2,tan2019mnasnet,zagoruyko2016wide} due to their capacity to capture more fine-grained features.
-As well, increasing depth is a common and effective to capture richer and more complex features and increase performance, many deep architectures have been proposed~\cite{he2016deep,huang2016deep, szegedy2016rethinking,szegedy2017inception,xiao2018dynamical}.
+As well, increasing depth is a common and effective approach to capture richer and more complex features and increase performance, many deep architectures have been proposed~\cite{he2016deep,huang2016deep, szegedy2016rethinking,szegedy2017inception,xiao2018dynamical}.
 However, large neural networks lead to difficult and expensive training and overfitting and after observing that a lot of parameters in large neural networks were redundant~\cite{dai2018compressing,frankle2018lottery}, an important question arises: \emph{do neural networks needs to be over-parameterized? And if not, how to build accurate and compact neural networks?} 
-
-Numerous directions have been investigated to build compact and cost-effective neural networks, for example \citet{gupta2015deep,micikevicius2018mixed} have proposed to represent weights with limited numerical precision to reduce training time and memory requirements.
-They used half-precision floating-point format instead of single-precision floating-point format which uses 32 bits of computer memory.
-In the same direction, \citet{courbariaux2015binaryconnect} have proposed a method to train neural networks with binary weights.
-
-An important idea in model compression proposed by~\citet{bucilua2006model}, is based on the observation that the model used for training is not required to be the same as the one used for inference, indeed, compressed models after training can be deployed on smartphones or IoT devices.
-Based on this idea, multiple post-processing techniques have been developed: a quantization procedure which consists in converting the weights into a binary or integer formats \emph{after} the training phase~\cite{mellempudi2017ternary,rastegariECCV16}, pruning techniques~\cite{dai2018compressing,han2015deep,lin2017runtime} or sparsity regularizers~\cite{collins2014memory,dai2018compressing,liu2015sparse} which consists in removing redundant weights after training and taking advantage of the sparse structure of the weights matrices.
-Sparse neural networks have also been extensively studied since the \emph{Lottery Ticket Hypothesis} proposed by \citet{frankle2018lottery}.
-This hypothesis states that it exists a sparse subnetwork of dense neural network that when trained in isolation can match the test accuracy of the original dense network after training for at most the same number of iterations. 
-This hypothesis led to a series of works on sparse neural networks \cite{zhou2019deconstructing,malach2019proving,evci2020rigging}.
-Moreover, \citet{ba2014deep} have empirically demonstrated that shallow neural networks can learn the complex functions previously learned by another deep neural networks.
-This result led \citet{hinton2015distilling} to propose a technique called \emph{model distillation} which consists in training a large complex model using all the available data and resources to be as accurate as possible, then a smaller and more compact model is trained to approximate the first model.
-Although interesting for deployment purposes, this approach still requires to train one large network and one shallow, which entails a significant training cost.
-More recently, \citet{zoph2018learning,real2019regularized} have designed algorithms that automatically tune the width and depth of neural network architectures to obtain the best trade-off between compactness and accuracy.
-With this approach, \citet{tan2019efficientnet} found a new compound scaling method that uniformly scales network width and depth leading to efficient and compact architectures.
-
-Finally, in the context of deep learning, compact representations have gained much attention over the past years as a way to compress models or to reduce memory requirements.
-In this thesis, we focus on building compact neural networks with structured matrices.
-Hereafter, we present a comprehensive overview of the existing techniques in this line of research.
 
 
 
@@ -238,7 +219,7 @@ Bellow a description of known matrix structured:
   % \item \textbf{Block Circulant matrix}: A block circulant matrix is a matrix in which each block is repeated identically along diagonals (like block Toeplitz matrices) and each ``row of blocks'' is cyclic right shift of the previous one.
   \item \textbf{Vandermonde matrix}: A Vandermonde matrix, named after Alexandre-Théophile Vandermonde, is a matrix with the terms of a geometric progression in each row.  
     A very important special case is the complex matrix associated with the Discrete Fourier transform (DFT) presented in \Cref{definition:ch2-fourier_matrix} which has Vandermonde structure.
-  \item \textbf{Cauchy matrix}: A Cauchy matrix, named after Augustin Louis Cauchy, is a $m \times n$ matrix with elements $a_{ij}$ such that $a_{ij} = (\uvec_i - \vvec_j)^{-1}$ with $\uvec_i - \vvec_j \neq 0$, $i \in [m-1]_0$ and $j \in [n-1]_0$.
+  \item \textbf{Cauchy matrix}: A Cauchy matrix, named after Augustin Louis Cauchy, is a $m \times n$ matrix with elements $a_{ij}$ such that $a_{ij} = (\uvec_i - \vvec_j)^{-1}$ with $\uvec_i - \vvec_j \neq 0$, $i \in \{0,\dots,m-1\}$ and $j \in \{0,\dots,n-1\}$.
 \end{itemize}
 \Cref{figure:ch3-example_structure_matrices} shows the representation of the parameters sharing of Toeplitz, Vandermonde and Cauchy matrices.
 These matrices can be unified into a framework with the notion of \emph{Low Displacement Rank} (LDR).
@@ -264,26 +245,28 @@ More formally, we can define two displacement operators (for simplification, we 
     \multicolumn{2}{c|}{\textbf{Operator Matrices}} & \textbf{Class of structured} & \textbf{Rank of } \\
     \textbf{A} & \textbf{B} & \textbf{matrices M} & $\triangleopdown_{\Amat, \Bmat}(\Mmat)$ \\
     \midrule
-    $\Cmat_1$                & $\Cmat_0$                & Toeplitz               & $\leq 2$ \\
-    $\Cmat_1$                & $\Cmat_0^\top$           & Hankel                 & $\leq 2$ \\
-    % $\Cmat_0 + \Cmat_0^\top$ & $\Cmat_0 + \Cmat_0^\top$ & Toeplitz + Hankel      & $\leq 4$ \\
-    $\diag(\vvec)$           & $\Cmat_0$                & Vandermonde            & $\leq 1$ \\
-    % $\Cmat_0$                & $\diag(\vvec)$           & Inverse of Vandermonde & $\leq 1$ \\
+    $\Zmat_1$                & $\Zmat_0$                & Toeplitz               & $\leq 2$ \\
+    $\Zmat_1$                & $\Zmat_0^\top$           & Hankel                 & $\leq 2$ \\
+    $\Zmat_0 + \Zmat_0^\top$ & $\Zmat_0 + \Zmat_0^\top$ & Toeplitz + Hankel      & $\leq 4$ \\
+    $\diag(\vvec)$           & $\Zmat_0$                & Vandermonde            & $\leq 1$ \\
+    $\Zmat_0$                & $\diag(\vvec)$           & Inverse of Vandermonde & $\leq 1$ \\
     $\diag(\uvec)$           & $\diag(\vvec)$           & Cauchy                 & $\leq 1$ \\
-    % $\diag(\vvec)$           & $\diag(\uvec)$           & Inverse of Cauchy      & $\leq 1$ \\
+    $\diag(\vvec)$           & $\diag(\uvec)$           & Inverse of Cauchy      & $\leq 1$ \\
     \bottomrule
   \end{tabular}
   }
   \caption{Displacing Matrices Associated with Families of Structured Matrices \cite{pan2001structured}}
   \label{table:ch2-displacing_matrices}
+  \vspace{0.5cm}
 \end{table}
+
 \noindent
 Based on this definition, we can then say that, if $\Mmat$ is Toeplitz, it exists operator matrices $\Amat$ and $\Bmat$ such that $\triangleopdown_{\Amat, \Bmat} (\Mmat)$ or $\triangleopup_{\Amat, \Bmat} (\Mmat)$ is low rank.
-In particular, $\Amat$ and $\Bmat$ can be chosen to be diagonal or $f$-unit-circulant matrices for several classes of structured matrices.
+In particular, $\Amat$ and $\Bmat$ can be chosen to be diagonal or $f$-unit-circulant matrices (\eg \Cref{definition:ch2-f_circulant_matrix}) for several classes of structured matrices.
 \Cref{table:ch2-displacing_matrices} shows some specific choices of operators for the four basic classes of structured matrices and for some related matrices.
 An important result allows us to express structured matrices with low-displacement rank directly as a function of its low displacement generators.  
 For the Stein type displacement operator, we have the following result:
-\begin{theorem}[Krylov Decomposition~\citet{pan2003inversion,sindhwani2015structured}] ~\\
+\begin{theorem}[Krylov Decomposition~\citet{pan2003inversion,sindhwani2015structured}]
   If an $n \times n$ matrix $\Mmat$ is such that $\triangleopup_{\Amat, \Bmat}(\Mmat) = \Gmat \Hmat^\top$ where 
   $\Gmat = (\gvec^{(1)} \ldots \gvec^{(r)}), \Hmat = (\hvec^{(1)} \ldots \hvec^{(r)}) \in \Rbb^{n \times r}$ 
   and the operator matrices satisfy: $\Amat^n = a \Imat$, $\Bmat^n = b \Imat$ for some scalars $a, b$, then $\Mmat$ can be expressed as: 
@@ -341,6 +324,45 @@ Then, as acknowledged by the authors, the number of parameters required to repre
 More recently, another type of generalization of structured linear maps has been proposed by~\citet{dao2020kaleidoscope} and used in the context of deep neural networks.
 They introduced a family of matrices called \emph{kaleidoscope matrices} (K-matrices) that capture any sparse matrix with near-optimal space (parameter) and time (arithmetic operation) complexity.
 More precisely, their representation is based on products of a particular building block known as a butterfly matrix~\cite{parker1995random,dao2019learning}.
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Other Approaches for Building Compact Neural Networks}
+\label{subsection:ch3-other_approaches_for_building_compact_neural_networks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Numerous other directions have been investigated to build compact and cost-effective neural networks, for example \citet{gupta2015deep,micikevicius2018mixed} have proposed to represent weights with limited numerical precision to reduce training time and memory requirements.
+They used half-precision floating-point format instead of single-precision floating-point format which uses 32 bits of computer memory.
+In the same direction, \citet{courbariaux2015binaryconnect} have proposed a method to train neural networks with binary weights.
+
+An important idea in model compression proposed by~\citet{bucilua2006model}, is based on the observation that the model used for training is not required to be the same as the one used for inference, indeed, compressed models after training can be deployed on smartphones or IoT devices.
+Based on this idea, multiple post-processing techniques have been developed: a quantization procedure which consists in converting the weights into a binary or integer formats \emph{after} the training phase~\cite{mellempudi2017ternary,rastegariECCV16}, pruning techniques~\cite{dai2018compressing,han2015deep,lin2017runtime} or sparsity regularizers~\cite{collins2014memory,dai2018compressing,liu2015sparse} which consists in removing redundant weights after training and taking advantage of the sparse structure of the weight matrices.
+
+Sparse neural networks have also been extensively studied since the seminal paper of \citet{frankle2018lottery} in which he proposes the \emph{Lottery Ticket Hypothesis}. 
+This hypothesis states that it exists a sparse subnetwork of dense neural network that when trained in isolation can match the test accuracy of the original dense network after training for at most the same number of iterations. 
+This hypothesis led to a series of works on sparse neural networks \cite{zhou2019deconstructing,malach2019proving,evci2020rigging}.
+Moreover, \citet{ba2014deep} have empirically demonstrated that shallow neural networks can learn the complex functions previously learned by another deep neural networks.
+This result led \citet{hinton2015distilling} to propose a technique called \emph{model distillation} which consists in training a large complex model using all the available data and resources to be as accurate as possible, then a smaller and more compact model is trained to approximate the first model.
+Although interesting for deployment purposes, this approach still requires to train one large network and one shallow, which entails a significant training cost.
+More recently, \citet{zoph2018learning,real2019regularized} have designed algorithms that automatically tune the width and depth of neural network architectures to obtain the best trade-off between compactness and accuracy.
+With this approach, \citet{tan2019efficientnet} found a new compound scaling method that uniformly scales network width and depth leading to efficient and compact architectures.
+
+Finally, in the context of deep learning, compact representations have gained much attention over the past years as a way to compress models or to reduce memory requirements.
+In this thesis, we focus on building compact neural networks with structured matrices.
+Hereafter, we present a comprehensive overview of the existing techniques in this line of research.
+
+
+
+
+
+
+
+
+
 
 
 
@@ -439,7 +461,7 @@ The structured matrices below are a class of structured matrices that have a dif
   \item \textbf{Doubly-Block Toeplitz matrix}: A doubly-block Toeplitz matrix is a block Toeplitz matrix in which each block is itself a Toeplitz matrix.
   \item \textbf{Vandermonde matrix}: A Vandermonde matrix, named after Alexandre-Théophile Vandermonde, is a matrix with the terms of a geometric progression in each row.  
     A very important special case is the complex matrix associated with the Discrete Fourier transform (DFT) presented in \Cref{definition:ch2-fourier_matrix} which has Vandermonde structure.
-  \item \textbf{Cauchy matrix}: A Cauchy matrix, named after Augustin Louis Cauchy, is a $m \times n$ with elements $a_{ij}$ such that $a_{ij} = (\uvec_i - \vvec_j)^{-1}$ with $\uvec_i - \vvec_j \neq 0$, $i \in [m-1]_0$ and $j \in [n-1]_0$.
+  \item \textbf{Cauchy matrix}: A Cauchy matrix, named after Augustin Louis Cauchy, is a $m \times n$ with elements $a_{ij}$ such that $a_{ij} = (\uvec_i - \vvec_j)^{-1}$ with $\uvec_i - \vvec_j \neq 0$, $i \in \{0,\dots,m-1\}$ and $j \in \{0,\dots,n-1\}$.
 \end{itemize}
 \Cref{figure:ch3-example_structure_matrices} shows the representation of the parameters sharing of Toeplitz, Vandermonde and Cauchy matrices.
 

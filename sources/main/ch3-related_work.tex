@@ -4,9 +4,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \localtoc
 
+
 This thesis makes contributions on building compact and robust neural networks with help from Toeplitz matrix theory.
-This chapter aims at presenting related techniques and works on how to build compact and robust neural networks. 
-Given that the scope of concurrent techniques is large, we choose to focus mainly on works which uses linear algebra tools and more particularly structured matrices.
+This chapter, divided in two parts, aims at presenting an overview on current works related to our contributions.
+First, we present the current methods to build compact neural networks.  
+Given that the scope of current techniques is large, we choose to focus mainly on works which uses tools from linear algebra and more particularly structured matrices.
+
+Our second contribution focus on build robust neural networks by regularizing the Lipschitz constant of neural networks.
+The second part of this chapter present current methods for regularizing this constant that aim to improving the robust of neural networks.
+We omit methods that are orthogonal to our approach for clarity and conciseness.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Related Work on Compact Neural Networks}
@@ -25,15 +32,12 @@ Given that the scope of concurrent techniques is large, we choose to focus mainl
 \label{section:ch3-position_of_the_contribution_regarding_the_state-of-the-art}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todotext{complete}
-
-In the previous sections, we have shown current methods and techniques for designing compact neural networks with structured matrices. 
+In the first section, we have shown current methods and techniques for designing compact neural networks with structured matrices. 
 Our contributions on \emph{Deep Diagonal Circulant Neural Networks} are a direct follow-up to the work of~\citet{cheng2015exploration,sindhwani2015structured,moczulski2016acdc,thomas2018learning} focusing on compact neural networks with \emph{structured matrices}.
 More precisely, we extend the work of \citet{moczulski2016acdc} by training \emph{fully structured networks} (\ie, networks with structured layers only) hence demonstrating that diagonal circulant layers are able to model complex relations between inputs and outputs.
 Although, this diagonal circulant layers fit in the low displacement rank framework, we demonstrate much better performances in practice.
 Indeed, thanks to a solid theoretical analysis and thorough experiments, we were able to train deep (up to 40 layers) circulant neural networks, and apply, for the first time, this structured architecture in the context of large-scale video classification.
 This contrasts with previous experiments in which only one or a few dense layers were replaced inside a large redundant network such as VGG~\cite{simonyan2014very}.
-% To the best of our knowledge, this is the first time such networks can be trained.  
 
 % The first one considers the use of specific memory representation as well as efficient data structures.
 % This technique is interesting and has the advantage to be applicable to any neural networks, therefore is complementary to other methods.
@@ -46,36 +50,42 @@ This contrasts with previous experiments in which only one or a few dense layers
 
 
 
-\comment{
 
-A popular technique for approximating the maximal singular value of a matrix is the power method~\cite{golub2000eigenvalue}, an iterative algorithm which yields a good approximation of the maximum singular value when the algorithm is able to run for a sufficient number of iterations.
-
-\citet{yoshida2017spectral, miyato2018spectral} have used the power method to normalize the spectral norm of each layer of a neural network, and showed that the resulting models offered improved generalization performance and generated better examples when they were used in the context of GANs. 
-\citealt{farnia2018generalizable} built upon the work of ~\citet{miyato2018spectral} and proposed a power method specific for convolutional layers that uses the deconvolution operation and avoid the computation of the gradient.
-They used it in combination with adversarial training. 
-In the same vein, \citet{gouk2018regularisation} demonstrated that regularized neural networks using the power method also offered improvements over their non-regularized counterparts. 
-Furthermore, \citet{tsuzuku2018lipschitz} have shown that a neural network can be more robust to some adversarial attacks,  if the prediction margin of the network (\ie, the difference between the first and the second maximum logit) is higher than a minimum threshold that depends on the global Lipschitz constant of the network.
-Building on this observation, they use the power method to compute an upper bound on the global Lipschitz constant, and maximize the prediction margin during training.
-Finally, \citet{scaman2018lipschitz} have used automatic differentiation combined with the power method to compute a tighter bound on the global Lipschitz constant of neural networks.
+In the second section of this chapter, we have presented current methods for regularizing the Lipschitz constant of neural networks with the aim to improve their robustness against adversarial attacks.
+We have shown that the power method~\cite{golub2000eigenvalue} is a popular technique for approximating the maximal singular value of a matrix.
+Multiple works in deep learning use this method in a wide variety of settings, for example, robustness \cite{farnia2018generalizable,tsuzuku2018lipschitz}, generalization~\cite{yoshida2017spectral,gouk2018regularisation} or to stabilize the training of Generative Adversarial Networks (GANs) \cite{miyato2018spectral}.
 Despite a number of interesting results, using the power method is expensive and results in prohibitive training times. 
-
 Other approaches to regularize the Lipschitz constant of neural networks have been proposed by~\citet{sedghi2018singular} and ~\citet{singla2019bounding}.
-The method of~\citet{sedghi2018singular} exploits the properties of circulant matrices to approximate the maximal singular value of a convolutional layer.
-Although interesting, this method results in a loose approximation of the maximal singular value of a convolutional layer.
-Furthermore, the complexity of their algorithm is dependent on the convolution input which can be high for large datasets such as ImageNet.
-More recently, \citet{singla2019bounding} have successfully bounded the operator norm of the Jacobian matrix of a convolution layer by the Frobenius norm of the reshaped kernel.
-This technique has the advantage to be very fast to compute and to be independent of the input size but it also results in a loose approximation. 
+The method of~\citet{sedghi2018singular,singla2019bounding} exploits the properties of circulant matrices to approximate the maximal singular value of a convolutional layer.
+Although interesting, theses method results in a loose approximation of the maximal singular value of a convolutional layer.
+Our work is positioned at the intersection between these works, we will show that a new approach for regularizing the Lipschitz constant of neural networks is more efficient than the power method and more accurate than methods based on the structure of convolutions.
 
 
-To build robust neural networks, \citet{cisse2017parseval} and ~\citet{li2019preventing} have proposed to constrain the Lipschitz constant of neural networks by using orthogonal convolutions.
-\citet{cisse2017parseval} use the concept of \emph{parseval tight frames}, to constrain their networks.
-\citet{li2019preventing} built upon the work of~\citet{cisse2017parseval} to propose an efficient construction method of orthogonal convolutions.  
-Also, recent work~\cite{fazlyab2019efficient,latorre2020lipschitz} has proposed a tight bound on the Lipschitz constant of the full network with the use of semi-definite programming.
-These works are theoretically interesting but lack scalability (\ie, the bound can only be computed on small networks).
+% A popular technique for approximating the maximal singular value of a matrix is the power method~\cite{golub2000eigenvalue}, an iterative algorithm which yields a good approximation of the maximum singular value when the algorithm is able to run for a sufficient number of iterations.
+%
+% \citet{yoshida2017spectral, miyato2018spectral} have used the power method to normalize the spectral norm of each layer of a neural network, and showed that the resulting models offered improved generalization performance and generated better examples when they were used in the context of GANs. 
+% \citealt{farnia2018generalizable} built upon the work of ~\citet{miyato2018spectral} and proposed a power method specific for convolutional layers that uses the deconvolution operation and avoid the computation of the gradient.
+% They used it in combination with adversarial training. 
+% In the same vein, \citet{gouk2018regularisation} demonstrated that regularized neural networks using the power method also offered improvements over their non-regularized counterparts. 
+% Furthermore, \citet{tsuzuku2018lipschitz} have shown that a neural network can be more robust to some adversarial attacks,  if the prediction margin of the network (\ie, the difference between the first and the second maximum logit) is higher than a minimum threshold that depends on the global Lipschitz constant of the network.
+% Building on this observation, they use the power method to compute an upper bound on the global Lipschitz constant, and maximize the prediction margin during training.
+% Finally, \citet{scaman2018lipschitz} have used automatic differentiation combined with the power method to compute a tighter bound on the global Lipschitz constant of neural networks.
+% Despite a number of interesting results, using the power method is expensive and results in prohibitive training times. 
+%
+% Other approaches to regularize the Lipschitz constant of neural networks have been proposed by~\citet{sedghi2018singular} and ~\citet{singla2019bounding}.
+% The method of~\citet{sedghi2018singular} exploits the properties of circulant matrices to approximate the maximal singular value of a convolutional layer.
+% Although interesting, this method results in a loose approximation of the maximal singular value of a convolutional layer.
+% Furthermore, the complexity of their algorithm is dependent on the convolution input which can be high for large datasets such as ImageNet.
+% More recently, \citet{singla2019bounding} have successfully bounded the operator norm of the Jacobian matrix of a convolution layer by the Frobenius norm of the reshaped kernel.
+% This technique has the advantage to be very fast to compute and to be independent of the input size but it also results in a loose approximation. 
+%
+% To build robust neural networks, \citet{cisse2017parseval} and ~\citet{li2019preventing} have proposed to constrain the Lipschitz constant of neural networks by using orthogonal convolutions.
+% \citet{cisse2017parseval} use the concept of \emph{parseval tight frames}, to constrain their networks.
+% \citet{li2019preventing} built upon the work of~\citet{cisse2017parseval} to propose an efficient construction method of orthogonal convolutions.  
+% Also, recent work~\cite{fazlyab2019efficient,latorre2020lipschitz} has proposed a tight bound on the Lipschitz constant of the full network with the use of semi-definite programming.
+% These works are theoretically interesting but lack scalability (\ie, the bound can only be computed on small networks).
+%
+% Finally, in parallel to the development of the results in this paper, we discovered that \citet{yi2020asymptotic} have studied the asymptotic distribution of the singular values of convolutional layers by using a related approach. However, this author does not investigate the robustness applications of Lipschitz regularization.
 
-Finally, in parallel to the development of the results in this paper, we discovered that \citet{yi2020asymptotic} have studied the asymptotic distribution of the singular values of convolutional layers by using a related approach. However, this author does not investigate the robustness applications of Lipschitz regularization.
 
-
-
-}
 
