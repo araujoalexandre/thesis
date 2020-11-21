@@ -342,7 +342,7 @@ The generic approach for minimizing the empirical risk in \Cref{equation:ch2-erm
 % Instead, a common approach is to used the softmax activation function as the last non-linear activation $\act_d$ with the cross-entropy loss function and estimate the parameters with \emph{maximum likelihood}~\cite{hastie2009elements}.
 % The softmax activation function, $\act_d: \Rbb^k \rightarrow [0, 1]^k$, is defined as follows:
 % \begin{equation}
-%   \leftmat \act_d(\xvec) \rightmat_i = \frac{e^{\xvec_i}}{\sum_{j=0}^{k-1} e^{\xvec_j}}, \quad \forall i \in [k-1]_0
+%   \leftmat \act_d(\xvec) \rightmat_i = \frac{e^{\xvec_i}}{\sum_{j=0}^{k-1} e^{\xvec_j}}, \quad \forall i \in [0,k-1]
 % \end{equation}
 % The generic approach for minimizing the empirical risk in \Cref{equation:ch2-erm_neural_network} is by \emph{gradient descent} with the \emph{backpropgation} algorithm ~\cite{rumelhart1986learning} which consists of computing the gradient with the help of the chain-rule.
 
@@ -466,9 +466,9 @@ However, it has been shown that such neural networks are vulnerable to \emph{adv
 Because it is difficult to characterize the space of visually imperceptible variations of a natural image, existing adversarial attacks use $\ell_p$ norms as surrogates measure.
 We can formally define an adversarial example as follows:
 \begin{definition}[Adversarial Pertubation]
-  Given a dataset $\mathcal{S} = \mathcal{X} \times \mathcal{Y}$, a pair $(\xvec, y) \sim \mathcal{S}$ and a trained neural network $\nn_\weights$ on $\mathcal{S}$ such that $\argmax_{i \in [k-1]_0} \{ \nn_\weights(\xvec)_i \} = y$, let $\adv \in \mathcal{X}$ be an adversarial perturbation such that:
+  Given a dataset $\mathcal{S} = \mathcal{X} \times \mathcal{Y}$, a pair $(\xvec, y) \sim \mathcal{S}$ and a trained neural network $\nn_\weights$ on $\mathcal{S}$ such that $\argmax_{i \in [0,k-1]} \{ \nn_\weights(\xvec)_i \} = y$, let $\adv \in \mathcal{X}$ be an adversarial perturbation such that:
   \begin{align}
-    &\argmax_{i \in [k-1]_0} \{ \nn_\weights (\xvec + \adv)_i \} \neq y \\
+    &\argmax_{i \in [0,k-1]} \{ \nn_\weights (\xvec + \adv)_i \} \neq y \\
     \st\ &\norm{\adv}_p \leq \epsilon \notag
   \end{align}
   where $\epsilon$ is a small value defined by the attacker. 
@@ -672,7 +672,7 @@ Because:
 Circulant matrices are a special case of Toeplitz matrices.
 In addition to having constant diagonals, each row of a circulant matrix is a cyclic right shift of the previous one.
 % Circulant matrices have been used to efficiently solve linear systems~\cite{golub1996matrix} and years later were used to perform dimensionality reduction~\cite{hinrichs2011johnson,vybiral2011variant}, binary embedding~\cite{yu2014circulant} and kernel approximation~\cite{yu2015compact} in the context of pattern recognition and machine learning.
-An $n \times n$ circulant matrix $\Cmat$ is fully determined by a sequence of scalars $\{c_h\}_{h \in [n-1]_0}$ as follows:
+An $n \times n$ circulant matrix $\Cmat$ is fully determined by a sequence of scalars $\{c_h\}_{h \in [0,n-1]}$ as follows:
 
 \begin{equation}
   \Cmat =
@@ -686,7 +686,7 @@ An $n \times n$ circulant matrix $\Cmat$ is fully determined by a sequence of sc
   \rightmatrix
 \end{equation}
 
-Because the circulant matrix $\Cmat$ is fully determined by the sequence $\{c_h\}_{h \in [n-1]_0}$, it can be compactly represented in memory using only $n$ values instead of $n^2$.
+Because the circulant matrix $\Cmat$ is fully determined by the sequence $\{c_h\}_{h \in [0,n-1]}$, it can be compactly represented in memory using only $n$ values instead of $n^2$.
 Circulant matrices can also be characterized by noting that the $(k,j)$ entry of $\Cmat$, $\leftmat \Cmat \rightmat_{j,k}$ is given by
 \begin{equation}
   \leftmat \Cmat \rightmat_{j,k} = c_{\left(k-j\right) \mod n} \enspace.
@@ -729,7 +729,7 @@ The complexity is reduced from from $\mathcal{O}(n^2)$ to $\mathcal{O}(n \log n)
     \Cmat = \frac{1}{n} \Umat_n^* \diag(\Umat_n \cvec) \Umat_n
     \label{equation:ch2-diagonalization_circulant_matrix}
   \end{equation}
-  where $\cvec$ is vector based of the scalars $\{c_h\}_{h \in [n-1]_0}$.
+  where $\cvec$ is vector based of the scalars $\{c_h\}_{h \in [0,n-1]}$.
   In particular all circulant matrices share the same eigenvectors, the same matrix $\Umat_n$ works for all $n \times n$ circulant matrices.
   Also, if $\Cmat$ and $\Bmat$ are circulant matrices then $\Cmat$ and $\Bmat$ commute and $\Cmat + \Bmat$ is also a circulant matrix.
   \label{theorem:ch2-diagonalization_circulant_matrix}
@@ -879,7 +879,7 @@ A block Toeplitz matrix is a matrix in which each block is repeated identically 
 Equivalently, a block circulant matrix is a matrix in which each block is repeated identically along diagonals (like block Toeplitz matrices) and each ``row of blocks'' is cyclic right shift of the previous one.
 We show that block Toeplitz and block circulant matrices have similar properties that Toeplitz and circulant matrices.
 
-A $nm\times nm$ block circulant matrix $\Amat$ is fully determined by a sequence of blocks $\{\Amat_h\}_{h \in [n-1]_0}$ and where each block $\Amat_h$ is an $m \times m$ matrix.
+A $nm\times nm$ block circulant matrix $\Amat$ is fully determined by a sequence of blocks $\{\Amat_h\}_{h \in [0,n-1]}$ and where each block $\Amat_h$ is an $m \times m$ matrix.
 The circulant matrix $\Amat$ has the following form:
 \begin{equation}
   \Amat = \leftmat \Amat_{(k-j) \mod n} \rightmat_{i, j = 0}^{n-1} = 
@@ -906,11 +906,12 @@ The circulant matrix $\Amat$ has the following form:
 In a similar way to circulant matrices, block circulant matrices have a relation with the Discrete Fourier Transform.
 The next result characterizes this relation:
 \begin{theorem}[Lemma 5.1 of \citet{gutierrez2012block}]
-  Let $\Amat$ be a $nm\times nm$ block circulant matrix defined by the sequence of blocks $\{\Amat_h\}_{h \in [n-1]_0}$, then:
+  Let $\Amat$ be a $nm\times nm$ block circulant matrix defined by the sequence of blocks $\{\Amat_h\}_{h \in [0,n-1]}$, then:
   \begin{equation}
     \Amat = (\Umat_n \otimes \Imat_n) \diag(\Psi_0, \dots, \Psi_{n-1}) (\Umat_n \otimes \Imat_n)^*
   \end{equation}
-  where $\otimes$ is the Kronecker product, $\Umat_n$ is the Fourier matrix of size $n$ and
+  where $\otimes$ is the Kronecker product, $\Umat_n$ is the Fourier matrix of size $n \times n$ and
+
   \begin{equation}
     \leftmatrix
       \Psi_{0} \\
@@ -929,6 +930,13 @@ The next result characterizes this relation:
 \end{theorem}
 \noindent
 One can remark that when the blocks are of size $1\times1$ \ie, scalar, this theorem coincide with \Cref{equation:ch2-diagonalization_circulant_matrix} of \Cref{theorem:ch2-diagonalization_circulant_matrix}.
+Another interesting special case is when the blocks of the block circulant matrix are also circulant, such matrix are called doubly-block circulant matrices.
+In this case, we have the following result:
+
+\begin{theorem}[Section 5.5 of \citet{jain1989fundamentals}] 
+  The eigenvectors of every $n^2 \times n^2$ doubly-block circulant matrices are the columns of the matrix $\frac{1}{n} \left( \Umat_n \otimes \Umat_n \right)$.
+  \label{theorem:ch2-diaginalization_doubly_block_circulant_matrix}
+\end{theorem}
 
 
 In a similar way as Toeplitz matrices, block Toeplitz matrices can be expressed with the Toeplitz operator defined in \Cref{equation:ch2-toeplitz_operator}.
