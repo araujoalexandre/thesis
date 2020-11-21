@@ -262,10 +262,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+% maybe use nobreak to prevent theorem to be on multiple pages
+% mdframed={
+%   nobreak=true,
+%   topline=false,
+%   bottomline=false,
+%   rightline=false,
+%   leftline=false,
+%   linewidth=0pt,
+%   backgroundcolor=white,
+%   innerleftmargin=0pt,
+%   innerrightmargin=0pt,
+% }
+
 
 \declaretheoremstyle[
-  % headfont=\color{mydarkblue}\sffamily\bfseries,
-  % notefont=\mdseries, notebraces={(}{)},
   spaceabove=6pt, spacebelow=6pt,
   bodyfont=\itshape,
   postheadspace=1em,
@@ -273,8 +284,6 @@
 ]{style}
 
 \declaretheoremstyle[
-  % headfont=\color{mydarkblue}\sffamily\bfseries,
-  % notefont=\mdseries, notebraces={(}{)},
   spaceabove=6pt, spacebelow=6pt,
   bodyfont=\itshape,
   postheadspace=1em,
@@ -284,11 +293,9 @@
     rulewidth=2pt,
     bgcolor=white,
     padding=0.02\textwidth,
-    textwidth=0.96\textwidth}
+    textwidth=0.96\textwidth},
 ]{maintheoremstyle}
 
-% \AtBeginEnvironment{teo}{\begin{minipage}{\textwidth}}
-% \AtEndEnvironment{teo}{\end{minipage}}
 
 \declaretheorem[
   numberwithin=chapter,
@@ -554,8 +561,8 @@
 \newcommand{\krylov}      {\ensuremath \mathrm{krylov}}
 \newcommand{\Cov}         {\ensuremath \mathrm{Cov}}
 \newcommand{\Var}         {\ensuremath \mathrm{Var}}
-\newcommand{\cin}         {\ensuremath \mathrm{cin}}
-\newcommand{\cout}        {\ensuremath \mathrm{cout}}
+\newcommand{\cin}         {\ensuremath c_{in}}
+\newcommand{\cout}        {\ensuremath c_{out}}
 
 
 \newcommand{\F}{\ensuremath \mathcal{F}}
