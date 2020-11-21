@@ -1,28 +1,33 @@
 
 
 \newglossaryentry{Natural numbers}{%
-  name        = {$\mathbb{N}$},
+  name        = {$\Nbb$},
   description = {The set of natural numbers},
 }
 
 \newglossaryentry{Real numbers}{%
-  name        = {$\mathbb{R}$},
-  description = {The set of real numbers},
+  name        = {$\Rbb, \Rbb^n, \Rbb^{n \times m}$},
+  description = {The set of real numbers, vectors and matrices},
 }
 
 \newglossaryentry{Complex numbers}{%
-  name        = {$\mathbb{C}$},
-  description = {The set of complex numbers},
+  name        = {$\Cbb, \Cbb^n, \Cbb^{n \times m}$},
+  description = {The set of complex numbers, vectors and matrices},
+}
+
+\newglossaryentry{Positive real numbers}{%
+  name        = {$\Rbb_+$},
+  description = {The set of positive real numbers},
 }
 
 \newglossaryentry{integer set}{%
   name        = {$[n]$},
-  description = {The set of natural numbers from $1$ to $n$},
+  description = {The set $\left\{ x \in \Nbb \mid 1 \leq x \leq b \right\}$},
 }
 
-\newglossaryentry{integer set with 0}{%
-  name        = {$[n]_0$},
-  description = {The set of numbers \{0, \dots, n\}},
+\newglossaryentry{real numbers interval}{%
+  name        = {$[a, b]$},
+  description = {The set $\left\{ x \in \Rbb \mid a \leq x \leq b \right\}$},
 }
 
 \newglossaryentry{imaginary number}{%
@@ -30,19 +35,14 @@
   description = {Imaginary number},
 }
 
-\newglossaryentry{real part}{%
-  name        = {$\mathfrak{R}(z)$},
-  description = {Real part of complex number z},
-}
-
-\newglossaryentry{imaginary part}{%
-  name        = {$\mathfrak{I}(z)$},
-  description = {Imaginary part of complex number z},
+\newglossaryentry{real part, imaginary part}{%
+  name        = {$\mathfrak{R}(z), \mathfrak{I}(z)$},
+  description = {Real part and imaginary part of complex number z},
 }
 
 \newglossaryentry{complex modulus}{%
-  name        = {$|z|$},
-  description = {Modulus of complex number z},
+  name        = {$|a + \ci b|$},
+  description = {Modulus of complex number $a + \ci b$, \ie, $|a + \ci b| = \sqrt{a^2 + b^2}$},
 }
 
 \newglossaryentry{indicators function}{%
@@ -60,24 +60,14 @@
   description = {Vector $\xvec$ of size $n$ with $\xvec_{i}$ entries},
 }
 
-\newglossaryentry{Transpose}{%
-  name        = {$\Mmat^\top$},
-  description = {Transpose of matrix $\Mmat$},
+\newglossaryentry{Transpose, Conjugate}{%
+  name        = {$\Mmat^\top, \Mmat^*$},
+  description = {Transpose and conjugate transpose of matrix $\Mmat$},
 }
 
-\newglossaryentry{Conjugate Transpose}{%
-  name        = {$\Mmat^*$},
-  description = {Conjugate transpose of matrix $\Mmat$},
-}
-
-\newglossaryentry{vector of ones}{%
-  name        = {$\onevec{n}$},
-  description = {\emph{n-}vector of ones},
-}
-
-\newglossaryentry{vector of zeros}{%
-  name        = {$\zerovec{n}$},
-  description = {\emph{n-}vector of zeros},
+\newglossaryentry{vector of ones, zero}{%
+  name        = {$\onevec{n}, \zerovec{n}$},
+  description = {\emph{n-}vector of ones and \emph{n-}vector of zeros},
 }
 
 \newglossaryentry{unit vector}{%
@@ -85,25 +75,15 @@
   description = {$i$-th unit vector in $\Rbb^n$}
 }
 
-\newglossaryentry{identity}{%
-  name        = {$\Imat_n$},
-  description = {Identity matrix of size $n \times n$},
-}
-
-\newglossaryentry{reflection}{%
-  name        = {$\Jmat_n$},
-  description = {Reflection matrix of size $n \times n$, $\Jmat^2 = \Imat$},
-}
-
-\newglossaryentry{symmetric_matrix}{%
-  name        = {$\mathbb{S}^n$},
-  description = {The set of all symmetric matrices of size $n \times n$},
+\newglossaryentry{identity, reflection}{%
+  name        = {$\Imat_n, \Jmat_n$},
+  description = {Identity and reflection matrix of size $n \times n$, \ie, $\Jmat^2 = \Imat$},
 }
 
 \newglossaryentry{discrete fourier transform}{%
   name        = {$\Umat_n$},
   description = {DFT matrix of size $n \times n$, \ie, 
-  $\Umat_n = \leftmatrix e^{-\frac{2 \pi \ci jk}{n}} \rightmatrix_{j,k = 0}^{n-1}$},
+  $\Umat_n = \leftmatrix e^{-(2 \pi \ci jk)/n} \rightmatrix_{j,k = 0}^{n-1}$},
 }
 
 \newglossaryentry{Vector p-norm}{%
