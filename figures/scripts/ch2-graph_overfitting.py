@@ -67,7 +67,7 @@ for i, clf in enumerate(classifiers):
     ax.set_xticks(())
     ax.set_yticks(())
 
-    plt.savefig('main/ch2-background/{}.pdf'.format(names[i]), format='pdf', dpi=300)
+    plt.savefig('../main/ch2-background/{}.pdf'.format(names[i]), format='pdf', dpi=300)
 
 
 

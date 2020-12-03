@@ -1,10 +1,19 @@
-
 import copy
 import numpy as np
 
+import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
-                               AutoMinorLocator)
+from matplotlib.ticker import MultipleLocator 
+
+font = {
+  'family': 'serif',
+  'serif': ['Computer Modern Roman'],
+}
+matplotlib.rc('text', usetex=True)
+matplotlib.rc('font', **font)
+matplotlib.rc('xtick', labelsize=12)
+matplotlib.rc('ytick', labelsize=12)
+
 
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
@@ -42,14 +51,15 @@ def plot_figures(x, data, locator, lim_and_ticks, function):
   ax.set_ylim(lim_and_ticks['ylim'])
   ax.set_xticks(lim_and_ticks['xticks'])
   ax.set_yticks(lim_and_ticks['yticks'])
-  if lim_and_ticks['yticklabels'] is not None:
-    ax.set_yticklabels(lim_and_ticks['yticklabels'])
+
+  ax.set_xticklabels(lim_and_ticks['xticklabels'])
+  ax.set_yticklabels(lim_and_ticks['yticklabels'])
+  
   ax.grid(which='major', linewidth=0.6, color='black', linestyle='-')
-  ax.grid(which='minor', linewidth=0.3, color='grey', linestyle='-')
-  ax.xaxis.set_tick_params(labelsize=12, zorder=10000)
-  ax.yaxis.set_tick_params(labelsize=12, zorder=10000)
-  ax.plot(x, data, linewidth=2)
-  plt.savefig('main/ch2-background/{}.pdf'.format(function), dpi=300, format='pdf')
+  ax.grid(which='minor', linewidth=0.3, color='gray', linestyle='-')
+  ax.plot(x, data, linewidth=2, color=(0.02, 0.40, 0.62))
+  plt.savefig(
+    '../main/ch2-background/{}.pdf'.format(function), dpi=300, format='pdf')
 
 
 
@@ -83,6 +93,7 @@ def main():
       'ylim': (-0.1, 1.1),
       'xticks': (-5, 5), 
       'yticks': (0, 0.5, 1),
+      'xticklabels': ['-5', '5'],
       'yticklabels': ['0', '0.5', '1']
     },
     "tanh": {
@@ -90,14 +101,16 @@ def main():
       'ylim': (-2.3, 2.3),
       'xticks': (-2, 0, 2),
       'yticks': (-2, 2),
-      'yticklabels': None
+      'xticklabels': ['-2', '0', '2'],
+      'yticklabels': ['-2', '2']
     },
     "relu": {
       'xlim': (-1.3, 1.3),
       'ylim': (-1.3, 1.3),
       'xticks': (-1, 0, 1),
       'yticks': (-1, 1),
-      'yticklabels': None
+      'xticklabels': ['-1', '0', '1'],
+      'yticklabels': ['-1', '1']
     }
   }
 
