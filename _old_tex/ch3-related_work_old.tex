@@ -318,7 +318,7 @@ Later, the \emph{Structured Spinners} transform of the form: $\Hmat\Dmat_3\Hmat\
 
 % diagonalization of circulant matrix \cite{davis1979circulant}
 %
-% In addition, the matrix-vector product is simplified from $\mathcal{O}(n^2)$ to $\mathcal{O}(n \log n)$ using the convolution theorem.
+% In addition, the matrix-vector product is simplified from $\bigO(n^2)$ to $\bigO(n \log n)$ using the convolution theorem.
 
 % Because the circulant matrix $C \in \Rbb^{n\times n}$ is fully determined by the vector $c \in \Rbb^n$, the matrix $C$ can be compactly represented in memory using only $n$ real values instead of $n^2$.
 
@@ -329,7 +329,7 @@ Later, the \emph{Structured Spinners} transform of the form: $\Hmat\Dmat_3\Hmat\
 %   Cx \quad = \quad c \star x \quad = \quad \F^{-1}\left(\F(c) \times \F(x)\right)
 % \end{equation}
 % where $\F$ is the Fourier transform.
-% Because this operation can be simplified to a simple element wise vector multiplication, the matrix multiplication $Cx$ can be computed in $\mathcal{O}(n \log n)$ instead of $\mathcal{O}(n^2)$.
+% Because this operation can be simplified to a simple element wise vector multiplication, the matrix multiplication $Cx$ can be computed in $\bigO(n \log n)$ instead of $\bigO(n^2)$.
 
 % For example, $\Amat = \leftmat a_{j-i} \rightmat_{i,j \in \{0,\ldots,n-1\}}$ and $\Bmat = \leftmat \Bmat_{j-i} \rightmat_{i,j \in \{0,\ldots,n-1\}}$.
 
@@ -518,7 +518,7 @@ However, neural networks based on structured matrices (different than convolutio
 
 Our contributions on \emph{Deep Diagonal Circulant Neural Networks} are a direct follow-up to the work of~\citet{cheng2015exploration,sindhwani2015structured,moczulski2016acdc,thomas2018learning} focusing on compact neural networks with \emph{structured matrices}.
 Although, this diagonal circulant layers fit in the low displacement rank framework, we demonstrate much better performances in practice.
-Indeed, thanks to a solid theoretical analysis and thorough experiments, we were able to train deep (up to 40 layers) circulant neural networks (see Chapter~\ref{chapter:diagonal_circulant_neural_network}), and apply, for the first time, this structured architecture in the context of large-scale video classification (see Chapter~\ref{chapter:diagonal_circulant_neural_networks_for_video_classification}).
+Indeed, thanks to a solid theoretical analysis and thorough experiments, we were able to train deep (up to 40 layers) circulant neural networks (see Chapter~\ref{chapter:ch4-diagonal_circulant_neural_network}), and apply, for the first time, this structured architecture in the context of large-scale video classification (see Chapter~\ref{chapter:ch4-diagonal_circulant_neural_networks_for_video_classification}).
 Note that we are able to train \emph{fully structured networks} (\ie, networks with structured layers only) hence demonstrating that diagonal circulant layers are able to model complex relations between inputs and outputs.
 This contrasts with previous experiments in which only one or a few dense layers were replaced inside a large redundant network such as VGG~\cite{simonyan2014very}.
 To the best of our knowledge, this is the first time such networks can be trained.  

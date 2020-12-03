@@ -50,7 +50,7 @@ The most recent result from \citet{huhtanen2015factoring} demonstrates that any 
 The diagonal-circulant decomposition inspired \citet{moczulski2016acdc} to design the \emph{Structured Efficient Linear Layers} (SELL), which is the building block of DCNNs.
 
 This contribution is divided into two chapters.
-First, Chapter~\ref{chapter:diagonal_circulant_neural_network} answers the questions \textbf{Q1} and \textbf{Q2}.
+First, Chapter~\ref{chapter:ch4-diagonal_circulant_neural_network} answers the questions \textbf{Q1} and \textbf{Q2}.
 We provide an analysis of the expressivity of DCNNs and an extension of the results presented by \citet{huhtanen2015factoring}.
 More precisely, we introduce a new bound on the number of diagonal-circulant products required to approximate a matrix that depends on its rank.
 Building on this result, we demonstrate that a DCNN with bounded width and small depth can approximate any dense networks with ReLU activations.
@@ -59,7 +59,7 @@ We show that the number of non-linearities in the network has an important impac
 To facilitate the training, we provide a theoretically sound initialization procedure for DCNN which allows the signal to propagate through the network without vanishing nor exploding.
 These insights allow us to train, for the first time, large and deep DCNNs.
 
-Finally, Chapter~\ref{chapter:diagonal_circulant_neural_networks_for_video_classification} answers the question on the effectiveness of structured neural networks on a real-world use case;
+Finally, Chapter~\ref{chapter:ch4-diagonal_circulant_neural_networks_for_video_classification} answers the question on the effectiveness of structured neural networks on a real-world use case;
 we focus on the problem of large-scale video classification. 
 The top-3 most accurate approaches proposed during the first \yt\footnote{https://www.kaggle.com/c/youtube8m} video classification challenge  were all ensemble models~\cite{miech2017learnable,wang2017monkeytyping,li2017temporal}.
 Ensembles are accurate, but they are not ideal: their size makes them difficult to train, maintain and deploy, especially on mobile and IoT devices. 
