@@ -192,10 +192,10 @@ Hereafter, we review the two problems and some methods currently applied to addr
 
 % A neural network $f_{\Wmat,\Bmat} : \Rbb^m \rightarrow \Rbb^k$ can be defined as follows:
 % \begin{equation}
-%   f_{\Theta,\Bmat}(\xvec) \triangleq \phi_{\Wmat^{(L)}, \bvec^{(L)}} \circ \cdots \circ \phi_{\Wmat^{(1)}, \bvec^{(1)}}(\xvec)
+%   f_{\Theta,\Bmat}(\xvec) \triangleq \layer_{\Wmat^{(L)}, \bvec^{(L)}} \circ \cdots \circ \layer_{\Wmat^{(1)}, \bvec^{(1)}}(\xvec)
 %   \label{equation:ch1-neural_network}
 % \end{equation}
-% where $L$ corresponds to the \emph{depth} of the network (\ie, the number of layers), $\Theta$ is the set of weights matrices $\Theta \triangleq \left( \Wmat^{(1)}, \dots, \Wmat^{(L)} \right)$, $\Bmat$ is the set of bias vectors $\Bmat \triangleq \left( \bvec^{(1)}, \dots, \bvec^{(L)} \right)$ and the function $\phi_{\Wmat^{(i)},\bvec^{(i)}}$ is define by: $\phi_{\Wmat^{(i)},\bvec^{(i)}} \triangleq \rho\left(\Wmat^{(i)}\xvec + \bvec^{(i)}\right)$ where $\rho$ is a non-linear function.
+% where $L$ corresponds to the \emph{depth} of the network (\ie, the number of layers), $\Theta$ is the set of weights matrices $\Theta \triangleq \left( \Wmat^{(1)}, \dots, \Wmat^{(L)} \right)$, $\Bmat$ is the set of bias vectors $\Bmat \triangleq \left( \bvec^{(1)}, \dots, \bvec^{(L)} \right)$ and the function $\layer_{\Wmat^{(i)},\bvec^{(i)}}$ is define by: $\layer_{\Wmat^{(i)},\bvec^{(i)}} \triangleq \rho\left(\Wmat^{(i)}\xvec + \bvec^{(i)}\right)$ where $\rho$ is a non-linear function.
 % The input space $m$ corresponds to the dimension of the data and the output space $k$ corresponds to the number of classes the network has to classify.
 
 
