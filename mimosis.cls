@@ -209,7 +209,7 @@
 
 % Large number for chapter
 \renewcommand*{\chapterformat}{%
-  \fontsize{50}{55}\selectfont\chaptername~\thechapter\autodot\enskip
+  \fontsize{35.83}{35.83}\selectfont\chaptername~\thechapter\autodot\enskip
 }
 \renewcommand*{\sectionformat}{%
   \textcolor{mydarkblue}{\thesection}\autodot\enskip%
