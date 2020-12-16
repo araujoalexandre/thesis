@@ -41,6 +41,7 @@ Then, we have the following proposition:
     \mathcal{M}^{N}_{(\xvec, y)} \geq \sqrt{2} \lip{N} \norm{\adv}_2 \quad \Longrightarrow \quad \mathcal{M}^{N}_{(\xvec + \adv, y)} \geq 0
     \label{equation:ch3-margin_guarded_area}
   \end{equation}
+  \removespace
 \end{proposition}
 \noindent
 If the inequality on the right-hand side of \Cref{equation:ch3-margin_guarded_area} is verified then the adversarial margin is positive, \ie, the network correctly predicts the label. 
@@ -73,7 +74,7 @@ For example, \citet{scaman2018lipschitz} have shown that the Lipschitz constant 
   \lip{\nn} = \sup_{x \in \Rbb^n} \norm{\Wmat^{(p)} \diag(\rho'_\depth(\theta_\depth)) \dots \Wmat^{(2)} \diag(\rho'_1(\theta_1)) \Wmat^{(1)}}_2,
   \label{equation:ch3-decomposition_jacobian_lipschitz}
 \end{equation}
-where $\theta_i = \phi^{\act_i}_{\Wmat^{(i)}, \bvec^{(i)}} \circ \cdots \circ \phi^{\act_1}_{\Wmat^{(1)}, \bvec^{(1)}}(\xvec)$ is the intermediate output after $i$ layers.
+where $\theta_i = \layer^{\act_i}_{\Wmat^{(i)}, \bvec^{(i)}} \circ \cdots \circ \layer^{\act_1}_{\Wmat^{(1)}, \bvec^{(1)}}(\xvec)$ is the intermediate output after $i$ layers.
 The Lipschitz of neural network $N$ can then be upper bounded as follows:
 \begin{align}
   \lip{\nn} &\leq \max_{\forall i,\ \sigma_i \in [0, 1]^{w^{(i+1)}}} \norm{\Wmat^{(\depth)} \diag(\sigma_{\depth-1}) \dots \diag(\sigma_1) \Wmat^{(1)}}_2 \notag \\
@@ -134,11 +135,12 @@ The global Lipschitz of a neural network can easily be upper bound by the produc
 \end{proposition}
 
 \begin{remark}
-  The Lipschitz constant of a layer $\Phi_{\Wmat, \bvec}^\rho$ (with a 1-Lipschitz activation function) is equal to the spectral norm of the matrix $\Wmat$ (largest singular value).
-  Let $\Phi_{\Wmat, \bvec}^\rho: \Rbb^n \rightarrow \Rbb^m$ such that $\Phi_{\Wmat, \bvec}^\rho = \rho(\Wmat \xvec + \bvec)$ then by definition of the Lipschitz constant (\Cref{definition:ch3-lipschitz_constant}) and of the operator norm, we have:
+  The Lipschitz constant of a layer $\layer_{\Wmat, \bvec}^\rho$ (with a 1-Lipschitz activation function) is equal to the spectral norm of the matrix $\Wmat$ (largest singular value).
+  Let $\layer_{\Wmat, \bvec}^\rho: \Rbb^n \rightarrow \Rbb^m$ such that $\layer_{\Wmat, \bvec}^\rho = \rho(\Wmat \xvec + \bvec)$ then by definition of the Lipschitz constant (\Cref{definition:ch3-lipschitz_constant}) and of the operator norm, we have:
   \begin{equation}
-    \lip{\Phi_{\Wmat, \bvec}^\rho} = \sup_{\substack{\xvec \in \Rbb^n \\ \xvec \neq 0}} \frac{\norm{\Wmat \xvec}_2}{\norm{\xvec}_2} = \norm{\Wmat}_2
+    \lip{\layer_{\Wmat, \bvec}^\rho} = \sup_{\substack{\xvec \in \Rbb^n \\ \xvec \neq 0}} \frac{\norm{\Wmat \xvec}_2}{\norm{\xvec}_2} = \norm{\Wmat}_2
   \end{equation}
+  \removespace
 \end{remark}
 
 The trivial bound given by the product of layer-wise Lipschitz constants in \Cref{equation:ch3-naive_upper_bound_lipschitz} is known to be loose and pessimistic~\citet{combettes2019lipschitz}.
@@ -317,6 +319,7 @@ Finally, for multi-channel convolution, their method requires the computation of
   \begin{equation}
     \sigma(\Mmat) = \bigcup_{i, j = 0}^{n-1} \sigma \left(  \Pmat(i,j) \right).
   \end{equation}
+  \removespace
 \end{theorem}
 
 
@@ -328,12 +331,12 @@ Finally, for multi-channel convolution, their method requires the computation of
 
 In the same line of research, \citet{singla2019bounding} have used the properties of convolution to devised several bound on the singular values of convolution layers.
 Recall from \Cref{subsection:ch2-the_structure_of_the_convolution_operator} that a convolution kernel is a 4 dimensional tensor of size $\cout \times \cin \times k_1 \times k_2$.
-\citet{singla2019bounding} have demonstrated that the largest singular value (Lipschitz constant) of a convolutional layers $\Phi_\Kmat$ parameterized by a kernel $\Kmat$ can be upper-bound as follows:
+\citet{singla2019bounding} have demonstrated that the largest singular value (Lipschitz constant) of a convolutional layers $\layer_\Kmat$ parameterized by a kernel $\Kmat$ can be upper-bound as follows:
 
 \begin{theorem}[Reformulation of Theorem 1 of \citet{singla2019bounding}]
-  Let $\Kmat \in \Rbb^{\cout \times \cin \times k_1 \times k_2}$ be the kernel of a convolutional layer $\Phi_\Kmat$ then,  
+  Let $\Kmat \in \Rbb^{\cout \times \cin \times k_1 \times k_2}$ be the kernel of a convolutional layer $\layer_\Kmat$ then,  
   \begin{equation}
-    \lip{\Phi_\Kmat} \leq \min \left\{ \sqrt{k_1 k_2} \norm{\Rmat}_2, \sqrt{k_2 k_2} \norm{\Smat}_2 \right\}
+    \lip{\layer_\Kmat} \leq \min \left\{ \sqrt{k_1 k_2} \norm{\Rmat}_2, \sqrt{k_2 k_2} \norm{\Smat}_2 \right\}
   \end{equation}
   where $\Rmat$ and $\Smat$ are matrices of size $k_1 \cout \times k_2 \cin$ and $k_2 \cout \times k_1 \cin$ respectively and are a `reshape' of the tensor kernel $\Kmat$.
 \end{theorem}

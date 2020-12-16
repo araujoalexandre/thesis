@@ -1,5 +1,4 @@
 
-
 % In this chapter, we review the literature on techniques for building compact neural networks.
 % First of all, we present, in detail, related work which uses tools from linear algebra and structured matrices. 
 % Finally, we present in a more concise way concurrent techniques like using specific memory representation or using neural architecture search.
@@ -66,7 +65,7 @@ However, large neural networks lead to difficult and expensive training and over
 % The formulaic relationship between entries is an important feature to consider, for example, a sparse matrix has fewer than $n^2$ parameters but does not have a clear relationship between its entries.
 
 
-An effective method to build compact neural networks is to constrain the hypothesis space on \emph{structured neural networks}. 
+An effective method to build compact neural networks is to constrain the hypothesis space by using \emph{structured neural networks}. 
 The idea of structured neural networks consists of replacing the dense weight matrices with \emph{structured matrices}.
 A structured matrix is a $n \times n$ matrix which can be represented with fewer than $n^2$ parameters and where the entries are distributed along specific rules.
 
@@ -79,12 +78,12 @@ A structured matrix is a $n \times n$ matrix which can be represented with fewer
 \drawstar
 
 A classic example of structured matrices are \emph{low-rank} matrices which result from the product of two rectangular matrices.
-Let $\Umat \in \Rbb^{n \times r}$ and $\Vmat \in \Rbb^{r \times m}$ with $r \ll \min(m, n)$ then the matrix $\tilde{\Wmat} = \Umat \Vmat$ is low-rank of rank $r$.  
-By representing the matrix $\tilde{\Wmat}$ with the low-rank decomposition, we can reduce storage from $mn$ parameters to $(mr + nr)$ parameters and accelerate the matrix-vector product from $\mathcal{O}(mn)$ to $\mathcal{O}(mr + rn)$.
+Let $\Umat \in \Rbb^{n \times r}$ and $\Vmat \in \Rbb^{r \times m}$ with $r \ll \min(m, n)$ then the matrix $\widetilde{\Wmat} = \Umat \Vmat$ is low-rank of rank $r$.  
+By representing the matrix $\widetilde{\Wmat}$ with the low-rank decomposition, we can reduce storage from $mn$ parameters to $(mr + nr)$ parameters and accelerate the matrix-vector product from $\bigO(mn)$ to $\bigO(mr + rn)$.
 \citet{sainath2013lowrank} were among the first to use low-rank matrices in deep learning contexts followed by the work of~\citet{jaderberg2014speeding,yu2017compressing}.
-To enforce the low-rank constraint, reduce storage and computation time, they learned the low-rank decomposition directly, \ie the matrices $\Umat$ and $\Vmat$ instead of $\tilde{\Wmat}$ leading to a neural network layer defined as follows:
+To enforce the low-rank constraint, reduce storage and computation time, they learned the low-rank decomposition directly, \ie the matrices $\Umat$ and $\Vmat$ instead of $\widetilde{\Wmat}$ leading to a neural network layer defined as follows:
 \begin{equation}
-  \phi^\rho_{\Umat, \Vmat, \bvec} (\xvec) = \rho\left( \Umat \Vmat \xvec + \bvec \right) .
+  \layer^\act_{\Umat, \Vmat, \bvec} (\xvec) = \act\left( \Umat \Vmat \xvec + \bvec \right) .
 \end{equation}
 % By replacing the dense weight matrices $\Wmat^{(i)}$ with the product of two rectangular matrices and learning them instead of the dense matrices, they \emph{impose} on the learning procedure the low-rank constraint.
 % We can remark that the matrix resulting from the product of $\Umat^\top \Vmat$ has $m^2$ unique values but can still be represented with only $2nm$ values in memory.
@@ -113,10 +112,11 @@ Despite the reduction of expressivity, their experiments demonstrated good accur
 The idea of using circulant matrices and other types of structured matrices in neural networks is motivated by the celebrated \citeauthor{johnson1984extensions} lemma which states that a set of points in a high-dimensional space can be embedded into a space of much lower dimension with near preservation of distance between the points.
 This result can be formalized as follows:
 \begin{lemma}[\citet{johnson1984extensions}]
-  Let $\mathcal{X} \subset \Rbb^n$ be a set of $m$ vectors, then for any $0 < \epsilon < \frac{1}{2}$, there exists a map $f: \mathcal{X} \rightarrow \Rbb^k$ for some $k = \mathcal{O}(\epsilon^{-2} \log m)$ such that
+  Let $\Xset \subset \Rbb^n$ be a set of $m$ vectors, then for any $0 < \epsilon < \frac{1}{2}$, there exists a map $f: \Xset \rightarrow \Rbb^k$ for some $k = \bigO(\epsilon^{-2} \log m)$ such that
   \begin{equation}
-    \forall \xvec, \yvec \in \mathcal{X}, \quad (1 - \epsilon) \norm{\xvec - \yvec}_2^2 \leq \norm{f(\xvec) - f(\yvec)}_2^2 \leq (1 - \epsilon) \norm{\xvec - \yvec}_2^2 
+    \forall \xvec, \yvec \in \Xset, \quad (1 - \epsilon) \norm{\xvec - \yvec}_2^2 \leq \norm{f(\xvec) - f(\yvec)}_2^2 \leq (1 - \epsilon) \norm{\xvec - \yvec}_2^2 
   \end{equation}
+  \removespace
 \end{lemma}
 \noindent
 More practically, \citet{hinrichs2011johnson} have shown that the \DC transform $\xvec \mapsto \Dmat \Cmat \xvec$, where the matrix $\Dmat$ is a diagonal matrix with entries sampled from $\{1, -1\}$ and $\Cmat$ is a circulant matrix based on a sequence of independent identically distributed random variables respect the \citeauthor{johnson1984extensions} lemma.
@@ -128,7 +128,7 @@ The authors have replaced dense matrices of fully connected layers with adaptive
 Later, the \emph{Structured Spinners} transform of the form: $\Hmat\Dmat^{(3)} \Hmat\Dmat^{(2)} \Hmat\Dmat^{(1)}$, where $\Hmat$ is the Walsh-Hadamard matrix, and $\Dmat^{(i)}$ for $i \in {1, 2, 3}$ is a random $\pm1$-diagonal matrix, was originally proposed by~\citet{andoni2015practical} and used in deep learning settings by~\citet{bojarski2017structured}.
 
 \citet{moczulski2016acdc} build upon the work of~\citet{cheng2015exploration} and \citet{huhtanen2015factoring} and introduced two \emph{Structured Efficient Linear Layers} (SELL) based on the Fourier and cosine transform.
-First, by observing that the \DC transform cannot express an arbitrary linear operator they propose to apply the result of \citet{huhtanen2015factoring} which states that almost all matrices can be decomposed as a product of \DC transform.
+First, by observing that the \DC transform cannot express an arbitrary linear operator they proposed to apply the result of \citet{huhtanen2015factoring} which states that almost all matrices can be decomposed as a product of \DC transform.
 More formally, 
 \begin{theorem}[Reformulation from \citet{huhtanen2015factoring}]
   For every matrix $\Mmat \in \Cnn$, for any $\epsilon > 0$, there exists a sequence of matrices $\Amat^{(1)} \ldots \Amat^{(2n-1)}$ where $\Amat^{(i)}$ is a circulant matrix if $i$ is odd, and a diagonal matrix otherwise, such that $\norm{\Amat^{(1)} \ldots \Amat^{(2n-1)} - \Mmat} < \epsilon$.
@@ -137,7 +137,7 @@ More formally,
 \noindent
 Based on this result, they proposed the following structured layer:
 \begin{equation}
-  \Phi^\rho_{\Dmat, \Cmat, \bvec} (\xvec) = \rho \left( \left(\prod_{i = 1}^{k} \Dmat^{(i)} \Cmat^{(i)} \right) \xvec + \bvec \right)
+  \layer^\act_{\Dmat, \Cmat, \bvec} (\xvec) = \act \left( \left(\prod_{i = 1}^{k} \Dmat^{(i)} \Cmat^{(i)} \right) \xvec + \bvec \right)
 \end{equation}
 where $\Dmat$ and $\Cmat$ are sequences of $k$ diagonal and circulant matrices respectively.
 This structured is therefore parameterized by $n(2k+1)$ values and the value $k$ becomes an hyper-parameter controlling the trade-off between compactness and expressivity. 
@@ -148,7 +148,7 @@ Recall that if the circulant matrix $\Cmat^{(i)} =  \circulant\left(\cvec^{(i)}\
 % \end{equation}
 The structured layer can then be written as the following:
 \begin{equation}
-  \Phi^\rho_{\dvec, \cvec, \bvec} (\xvec) = \rho \left(\frac{1}{n^k} \left(\prod_{i = 1}^{k} \diag\left(\dvec^{(i)}\right) \Umat_n^* \diag\left(\Umat_n \cvec^{(i)}\right) \Umat_n \right) \xvec + \bvec \right)
+  \layer^\act_{\dvec, \cvec, \bvec} (\xvec) = \act \left(\frac{1}{n^k} \left(\prod_{i = 1}^{k} \diag\left(\dvec^{(i)}\right) \Umat_n^* \diag\left(\Umat_n \cvec^{(i)}\right) \Umat_n \right) \xvec + \bvec \right)
 \end{equation}
 \noindent
 Although interesting and demonstrating good empirical results, their work suffers form from multiple limitations. 
@@ -279,28 +279,29 @@ For the Stein type displacement operator, we have the following result:
     \krylov(\Amat, \vvec) = [\vvec~~\Amat\vvec~~\Amat^2 \vvec \ldots \Amat^{n-1} \vvec]
   \end{equation}
   \label{theorem:ch3-krylov_decomposition}
+  \removespace
 \end{theorem} 
 \noindent
 This theorem can be simplified for \emph{Toeplitz-like matrices} as follows:
 \begin{theorem}[Toeplitz-like matrix decomposition \citet{pan2001structured}]
-  If an $n \times n$ matrix $\Mmat$ satisfies $\triangleopdown_{\Cmat_1, \Cmat_{-1}}(\Mmat) = \Gmat \Hmat^T$ ($\Mmat$ is Toeplitz-like) where $\Gmat = (\gvec ^{(1)} \ldots \gvec^{(r)}], \Hmat = (\hvec^{(1)} \ldots \hvec^{(r)}) \in \Rbb^{n \times r}$, then $\Mmat$ can be written as: 
+  If an $n \times n$ matrix $\Mmat$ satisfies $\triangleopdown_{\Zmat_1, \Zmat_{-1}}(\Mmat) = \Gmat \Hmat^\top$ $(\Mmat \text{ is Toeplitz-like})$ where $\Gmat = (\gvec ^{(1)} \ldots \gvec^{(r)}), \Hmat = (\hvec^{(1)} \ldots \hvec^{(r)}) \in \Rbb^{n \times r}$, then $\Mmat$ can be written as: 
   \begin{equation} 
-    \Mmat = \frac{1}{2} \sum_{j=1}^{r} \Cmat_1(\gvec^{(j)}) \Cmat_{-1}(\Jmat_n \hvec^{(j)})
+    \Mmat = \frac{1}{2} \sum_{j=1}^{r} \Zmat_1(\gvec^{(j)}) \Zmat_{-1}(\Jmat_n \hvec^{(j)})
     \label{equation:ch3-toeplitz_like_matrix_decomposition}
   \end{equation}
-  where $\Jmat_n$ is the reflection matrix of size $n \times n$.
+  where $\Jmat_n$ is the reflection matrix of size $n \times n$ and $\Zmat_1$ and $\Zmat_{-1}$ are $f$-unit-circulant matrices defined in~\Cref{subsection:ch2-circulant_matrices}, \Cref{definition:ch2-f_circulant_matrix}.
 \end{theorem}
 \noindent
 \citet{sindhwani2015structured} have used this theorem in the context of deep learning.
 More precisely, they proposed to parameterized neural networks layers as in \Cref{equation:ch3-toeplitz_like_matrix_decomposition} and learn the displacement factors $\Gmat$, $\Hmat$ by gradient descent. 
 For some $\Gmat = \leftmat \gvec^{(1)} \ldots \gvec^{(r)} \rightmat, \Hmat = \leftmat \hvec^{(1)} \ldots \hvec^{(r)} \rightmat \in \Rbb^{n \times r}$, their layer is defined as follows:
 \begin{equation}
-  \Phi^\rho_{\Gmat, \Hmat, \bvec}(\xvec) = \rho\left( \left(\sum_{j=1}^{r} \Cmat_1\left(\gvec^{(j)}\right) \Cmat_{-1}\left(\Jmat_n \hvec^{(j)}\right) \right) \xvec + \bvec \right)
+  \layer^\act_{\Gmat, \Hmat, \bvec}(\xvec) = \act \left( \left(\sum_{j=1}^{r} \Zmat_1\left(\gvec^{(j)}\right) \Zmat_{-1}\left(\Jmat_n \hvec^{(j)}\right) \right) \xvec + \bvec \right)
 \end{equation}
 \noindent
 They also show that this class of layer are very rich of a modeling perspective:
 \begin{theorem}[LDR expressivity \citet{pan2001structured,sindhwani2015structured}] ~\\
-  The set of all $n \times n$ matrices that can be written as, $\sum_{i=1}^{r} \Cmat_1(\gvec^{(i)}) \Cmat_{-1}(\hvec^{(i)})$
+  The set of all $n \times n$ matrices that can be written as, $\sum_{i=1}^{r} \Zmat_1(\gvec^{(i)}) \Zmat_{-1}(\hvec^{(i)})$
   for some $\Gmat = \leftmat \gvec^{(1)} \ldots \gvec^{(r)} \rightmat,
   \Hmat = \leftmat \hvec^{(1)} \ldots \hvec^{(r)} \rightmat \in \Rbb^{n \times r}$ contains:
   \begin{compactitem}
