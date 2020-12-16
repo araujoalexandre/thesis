@@ -9,15 +9,6 @@
 \label{section:ch1-context_and_motivation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \subsection{Context}
-% \label{subsection:ch1-context}
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% With the surge in data collection and computing resources over the last 20 years, the interest and use cases for Machine Learning have grown exponentially.
-% More specifically, Deep Learning, a subfield of Machine Learning, consisting of training Deep Neural Networks on high-level
-% data (images, sounds, texts) have shown great achievements.
-% In recent years, Deep Neural Networks achieve state-of-the-art performances in a variety of domains such as image recognition~\cite{lecun1998gradient,krizhevsky2012imagenet,he2016deep,tan2019efficientnet}, object detection~\cite{redmon2016you,liu2016ssd,redmon2017yolo9000}, natural language processing~\cite{merity2016pointer,radford2018Language,brown2020language}, speech recognition~\cite{hinton2012deep,abdel2014convolutional,yu2016automatic}, etc.
 
 \begin{figure}[t]
   \centering
@@ -26,15 +17,15 @@
   \label{figure:ch1-alexnet_network}
 \end{figure}
 
+
 One of the first breakthroughs of Deep Learning was during the 2012 ImageNet Large-Scale Visual Recognition Challenge~\cite{ILSVRC15} which consists of evaluating algorithms for object detection and image classification.
 In this challenge, \citet{krizhevsky2012imagenet} achieved \nth{1} place and beat every other participants by a 10.8\% margin with a neural network architecture called \textbf{AlexNet}. 
-The main reasons for such performance are three fold.
-First of all, they used a network architecture with more than 60 million parameters which was significant for the computational resources of the time.
-% Secondly, they used the ImageNet database~\cite{deng2009imagenet} which consists of 1.2 million labeled images with 1000 different classes for training their network;
+The main reasons for this success are threefold.
+First of all, they used a model with more than 60 million parameters which was significant for the computational resources of the time.
 Secondly, with 1.2 million labeled images, the ImageNet database~\cite{deng2009imagenet} was an adequate dataset to train a neural network with so many parameters.
-Finally, they used graphics processing units (GPUs) to speed up the arithmetic operations, which enabled them to significantly reduce training time.
-The \Cref{figure:ch1-alexnet_network} shows the AlexNet architecture which consists of five convolutional layers with a fully-connected layer at the end.
-The figure also shows the delineation of responsibilities between the two GPUs.
+Finally, they used programmable graphics processing units (GPUs) to speed up the arithmetic operations, which enabled them to significantly reduce training time.
+The \Cref{figure:ch1-alexnet_network} shows the AlexNet architecture which consists of five convolutional layers with two fully connected layers at the end.
+The figure also shows the distribution of the workload between the two GPUs
 
 
 \begin{table}[t]
@@ -104,100 +95,55 @@ The figure also shows the delineation of responsibilities between the two GPUs.
 \end{table}
 
 
-
-% Since this result, many different architectures have been developed, with a growing number of parameters leading years later to surpass human-level performance on the ImageNet Dataset and Computer Vision task in general.
-% Since this result, many different architectures with a growing number of parameters have been developed.
-% This growth of number of parameters have lead to an increase in accuracy surpass human-level performance on the ImageNet Dataset and Computer Vision task in general.
-% near perfect accuracy on the ImageNet Dataset and Computer Vision task in general.
-% \Cref{table:ch1-networks_parameters} shows the different architectures that came out in the years after AlexNet.
-
-Since this result, many architectures with an increasing number of parameters have been developed.
+Following this result, many architectures with an increasing number of parameters have been developed.
 This growth in the number of parameters has led to an increase in accuracy exceeding human performance on the ImageNet dataset~\cite{he2015delving}.
-\Cref{table:ch1-networks_parameters} shows an historic of the different state-of-the-art architectures along with their size, and accuracy, as we can see, the models have dramatically improved their size, generally at the cost of model size.
-This increase in model size as been possible with the increase in computational resources~\cite{huang2019gpipe} and the availability of high level deep learning frameworks~\cite{tensorflow2015-whitepaper,paszke2019pytorch}.
+\Cref{table:ch1-networks_parameters} shows an historic of the different state-of-the-art architectures along with their size, and accuracy.
+As we can see, the accuracy of the models have dramatically improved, generally at the cost of their size.
+% This increase in model size has been possible with the increase in computational resources~\cite{huang2019gpipe} and the availability of high level deep learning frameworks~\cite{tensorflow2015-whitepaper,paszke2019pytorch}.
 While most new architectures have been proposed based on empirical studies, recent research \cite{tan2019efficientnet,rosenfeld2020a} have examined the relationship between the number of parameters (model size), the size of the dataset and the accuracy.
 For computer vision models, \citet{tan2019efficientnet} have shown that the relation between model size and accuracy seems to obey a power law. 
-This discovery leads them to propose an efficient neural network with similar or higher accuracy than existing ones.  
-For Natural Language Processing (NLP) neural networks, this relationship has also been observed and given the availability of large-scale datasets (Common Crawl dataset~\cite{raffel2019exploring} constitutes nearly a trillion words), researchers have been able to scale their models culminating in the 175 billion parameters GPT-3 model proposed by~\citet{brown2020language}. 
+This discovery lead them to develop a new scaling method that balance all dimensions of network width, depth, and resolution, leading to an efficient neural network with similar or higher accuracy than existing ones.  
+
+This relationship has also been observed for Natural Language Processing (NLP) neural networks and given the availability of large-scale datasets (Common Crawl dataset~\cite{raffel2019exploring} constitutes nearly a trillion words), researchers have been able to scale their models.
+The latest GPT-3 model, proposed by~\citet{brown2020language}, culminates at 175 billion parameters and requires 355 years of training on a single GPU and \$4,600,000 to train on a cloud-based compute platform.
 As a result, computer vision and natural language processing models have achieved sufficient performance for being use in real-world applications such as autonomous vehicles~\cite{fagnant2015preparing}, translation~\cite{wu2016google}, vocal assistants~\cite{li2017acoustic}.
-% Translation and voice assistants are now used by millions of people around the world and the autonomous vehicles could reshape the transportation industry over the next decade.
+
 However, recent finding suggests that the accuracy cannot be the only metric to optimize. 
-Neural networks, when implemented in a critical decision process, need to be compact, cost effective, secure and interpretable.
-Although accurate, large neural networks lack these properties.
+Neural networks, when implemented in a critical decision process, need to be compact, cost effective, secure.
+Although accurate, large neural networks often lack these properties.
+Indeed, large neural networks require a large amount of computing power limiting their access to many small research labs and companies.
+Furthermore, large and deep neural networks have shown to be unreliable in certain circumstances, \ie, they have been shown to be vulnerable to adversarial examples, raising many societal problems (judicial decision, self-driving cars, etc.).
+This thesis focuses on the problem of training neural networks which are not only accurate, but also compact, easy to train, reliable and robust to adversarial examples.
 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \subsection{Motivation}
-% \label{subsection:ch1-motivation}
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% In recent years, researchers have developed network architectures with higher and higher accuracy 
-% in order to build models that can be deployed into real-world applications. 
-
-
-\paragraph{Compact and Cost Effective Neural Networks}
-% neural networks need to be compact and cost effective and  
-% training and inference need to be performed with limited computational and memory resources.
-% In this setting, the training needs to be performed with limited computational and memory resources. 
-% More generally, building efficient neural networks can have upside.
-
-With the rise of smartphones and ``Internet of things'' devices (IoT) with limited computational and memory resources, building compact and cost effective neural network have been an important goal.
-For example, with the growing concern over data privacy, methods such as \emph{federated learning} are gaining ground.
-Federated learning involves training a model across multiple decentralized devices (\eg, smartphones) with local data sample. 
-This avoids the step of centralizing all users' data into one server, thus addressing the issue of data privacy.  
-Training state-of-the-art models on the ImageNet dataset needs gigabytes of memory and can take several days to train on a single GPU~\cite{krizhevsky2012imagenet}. 
-Neural networks for natural language processing are even more computationally expensive.
-For example, it has been estimated that the GPT-3 model with 175 billion parameters requires 355 years of training on a single GPU and \$4,600,000 to train on a cloud-based compute platform~\cite{li2020overview}.
-Thus, building efficient neural networks can reduce training time, cost and allow for faster research and development.
-
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\textwidth]{figures/main/ch1-introduction/ExampleAdversarialCatDog.pdf}
-  \caption{Example of Adversarial Attack on an image.}
-  \label{figure:ch1-adversarial_image_example}
-\end{figure}
-
-
-\paragraph{Secure and Interpretable Neural Networks}
-For certain tasks, in order to be deployed into production, neural network must have very high accuracy.
-Indeed, a mistake made by the neural network governing the drive of an autonomous vehicle can lead to injuries or even death.
-However, it is difficult to guarantee that no errors will be made.
-Having the ability to interpret and understand errors is therefore essential to prevent recurring errors.
-% Very large neural networks with millions, or more, parameters act as a kind of black box and are difficult to interpret.
-% Very large neural networks are difficult to explain and interpret due to highly non-linear relation between the features and the outcome and to the millions of parameters involve.
-Very large neural networks are difficult to explain and interpret because of the non-linear relationship between features and the outcome and of the millions of parameters involved.
-% Algorithms \cite{lundberg2017unified} for interpreting the decision of a machine learning models scale exponentially with the number of parameters making it impractical for large neural networks.
-\citet{lundberg2017unified} have proposed an algorithm based on a method from coalitional game theory for interpreting the decision of a machine learning models. 
-The goal of this algorithm is to explain the prediction of an instance by computing the contribution of each feature to the prediction.
-However, this method scale exponentially with the number of parameters making it impractical for large neural networks.
-Furthermore, large neural networks due to a high complexity and expressivity exhibit instability to small perturbations of their inputs.
-The best example of this phenomenon is the vulnerability of neural networks to \emph{adversarial examples}, \ie, imperceptible variations of natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,szegedy2013intriguing}.
-The \Cref{figure:ch1-adversarial_image_example} gives an examples of an adversarial attacks on an image. The small perturbation (center) is added to the original image (left) leading to an adversarial image (right).
-This behavior can cause serious security problems for neural networks used for critical decision-making for example self-driving cars.
+% In recent years, deep neural networks have grew larger and larger both in terms of depth and number of parameters.
+% Although accurate, large neural networks  exhibit important drawbacks.
+%
+% The existence of adversarial examples poses a growing societal problem as more and more machine learning models are trained and deployed in critical decision system.
+% Indeed, they call into question the reliability of neural networks, and their use in a context where the presence of malicious users is to be expected.
+% My research goals aim at solving this important problem. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Problem Setting}
+\section{Problem Statement}
 \label{section:ch1-problem_setting}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-This thesis focuses on the concept of \emph{supervised learning} with \emph{neural networks}. 
-Supervised learning refers to the problem of optimizing the parameters of a function in order to map an input to an output based of a series of input-output pairs.
-For example, an image (input) mapped to a class (output) describing its content.
+In this thesis, we focus on the design and the training of \emph{neural networks}.
 Neural networks, which find their roots in the work of \citet{mcculloch1943logical,rosenblatt1958perceptron}, can be analytically described as a composition of multi-dimensional linear functions interlaced with non-linear functions (also called activation functions).
-As we briefly saw in the previous section, large neural networks have achieve state-of-the-art performances in a variety of domains such as computer vision and natural language processing.
+More precisely, a neural network is a function $f_{\Theta} : \Rbb^n \rightarrow \Rbb^m$ parameterized by $\Theta$ which can be expressed as follows:
+\begin{equation}
+  f_{\Theta}(\xvec) = \psi^{(\depth)} \circ \rho \circ \psi^{(\depth-1)} \cdots \circ \psi^{(2)} \circ \rho \circ \psi^{(1)} (\xvec)
+  \label{equation:ch1-neural_network}
+\end{equation}
+where $\depth$ corresponds to the \emph{depth} of the network (\ie, the number of layers), $\psi^{(i)}$ are linear functions and $\rho$ is a non-linear function (\Cref{definition:ch2-neural_networks} present a more formal definition a neural networks).
+
+Neural networks can be trained (\ie their weights can be optimized) to fit a particular function of interest, for example, a neural network can be trained to map an input image with an output label describing the content of the input image
+% This thesis focuses on the task of \emph{supervised learning} with \emph{neural networks}. 
+% Supervised learning refers to the problem of optimizing the parameters of a parametric function in order to accurately map an input to an output given a set of input-output pairs.
+% For example, an input image can be mapped to an output class describing its content
+As we saw in the previous section, large neural networks have achieve state-of-the-art performances in a variety of domains such as computer vision and natural language processing.
 However, accuracy should not be the only metric to optimize when training, developing and deploying neural networks, efficiency and security are also crucial factors to consider.
 Hereafter, we review the two problems and some methods currently applied to address them. 
-
-
-% A neural network $f_{\Wmat,\Bmat} : \Rbb^m \rightarrow \Rbb^k$ can be defined as follows:
-% \begin{equation}
-%   f_{\Theta,\Bmat}(\xvec) \triangleq \layer_{\Wmat^{(L)}, \bvec^{(L)}} \circ \cdots \circ \layer_{\Wmat^{(1)}, \bvec^{(1)}}(\xvec)
-%   \label{equation:ch1-neural_network}
-% \end{equation}
-% where $L$ corresponds to the \emph{depth} of the network (\ie, the number of layers), $\Theta$ is the set of weights matrices $\Theta \triangleq \left( \Wmat^{(1)}, \dots, \Wmat^{(L)} \right)$, $\Bmat$ is the set of bias vectors $\Bmat \triangleq \left( \bvec^{(1)}, \dots, \bvec^{(L)} \right)$ and the function $\layer_{\Wmat^{(i)},\bvec^{(i)}}$ is define by: $\layer_{\Wmat^{(i)},\bvec^{(i)}} \triangleq \rho\left(\Wmat^{(i)}\xvec + \bvec^{(i)}\right)$ where $\rho$ is a non-linear function.
-% The input space $m$ corresponds to the dimension of the data and the output space $k$ corresponds to the number of classes the network has to classify.
-
 
 
 \begin{figure}[t]
@@ -257,31 +203,74 @@ Hereafter, we review the two problems and some methods currently applied to addr
   \label{figure:ch1-example_structure_matrices}
 \end{figure}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Training Compact Neural Networks}
+\label{subsection:ch1-training_compact_neural_networks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\paragraph{Over-parameterized to Cost Effective Network Networks}
-% Neural networks with dense matrices are called \emph{Fully Connected Neural Networks} because all the neurons from one activation are connected to all the neurons of the following activation.
-% Fully connected neural networks can have a very large number of parameters.
-\emph{Fully connected neural networks}, networks in which all the neurons from one activation are connected to all the neurons of the following activation, can have a very large number of parameters.
-For example, with the ImageNet Dataset, a two-layer fully connected neural network will have more than $2.6 \times 10^9$ parameters.
+% TODO: make difference of training and inference ? 
+Training state-of-the-art models on computer vision or natural language processing tasks requires gigabytes of memory and can take several months to train on a single GPU~\cite{krizhevsky2012imagenet,brown2020language}.
+Furthermore, with the rise of smartphones and ``Internet of things'' devices (IoT) with limited computational and memory resources, neural networks also need to be efficient during the inference phase.
+% However, compact and cost effective neural networks are essential for smartphones and ``Internet of things'' devices (IoT) with limited computational and memory resources.
+In addition, with the growing concern over data privacy, methods such as \emph{federated learning} are gaining ground.
+Federated learning involves training a model across multiple decentralized devices (\eg, smartphones) with local data sample. 
+This avoids the step of centralizing all users' data into one server, thus addressing the issue of data privacy.  
+Thus, building compact and cost effective neural network have been an important goal in order to reduce training time, reduce cost and allow for faster research and development.
+
+
+% With the current rise of smartphones and ``Internet of things'' devices (IoT) with limited computational and memory resources, compact and cost effective neural networks are  
+% therefore requiring compact and cost effective neural networks 
+
+% building compact and cost effective neural network have been an important goal.
+% Thus, building efficient neural networks can reduce training time, reduce cost and allow for faster research and development.
+
+
+Classical neural networks have, by default, a large number of parameters.
+For example, a two-layer \emph{fully connected neural networks}, networks in which all the neurons from one activation are connected to all the neurons of the following activation, will have a minimum of $n \times m + m^2$ parameters where $n$ is the size of the input and $m$ is the size of the output (number of classes).
+The dimension of the input is usually large, for example, with the ImageNet dataset $n = 224^2 \times 3$ and $m = 1000$ leading to a two-layer fully connected neural network with more than 150 million parameters\footnote{The resolution of $224^2 \times 3$ with the ImageNet dataset is usually used but sometimes higher resolution can be used \cite{tan2019efficientnet}.}.
+% For example, with the ImageNet Dataset, a two-layer fully connected neural network will have more than $2.6 \times 10^9$ parameters.
 Generally, this type of neural network has been shown to perform poorly due to a large search space or due to the important expressivity of the model which leads to overfitting.
 Moreover, they are computationally expensive which makes them impractical for a number of use cases (smartphones, IoT devices, etc.).
 Because of their limitations, researchers have devised specific linear operations that reduce the number of parameters and have better properties for the problem at hand.
-An example of neural networks with specific linear operations are \emph{Convolutional Neural Networks} (CNN)~\cite{lecun1998gradient,krizhevsky2012imagenet,he2016deep,tan2019efficientnet} which are state-of-the-art for computer vision tasks.
-They use specific linear operations (\eg, convolution) which are specific to image processing and use very few parameters.  
-A classical linear layer with a dense matrix has $n \times n$ parameters, a convolution layer only has $k \times k$ parameters where $k$ is the kernel size and is usually small (\eg 3 or 5 for classical convolutional layers).
-A convolutional neural networks is a type of \emph{structured} neural network because the convolution operation is a matrix multiplication with a structured matrix \ie, matrix that can be represented with less than $n^2$ parameters. 
+
+
+An example of neural networks with specific linear operations are \emph{Convolutional Neural Networks} (CNN)~\cite{lecun1998gradient,krizhevsky2012imagenet,he2016deep,tan2019efficientnet} which achieve state-of-the-art result for computer vision tasks.
+They use convolutional layers which are specific to image processing and use very few parameters.  
+Whereas a classical linear layer with a dense matrix will have $n \times n$ parameters, a convolution layer only have $k \times k$ parameters where $k << n$ is the kernel size and is usually small (\eg 3 or 5 for classical convolutional layers).
+A convolutional neural networks is a type of \emph{structured} neural network due to the structure of the convolution operation.
+Indeed, the convolution operation can be represented with with a structured matrix \ie, matrix that can be represented with less than $n^2$ parameters.
+
 In addition to offering a more compact representation, the structure of certain matrices can be exploited to obtain better algorithms for the matrix-vector product, thus optimizing memory and computing operations.
 Based on the success of convolutional neural networks, researchers have studied and proposed other types of neural networks based on weight matrices with different structures~\cite{moczulski2016acdc,sindhwani2015structured,denil2013predicting}.
-% Structured neural networks have been extensively studied in the field of deep learning \cite{moczulski2016acdc,sindhwani2015structured,denil2013predicting}.
 \Cref{figure:ch1-example_structure_matrices} shows different types of structured matrices that have been used for deep learning.
 Although, convolutional neural networks have been state-of-the-art for computer vision tasks, it remains unclear whether other types of structured neural networks can be beneficial to other types of applications and which structure can provide both accuracy and efficient computation.
+
 The phenomenon, that neural network with a smaller number of parameters, generalizes better has been theoretically justified \cite{vapnik1982estimation}.
 \citeauthor{vapnik1982estimation} linked the generalization capability of neural networks to their VC-dimension which is a measure of expressivity of the class of functions.
 This complexity measure is based on the number of parameters, therefore, reducing the number of parameters leads to a smaller VC-Dimension, which could lead to better generalizations.
 
 
-\paragraph{Robust Neural Networks}
-The instability of neural networks to small input perturbations has led them to be vulnerable to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Training Robust Neural Networks}
+\label{subsection:ch1-training_robust_neural_networks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figures/main/ch1-introduction/ExampleAdversarialCatDog.pdf}
+  \caption{Example of Adversarial Attack on an image.}
+  \label{figure:ch1-adversarial_image_example}
+\end{figure}
+
+Large neural networks due to a high complexity and expressivity exhibit instability to small perturbations of their inputs.
+The best example of this phenomenon is the vulnerability of neural networks to \emph{adversarial examples}, \ie, imperceptible variations of natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,szegedy2013intriguing}.
+The \Cref{figure:ch1-adversarial_image_example} gives an examples of an adversarial attacks on an image.
+The small perturbation (center) is added to the original image (left) leading to an adversarial image (right).
+This behavior can cause serious security problems when neural networks used for critical decision-making (\eg self-driving cars).
+
+% The instability of neural networks to small input perturbations has led them to be vulnerable to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models.
+
 The study of security properties of learning algorithms is a research field known as \emph{adversarial machine learning} which dates back to 2004 \cite{dalvi2004adversarial}.
 More recently, the work of \citet{szegedy2013intriguing} has bought considerable attention to adversarial examples in the context of Deep Learning.
 Since then, a number of work has been published in designing attacks and defenses \cite{szegedy2013intriguing,goodfellow2014explaining,papernot2016limitations,madry2018towards,carlini2017towards,pinot2019theoretical}.
@@ -292,27 +281,12 @@ Although, these methods improve the robustness of neural networks, the accuracy 
 
 
 
-
-% One of the first effective method is called \emph{Adversarial Training}.
-% It was introduced by \citet{goodfellow2014explaining} and later improved by \citet{madry2018towards}.
-% It consists of augmenting training batches with adversarial examples generated during the training procedure.
-% By \emph{seeing} adversarial examples correctly labeled during the training procedure, neural networks exhibit increased robustness during the inference phase.
-
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Main contributions and Outline of the Thesis}
 \label{section:ch1-main_contributions_and_outline_of_the_thesis}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-% In this thesis, we leverage the properties of \emph{structured matrices} for the problems mentioned in \Cref{subsection:ch1-introducing_structured_into_the_architecture_of_neural_networks} and \Cref{subsection:ch1-introducing_structured_into_the_learning_procedure}.
-%
-% More specifically, we study the properties of structured matrices from the Toeplitz family to make two contributions presented below:
-
 In this thesis, we study the properties of structured matrices from the Toeplitz family and make contributions to the field of supervised learning with neural networks.
-% More precisely, we focus on building efficient and robust neural networks. 
 This thesis is organized in two parts.
 First, we use circulant matrices, which are a particular case of Toeplitz matrices, to devise a new compact architecture replacing Fully Connected Neural Networks.
 More precisely, we study which state deep diagonal circulant neural networks, which are deep neural networks in which weight matrices are the product of diagonal and circulant ones.
@@ -327,6 +301,7 @@ From our analysis immediately follows an algorithm for bounding the Lipschitz co
 Finally, we illustrate our approach on adversarial robustness. 
 Recent work has shown that empirical methods such as adversarial training (AT) offer poor generalization~\cite{schmidt2018adversarially}, and can be improved by applying Lipschitz regularization~\cite{farnia2018generalizable}.
 To illustrate the benefit of our new method, we train neural networks with Lipschitz regularization and show that it offers a significant improvement over adversarial training alone.
+
 
 
 
