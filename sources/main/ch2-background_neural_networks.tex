@@ -1,0 +1,583 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Introduction on Supervised Learning}
+\label{subsection:ch2-introduction_on_supervised_learning}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Supervised learning consists in learning a function that maps an input to an output based on input-output pairs.
+For example, one could learn to ``predict'' if a fruit will be tasty based on its features (\eg size, weight, color, consistency, etc.).
+These features are used as input to the function and the function outputs a value characterizing the taste of the fruit. 
+
+In the following, we will formalize the learning problem describe above with the \emph{statistical learning framework}.
+First, let us define the domain space $\Xset$ which corresponds to the set of inputs that we wish to label.
+Let us denote the label space $\Yset$ and a finite sequence of pairs $\mathcal{S} = \left\{ \left(\xvec^{(1)}, y^{(1)} \right) \dots \left( \xvec^{(m)}, y^{(m)} \right) \right\}$ in $\Xset \times \Yset$. 
+Such pairs \ie, labeled examples, are called \emph{training examples} and the set $\mathcal{S}$ is called the \emph{training set}.
+We denote $\mathcal{D}$ the \emph{joint distribution} over $\Xset \times \Yset$.
+The main objective of the task at hand is to output a \emph{prediction rule} $h: \Xset \rightarrow \Yset$ that maps the input $\xvec \in \Xset$ to the output $y \in \Yset$.
+This function is called the \emph{hypothesis} or the \emph{classifier}. 
+Given the probability distribution $\mathcal{D}$, we aim to measure how \emph{likely} the hypothesis $h$ makes an error when labeled points are randomly drawn from the distribution $\mathcal{D}$.
+Let us define the true error or \emph{risk} of the hypothesis $h$ that we which to minimize:
+% \begin{equation}
+%   R_{\mathcal{D}}(h) \triangleq \Pbb_{(\xvec, y) \sim \mathcal{D}} \left[ h(\xvec) \neq  y \right] \enspace.
+%   \label{equation:ch2-risk1}
+% \end{equation}
+\begin{equation}
+  R_{\mathcal{D}}(h) \triangleq \Ebb_{(\xvec, y) \sim \mathcal{D}} \left[ L\big( h(\xvec), y \big) \right] \enspace.
+  \label{equation:ch2-risk2}
+\end{equation}
+where $L: \Yset \times \Yset \rightarrow \Rbb_{+}$ is a \emph{loss function} which measure the correctness of the hypothesis.
+For example, for classification problems, we can define $L$ as: %$L(h(\xvec), y) = \mathds{1}\big[ h(\xvec) \neq y \big]$.
+\begin{equation}
+  L(h(\xvec), y) = \mathds{1}\big[ h(\xvec) \neq y \big]
+\end{equation}
+
+However, in practice, the joint probability distribution $\mathcal{D}$ is unknown; therefore, the true error is not directly available to the learner.
+The learner only has access to the training data, $\mathcal{S}$, and can calculate the \emph{empirical error} \ie, the error over the training samples.
+We define the \emph{empirical risk} as follows:
+\begin{equation}
+  R_{\mathcal{S}}(h) \triangleq \frac{1}{|\mathcal{S}|} \sum_{(\xvec, y) \sim \mathcal{S}} L\big( h(\xvec), y \big) \enspace.
+\end{equation}
+
+
+% \begin{equation}
+%   R_{\mathcal{S}}(h) \triangleq \frac{\left| \left\{i \in [m]: h\left(\xvec^{(i)}\right) \neq y^{(i)} \right\}\right|}{m} \enspace.
+% \end{equation}
+% We can generalize our measure of correctness so that it can be applied to multiple learning tasks.
+% Let us define a \emph{loss function} from $\Yset \times \Yset$ to the set of nonnegative real numbers, $L: \Yset \times \Yset \rightarrow \Rbb_{+}$.
+% We can express the \emph{risk} as follows:
+% \begin{equation}
+%   R_{\mathcal{D}}(h) \triangleq \Ebb_{(\xvec, y) \sim \mathcal{D}} \left[ L\big( h(\xvec), y \big) \right] \enspace.
+%   \label{equation:ch2-risk2}
+% \end{equation}
+% Similarly, we express the empirical risk as follows:
+% \begin{equation}
+%   R_{\mathcal{S}}(h) \triangleq \frac{1}{m} \sum_{(\xvec, y) \sim \mathcal{S}} L\big( h(\xvec), y \big) \enspace.
+% \end{equation}
+% The loss functions used for classification problems and regression problems are as follows: 
+% \begin{itemize}
+%   \item \textbf{0-1 Loss}: $L_{0-1}\big( h(\xvec), y \big) = \mathds{1}\big[ h(\xvec) \neq y \big]$ \\
+%   This loss is used for classification problems, for example, when the learner have to recognizing hand-written digits in images.
+%   We can notice that the definitions of $R_{\mathcal{D}}$ given in \Cref{equation:ch2-risk1} and \Cref{equation:ch2-risk2} coincide.
+%   \item \textbf{Square Loss}: $L_{\text{sq}} \big( h(\xvec), y \big) = \big( h(\xvec) - y \big)^2$ \\	
+%   This loss is used for another common type of learning problem \ie, \emph{regression problem}, in which the label domain $\Yset$ is the set of real numbers.
+%   For example, one wishes to predict the price of an apartment given its characteristics.
+% \end{itemize}
+
+
+The goal of the learning algorithm is to find the hypothesis $h$ that minimize the risk $R_{\mathcal{S}}$, this learning paradigm is called \emph{Empirical Risk Minimization} (ERM).
+We use the ERM paradigm as a surrogate to find a hypothesis $h$ that minimize the true risk $R_\mathcal{D}$.
+However, all hypothesis that minimize the empirical error does not necessarily minimize the true risk.
+For example, consider the following function:
+\begin{equation}
+  h^*(\xvec) =
+  \begin{cases}
+    y^{(i)} &\quad \text{if }\exists i \in [m] \text{ s.t. } \xvec^{(i)} = \xvec \\
+    0 &\quad \text{otherwise}
+  \end{cases}
+  \label{equation:ch2-perfect_function}
+\end{equation}
+Clearly, this function, for any training set, $\mathcal{S}$, will have $R_\mathcal{S}(h^*) = 0$, whereas the true risk would certainly be high.
+The phenomenon, called \emph{overfitting}, happens when the classifier fits the training data ``too well'' but will likely have a high error on unseen data.
+One possible solution to this phenomenon is to apply ERM with a restricted search space to prevent the learning algorithm to output a function such as $h^*$ in \Cref{equation:ch2-perfect_function}.
+We call this set the \emph{hypothesis class} and is denoted $\mathcal{H}$. 
+Each $h \in \mathcal{H}$ is a function mapping from $\Xset$ to $\Yset$.
+We call $\mathrm{ERM}_{\mathcal{H}}$, the learned that use the $\mathrm{ERM}$ paradigm over the hypothesis class $\mathcal{H}$ and a training data $\mathcal{S}$.
+Formally,
+\begin{equation}
+  \mathrm{ERM}_{\mathcal{H}}(\mathcal{S}) \in \argmin_{h \in \mathcal{H}} R_{\mathcal{S}}(h) \enspace.
+\end{equation}
+For a training sample $\mathcal{S}$, we denote $h_\mathcal{S}$, one solution of applying $\text{ERM}_\mathcal{H}$ on the set $\mathcal{S}$, if there exists multiple hypotheses with minimal error on the training sample, then minimization problem returns an arbitrary one.
+In practice, the hypothesis class is chosen based on a hypothesis on the relation between the data and its label.
+For example, if the relation between the data and its label is supposedly linear then the hypothesis class can be the set of all linear function.
+This kind of restriction is called an \emph{inductive bias} because the learner is \emph{biased} toward a particular set of predictors.
+
+\begin{figure}[t]
+  \centering
+  \begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=0.98\textwidth]{figures/main/ch2-background/underfitting.pdf}
+    \caption{Underfitting}
+    \label{figure:ch2-fitting_points_a}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=0.98\textwidth]{figures/main/ch2-background/overfitting.pdf}
+    \caption{Overfitting}
+    \label{figure:ch2-fitting_points_b}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=0.98\textwidth]{figures/main/ch2-background/normal.pdf}
+    \caption{Good fit}
+    \label{figure:ch2-fitting_points_c}
+  \end{subfigure}
+  \caption{
+    Decision boundary of 3 classifiers with different complexity for the same set of sample.
+  }
+  \label{figure:ch2-fitting_points}
+\end{figure}
+
+
+
+A fundamental question remains: \emph{how to choose the correct hypothesis class for which $\text{ERM}_\mathcal{H}$ will not lead to overfitting?} 
+We answer this question by decomposing the true risk into two different components as follows: 
+\begin{equation}
+  R_\mathcal{D} (h_\mathcal{S}) = 
+  \underbrace{\left[ \min_{h \in \mathcal{H}} R_\mathcal{D}(h) \right]}_{\text{\scriptsize Approximation Error}} + \quad 
+  \underbrace{\left[ R_\mathcal{D}(h_\mathcal{S}) - \min_{h \in \mathcal{H}} R_\mathcal{D}(h) \right]}_{\text{\scriptsize Estimation Error}} 
+  \label{equation:ch2-bias_complexity_tradeoff}
+\end{equation}
+\begin{itemize}
+  \item \textbf{Approximation Error}: The approximation error corresponds to the minimum risk achievable by a classifier in the given hypothesis class.
+  Intuitively, this error measure the quality of the hypothesis class and therefore the quality of the prior knowledge.
+  Enlarging the hypothesis class, \ie, allowing more complex functions, can decrease the approximation error.
+  \item \textbf{Estimation Error}: The estimation error is the difference between the approximation error and the error made by the ERM predictor.
+  Recall that the empirical risk is only an estimate of the true risk.
+  This error is dependent on the sample size and/or the complexity of the hypothesis class. 
+\end{itemize}
+Recall that the main goal is to minimize the true risk $R_\mathcal{D} (h_\mathcal{S})$, however, \Cref{equation:ch2-bias_complexity_tradeoff} shows a tradeoff called the \emph{bias-complexity tradeoff}.
+The tradeoff is as follows: if we choose a large and complex hypothesis space, we reduce the approximation error but at the same time can increase the estimation error because a complex hypothesis space might lead to overfitting.
+Conversely, choosing a small hypothesis space might reduce the estimation error but increase the approximation error leading to an \emph{underfitting} phenomenon.
+We can demonstrate the \emph{overfitting} and \emph{underfitting} phenomenons with \Cref{figure:ch2-fitting_points} which shows the decision boundary of 3 classifiers for the same set of samples.
+\Cref{figure:ch2-fitting_points_a} shows a classifier which \emph{underfit} the data, meaning the decision boundary is not complex enough to separate the data correctly.
+The \Cref{figure:ch2-fitting_points_b} shows a classifier that almost perfectly follows the training data but is likely to have a higher error rate on the unseen data.
+Finally, the \Cref{figure:ch2-fitting_points_c} shows a classifier that seems to have a good compromise between the two.
+
+
+As seen above, defining a small hypothesis class might lead to underfitting and a large hypothesis class might lead to overfitting.
+A good way to best balance the trade-off would be to minimize the empirical risk while also minimizing the complexity of the hypothesis class. 
+Let us define a \emph{regularization} function $r: \mathcal{H} \rightarrow \Rbb$ which takes an hypothesis as input and a measure of the ``complexity'' of the hypothesis.
+We could now update the learning rule as follows:
+\begin{equation}
+  \argmin_{h \in \mathcal{H}} \left[ R_\mathcal{S}(h) + r(h) \right]
+\end{equation}
+This learning rule minimizes the empirical risk $R_\mathcal{S}(h)$ and the regularization function $r$, thus, preventing overfitting and improving generalization on unseen data.
+This learning rule is closely related to \emph{Structural Minimization Paradigm} (SRM) \cite{shalev2014understanding}.
+In the next section, we will present a classic regularization function for neural networks and we will introduce a new regularization scheme in \Cref{chapter:ch5-lipschitz_bound}.
+
+
+
+
+% A good way to offset a large hypothesis class would be to specific preference over hypothesis within the hypothesis class.
+% The \emph{Structural Minimization Paradigm} (SRM) assumes that the hypothesis class can be written as the union of multitude smaller hypothesis class as follows: $\mathcal{H} = \bigcup_{n \in \Nbb} \mathcal{H}_n$ with a weight function $w: \Nbb \rightarrow [0, 1]$ which assigns a weight to each hypothesis class, $\mathcal{H}_n$, such that a higher weights reflects a lower preference for the hypothesis class.
+% Intuitively, the weight function is a measure of the ``complexity'' of the hypotesis.
+% The SRM learning paradigm can then be defined as follows:
+% \begin{equation}
+%   \text{SRM}_\mathcal{H} \in \argmin_{h \in \mathcal{H}, n \in \Nbb} \left[ R_\mathcal{S}(h) + w(n) \right]
+% \end{equation}
+% The SRM learning paradigm minimizes the empirical risk $R_\mathcal{S}(h)$ and the weight function $w$; therefore, ovoiding overfitting and improving generalization by reducing the complexity of the hypotesis while maintening a low empirical risk. 
+% In the next section, we will present neural networks which are the type of function we will use as predictors and we will see how to implement the ERM and SRM paradigm.
+
+
+
+
+
+
+
+
+
+% \‰\‰\‰
+%
+% The ERM paradigm with inductive bias is based on an important assumption.
+% We assume that uniformly over all $h \in \mathcal{H}$, the empirical risk is close to the true risk, meaning, an $h$ that minimize the empirical risk with respect to a data set $\mathcal{S}$ will also minimize the \emph{true} risk.
+% More formally, 
+% \begin{equation}
+%   \forall h \in \mathcal{H}, \quad \left| R_\mathcal{S}(h) - R_\mathcal{D}(h) \right| \leq \epsilon \enspace.
+%   \label{equation:ch2-eps_respresentative_sample} 
+% \end{equation}
+% If this assumption is met, then the ERM paradigm will always return a good classifier. 
+% \begin{lemma}[Lemma 4.2 \citet{shalev2014understanding}] 
+%   If \Cref{equation:ch2-eps_respresentative_sample} hold, then any output of $\mathrm{ERM}_\mathcal{H}(\mathcal{S})$, namely, any $h_\mathcal{S} \in \argmin_{h \in \mathcal{H}} R_\mathcal{S}(h)$, satisfies
+%   \begin{equation}
+%     R_\mathcal{D}(h_\mathcal{S}) \leq \min_{h \in \mathcal{H}} R_\mathcal{S}(h) + 2\epsilon
+%   \end{equation}
+% \end{lemma}
+%
+% \‰\‰\‰
+
+
+% Let us consider an input space $\Xset = [0, 1]^d$ of dimension $d$, an output space $\Yset = [k]$ where $k$ is the number of class and a data distribution $\mathcal{D}$ over $\Xset \times \Yset$.
+% We seek to find a function $h: \Xset \rightarrow \Yset$ that maps the input $\xvec \in \Xset$ to the output $y \in \Yset$ with $h \in \mathcal{H}$ where $h$ is called the \emph{hypothesis} and $\mathcal{H}$ the \emph{hypothesis space}.
+% in order to measure how well the function fits, we de\emph{loss function} $l: \mathcal{y} \times \mathcal{y} \rightarrow \rbb^{+}$ is defined.
+% The \emph{risk} $R$ associated with the hypothesis $h(\xvec)$ is defined as follows:
+% \begin{equation}
+%   R(h) \triangleq \Ebb_{(\xvec, y) \sim \mathcal{D}}\  L \left( h(\xvec), y \right)
+% \end{equation}
+% The goal of a \emph{learning algorithm} is to find a hypothesis $h^* \in \mathcal{H}$ which minimize the risk $R(h)$:
+% \begin{equation}
+%   h^* \triangleq \argmin_{h \in \mathcal{H}} R(h) .
+% \end{equation}
+
+% In practice, the joint probability distribution $\mathcal{D}$ is unknown.
+% Instead, we have $n$ independent observations of the distribution called the \emph{training set}
+% \begin{equation}
+%   \mathcal{T} \triangleq \left\{ \left(\xvec^{(1)}, y^{(1)} \right), \dots, \left( \xvec^{(n)}, y^{(n)} \right) \right\} ,
+% \end{equation}
+% where $\xvec \in \Xset$ and $y \in \Yset$.
+
+% The risk minimization problem is therefore replace by the \emph{empirical risk minimization} as follows:
+% \begin{equation}
+%   E(h, n) \triangleq \frac{1}{n} \sum_{i = 1}^{n} L\left(h\left(\xvec^{(i)}\right), y^{(i)}\right) ,
+% \end{equation}
+% the learning algorithm then becomes:
+% \begin{equation}
+%   \hat{h}^* \triangleq \argmin_{h \in \mathcal{H}} E(h, n)  .
+% \end{equation}
+
+
+% \paragraph{Structural Risk Minimization} (SRM).
+% The ERM principle assumes that the function $\hat{h}^*$ minimizing $E(h, n)$ leads to the risk $R(\hat{h}^*)$ being close to the minimum.
+% This assumption mean that as the \emph{size} of the training set increase the minimization becomes more accurate. More formally, the ERM principle assumes that $R(\hat{h}^*)$ converge to its minimum value on the set $h \in \mathcal{H}$ when $n \rightarrow \infty$.  
+% \citet{Vapnik1991TheNA} have shown that this equivalent to say that the empirical risk $E(h, n)$ \emph{converge uniformly} to the actual risk $R(h)$ over $h \in \mathcal{H}$ where the \emph{uniform convergence} is defined as follows:
+% \begin{equation}
+%   \Pbb \left[ \sup_{h \in \mathcal{H}} \left| R(h) - E(h, n) \right| < \epsilon \right] \rightarrow 0 \quad \text{ when } \quad n \rightarrow \infty, \quad \forall \epsilon > 0 
+% \end{equation}
+
+
+% \citet{Vapnik1991TheNA} have shown that this assumption is equivalent to the following: does the empirical risk $E(h, n)$ \emph{converge uniformly} to the actual risk $R(h)$ over $h \in \mathcal{H}$ where the \emph{uniform convergence} is defined as follows:
+% \begin{equation}
+%   \Pbb \left[ \sup_{h \in \mathcal{H}} \left| R(h) - E(h, n) \right| < \epsilon \right] \rightarrow 0 \quad \text{ when } \quad n \rightarrow \infty, \quad \forall \epsilon > 0 
+% \end{equation}
+
+
+% However, does increasing the \emph{size} of the training set allow a better minimisation of the actual risk. More formally, does $R(\hat{h}^*)$ converge to its minimum value on the set $h \in \mathcal{H}$ when $n \rightarrow \infty$. 
+
+% \citet{vapnik1992principles} 
+
+% The 0-1 loss function is a natural loss function to use because it assigns 0 for a correct classification and 1 for an incorrect classification. 
+
+
+% of the ERM principle \ie, does $R(\hat{h}^*)$ converge to its minimum value on the set $h \in \mathcal{H}$ when $n \rightarrow \infty$ is equivalent to the question: 
+
+% is equivalent to the question: does the empirical risk E(h, n) \emph{converge uniformly} to the actual risk $R(h)$ over $h \in \mat
+
+% \begin{equation}
+%   h^* = \argmin_{h \in \mathcal{H}} \frac{1}{n} \sum_{i = 0}^{n} L(h(\xvec_i), y) + \lambda C(\theta) 
+% \end{equation}
+
+% Because the relation between $\xvec \in \Xset$ and $y \in \Yset$ is unknown, we aim to find the best approximation of the function $h$ with a parameterized function $h_\theta \in \mathcal{H}$ where $\mathcal{H}$ is called the \emph{hypothesis space}.
+
+% The goal of a \textbf{learning algorithm} is to learn a function $f: \Xset \rightarrow \Yset$ which outputs $y \in \Yset$ given an input $\xvec \in \Xset$ with $f \in \mathcal{H}$ where $\mathcal{H}$ is called the \emph{hypothesis space}.
+
+% The supervised learning settings assume that a function $f: \Xset \rightarrow \Yset$ exists. 
+
+% The supervised learning settings assume that a function $f$ that maps $\xvec \sim \Xset$ to $y \sim \mathcal{y}$ exists. 
+
+% The goal of a \textbf{learning algorithm} is to approximate $f$ by a parameterized function $f_\theta$.
+% The standard method to learn the set of parameters $\theta$ is the \textbf{empirical risk minimization (ERM)}:
+% \begin{equation*}
+%   \hat{\theta}_{ERM} \triangleq \argmin_{\theta} \frac{1}{n} \sum_{i=1}^{n} L (f_{\theta} (\xvec_i), y_i )
+% \end{equation*}
+
+% \begin{equation}
+%   \min_{\theta} \Ebb_{(\xvec, y) \sim \mathcal{D}} \left[ L(f_\theta(x), y) \right]. 
+% \end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Preliminaries on Neural Networks}
+\label{subsection:ch2-preliminaries_on_neural_networks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.88\textwidth]{figures/main/ch2-background/mnist-dataset.png}
+  \caption{Images with handwritten digits in the MNIST database \cite{lecun1998gradient}}
+  \label{figure:ch2-mnist-database}
+\end{figure}
+
+In \citeyear{lecun1998gradient}, \citeauthor{lecun1998gradient} had successfully learned a function capable of recognizing handwritten digits in images.
+They used the MNIST dataset \cite{lecun1998gradient} consists of black and white images of size $28 \times 28$ pixels (\Cref{figure:ch2-mnist-database} presents a sample of images from the MNIST database).
+Their goal was to develop an algorithm that takes a vector as input and produces the digit from 0 to 9 as the output.
+Although simple for a human, this task is a non-trivial problem for computers due to the uniqueness of each image. 
+To solve this problem, \citet{lecun1998gradient} trained a neural network based on the images of the MNIST dataset and their label.
+
+% This is a non-trivial problem because each image is unique and while digits can be differentiated based on their shapes and strokes, these features give poor results for an automated system. 
+
+% In the previous section, we said that we restrict the learner towards a specific set of predictors.
+% In this thesis, we focus on neural networks. 
+Neural networks, which find their roots in the work of \citet{mcculloch1943logical,rosenblatt1958perceptron}, can be analytically described as a composition of linear functions interlaced with non-linear functions (also called activation functions).
+A neural network can be defined as follows:
+
+% \begin{definition}[Neural Network]
+%   Given a depth $\depth \in \Nbb$, 
+%   let $w = \{ w^{(i)} \}_{i \in [\depth]}$ and $b = \{ b^{(i)} \}_{i \in [\depth]}$ be sequences of ``dimension'',  
+%   $\weights = \left\{ \left( \Wmat^{(i)}, \bvec^{(i)} \right) \right\}_{i \in [\depth]}$ a set of weights matrices and bias vectors 
+%   such that $\Wmat^{(i)} \in \Rbb^{w^{(i)}}$ and $\bvec^{(i)} \in \Rbb^{b^{(i)}}$ and 
+%   sequence of activation functions $\act = \{\act_i \}_{i \in [\depth]}$.
+% %   Let $\dim^{w} = \{ \dim_1^w, \dots, \dim_\depth^w \}$ and $\dim^{b} = \{ \dim_1^b, \dots, \dim_\depth^b \}$ 
+% % be sequences of ``dimension'', let $\dim_{\text{in}} = \dim_\depth^w$ and $\dim_{\text{out}} = \dim_\depth^w$.
+%   Let $\Xset \subset \Rbb^{\dim_{\text{in}}}$ and 
+%   $\Yset \subset \Rbb^{\dim_\text{out}^w}$ be the input space and output space respectively. 
+%   % Given a depth $\depth$, a set of weights matrices and bias vectors $\weights = \left\{ \left( \Wmat^{(i)}, \bvec^{(i)} \right) \right\}_{i \in [\depth]}$ and a sequence of activation functions $\act = \{\act_i \}_{i \in [\depth]}$, a neural network is a function $N^\act_\weights : \Xset \rightarrow \Yset$ such that
+%   A neural network is a function $N^\act_\weights : \Xset \rightarrow \Yset$ such that
+%   \begin{equation}
+%     \nn^\act_{\weights}(\xvec) \triangleq \layer^{\act_\depth}_{\Wmat^{(\depth)}, \bvec^{(\depth)}} \circ \cdots \circ \layer^{\act_1}_{\Wmat^{(1)}, \bvec^{(1)}}(\xvec)
+%   \end{equation}
+%   % where $d$ corresponds to the depth of the network (\ie, the number of layers), $\weights$ is the set of weights matrices and bias vectors $\weights = \left\{ \left( \Wmat^{(1)}, \bvec^{(1)} \right) \dots \left( \Wmat^{(d)}, \bvec^{(d)} \right) \right\}$.
+%   % $\Bmat$ is the set of bias vectors $\Bmat = \left\{ \right\}$. 
+%   where $\layer^{\act_i}_{\Wmat^{(i)},\bvec^{(i)}}: \Rbb^{w^{(i)}} \rightarrow \Rbb^{w^{(i+1)}}$ (also called layer) is a function parameterized by the weight matrix $\Wmat^{(i)}$, the bias vector $\bvec^{(i)}$ and the activation function $\act_i$ and can be expressed as follows: 
+%   \begin{equation}
+%     \layer^{\act_i}_{\Wmat^{(i)},\bvec^{(i)}} (\xvec) \triangleq \act_i \left(\Wmat^{(i)}\xvec + \bvec^{(i)}\right)
+%   \end{equation}
+% \end{definition}
+
+\begin{definition}[Neural Network]
+  Given a depth $\depth \in \Nbb$, 
+  let $\dimw = \{ \dimw^{(i)} \}_{i \in [\depth]}$ and $\dimb = \{ \dimb^{(i)} \}_{i \in [\depth]}$ be sequences of ``dimension'', $\weights = \left\{ \left( \Wmat^{(i)}, \bvec^{(i)} \right) \right\}_{i \in [\depth]}$ a set of weights matrices and bias vectors 
+  such that $\Wmat^{(i)} \in \Rbb^{\dimw^{(i)}}$ and $\bvec^{(i)} \in \Rbb^{\dimb^{(i)}}$ and sequence of activation functions $\act = \{\act_i \}_{i \in [\depth]}$.
+  Let $\Xset \subset \Rbb^{\dimw^{(1)}}$ and $\Yset \subset \Rbb^{\dimw^{(\depth)}}$ be the input space and output space respectively. 
+  $\dimw^{(1)}$ refer to the input dimension and $\dimw^{(\depth)}$ refer to the output dimension.
+  A neural network is a function $\nn^\act_\weights : \Xset \rightarrow \Yset$ such that
+  \begin{equation}
+    \nn^\act_{\weights}(\xvec) \triangleq \layer^{\act_\depth}_{\Wmat^{(\depth)}, \bvec^{(\depth)}} \circ \cdots \circ \layer^{\act_1}_{\Wmat^{(1)}, \bvec^{(1)}}(\xvec)
+  \end{equation}
+  where $\layer^{\act_i}_{\Wmat^{(i)},\bvec^{(i)}}: \Rbb^{w^{(i)}} \rightarrow \Rbb^{w^{(i+1)}}$ (also called layer) is a function parameterized by the weight matrix $\Wmat^{(i)}$, the bias vector $\bvec^{(i)}$ and the activation function $\act_i$ and can be expressed as follows: 
+  \begin{equation}
+    \layer^{\act_i}_{\Wmat^{(i)},\bvec^{(i)}} (\xvec) \triangleq \act_i \left(\Wmat^{(i)}\xvec + \bvec^{(i)}\right) \enspace,
+  \end{equation}
+  and $\rho_\depth$ is identity function.
+  \label{definition:ch2-neural_networks}
+\end{definition}
+
+\noindent
+Based on this definition, for a given training set $\mathcal{S} = \Xset \times [k]$, a set of activation functions $\act$, a set of weights and biases $\weights$ and a loss function $L: \Yset \times [k] \rightarrow \Rbb_+$, the ERM learning paradigm for neural networks is given by
+\begin{equation}
+  \argmin_{\weights} \frac{1}{|\mathcal{S}|} \sum_{(\xvec, y) \in \mathcal{S}} L(N^\act_\weights(\xvec), y) 
+  \label{equation:ch2-erm_neural_network}
+\end{equation}
+For classification problem, the zero-one loss is known to be non-convex and non-smooth, and it has been shown that solving for the optimal solution is an NP-hard combinatorial optimization problem~\cite{feldman2012agnostic,bendavid2003difficulty}.
+Instead, a common approach is to use the cross-entropy loss function and estimate the parameters with \emph{maximum likelihood}~\cite{hastie2009elements}.
+The cross-entropy loss $L:\Yset \times [k]$, is defined as follows:
+\begin{equation}
+  L(N^\rho_\Omega(\xvec), y) = -\log
+    \left(
+      \frac
+        {e^{\left(N^\rho_\Omega(\xvec)\right)_y}}
+	{\sum_{j\in[k]} e^{\left(N^\rho_\Omega(\xvec)\right)_j}}
+    \right)
+\end{equation}
+The generic approach for minimizing the empirical risk in \Cref{equation:ch2-erm_neural_network} is by \emph{gradient descent} with the \emph{backpropgation} algorithm ~\cite{rumelhart1986learning} which consists of computing the gradient with the help of the chain-rule.
+
+
+
+
+% Instead, a common approach is to used the softmax activation function as the last non-linear activation $\act_d$ with the cross-entropy loss function and estimate the parameters with \emph{maximum likelihood}~\cite{hastie2009elements}.
+% The softmax activation function, $\act_d: \Rbb^k \rightarrow [0, 1]^k$, is defined as follows:
+% \begin{equation}
+%   \leftmat \act_d(\xvec) \rightmat_i = \frac{e^{\xvec_i}}{\sum_{j=0}^{k-1} e^{\xvec_j}}, \quad \forall i \in [0,k-1]
+% \end{equation}
+% The generic approach for minimizing the empirical risk in \Cref{equation:ch2-erm_neural_network} is by \emph{gradient descent} with the \emph{backpropgation} algorithm ~\cite{rumelhart1986learning} which consists of computing the gradient with the help of the chain-rule.
+
+
+As seen in the previous section, the SRM paradigm minimizes two terms, the empirical risk and a weight function measuring the ``complexity'' of the hypothesis.
+% It has been shown that the number of free parameters can be used as a measure of complexity and a number of work have proposed techniques to reduce the number parameters~\cite{lecun1990optimal,thodberg1991improving,weigend1991generalization}.
+% However, a different way of constraining the complexity is to limit the growth of weights~\cite{hinton1987learning}.
+% This \emph{regularization} \cite{tikhonov1977solutions,krogh1992simple}, also called \emph{weight decay}, prevents weights from growing too large unless it is necessary.
+It has been shown that the $\ell_2$ norm of the weights of a network can be used as a measure of complexity; therefore, limiting the growth of the weights constraints the complexity of the network ~\cite{hinton1987learning}.
+% However, a different way of constraining the complexity is to limit the growth of weights~\cite{hinton1987learning}.
+This \emph{regularization} \cite{tikhonov1977solutions,krogh1992simple}, also called \emph{weight decay}, prevents weights from growing too large unless it is necessary.
+The SRM learning algorithm with the weight decay regularization can be expressed as follows:
+\begin{equation}
+  \argmin_{\weights} \frac{1}{|\mathcal{S}|} \sum_{(\xvec, y) \in \mathcal{S}} L(N^\act_\weights(\xvec), y) + \lambda \sum_{(\Wmat, \bvec) \in \weights} \left( \norm{\Wmat}_\mathrm{F} + \norm{\bvec}_\mathrm{2} \right)
+\end{equation}
+where $\lambda > 0$ is the regularization parameter.
+
+
+
+\begin{figure}[htb]
+  \centering
+  \begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=0.98\textwidth]{figures/main/ch2-background/sigmoid.pdf}
+    \caption{Sigmoid Activation}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=0.98\textwidth]{figures/main/ch2-background/tanh.pdf}
+    \caption{Tanh Activation}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.32\textwidth}
+    \includegraphics[width=0.98\textwidth]{figures/main/ch2-background/relu.pdf}
+    \caption{Leaky ReLU Activation}
+  \end{subfigure}
+  \caption{Graphical representation of 3 common activation functions}
+  \label{figure:ch2-activation_functions}
+\end{figure}
+
+
+Choosing the right activation function has been an active area of research. 
+Hereafter, we present 3 common activation functions used by practitioners.
+\begin{itemize}
+  \item \textbf{Sigmoid activation} \cite{han1995influence}
+    \begin{equation*}
+      \act(x) = \frac{1}{1+e^{-x}} 
+    \end{equation*}
+    The sigmoid activation function is one of the first continuous non-linear function to be used in the context of neural network. It takes a real value as input and outputs another value between 0 and 1.
+  \item \textbf{Hyperbolic Tangent activation} \cite{karlik2011performance}
+    \begin{equation*}
+      \act(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}
+    \end{equation*}
+    The hyperbolic tangent activation function is similar to the sigmoid activation function but instead of returning between 0 and 1, the function returns between -1 and 1.     
+  \item \textbf{Leaky Rectified Linear activation (Leaky-ReLU)} \cite{maas2013rectifier}
+    \begin{equation*}
+      \act(x) = \max(\alpha, x)
+    \end{equation*}
+    More recently, the ReLU~\cite{nair2010rectified} ($\alpha = 0$) and leaky-ReLU~\cite{maas2013rectifier} ($\alpha > 0$) activation function was proposed.
+    The parameter $\alpha$ characterize the slope on $\Rbb_-$.
+    These function have the advantages to avoids the vanishing gradient problem and are less less computationally expensive than tanh and sigmoid because it involves simpler mathematical operations.
+\end{itemize}
+
+\noindent
+The \Cref{figure:ch2-activation_functions} present the graphical representation of the activation functions presented above.
+In this thesis, we will use the Leaky-ReLU function with different $\alpha$ when we train deep neural networks.
+We simplify the notation $\nn^\act_\weights$ with $\nn_\weights$.
+
+
+
+
+% From $\mathcal{N}$, we can easily build a deep ReLU network $\mathcal{N'}$ of width exactly $n+3$, such that $\forall x \in [0,1]^{n+3}$, $\left|f(\xvec_{1} \ldots \xvec_{n}) - \left(\mathcal{N}'\left(\xvec\right)\right)_{1}\right| < \epsilon$. Thanks to \Cref{lemma:dcnn_approx_neural_network}, this last network can be approximated arbitrarily well by a DCNN of width $n+3$.
+%
+% \begin{theorem}
+%   Let $\Xset \subset \Rbb^{w_{(1)}}$.
+%   For any continuous function $f: \Xset \rightarrow \Rbb^{w^{(\depth)}}$, then there exists a  
+%
+%   Let $\Xset \subset \Rbb^{w_{(1)}}$ and let $f: \Rbb^{w^{(1)}} \rightarrow \Rbb^{w^{(\depth)}}$ be a continuous function.
+%   Then, there exists a neural networks parameterized by $\weights$ with an input dimension $w^{(1)}$, an arbitrary depth $\depth$, and $\relu$ activation such that:
+%   \begin{equation}
+%     \norm{f(\xvec) - \nn(\xvec)} \leq \epsilon
+%   \end{equation}
+%   \label{theorem:ch2-universal_approximation_theorem}
+% \end{theorem}
+%
+
+
+% \citet{cybenko1989approximation} have shown that shallow neural networks with sigmoid activation can \emph{theoretically} approximate any decision boundary.
+%
+% The arbitrary depth case was also studied by number of authors, such as Zhou Lu et al in 2017,[11] 
+% \cite{lu2017expressive}
+%
+% Boris Hanin and Mark Sellke in 2018,[12] 
+% \cite{hanin2017universal}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Adversarial Attacks \& Robustness of Neural Networks}
+\label{subsection:ch2-preliminaries_on_adversarial_attacks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+As seen in the introduction (\Cref{chapter:ch1-introduction}), deep neural networks achieve state-of-the-art performances in a variety of domains such as natural language processing~\cite{radford2018Language}, image recognition~\cite{he2016deep} and speech recognition~\cite{hinton2012deep}.
+However, it has been shown that such neural networks are vulnerable to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,szegedy2013intriguing}.
+Because it is difficult to characterize the space of visually imperceptible variations of a natural image, existing adversarial attacks use $\ell_p$ norms as surrogate measures.
+We can formally define an adversarial example as follows:
+\begin{definition}[Adversarial Pertubation]
+  Given a dataset $\mathcal{S} = \Xset \times \Yset$, a pair $(\xvec, y) \sim \mathcal{S}$ and a trained neural network $\nn_\weights$ on $\mathcal{S}$ such that $\argmax_{i \in [0,k-1]} \{ \nn_\weights(\xvec)_i \} = y$, let $\adv \in \Xset$ be an adversarial perturbation such that:
+  \begin{align}
+    &\argmax_{i \in [0,k-1]} \{ \nn_\weights (\xvec + \adv)_i \} \neq y \\
+    \st\ &\norm{\adv}_p \leq \epsilon \notag
+  \end{align}
+  where $\epsilon$ is a small value defined by the attacker. 
+\end{definition}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Implementing Adversarial Attacks}
+\label{subsubsection:ch2-adversarial_attacks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Since the discovery of adversarial perturbations, a variety of procedures, \aka \emph{adversarial attack}, have been developed to generate adversarial examples, for example FGSM \cite{goodfellow2014explaining}, PGD \cite{madry2018towards} and C\&W \cite{carlini2017towards}, to mention the most popular ones.
+To find the best perturbation $\adv$, existing attacks can adopt one of the two following strategies:
+% \begin{itemize}
+%   \item \textbf{Loss maximization}: maximizing the loss $L(\nn_\weights(\xvec + \adv), y)$ under some constraint on $\norm{\adv}_p$ with $p \in \{0, \dots, \infty\}$.;
+%   \item \textbf{Perturbation minimization}: minimizing $\norm{\adv}_p$ under some constraint on the loss $L(\nn_\weights(\xvec + \adv), y)$.
+% \end{itemize}
+
+\paragraph{Loss maximization.}
+In this scenario, the procedure maximizes the loss objective function $L(\nn_\weights(\xvec + \adv), y)$, under the constraint that the $\lp$ norm of the perturbation remains bounded by some value $\epsilon$, as follows:
+\begin{equation}
+  \argmax_{\adv:\norm{\adv}_p \leq \epsilon} L(\nn_\weights(\xvec + \adv), y) \enspace.
+  \label{equation:ch2-lossmax}
+\end{equation}
+The typical value of $\epsilon$ depends on the norm $\norm{\ \cdot\ }_p$ considered in the problem setting.
+% In order to compare $\linf$ and $\ltwo$ attacks of similar strength, we choose values of $\epsilon_\infty$ and $\epsilon_2$ (for $\linf$ and $\ltwo$ norms respectively) which result in $\linf$ and $\ltwo$ balls of equivalent volumes.
+% For the particular case of CIFAR-10, this would lead us to choose $\epsilon_\infty = 0.03$ and $\epsilon_2 = 0.8$ which correspond to the maximum values chosen empirically to avoid the generation of visually detectable perturbations. 
+The current state-of-the-art method to solve \Cref{equation:ch2-lossmax} is based on a projected gradient descent (PGD)~\cite{madry2018towards} of radius~$\epsilon$.
+Given a budget $\epsilon$, it recursively computes
+\begin{equation}
+  \xvec^{(t+1)} = \prod_{\mathcal{B}_p(\xvec,\epsilon)}\left(\xvec^{(t)}
+    + \alpha \argmax_{\adv: \norm{\adv}_p \leq 1} \nabla_\xvec L\left( \nn_\weights \left(\xvec^{(t)} + \adv \right), y \right)
+\right)
+  \label{equation:ch2-projectionPGD}
+\end{equation}
+where $\mathcal{B}_p(\xvec,\epsilon) = \{ \xvec + \adv:\norm{\adv}_p \leq \epsilon\}$, $\alpha$ is a gradient step size, and $\prod_S$ is the projection operator on $S$.
+The PGD attack is currently used in the literature with $p=2$ and $p=\infty$.
+The attack with the norm $p=\infty$ is state-of-the-art for the loss maximization problem. 
+
+\paragraph{Perturbation minimization.}
+This type of procedure search for the perturbation that has the minimal $\lp$ norm, under the constraint that $L(\nn_\weights(\xvec + \adv), y)$ is bigger than a given bound $c$:
+\begin{align}
+  &\argmin_{\adv} \norm{\adv}_p \label{equation:ch2-normmin} \\
+  \st\ &L(\nn_\weights(\xvec + \adv), y) \geq c \notag
+\end{align}
+The value of $c$ is typically chosen depending on the loss function $L$. For example, if $L$ is the $0-1$ loss, any $c > 0$ is acceptable.
+\Cref{equation:ch2-normmin} has been tackled by~\citet{carlini2017towards}, leading to the following method, denoted C\&W attack in the rest of the chapter. It aims at solving the following Lagrangian relaxation of \Cref{equation:ch2-normmin}:
+\begin{equation}
+  \argmin_{\adv} \norm{\adv}_p + \lambda g(\xvec+\adv)
+\end{equation}
+where $g(\xvec + \adv)<0$ if and only if $L(\nn_\weights(\xvec + \adv),y) \geq c$. 
+The authors use a change of variable $\adv = \tanh(\wvec) - \xvec$ to ensure that $\xvec + \adv \in \Xset$, a binary search to optimize the constant $c$, and Adam or SGD to compute an approximated solution.
+The C\&W attack is currently used in the literature with $p \in \{1, 2, \infty \}$ and is state-of-the-art with $p=2$ for the perturbation minimization problem
+% This attack with the norm $p=2$ is state-of-the-art for the perturbation minimization problem. 
+% The C\&W attack is well defined both for $p=2$, and $p=\infty$, but there is a clear empirical gap of efficiency in favor of the $\ltwo$ attack.
+
+
+% For example, \citet{goodfellow2014explaining} use the $\linf$ norm to measure the distance between the original image and the adversarial image whereas \citet{carlini2017towards} use the $\ltwo$ norm.
+% When the input dimension is low, the choice of the norm is of little importance because the $\linf$ and $\ltwo$ balls overlap by a large margin, and the adversarial examples lie in the same space.
+% For typical image datasets with large dimensionality, the two balls are mostly disjoint.
+% As a consequence, the $\linf$ and the $\ltwo$ adversarial examples lie in different areas of the space, and it explains why $\linf$ defense mechanisms perform poorly against $\ltwo$ attacks and vice versa. 
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Defending against Adversarial Attacks}
+\label{subsubsection:ch2-defending_against_adversarial_attacks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Given the important security risks that adversarial attacks pose, it is important to design defenses to protect neural networks against these kinds of attacks.
+Adversarial Training was introduced by~\citet{goodfellow2014explaining} and later improved by~\citet{madry2018towards} as a first defense mechanism to train robust neural networks.
+It consists in augmenting training batches with adversarial examples generated during the training procedure.
+The structural risk minimization paradigm is thus replaced by the following $\min$ $\max$ problem, where the classifier tries to minimize the expected loss under maximum perturbation of its input:
+\begin{equation}
+  \argmin_\weights \argmax_{\adv: \norm{\adv} \leq \epsilon} \frac{1}{|\mathcal{S}|} \sum_{(\xvec, y) \in \mathcal{S}} L\left( \nn_\weights \left(\xvec + \adv \right), y \right) + \lambda \sum_{(\Wmat, \bvec) \in \weights} \left( \norm{\Wmat}_\mathrm{F} + \norm{\bvec}_\mathrm{2} \right)
+\end{equation}
+% In the case where $p = \infty$, this technique offers good robustness against $\linf$ attacks \cite{athalye2018obfuscated}.
+Although adversarial training lacks formal guarantees, it is one of the few techniques that prove to be empirically very effective.
+
+
+% Despite some recent work providing great insights \cite{sinha2017certifying,zhang2019theoretically}, there is no worst case lower bound yet on the accuracy under attack of this method.
+
+
+
+
+% \%\%\%
+%
+% \cite{goodfellow2014explaining} have proposed \textbf{Adversarial Training} which follows \textbf{ERM} training over adversarially-perturbed samples
+%
+%
+% \%\%\%
+
+% Another important technique to defend against adversarial examples is to use \emph{noise injection} techniques.  
+% In contrast with adversarial Training, noise injection mechanisms are usually deployed after training.
+
+
+% In a nutshell, it works as follows.
+% At inference time, given a unlabeled sample $x$, the network outputs
+% \begin{equation}
+%   \tilde{f}_\theta(\xvec) \triangleq f_\theta(\xvec + \eta) \ \ \ (\text{instead of  } f_\theta(\xvec)) 
+% \end{equation}
+% where $\eta$ is a random variable on $\mathbb{R}^d$.
+% Even though, Noise Injection is often less efficient than Adversarial Training in practice (see \eg, \Cref{table:764774}), it benefits from strong theoretical background.
+% In particular, recent works \cite{lecuyer2018certified,li2019certified}, followed by~\citet{cohen2019certified,pinot2019theoretical} demonstrated that noise injection from a Gaussian distribution can give provable defense against $\ltwo$ adversarial attacks.
+% In this work, besides the classical Gaussian noises already investigated in previous works, we evaluate the efficiency of Uniform distributions to defend against $\ltwo$ adversarial examples. 
+
+
