@@ -14,8 +14,6 @@
 \usepackage{epigraph}                                       % for citation
 \usepackage[super]{nth}                                     % Generate English ordinal numbers
 \usepackage{bbding}                                         % A symbol font
-\usepackage[chapter]{algorithm}                             % Support for typesetting algorithms
-\usepackage{algpseudocode}                                  % Support for typesetting pseudocode
 \usepackage[title, toc, titletoc, page, header]{appendix}   % extra control of appendices
 \usepackage[nomaketitle]{psl-cover}                         % package for PSL cover
 \usepackage{etoc}                                           % Support for Mini Table of Contents
@@ -59,6 +57,22 @@
 \usepackage{booktabs}       % professional-quality tables
 \usepackage{makecell}
 
+% This ensures that I am able to typeset bold font in table while still aligning the numbers correctly.
+\DeclareSIUnit\px{px}
+\sisetup{%
+  separate-uncertainty,
+  detect-all           = true,
+  detect-family        = true,
+  detect-mode          = true,
+  detect-shape         = true,
+  detect-weight        = true,
+  detect-inline-weight = math,
+  multi-part-units     = single
+}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Hyperlinks
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -75,6 +89,25 @@
 \usepackage{cleveref}       % Intelligent cross-referencing
 \usepackage{bookmark}       % Bookmarks in the resulting PDF
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Algoithms
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% should be loaded after hyperref
+\usepackage[chapter]{algorithm} % Support for typesetting algorithms
+\usepackage{algpseudocode}      % Support for typesetting pseudocode
+
+\makeatletter
+\newcounter{algorithmicH}% New algorithmic-like hyperref counter
+\let\oldalgorithmic\algorithmic
+\renewcommand{\algorithmic}{%
+  \stepcounter{algorithmicH}% Step counter
+  \oldalgorithmic}% Do what was always done with algorithmic environment
+\renewcommand{\theHALG@line}{ALG@line.\thealgorithmicH.\arabic{ALG@line}}
+\makeatother
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -87,13 +120,15 @@
 \DeclareMathAlphabet\mathchorus     {T1} {qzc}      {m}  {n}
 \DeclareMathAlphabet\mathrsfso      {U}  {rsfso}    {m}  {n}
 
+\DeclareUnicodeCharacter{2212}{-}
+
 % Minitoc
 \newlength\tocrulewidth
 \setlength{\tocrulewidth}{0.8pt}
 \etocsettocstyle{
   \addsec*{Contents \\ \vspace{-0.5cm}
     \rule{\textwidth}{\tocrulewidth}
-    \vspace{-0.8cm}
+    \vspace{-1cm plus0mm minus0mm}
   }
 }{
   \noindent\rule{\linewidth}{\tocrulewidth}
@@ -101,35 +136,9 @@
 
 \newcommand{\localtoc}{
   \begingroup
-    \setlength{\parskip}{0cm plus0mm minus0mm}
     \localtableofcontents
-    \vspace{1cm}
+    % \vspace{1cm}
   \endgroup
-}
-
-
-% % Glossary
-% \newlength\marginglossary
-% \setlength{\marginglossary}{2.4cm}
-
-
-% These are the adjustments that I consider necessary for typesetting
-% a nice thesis. However, they are *not* included in the template, as
-% I do not want to force you to use them.
-
-% This ensures that I am able to typeset bold font in table while still aligning the numbers
-% correctly.
-
-\DeclareSIUnit\px{px}
-\sisetup{%
-  separate-uncertainty,
-  detect-all           = true,
-  detect-family        = true,
-  detect-mode          = true,
-  detect-shape         = true,
-  detect-weight        = true,
-  detect-inline-weight = math,
-  multi-part-units     = single
 }
 
 
@@ -300,15 +309,16 @@
 \declaretheorem[
   numberwithin=chapter,
   name=Theorem,
-  style=maintheoremstyle,
-  refname={theorem,theorems},
-  Refname={Theorem,Theorems}]{maintheorem}
-\declaretheorem[
-  numberwithin=chapter,
-  name=Theorem,
   style=style,
   refname={theorem,theorems},
   Refname={Theorem,Theorems}]{theorem}
+\declaretheorem[
+  numberwithin=chapter,
+  name=Corollary,
+  style=style,
+  refname={corollary,corollaries},
+  Refname={Corollary,Corollaries}]{corollary}
+
 \declaretheorem[
   numberwithin=chapter,
   name=Definition,
@@ -329,10 +339,10 @@
   Refname={Proposition,Propositions}]{proposition}
 \declaretheorem[
   numberwithin=chapter,
-  name=Corollary,
+  name=Problem,
   style=style,
-  refname={corollary,corollaries},
-  Refname={Corollary,Corollaries}]{corollary}
+  refname={problem,problems},
+  Refname={Problem,Problems}]{problem}
 \declaretheorem[
   numberwithin=chapter,
   numbered=no,
@@ -340,12 +350,40 @@
   style=style,
   refname={remark,remarks},
   Refname={Remark,Remarks}]{remark}
+
 \declaretheorem[
   numberwithin=chapter,
-  name=Problem,
+  name=Theorem,
+  style=maintheoremstyle,
+  sibling=theorem,
+  refname={theorem,theorems},
+  Refname={Theorem,Theorems}]{maintheorem}
+\declaretheorem[
+  numberwithin=chapter,
+  name=Corollary,
+  style=maintheoremstyle,
+  sibling=corollary,
+  refname={corollary,corollaries},
+  Refname={Corollary,Corollaries}]{maincorollary}
+
+\declaretheorem[
+  numberwithin=chapter,
+  numbered=no,
+  name=Property,
   style=style,
-  refname={problem,problems},
-  Refname={Problem,Problems}]{problem}
+  refname={property,properties},
+  Refname={Property,Properties}]{property}
+\declaretheorem[
+  numberwithin=chapter,
+  numbered=no,
+  name=Properties,
+  style=style,
+  refname={property,properties},
+  Refname={Property,Properties}]{properties}
+
+
+
+
 
 \let\proof\relax
 \let\endproof\relax
@@ -357,6 +395,7 @@
   headfont=\bfseries\itshape,
   notefont=\bfseries\itshape,
   postheadspace=1em,
+  postfoothook=\vspace{2em},
   qed=$\blacksquare$,
   mdframed={
     topline=false,
@@ -381,41 +420,48 @@
 ]{proof}
 
 
-% \newtheorem{definition}   {Definition}
-% \newtheorem{theorem}      {Theorem}
-% \newtheorem{corollary}    {Corollary}
-% \newtheorem{lemma}        {Lemma}
-% \newtheorem{proposition}  {Proposition}
-% \newtheorem{property}     {Property}
-% \newtheorem{problem}      {Problem}
-% \newtheorem{example}      {Example}
-% \newtheorem*{remark}      {Remark}
 
-% \renewcommand\qedsymbol{$\blacksquare$}
-%
-% \newcommand\proofrefth[1]   {\textbf{Proof of Theorem}~\ref{#1}}
-% \newcommand\proofrefcor[1]  {\textbf{Proof of Corollary}~\ref{#1}}
-% \newcommand\proofreflem[1]  {\textbf{Proof of Lemma}~\ref{#1}}
-% \newcommand\proofrefprop[1] {\textbf{Proof of Proposition}~\ref{#1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Text commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \newcommand{\beginproof}{#1}{\begin{proof}[\proofreflem{#1}]}
-% \newcommand{\endproof}{\end{proof}}
+\newcommand{\yt}    {\textit{\mbox{YouTube-8M}}\xspace}
+\newcommand{\eg}    {\textit{e.g.}\xspace}
+\newcommand{\ie}    {\textit{i.e.}\xspace}
+\newcommand{\cf}    {\textit{cf.}\xspace}
+\newcommand{\aka}   {\textit{a.k.a.}\xspace}
+\newcommand{\pdf}   {p.d.f.\xspace}
+\newcommand{\st}    { s.t.\xspace}
+% \newcommand{\vs}    {\textit{vs.}\xspace}
+% \newcommand{\wrt}   {w.r.t.\xspace}
+
+\newcommand{\DC}    {$\mathbf{DC}$\xspace}
+\newcommand{\ACDC}  {$\mathbf{ACDC}$\xspace}
+% \newcommand{\AFDF}  {$\mathbf{AFDF}^{-1}$\xspace}
+
+% Star for separating paragraph
+\newcommand{\drawstar}{
+  \begin{center}
+    \color{mydarkblue}{\FourStar}
+  \end{center}
+}
+
+% \newcommand{\drn}{Deep ReLU network\xspace}
+% \newcommand{\drns}{Deep ReLU networks\xspace}
+% \newcommand{\DCRN}{DCRN\xspace}
+% \newcommand{\DCRNs}{DCRNs\xspace}
+% \newcommand{\divisiblerank}{divisible rank}
+% \newcommand{\totalrank}{total rank}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Specific Operators
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\DeclareMathOperator{\reshape}       {vec}
-\DeclareMathOperator{\pad}           {pad}
-\DeclareMathOperator{\relu}          {ReLU}
 \DeclareMathOperator*{\argmax}       {arg\,max}
 \DeclareMathOperator*{\argmin}       {arg\,min}
-\DeclareMathOperator*{\Vol}          {Vol}
-\DeclareMathOperator*{\Ebb}          {\ensuremath \mathbb{E}}
-\DeclareMathOperator*{\Pbb}          {\ensuremath \mathbb{P}}
-\DeclareMathOperator*{\EoT}          {EoT}
-\DeclareMathOperator*{\diag}         {diag}
-\DeclareMathOperator{\sign}          {sign}
+\DeclareMathOperator*{\Ebb}          {\mathbb{E}}
+\DeclareMathOperator*{\Pbb}          {\mathbb{P}}
 \DeclareMathOperator*{\Risk}         {Risk}
 \DeclareMathOperator*{\advRisk}      {Risk_{\alpha}}
 \DeclareMathOperator*{\PCadvRisk}    {PC-Risk_{\alpha}}
@@ -425,33 +471,63 @@
 \DeclareMathOperator*{\B}            {B(\alpha)}
 \DeclareMathOperator*{\probmap}      {M}
 
-\DeclareMathOperator{\lipop}{Lip}
-\DeclareMathOperator{\lipbound}{LipBound}
-\newcommand{\lip}[1]{\lipop{(#1)}}
+% \DeclareMathOperator{\lipop}{Lip}
+% \DeclareMathOperator{\lipbound}{LipBound}
+% \newcommand{\lip}[1]{\lipop{(#1)}}
 % \newcommand{\lipbound}[1]{\lipboundop{(#1)}}
 
+% \DeclareMathOperator{\lipbound}{LipBound}
+% \DeclareMathOperator{\reshape}       {vec}
+% \DeclareMathOperator{\pad}           {pad}
+% \DeclareMathOperator{\relu}          {ReLU}
+
+% \relax\vec
+% \renewcommand{\vec}    {\ensuremath{\mathrm{vec}}\xspace}
+\newcommand{\relu}     {\ensuremath{\mathrm{ReLU}}\xspace}
+\newcommand{\pad}      {\ensuremath{\mathrm{pad}}\xspace}
+\newcommand{\lipp}[2]   {\ensuremath{\mathrm{Lip}_{#1} (#2)}}
+\newcommand{\lip}[1]   {\ensuremath{\mathrm{Lip}(#1)}}
+\newcommand{\lipbound} {\ensuremath{\mathrm{LipBound}}}
+\newcommand{\diag}     {\ensuremath{\mathrm{diag}}}
+\newcommand{\sign}     {\ensuremath{\mathrm{sign}}}
+\renewcommand{\mod}[1] {\ \mathrm{mod}\ #1}
+
+
+
+% \DeclareMathOperator*{\diag}         {diag}
+% \DeclareMathOperator{\sign}          {sign}
+\DeclareMathOperator*{\EoT}          {EoT}
+\DeclareMathOperator*{\Vol}          {Vol}
+
+% text in math environment 
+\newcommand{\circulant}   {\ensuremath \mathrm{circ}}
+\newcommand{\diagonal}    {\ensuremath \mathrm{diag}}
+\newcommand{\krylov}      {\ensuremath \mathrm{krylov}}
+\newcommand{\Cov}         {\ensuremath \mathrm{Cov}}
+\newcommand{\Var}         {\ensuremath \mathrm{Var}}
+\newcommand{\cin}         {\ensuremath c_{in}}
+\newcommand{\cout}        {\ensuremath c_{out}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Custom Commands
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
 
-\newlength{\marginbellowtable}
-\setlength{\marginbellowtable}{2em}
+% TODO delete these commands
+\newcommand{\seqidx}{h}
+\newcommand{\seqsetN}{N}
+\newcommand{\seqsetM}{M}
+\newcommand{\Cnn}{\Cbb^{n \times n}}
+\newcommand{\Cn}{\Cbb^{n}}
+\newcommand{\F}{\ensuremath \mathcal{F}}
 
-\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
-\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\newcommand{\scalefigure}{0.80}
+\newcommand{\removespace}{\vspace{-\baselineskip}}
 
 % complex number i
 \newcommand{\ci}{\ensuremath \mathbf{i}}
 
-% definition of index a_h and B_h
-\newcommand{\seqidx}{h}
-\newcommand{\seqsetN}{N}
-\newcommand{\seqsetM}{M}
-
-% channel-in and channels-out
 
 % norms
 \newcommand{\lzero} {\ensuremath \ell_0 \xspace}
@@ -459,16 +535,16 @@
 \newcommand{\ltwo}  {\ensuremath \ell_2 \xspace}
 \newcommand{\linf}  {\ensuremath \ell_\infty \xspace}
 \newcommand{\lp}    {\ensuremath \ell_p \xspace}
+\newcommand{\fro}   {\ensuremath \mathrm{F}}
 
 % command for sets
 \newcommand{\Nbb}{\ensuremath \mathbb{N}}
 \newcommand{\Zbb}{\ensuremath \mathbb{Z}}
 \newcommand{\Rbb}{\ensuremath \mathbb{R}}
 \newcommand{\Cbb}{\ensuremath \mathbb{C}}
-\newcommand{\Cnn}{\Cbb^{n \times n}}
-\newcommand{\Cn}{\Cbb^{n}}
-\newcommand{\Xset}{\mathcal{X}}
-
+\newcommand{\Xset}{\ensuremath \mathcal{X}}
+\newcommand{\Yset}{\ensuremath \mathcal{Y}}
+\newcommand{\bigO}{\ensuremath \mathcal{O}}
 
 % Vector of ones
 \newcommand{\onevec}[1]{\ensuremath \mathbf{1}_{#1}}
@@ -476,8 +552,10 @@
 
 % neural networks
 \newcommand{\nn}{N}
-\newcommand{\dcnn}{DCNN}
+\newcommand{\dcnn}{DCNN\xspace}
+\newcommand{\dcnns}{DCNNs\xspace}
 \newcommand{\act}{\rho}
+\newcommand{\layer}{\phi}
 \newcommand{\weights}{\Omega}
 \newcommand{\depth}{p}
 \newcommand{\dimw}{w}
@@ -488,6 +566,15 @@
 % operator low displacement rank
 \newcommand{\triangleopup}{\pmb{\bigtriangleup}}
 \newcommand{\triangleopdown}{\rotatebox[x=0pt,y=4pt]{180}{$\triangleopup$}}
+
+% matrix brackets
+\newcommand{\leftmatrix}       {\begin{pmatrix}}
+\newcommand{\rightmatrix}      {\end{pmatrix}}
+\newcommand{\leftmatrixsmall}  {\begin{psmallmatrix}}
+\newcommand{\rightmatrixsmall} {\end{psmallmatrix}}
+\newcommand{\leftmat}          {\left(}
+\newcommand{\rightmat}         {\right)}
+\newcommand{\smallddots}       {\scalebox{.40}{$\ddots$}}
 
 
 % command for matrices
@@ -546,56 +633,6 @@
 \newcommand{\yvec}{\ensuremath \mathbf{y}}
 \newcommand{\zvec}{\ensuremath \mathbf{z}}
 
-% matrix brackets
-\newcommand{\leftmatrix}       {\begin{pmatrix}}
-\newcommand{\rightmatrix}      {\end{pmatrix}}
-\newcommand{\leftmatrixsmall}  {\begin{psmallmatrix}}
-\newcommand{\rightmatrixsmall} {\end{psmallmatrix}}
-\newcommand{\leftmat}          {\left(}
-\newcommand{\rightmat}         {\right)}
-\newcommand{\smallddots}       {\scalebox{.40}{$\ddots$}}
-
-% text in math environment 
-\newcommand{\circulant}   {\ensuremath \mathrm{circ}}
-\newcommand{\diagonal}    {\ensuremath \mathrm{diag}}
-\newcommand{\krylov}      {\ensuremath \mathrm{krylov}}
-\newcommand{\Cov}         {\ensuremath \mathrm{Cov}}
-\newcommand{\Var}         {\ensuremath \mathrm{Var}}
-\newcommand{\cin}         {\ensuremath c_{in}}
-\newcommand{\cout}        {\ensuremath c_{out}}
-
-
-\newcommand{\F}{\ensuremath \mathcal{F}}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Text commands
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\newcommand{\yt}    {\textit{\mbox{YouTube-8M}}\xspace}
-\newcommand{\eg}    {\textit{e.g.}\xspace}
-\newcommand{\ie}    {\textit{i.e.}\xspace}
-\newcommand{\aka}   {\textit{a.k.a.}\xspace}
-\newcommand{\vs}    {\textit{vs.}\xspace}
-\newcommand{\wrt}   {w.r.t.\xspace}
-\newcommand{\st}    { s.t.\xspace}
-\newcommand{\DC}    {$\mathbf{DC}$\xspace}
-\newcommand{\ACDC}  {$\mathbf{ACDC}^{-1}$\xspace}
-\newcommand{\AFDF}  {$\mathbf{AFDF}^{-1}$\xspace}
-
-% Star for separating paragraph
-\newcommand{\drawstar}{
-  \begin{center}
-    \color{mydarkblue}{\FourStar}
-  \end{center}
-}
-
-% \newcommand{\drn}{Deep ReLU network\xspace}
-% \newcommand{\drns}{Deep ReLU networks\xspace}
-% \newcommand{\DCRN}{DCRN\xspace}
-% \newcommand{\DCRNs}{DCRNs\xspace}
-% \newcommand{\divisiblerank}{divisible rank}
-% \newcommand{\totalrank}{total rank}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Debugging
@@ -617,6 +654,7 @@
 
 % todotext command 
 \newcommand{\todotext}[1]{{\color{red} \noindent \textbf{#1}}}
+\newcommand{\todotextok}[1]{{\color{green} \noindent \textbf{#1}}}
 
 % command to count page of chapter
 \newcommand{\countpages}[2]{\the\numexpr\getpagerefnumber{#2}-\getpagerefnumber{#1}\relax}
