@@ -78,34 +78,32 @@
         \tableofcontents
       \endgroup
       \newpage
-      % \addcontentsline{toc}{chapter}{\listfigurename}
-      % \listoffigures
-      % \newpage
-      % \addcontentsline{toc}{chapter}{\listtablename}
-      % \listoftables
-      % \newpage
-      % \printglossary[type=\acronymtype]
-      % \newpage
+      \addcontentsline{toc}{chapter}{\listfigurename}
+      \listoffigures
+      \newpage
+      \addcontentsline{toc}{chapter}{\listtablename}
+      \listoftables
+      \newpage
+      \printglossary[type=\acronymtype]
+      \newpage
       \printglossary[title={List of Symbols}]
     \endgroup
     \printindex
 
   % main
-  \linenumbers
+  % \linenumbers
   \mainmatter
   \input{sources/main/ch1-introduction}
   \input{sources/main/ch2-background}
   \input{sources/main/ch3-related_work}
 
-  \chapter{Diagonal Circulant Neural Networks}
-  \label{chapter:ch4-diagonal_circulant_neural_network}
+  % \chapter{Diagonal and Circulant Matrices for Compact Neural Networks}
+  % \label{chapter:ch4-diagonal_circulant_neural_network}
+  \input{sources/main/ch4-diagonal_circulant}
+  \input{sources/main/ch5-lipschitz_regularization}
+  \input{sources/main/ch6-conclusion}
+  % \chapter{Appendix} \label{chapter:appendix}
 
-  \chapter{Lipschitz Bound of Convolutional Layers}
-  \label{chapter:ch5-lipschitz_bound}
-
-  % \input{sources/main/ch4-diagonal_circulant}
-  % \input{sources/main/ch5-lipschitz_regularization}
-  % \input{sources/main/ch6-conclusion}
 
   % Appendix
   % \renewcommand\appendixpagename{\usekomafont{disposition}Appendices}
