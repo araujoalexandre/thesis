@@ -2,7 +2,7 @@
 
 In this thesis, we make contributions at the intersection between neural networks and structured matrices.
 We build neural networks with structured matrices and develop new algorithms for training neural networks based on certain properties of structured matrices. 
-Hereafter, we present some preliminaries on structured matrices that we will use later. 
+Hereafter, we present some preliminaries on structured matrices that we will build on during this thesis.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Toeplitz Matrices}
@@ -35,16 +35,16 @@ The complex-valued function
 \begin{equation}
   f(\omega) = \sum_{h \in P} a_h e^{\ci h \omega}
 \end{equation}
-is the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in P}$ with $\omega \in \mathbb{R}$.
+is the \emph{inverse Fourier transform} of the sequence $\{a_h\}_{h \in P}$ with $\omega \in \mathbb{R}$.
 From this function, one can recover the sequence $\{a_h\}_{h \in P}$ using the standard Fourier transform:
 \begin{equation}
   a_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} f(\omega) d\omega \enspace. 
 \end{equation}
 
-From there, similarly to the work done by~\citet{gray2006toeplitz}, we can define an operator $\Tmat$ mapping integrable functions to matrices:
-\begin{equation}
+\todotext{update the phrase here}
+From there,  done by~\citet{gray2006toeplitz}, we can define an operator $\Tmat$ mapping integrable functions to matrices:
+\begin{equation} \label{equation:ch2-toeplitz_operator}
   \Tmat_n(g) \triangleq \leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j\in\{0,\ldots,n-1\}} \enspace.
-  \label{equation:ch2-toeplitz_operator}
 \end{equation}
 \noindent
 In the following of this thesis, when it is clear from context, we will write $\Tmat(g)$ instead of $\Tmat_n(g)$.
@@ -64,7 +64,7 @@ Because:
   \frac{1}{2\pi} \int_0^{2\pi} e^{\ci k \omega} \,d\omega = 
   \begin{cases}
     1 \quad \text{if}\ k = 0, \\
-    0 \quad \text{if}\ k\ \text{is a non-zero integer number.}
+    0 \quad \text{if}\ k \neq 0
   \end{cases}
 \end{equation}
 
@@ -115,7 +115,7 @@ First, we define the Fourier Matrix and then, we present an important theorem re
 
 \begin{definition}[Fourier Matrix]
   The Fourier matrix of order $n$ is defined as follows:
-  \begin{equation}
+  \begin{equation} \label{definition:ch2-fourier_matrix}
     \Umat_n = 
     \leftmatrix
       1      & 1           & 1              & \cdots & 1           \\
@@ -126,14 +126,13 @@ First, we define the Fourier Matrix and then, we present an important theorem re
     \rightmatrix
   \end{equation}
   where $z_n = e^{-\frac{2\pi\ci}{n}}$ is an $n^{\text{th}}$ root of unity.
-  \label{definition:ch2-fourier_matrix}
 \end{definition}
 \noindent
-The matrix-vector product between the Fourier matrix above and a vector is equivalent to apply the Discrete Fourier Transform on the vector.
+The matrix-vector product between the Fourier matrix above and a vector is equivalent to applying the Discrete Fourier Transform on the vector.
 This matrix-vector product can be efficiently computed with the \emph{Fast Fourier transform} (FFT) algorithm~\cite{cooley1965algorithm}.
 The complexity is reduced from from $\bigO(n^2)$ to $\bigO(n \log n)$.
 
-\begin{theorem}[Theorem 3.1 of \citet{gray2006toeplitz}]
+\begin{theorem}[Theorem 3.1 of \citet{gray2006toeplitz}] \label{theorem:ch2-diagonalization_circulant_matrix}
   Every $n \times n$ circulant matrix $\Cmat$, has eigenvectors  
   \begin{equation}
     \yvec^{(k)} = \frac{1}{\sqrt{n}} \leftmatrix 1, e^{-\frac{2 \pi \ci k}{n}}, \dots, e^{-\frac{2 \pi \ci k(n-1)}{n}} \rightmatrix^\top
@@ -143,17 +142,15 @@ The complexity is reduced from from $\bigO(n^2)$ to $\bigO(n \log n)$.
     \psi_k = \sum_{j=0}^{n-1} c_j e^{-\frac{2 \pi \ci}{n} jk}
   \end{equation}
   The circulant matrix $\Cmat$ can be expressed in the form 
-  \begin{equation}
+  \begin{equation} \label{equation:ch2-diagonalization_circulant_matrix}
     \Cmat = \frac{1}{n} \Umat_n^* \diag(\Umat_n \cvec) \Umat_n
-    \label{equation:ch2-diagonalization_circulant_matrix}
   \end{equation}
-  where $\cvec$ is vector based of the scalars $\{c_h\}_{h \in [0,n-1]}$.
+  where $\cvec$ is a vector based on the scalars $\{c_h\}_{h \in [0,n-1]}$.
   In particular all circulant matrices share the same eigenvectors, the same matrix $\Umat_n$ works for all $n \times n$ circulant matrices.
   Also, circulant matrices commute and are closed under sum and product.
-  \label{theorem:ch2-diagonalization_circulant_matrix}
 \end{theorem}
 \noindent
-Based on \Cref{theorem:ch2-diagonalization_circulant_matrix} and of the \emph{Fast Fourier transform} (FFT) algorithm the matrix-vector product between a circulant matrix $\Cmat$ and a vector $\xvec$ can be reduced from $\bigO(n^2)$ to $\bigO(n \log n)$. 
+Based on \Cref{theorem:ch2-diagonalization_circulant_matrix} and on the \emph{Fast Fourier transform} (FFT) algorithm, the matrix-vector product between a circulant matrix $\Cmat$ and a vector $\xvec$ can be reduced from $\bigO(n^2)$ to $\bigO(n \log n)$. 
 If we denote the Fast Fourier transform algorithm by \textbf{FFT} and the inverse by \textbf{IFFT}, the pseudocode for the matrix-product between a circulant matrix and a vector is as follows:
 \begin{algorithm}[h]
   \begin{algorithmic}[1]
@@ -168,8 +165,8 @@ If we denote the Fast Fourier transform algorithm by \textbf{FFT} and the invers
   \label{algorithm:ch2-matrix_vector_product_circulant_matrix}
 \end{algorithm}
 
-An important object based on circulant matrices are called \emph{$f$-circulant matrices} and are defined as follows:
-\begin{definition}[$f$-circulant matrix]
+An important object based on circulant matrices is called \emph{$f$-circulant matrix} and is defined as follows:
+\begin{definition}[$f$-circulant matrix] \label{definition:ch2-f_circulant_matrix}
   Given a vector $\xvec$, the $f$-circulant matrix, $\Zmat_f(\xvec)$, is defined as follows:
   \begin{equation}
     \Zmat_f(\xvec) \triangleq
@@ -182,15 +179,15 @@ An important object based on circulant matrices are called \emph{$f$-circulant m
       \xvec_{n-1} & \cdots & \cdots & \xvec_{2} & \xvec_{1} & \xvec_0
     \rightmatrix
   \end{equation}
-  \label{definition:ch2-f_circulant_matrix}
   \removespace
 \end{definition}
 \noindent
-A $f$-unit-circulant, denoted $\Zmat_f$, is a $f$-circulant matrix defined by the vector $\left(0, 1, \dots, 0 \right)$:
+% An $f$-unit-circulant, denoted $\Zmat_f$, is a $f$-circulant matrix defined by the vector $\left(0, 1, \dots, 0 \right)$:
+An $f$-unit-circulant, $\Zmat_f$, defined by the vector $\left(0, 1, \dots, 0 \right)$ writes:
 \begin{equation}
   \Zmat_f = \circulant \left(e^{(1)} \right) + (f - 1) \evec^{(0)} \evec^{(n-1)\top}
 \end{equation}
-
+\noindent
 Thus, in matrix form, we have:
 \begin{equation}
   \Zmat_f = 
@@ -206,8 +203,8 @@ Thus, in matrix form, we have:
 
 \noindent
 As stated by~\citet{sindhwani2015structured}, the $f$-unit-circulant matrix performs a downward shift-and-scale transformation on a vector.
-More precisely, the matrix-vector product $\Zmat_f \xvec$ makes a circular shifts on the elements and scale the last element of the vector resulting in $\Zmat_f \xvec = \leftmat f \xvec_{n-1}, \xvec_0, \dots, \xvec_{n-2} \rightmat^\top$. 
-$f$-unit-circulant matrix are one of the building block of \emph{Low displacement rank operator} presented in \Cref{subsection:ch3-building_compact_neural_networks_with_structured_matrices}.
+More precisely, the matrix-vector product $\Zmat_f \xvec$ makes a circular shift on the elements and scales the last element of the vector resulting in $\Zmat_f \xvec = \leftmat f \xvec_{n-1}, \xvec_0, \dots, \xvec_{n-2} \rightmat^\top$. 
+$f$-unit-circulant matrices are one of the building blocks of \emph{low displacement rank operator} presented in \Cref{subsection:ch3-building_compact_neural_networks_with_structured_matrices}.
 
 
 % The f-unit-circulant matrix is associated with a basic downward shift-and-scale transformation, i.e.,
@@ -265,7 +262,7 @@ A $n \times n$ banded-Toeplitz matrix can be represented as follows:
            &        &          &        &        &        & a_{-m} & \cdots & a_{-1} & a_0    \\ 
   \rightmatrix
 \end{equation}
-\citet{gray2006toeplitz} has noted that the only difference between a $n \times n$ banded-Toeplitz matrix and a circulant matrix based on the same sequence is the values on the bottom-left and top-right corner of the matrix.
+\citet{gray2006toeplitz} has noted that the only difference between an $n \times n$ banded-Toeplitz matrix and a circulant matrix based on the same sequence is the values on the bottom-left and top-right corner of the matrix.
 The circulant matrix based on the same sequence $\{a_k\}$ can be represented as follows:
 \begin{equation}
   \Cmat(n)  =
@@ -298,10 +295,10 @@ This concept of closeness between Toeplitz and a circulant matrix have been exte
 
 We can extend the logic of Toeplitz and circulant matrices to block Toeplitz and block circulant matrices.
 A block Toeplitz matrix is a matrix in which each block is repeated identically along diagonals.
-Equivalently, a block circulant matrix is a matrix in which each block is repeated identically along diagonals (like block Toeplitz matrices) and each ``row of blocks'' is cyclic right shift of the previous one.
-We show that block Toeplitz and block circulant matrices have similar properties that Toeplitz and circulant matrices.
+Equivalently, a block circulant matrix is a matrix in which each block is repeated identically along diagonals (like block Toeplitz matrices) and each ``row of blocks'' is a cyclic right shift of the previous one.
+We show that block Toeplitz and block circulant matrices have similar properties than Toeplitz and circulant ones.
 
-A $nm\times nm$ block circulant matrix $\Amat$ is fully determined by a sequence of blocks $\{\Amat_h\}_{h \in [0,n-1]}$ and where each block $\Amat_h$ is an $m \times m$ matrix.
+An $nm \times nm$ block circulant matrix $\Amat$ is fully determined by a sequence of blocks $\{\Amat_h\}_{h \in [0,n-1]}$ and where each block $\Amat_h$ is an $m \times m$ matrix.
 The circulant matrix $\Amat$ has the following form:
 \begin{equation}
   \Amat = \leftmat \Amat_{(k-j) \mod n} \rightmat_{i, j = 0}^{n-1} = 
@@ -328,7 +325,7 @@ The circulant matrix $\Amat$ has the following form:
 In a similar way to circulant matrices, block circulant matrices have a relation with the Discrete Fourier Transform.
 The next result characterizes this relation:
 \begin{theorem}[Lemma 5.1 of \citet{gutierrez2012block}]
-  Let $\Amat$ be a $nm\times nm$ block circulant matrix defined by the sequence of blocks $\{\Amat_h\}_{h \in [0,n-1]}$, then:
+  Let $\Amat$ be an $nm \times nm$ block circulant matrix defined by the sequence of blocks $\{\Amat_h\}_{h \in [0,n-1]}$, then:
   \begin{equation}
     \Amat = (\Umat_n \otimes \Imat_n) \diag(\Psi_0, \dots, \Psi_{n-1}) (\Umat_n \otimes \Imat_n)^*
   \end{equation}
@@ -352,18 +349,16 @@ The next result characterizes this relation:
   \removespace
 \end{theorem}
 \noindent
-One can remark that when the blocks are of size $1\times1$ \ie, scalar, this theorem coincide with \Cref{equation:ch2-diagonalization_circulant_matrix} of \Cref{theorem:ch2-diagonalization_circulant_matrix}.
-Another interesting special case is when the blocks of the block circulant matrix are also circulant, such matrix are called doubly-block circulant matrices.
-In this case, we have the following result:
-
-\begin{theorem}[Section 5.5 of \citet{jain1989fundamentals}] 
+One can remark that when the blocks are of size $1 \times 1$, \ie, scalars, this theorem coincides with \Cref{equation:ch2-diagonalization_circulant_matrix} of \Cref{theorem:ch2-diagonalization_circulant_matrix}.
+% Another interesting special case is when the blocks of the block circulant matrices are also circulant, such matrices are called doubly-block circulant matrices.
+In this case where the blocks of the block circulant matrix are also circulant, the matrix is called a doubly-block circulant matrix, then, we have the following result:
+\begin{theorem}[Section 5.5 of \citet{jain1989fundamentals}] \label{theorem:ch2-diaginalization_doubly_block_circulant_matrix}
   The eigenvectors of every $n^2 \times n^2$ doubly-block circulant matrices are the columns of the matrix $\frac{1}{n} \left( \Umat_n \otimes \Umat_n \right)$.
-  \label{theorem:ch2-diaginalization_doubly_block_circulant_matrix}
 \end{theorem}
 
 
-In a similar way as Toeplitz matrices, block Toeplitz matrices can be expressed with the Toeplitz operator defined in \Cref{equation:ch2-toeplitz_operator}.
-A $nm\times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat_h\}_{h \in P}$ and where each block $\Bmat_h$ is an $m \times m$ matrix.  
+Akin to Toeplitz matrices, block Toeplitz matrices can be expressed with the Toeplitz operator defined in \Cref{equation:ch2-toeplitz_operator}.
+An $nm \times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat_h\}_{h \in P}$ and where each block $\Bmat_h$ is an $m \times m$ matrix.  
 The block Toeplitz matrix $\Bmat$ has the following form:
 \begin{equation}
   \Bmat = \leftmat \Bmat_{k-j} \rightmat_{j,k = 0}^{n-1} = 
@@ -409,14 +404,14 @@ To recover the block Toeplitz matrix from its generating function, we use the To
     \hfill
     \includegraphics[width=0.23\textwidth]{figures/main/ch2-background/conv_03.pdf}
     \caption{A convolution: a kernel sliding over an image and acting as a filter. \\Illustration taken from~\citet{dumoulin2016guide}}
-    \label{figure:illustration_convolution}
+    \label{figure:illustration_convolution}.
 \end{figure}
 
 In this subsection, we describe the relation between structured matrices and convolutions.
 Recall that a discrete convolution can be seen as a kernel sliding over the image and acting as a filter.
 \Cref{figure:illustration_convolution} illustrates the convolution operation with the image (blue), the kernel (gray) and the resulting operation (green).
 It has been shown by~\citet{jain1989fundamentals} that the convolution operation is a linear transform `performed' by a doubly-block Toeplitz matrix (in the 2d case), \ie, a block Toeplitz matrix where the blocks are also Toeplitz.
-Considering convolutions as a simple linear transformation with a structured matrix has allowed multiple results to be derived~\citet{appuswamy2016structured,wang2020orthogonal,sedghi2018singular,singla2019bounding}, including one of our main contributions presented in \Cref{chapter:ch5-lipschitz_bound}.
+Considering convolutions as a simple linear transform with a structured matrix has allowed multiple results to be derived~\citet{appuswamy2016structured,wang2020orthogonal,sedghi2018singular,singla2019bounding}, including one of our main contributions presented in \Cref{chapter:ch5-lipschitz_bound}.
 
 
 
@@ -450,7 +445,7 @@ then, the doubly-block Toeplitz matrix $\Mmat$ that performs the convolution can
     0       &         & \Tmat_2 &  \Tmat_0
   \rightmatrix
 \end{equation*}
-where $\Tmat_j$ are banded-Toeplitz matrices and the values of the kernel $\Kmat$ are distributed in the Toeplitz blocks as follows:
+where $\Tmat_j$ are Toeplitz matrices and the values of the kernel $\Kmat$ are distributed in the Toeplitz blocks as follows:
 % \begin{equation*}
 %   \Tmat_0 = \leftmatrixsmall
 %     k_4 & k_3 &         &         & 0       \\
@@ -505,10 +500,9 @@ where $\Tmat_j$ are banded-Toeplitz matrices and the values of the kernel $\Kmat
 \end{equation*}
 
 
-However, in practice, the signal can have multiple channel called feature maps (\eg images have 3 channels: RGB).
+However, in practice, the signal can have multiple channels (\eg images have 3 channels: RGB).
 % corresponding to the colors red, green and blue).
-Let us denote by $\cin$ and $\cout$ the number of feature maps of the input and output respectively.
-Then the convolution % operation 
-takes an input of size $\cin \times n \times n$, is performed by a kernel of size $\cout \times \cin \times k \times k$ and the output signal will be of size $\cout \times m \times m$ with $m = n - k + 2p + 1$ where $p$ corresponds to the padding.
+Let us denote by $\cin$ and $\cout$ the number of channels of the input and output respectively.
+Then the convolution takes an input of size $\cin \times n \times n$, performed by a kernel of size $\cout \times \cin \times k \times k$, and outputs a signal of size $\cout \times m \times m$ with $m = n - k + 2p + 1$ where $p$ corresponds to the padding.
 The matrix for the multi-channel convolution is the concatenation of $\cout \cdot \cin$ doubly-block Toeplitz matrices.
 
