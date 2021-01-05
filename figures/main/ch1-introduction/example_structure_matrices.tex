@@ -1,0 +1,57 @@
+
+\begin{figure}[t]
+   \centering
+   \begin{subfigure}[t]{0.24\textwidth}
+       \centering
+       \begin{equation*}
+	  \leftmatrix
+	    a &   &   &   \\
+	      & b &   &   \\
+	      &   & c &   \\
+	      &   &   & d
+	  \rightmatrix
+       \end{equation*}
+       \caption*{diagonal}
+   \end{subfigure}
+   \hfill
+   \begin{subfigure}[t]{0.24\textwidth}
+       \centering
+       \begin{equation*}
+	  \leftmatrix
+	    a & b & c & d \\
+	    e & a & b & c \\
+	    f & e & a & b \\
+	    d & f & e & a
+	  \rightmatrix
+       \end{equation*}
+       \caption*{Toeplitz}
+   \end{subfigure}
+   \hfill
+   \begin{subfigure}[t]{0.24\textwidth}
+       \centering
+       \begin{equation*}
+	  \leftmatrix
+	    ae & af & ag & ah \\
+	    be & bf & bg & bh \\
+	    ce & cf & cg & ch \\
+	    de & df & dg & dh
+	  \rightmatrix
+       \end{equation*}
+       \caption*{Low Rank}
+   \end{subfigure}
+   \hfill
+   \begin{subfigure}[t]{0.24\textwidth}
+       \centering
+       \begin{equation*}
+	  \leftmatrix
+	    a & a^2 & a^3 & a^4 \\
+	    b & b^2 & b^3 & b^4 \\
+	    c & c^2 & c^3 & c^4 \\
+	    d & d^2 & d^3 & d^4
+	  \rightmatrix
+       \end{equation*}
+       \caption*{Vandermonde}
+   \end{subfigure}
+  \caption{Examples of structured matrices.}
+  \label{figure:ch1-example_structure_matrices}
+\end{figure}
