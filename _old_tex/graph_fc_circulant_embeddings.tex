@@ -13,8 +13,8 @@
     ymajorgrids=true,
     grid style=dashed,
 	]
-  \addplot[color=blue] table [y=gap, x=epoch]{figures/appendix/ap2-training_video_classification/fc_circulant_embedding/dbof_compressed.dat};
-  \addplot[color=red] table [y=gap, x=epoch]{figures/appendix/ap2-training_video_classification/fc_circulant_embedding/dbof_uncompressed.dat};
+  \addplot[color=blue] table [y=gap, x=epoch]{figures/scripts/ap2-graph_fc_circulant_embedding_data/dbof_compressed.dat};
+  \addplot[color=red] table [y=gap, x=epoch]{figures/scripts/ap2-graph_fc_circulant_embedding_data/dbof_uncompressed.dat};
 \legend{Compact, Dense}
 \end{axis}
 \end{tikzpicture}
@@ -34,9 +34,9 @@
     grid style=dashed,
   ]
   \addplot[color=blue] table [y=gap, x=epoch]
-  {figures/appendix/ap2-training_video_classification/fc_circulant_embedding/netvlad_compressed.dat};
+  {figures/scripts/ap2-graph_fc_circulant_embedding_data/netvlad_compressed.dat};
   \addplot[color=red] table [y=gap, x=epoch]
-  {figures/appendix/ap2-training_video_classification/fc_circulant_embedding/netvlad_uncompressed.dat};
+  {figures/scripts/ap2-graph_fc_circulant_embedding_data/netvlad_uncompressed.dat};
 \legend{Compact, Dense}
 \end{axis}
 \end{tikzpicture}
@@ -55,10 +55,8 @@
     ymajorgrids=true,
     grid style=dashed,
   ]
-  \addplot[color=blue] table [y=gap, x=epoch]
-  {figures/appendix/ap2-training_video_classification/fc_circulant_embedding/fisher_compressed.dat};
-  \addplot[color=red] table [y=gap, x=epoch]
-  {figures/appendix/ap2-training_video_classification/fc_circulant_embedding/fisher_uncompressed.dat};
+  \addplot[color=blue] table [y=gap, x=epoch]{figures/scripts/ap2-graph_fc_circulant_embedding_data/fisher_compressed.dat};
+  \addplot[color=red] table [y=gap, x=epoch]{figures/scripts/ap2-graph_fc_circulant_embedding_data/fisher_uncompressed.dat};
 \legend{Compact, Dense}
 \end{axis}
 \end{tikzpicture}
