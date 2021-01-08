@@ -34,6 +34,7 @@
 \usepackage{bm}             % Access bold symbols in maths mode
 \usepackage{centernot}      % The package provides \centernot
 \usepackage{thmtools}       % Extensions to theorem environments
+\usepackage{afterpage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Graphics packages
@@ -514,9 +515,9 @@
 
 
 % TODO delete these commands
-\newcommand{\seqidx}{h}
-\newcommand{\seqsetN}{N}
-\newcommand{\seqsetM}{M}
+% \newcommand{\seqidx}{h}
+% \newcommand{\seqsetN}{N}
+% \newcommand{\seqsetM}{M}
 \newcommand{\Cnn}{\Cbb^{n \times n}}
 \newcommand{\Cn}{\Cbb^{n}}
 \newcommand{\F}{\ensuremath \mathcal{F}}
@@ -537,14 +538,6 @@
 \newcommand{\lp}    {\ensuremath \ell_p \xspace}
 \newcommand{\fro}   {\ensuremath \mathrm{F}}
 
-% command for sets
-\newcommand{\Nbb}{\ensuremath \mathbb{N}}
-\newcommand{\Zbb}{\ensuremath \mathbb{Z}}
-\newcommand{\Rbb}{\ensuremath \mathbb{R}}
-\newcommand{\Cbb}{\ensuremath \mathbb{C}}
-\newcommand{\Xset}{\ensuremath \mathcal{X}}
-\newcommand{\Yset}{\ensuremath \mathcal{Y}}
-\newcommand{\bigO}{\ensuremath \mathcal{O}}
 
 % Vector of ones
 \newcommand{\onevec}[1]{\ensuremath \mathbf{1}_{#1}}
@@ -577,61 +570,27 @@
 \newcommand{\smallddots}       {\scalebox{.40}{$\ddots$}}
 
 
-% command for matrices
-\newcommand{\Amat}{\ensuremath \mathbf{A}}
-\newcommand{\Bmat}{\ensuremath \mathbf{B}}
-\newcommand{\Cmat}{\ensuremath \mathbf{C}}
-\newcommand{\Dmat}{\ensuremath \mathbf{D}}
-\newcommand{\Emat}{\ensuremath \mathbf{E}}
-\newcommand{\Fmat}{\ensuremath \mathbf{F}}
-\newcommand{\Gmat}{\ensuremath \mathbf{G}}
-\newcommand{\Hmat}{\ensuremath \mathbf{H}}
-\newcommand{\Imat}{\ensuremath \mathbf{I}}
-\newcommand{\Jmat}{\ensuremath \mathbf{J}}
-\newcommand{\Kmat}{\ensuremath \mathbf{K}}
-\newcommand{\Lmat}{\ensuremath \mathbf{L}}
-\newcommand{\Mmat}{\ensuremath \mathbf{M}}
-\newcommand{\Nmat}{\ensuremath \mathbf{N}}
-\newcommand{\Omat}{\ensuremath \mathbf{O}}
-\newcommand{\Pmat}{\ensuremath \mathbf{P}}
-\newcommand{\Qmat}{\ensuremath \mathbf{Q}}
-\newcommand{\Rmat}{\ensuremath \mathbf{R}}
-\newcommand{\Smat}{\ensuremath \mathbf{S}}
-\newcommand{\Tmat}{\ensuremath \mathbf{T}}
-\newcommand{\Umat}{\ensuremath \mathbf{U}}
-\newcommand{\Vmat}{\ensuremath \mathbf{V}}
-\newcommand{\Wmat}{\ensuremath \mathbf{W}}
-\newcommand{\Xmat}{\ensuremath \mathbf{X}}
-\newcommand{\Ymat}{\ensuremath \mathbf{Y}}
-\newcommand{\Zmat}{\ensuremath \mathbf{Z}}
+\def\ddefloop#1{\ifx\ddefloop#1\else\ddef{#1}\expandafter\ddefloop\fi}
 
-% command for matrices
-\newcommand{\avec}{\ensuremath \mathbf{a}}
-\newcommand{\bvec}{\ensuremath \mathbf{b}}
-\newcommand{\cvec}{\ensuremath \mathbf{c}}
-\newcommand{\dvec}{\ensuremath \mathbf{d}}
-\newcommand{\evec}{\ensuremath \mathbf{e}}
-\newcommand{\fvec}{\ensuremath \mathbf{f}}
-\newcommand{\gvec}{\ensuremath \mathbf{g}}
-\newcommand{\hvec}{\ensuremath \mathbf{h}}
-\newcommand{\ivec}{\ensuremath \mathbf{i}}
-\newcommand{\jvec}{\ensuremath \mathbf{j}}
-\newcommand{\kvec}{\ensuremath \mathbf{k}}
-\newcommand{\lvec}{\ensuremath \mathbf{l}}
-\newcommand{\mvec}{\ensuremath \mathbf{m}}
-\newcommand{\nvec}{\ensuremath \mathbf{n}}
-\newcommand{\ovec}{\ensuremath \mathbf{o}}
-\newcommand{\pvec}{\ensuremath \mathbf{p}}
-\newcommand{\qvec}{\ensuremath \mathbf{q}}
-\newcommand{\rvec}{\ensuremath \mathbf{r}}
-\newcommand{\svec}{\ensuremath \mathbf{s}}
-\newcommand{\tvec}{\ensuremath \mathbf{t}}
-\newcommand{\uvec}{\ensuremath \mathbf{u}}
-\newcommand{\vvec}{\ensuremath \mathbf{v}}
-\newcommand{\wvec}{\ensuremath \mathbf{w}}
-\newcommand{\xvec}{\ensuremath \mathbf{x}}
-\newcommand{\yvec}{\ensuremath \mathbf{y}}
-\newcommand{\zvec}{\ensuremath \mathbf{z}}
+% domains
+\def\ddef#1{\expandafter\def\csname #1bb\endcsname{\ensuremath{\mathbb{#1}}}}
+\ddefloop ABCDEFGHIJKLMNOPQRSTUVWXYZ\ddefloop
+
+% sets
+\def\ddef#1{\expandafter\def\csname #1set\endcsname{\ensuremath{\mathcal{#1}}}}
+\ddefloop ABCDEFGHIJKLMNOPQRSTUVWXYZ\ddefloop
+
+% bold matrices
+\def\ddef#1{\expandafter\def\csname #1mat\endcsname{\ensuremath{\mathbf{#1}}}}
+\ddefloop ABCDEFGHIJKLMNOPQRSTUVWXYZ\ddefloop
+
+% bold vectors
+\def\ddef#1{\expandafter\def\csname #1vec\endcsname{\ensuremath{\mathbf{#1}}}}
+\ddefloop abcdefghijklmnopqrstuvwxyz\ddefloop
+
+% special command for big O notation
+\newcommand{\bigO}{\ensuremath \mathcal{O}}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
