@@ -4,21 +4,24 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \localtoc
 
+\section*{}
 
-\vspace{\fill}
-
-This chapter gives a short introduction on the theory of Toeplitz matrices~\cite{gray2006toeplitz} and on supervised learning and neural networks~\cite{shalev2014understanding}.
+% This chapter gives a short introduction on the theory of Toeplitz matrices~\cite{gray2006toeplitz} and on supervised learning and neural networks~\cite{shalev2014understanding}.
+This chapter gives a short introduction on the theory of Toeplitz matrices and on supervised learning and neural networks.
 First, we describe the mathematical properties of Toeplitz matrices and known theorems that we use in this thesis. 
 In linear algebra, a Toeplitz matrix, named after Otto Toeplitz, is a matrix in which each descending diagonal, from left to right, is constant.
+This simple property has led to wonderful theoretical results and numerous applications.
 We will use a number of these results in the context of neural networks.
 Neural networks are parametric functions trained to map an input to an output.
 For example, an image (input) to the content of the image (output).
-The second section of this chapter is divided into three parts.
+The second section of this chapter is divided into four parts.
 First, we review notions of supervised learning which refer to the problem of optimizing the parameters of a function in order to map an input to an output based on a series of input-output pairs.
 Then, we formally define neural networks and some of their properties.
-We finish by presenting the concept of adversarial examples which we will use in \Cref{chapter:ch5-lipschitz_bound}.
+The next section formally introduces the concept of adversarial examples which we will use in \Cref{chapter:ch5-lipschitz_bound}.
+Finally, in the final section, we present some recent theoretical results on neural networks that allow a better understanding of the contributions of this thesis.
 
-\vspace{\fill}
+
+
 
 % In the statistical learning framework, supervised learning refers to the problem of optimizing the parameters of a function in order to map an input to an output based on a series of input-output pairs.
 % For example, an image (input) mapped to a class (output) describing its content.
@@ -53,9 +56,11 @@ These structured matrices are the building blocks of our contribution on compact
 
 Finally, in \Cref{subsection:ch2-introduction_on_supervised_learning}, we gave a quick overview of the concept of supervised learning, which presents the mathematical tools for optimizing a parameterized function in order to map an input to an output based on a series of input-output pairs. 
 Although the statistical learning framework considers generic hypothesis space, in this work we use a class of functions called neural networks presented in \Cref{subsection:ch2-preliminaries_on_neural_networks}.
-We also presented, in \Cref{subsection:ch2-preliminaries_on_adversarial_attacks}, the concept of adversarial attacks and robustness of neural networks.
+We also presented, in \Cref{subsection:ch2-adversarial_attacks_robustness_of_neural_networks}, the concept of adversarial attacks and robustness of neural networks.
 We showed how a neural network can be sensitive to small perturbations to its input and thus vulnerable to adversarial examples.
 Reducing the sensitivity and therefore increasing the robustness of neural networks is the central theme of our second contribution presented in \Cref{chapter:ch5-lipschitz_bound}.
+Finally, in \Cref{subsection:ch2-recent_results_on_the_theory_of_neural_networks}, we have presented some recent results on the theory of neural networks.
+These results give us important insights on how neural networks generalize and a theoretical justification of the regularization scheme that we propose in \Cref{chapter:ch5-lipschitz_bound}.
 
 
 

@@ -10,7 +10,7 @@ Hereafter, we present some preliminaries on structured matrices that we will bui
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 A Toeplitz matrix, named after Otto Toeplitz, is a matrix in which each descending diagonal from left to right is constant.
-Let $P = \{-n+1, \dots, n-1\}$, an $n\times n$ Toeplitz matrix $\Amat$ is fully determined by a two-sided sequence of scalars $\{a_h\}_{h \in P}$ as follows:
+Let $\mathcal{P} = \{-n+1, \dots, n-1\}$, an $n\times n$ Toeplitz matrix $\Amat$ is fully determined by a two-sided sequence of scalars $\{a_h\}_{h \in \mathcal{P}}$ as follows:
 \begin{equation}
   \Amat =
   \leftmatrix
@@ -23,32 +23,32 @@ Let $P = \{-n+1, \dots, n-1\}$, an $n\times n$ Toeplitz matrix $\Amat$ is fully 
   \rightmatrix
 \end{equation}
 \noindent
-Because the Toeplitz matrix $\Amat$ is fully determined by the sequence $\{a_h\}_{h \in P}$, it can be compactly represented in memory using only $2n-1$ values instead of $n^2$.
+Because the Toeplitz matrix $\Amat$ is fully determined by the sequence $\{a_h\}_{h \in \mathcal{P}}$, it can be compactly represented in memory using only $2n-1$ values instead of $n^2$.
 Toeplitz matrices can also be characterized by noting that the $(k,j)$ entry of $\Amat$, $\leftmat \Amat \rightmat_{j,k}$ is given by
 \begin{equation}
   \leftmat \Amat \rightmat_{j,k} = a_{k-j} \enspace.
 \end{equation}
 
 A standard tool for manipulating Toeplitz matrices is the use of Fourier analysis.
-Let $\{a_h\}_{h \in P}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \mathbb{R}^{n\times n}$.
+Let $\{a_h\}_{h \in \mathcal{P}}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n\times n}$.
 The complex-valued function 
 \begin{equation}
-  f(\omega) = \sum_{h \in P} a_h e^{\ci h \omega}
+  f(\omega) = \sum_{h \in \mathcal{P}} a_h e^{\ci h \omega}
 \end{equation}
-is the \emph{inverse Fourier transform} of the sequence $\{a_h\}_{h \in P}$ with $\omega \in \mathbb{R}$.
-From this function, one can recover the sequence $\{a_h\}_{h \in P}$ using the standard Fourier transform:
+is the \emph{inverse Fourier transform} of the sequence $\{a_h\}_{h \in \mathcal{P}}$ with $\omega \in \Rbb$.
+From this function, one can recover the sequence $\{a_h\}_{h \in \mathcal{P}}$ using the standard Fourier transform:
 \begin{equation}
   a_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} f(\omega) d\omega \enspace. 
 \end{equation}
 
-\todotext{update the phrase here}
-From there,  done by~\citet{gray2006toeplitz}, we can define an operator $\Tmat$ mapping integrable functions to matrices:
+From there, we can define an operator $\Tmat$ mapping integrable functions to matrices:
 \begin{equation} \label{equation:ch2-toeplitz_operator}
-  \Tmat_n(g) \triangleq \leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j\in\{0,\ldots,n-1\}} \enspace.
+  \Tmat_n(g) \triangleq \leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \mathcal{P}_0} \enspace.
 \end{equation}
+where $\Pset_0 = \{0, \ldots, n-1\}$
 \noindent
 In the following of this thesis, when it is clear from context, we will write $\Tmat(g)$ instead of $\Tmat_n(g)$.
-We can show that if $f$ is the inverse Fourier transform of $\{a_h\}_{h \in P}$, then $\Tmat_n(f)$ is equal to $\Amat$.
+We can show that if $f$ is the inverse Fourier transform of $\{a_h\}_{h \in \mathcal{P}}$, then $\Tmat_n(f)$ is equal to $\Amat$.
 \begingroup
 \allowdisplaybreaks
   \begin{align}
@@ -68,7 +68,7 @@ Because:
   \end{cases}
 \end{equation}
 
-% Also, if $F$ is the inverse Fourier transform of $\{\Bmat_h\}_{h \in P}$ as defined above, then the integral in \Cref{equation:expression_toeplitz_matrix} is matrix-valued, and thus $\Tmat(F) \in \mathbb{R}^{mn \times mn}$ is the block matrix $\Bmat$.
+% Also, if $F$ is the inverse Fourier transform of $\{\Bmat_h\}_{h \in \mathcal{P}}$ as defined above, then the integral in \Cref{equation:expression_toeplitz_matrix} is matrix-valued, and thus $\Tmat(F) \in \Rbb^{mn \times mn}$ is the block matrix $\Bmat$.
 
 % The trigonometric polynomial that \emph{generates} the Toeplitz matrix $\Amat$ can be defined as follows:
 % \begin{equation}
@@ -90,7 +90,7 @@ Because:
 Circulant matrices are a special case of Toeplitz matrices.
 In addition to having constant diagonals, each row of a circulant matrix is a cyclic right shift of the previous one.
 % Circulant matrices have been used to efficiently solve linear systems~\cite{golub1996matrix} and years later were used to perform dimensionality reduction~\cite{hinrichs2011johnson,vybiral2011variant}, binary embedding~\cite{yu2014circulant} and kernel approximation~\cite{yu2015compact} in the context of pattern recognition and machine learning.
-An $n \times n$ circulant matrix $\Cmat$ is fully determined by a sequence of scalars $\{c_h\}_{h \in [0,n-1]}$ as follows:
+An $n \times n$ circulant matrix $\Cmat$ is fully determined by a sequence of scalars $\{c_h\}_{h \in \mathcal{P}_0}$ as follows:
 
 \begin{equation}
   \Cmat =
@@ -104,7 +104,7 @@ An $n \times n$ circulant matrix $\Cmat$ is fully determined by a sequence of sc
   \rightmatrix
 \end{equation}
 
-Because the circulant matrix $\Cmat$ is fully determined by the sequence $\{c_h\}_{h \in [0,n-1]}$, it can be compactly represented in memory using only $n$ values instead of $n^2$.
+Because the circulant matrix $\Cmat$ is fully determined by the sequence $\{c_h\}_{h \in \mathcal{P}_0}$, it can be compactly represented in memory using only $n$ values instead of $n^2$.
 Circulant matrices can also be characterized by noting that the $(k,j)$ entry of $\Cmat$, $\leftmat \Cmat \rightmat_{j,k}$ is given by
 \begin{equation}
   \leftmat \Cmat \rightmat_{j,k} = c_{\left(k-j\right) \mod n} \enspace.
@@ -145,7 +145,7 @@ The complexity is reduced from from $\bigO(n^2)$ to $\bigO(n \log n)$.
   \begin{equation} \label{equation:ch2-diagonalization_circulant_matrix}
     \Cmat = \frac{1}{n} \Umat_n^* \diag(\Umat_n \cvec) \Umat_n
   \end{equation}
-  where $\cvec$ is a vector based on the scalars $\{c_h\}_{h \in [0,n-1]}$.
+  where $\cvec$ is a vector based on the scalars $\{c_h\}_{h \in \mathcal{P}_0}$.
   In particular all circulant matrices share the same eigenvectors, the same matrix $\Umat_n$ works for all $n \times n$ circulant matrices.
   Also, circulant matrices commute and are closed under sum and product.
 \end{theorem}
@@ -204,7 +204,7 @@ Thus, in matrix form, we have:
 \noindent
 As stated by~\citet{sindhwani2015structured}, the $f$-unit-circulant matrix performs a downward shift-and-scale transformation on a vector.
 More precisely, the matrix-vector product $\Zmat_f \xvec$ makes a circular shift on the elements and scales the last element of the vector resulting in $\Zmat_f \xvec = \leftmat f \xvec_{n-1}, \xvec_0, \dots, \xvec_{n-2} \rightmat^\top$. 
-$f$-unit-circulant matrices are one of the building blocks of \emph{low displacement rank operator} presented in \Cref{subsection:ch3-building_compact_neural_networks_with_structured_matrices}.
+$f$-unit-circulant matrices are one of the building blocks of \emph{low displacement rank operator} presented in \Cref{subsection:ch2-building_compact_neural_networks_with_structured_matrices}.
 
 
 % The f-unit-circulant matrix is associated with a basic downward shift-and-scale transformation, i.e.,
@@ -226,14 +226,13 @@ $f$-unit-circulant matrices are one of the building blocks of \emph{low displace
 % \begin{equation}
 %   \Cmat = \frac{1}{n} \Umat_n^* \diag(\Umat_n \cvec) \Umat_n
 % \end{equation}
-% where $\Umat_n = \leftmatrix e^{-\frac{2 \pi \ci jk}{n}} \rightmatrix_{j,k = 0}^{n-1}$ is the DFT matrix and $\cvec$ is vector based of the scalars $\{c_h\}_{h \in \{0, \dots, n-1\}}$.
+% where $\Umat_n = \leftmatrix e^{-\frac{2 \pi \ci jk}{n}} \rightmatrix_{j,k = 0}^{n-1}$ is the DFT matrix and $\cvec$ is vector based of the scalars $\{c_h\}_{h \in \mathcal{P}_0}$.
 
 % The following Theorem summarize the propreties for circulant matrices derived above.
 
 
 
 \comment{
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Relationship between Toeplitz and circulant matrices}
@@ -298,7 +297,7 @@ A block Toeplitz matrix is a matrix in which each block is repeated identically 
 Equivalently, a block circulant matrix is a matrix in which each block is repeated identically along diagonals (like block Toeplitz matrices) and each ``row of blocks'' is a cyclic right shift of the previous one.
 We show that block Toeplitz and block circulant matrices have similar properties than Toeplitz and circulant ones.
 
-An $nm \times nm$ block circulant matrix $\Amat$ is fully determined by a sequence of blocks $\{\Amat_h\}_{h \in [0,n-1]}$ and where each block $\Amat_h$ is an $m \times m$ matrix.
+An $nm \times nm$ block circulant matrix $\Amat$ is fully determined by a sequence of blocks $\{\Amat_h\}_{h \in \mathcal{P}_0}$ and where each block $\Amat_h$ is an $m \times m$ matrix.
 The circulant matrix $\Amat$ has the following form:
 \begin{equation}
   \Amat = \leftmat \Amat_{(k-j) \mod n} \rightmat_{i, j = 0}^{n-1} = 
@@ -325,7 +324,7 @@ The circulant matrix $\Amat$ has the following form:
 In a similar way to circulant matrices, block circulant matrices have a relation with the Discrete Fourier Transform.
 The next result characterizes this relation:
 \begin{theorem}[Lemma 5.1 of \citet{gutierrez2012block}]
-  Let $\Amat$ be an $nm \times nm$ block circulant matrix defined by the sequence of blocks $\{\Amat_h\}_{h \in [0,n-1]}$, then:
+  Let $\Amat$ be an $nm \times nm$ block circulant matrix defined by the sequence of blocks $\{\Amat_h\}_{h \in \mathcal{P}_0}$, then:
   \begin{equation}
     \Amat = (\Umat_n \otimes \Imat_n) \diag(\Psi_0, \dots, \Psi_{n-1}) (\Umat_n \otimes \Imat_n)^*
   \end{equation}
@@ -358,7 +357,7 @@ In this case where the blocks of the block circulant matrix are also circulant, 
 
 
 Akin to Toeplitz matrices, block Toeplitz matrices can be expressed with the Toeplitz operator defined in \Cref{equation:ch2-toeplitz_operator}.
-An $nm \times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat_h\}_{h \in P}$ and where each block $\Bmat_h$ is an $m \times m$ matrix.  
+An $nm \times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat_h\}_{h \in \mathcal{P}}$ and where each block $\Bmat_h$ is an $m \times m$ matrix.  
 The block Toeplitz matrix $\Bmat$ has the following form:
 \begin{equation}
   \Bmat = \leftmat \Bmat_{k-j} \rightmat_{j,k = 0}^{n-1} = 
@@ -384,7 +383,7 @@ The block Toeplitz matrix $\Bmat$ has the following form:
 % The same reasoning can be applied to block Toeplitz matrices.
 Instead of being complex-valued, the trigonometric polynomial that \emph{generates} the block Toeplitz $\Bmat$ is matrix-valued and can be defined as follows:
 \begin{equation}
-  F_{\Bmat}(\omega) \triangleq \sum_{h \in P} \Bmat_h e^{\ci h \omega}
+  F_{\Bmat}(\omega) \triangleq \sum_{h \in \mathcal{P}} \Bmat_h e^{\ci h \omega}
 \end{equation}
 The function $F_{\Bmat}$ is said to be the \emph{generating function} of $\Bmat$.
 To recover the block Toeplitz matrix from its generating function, we use the Toeplitz operator defined in \Cref{equation:ch2-toeplitz_operator}; therefore, we have $\Tmat_n(F_\Bmat) = \Bmat$.
@@ -505,4 +504,148 @@ However, in practice, the signal can have multiple channels (\eg images have 3 c
 Let us denote by $\cin$ and $\cout$ the number of channels of the input and output respectively.
 Then the convolution takes an input of size $\cin \times n \times n$, performed by a kernel of size $\cout \times \cin \times k \times k$, and outputs a signal of size $\cout \times m \times m$ with $m = n - k + 2p + 1$ where $p$ corresponds to the padding.
 The matrix for the multi-channel convolution is the concatenation of $\cout \cdot \cin$ doubly-block Toeplitz matrices.
+
+
+
+\begin{figure}[htb]
+   \centering
+   \begin{subfigure}[b]{0.32\textwidth}
+       \centering
+       \begin{equation*}
+	  \leftmatrix
+	     \tvec_{n-1} & \cdots     & \tvec_1 & \tvec_0      \\
+	     \vdots      & \ddots     & \tvec_0 & \tvec_{-1}   \\
+	     \tvec_1     & \ddots     & \ddots  & \vdots       \\
+	     \tvec_0     & \tvec_{-1} & \cdots  & \tvec_{-n+1} \\
+	  \rightmatrix
+       \end{equation*}
+       \caption*{Hankel}
+   \end{subfigure}
+   \hfill
+   \begin{subfigure}[b]{0.32\textwidth}
+       \centering
+       \begin{equation*}
+	  \leftmatrix
+	    1 & \vvec_0     & \cdots & \vvec_0^{n-1} \\
+	    1 & \vvec_1     & \cdots & \vvec_1^{n-1} \\
+	    1 & \vdots      &        & \vdots        \\
+	    1 & \vvec_{n-1} & \cdots & \vvec_{n-1}^{n-1}
+	  \rightmatrix
+       \end{equation*}
+       \caption*{Vandermonde}
+   \end{subfigure}
+   \hfill
+   \begin{subfigure}[b]{0.32\textwidth}
+       \centering
+       \begin{equation*}
+	  \leftmatrix
+	  \frac{1}{\uvec_0 - \vvec_{0}}     & \cdots & \frac{1}{\uvec_0 - \vvec_{n-1}} \\
+	  \frac{1}{\uvec_1 - \vvec_{0}}     & \cdots & \frac{1}{\uvec_1 - \vvec_{n-1}} \\
+	  \vdots                            & \cdots & \vdots                          \\
+	  \frac{1}{\uvec_{n-1} - \vvec_{0}} & \cdots & \frac{1}{\uvec_{n-1} - \vvec_{n-1}}
+	  \rightmatrix
+       \end{equation*}
+       \caption*{Cauchy}
+   \end{subfigure}
+   \caption{Representation of Hankel, Vandermonde and Cauchy matrices}
+  \label{figure:ch2-example_structure_matrices}
+\end{figure}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{General Framework for Structured Matrices}
+\label{subsection:ch2-general_frameworks_for_structured_matrices}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Other structured matrices can benefit from reduced memory footprint and fast matrix-vector product.
+Bellow a description of some known structured matrices: 
+\begin{itemize}
+  \item \textbf{Hankel matrix}: A Hankel matrix, named after Hermann Hankel, has constant values along each of its anti-diagonals.
+  \item \textbf{Vandermonde matrix}: A Vandermonde matrix, named after Alexandre-Théophile Vandermonde, is a matrix where each term follows a geometric progression.  
+    A very important special case is the complex matrix associated with the Discrete Fourier transform (DFT) presented in \Cref{definition:ch2-fourier_matrix} which has a Vandermonde structure.
+  \item \textbf{Cauchy matrix}: A Cauchy matrix, named after Augustin Louis Cauchy, is an $m \times n$ matrix with elements $a_{ij}$ such that $a_{ij} = (\uvec_i - \vvec_j)^{-1}$ with $\uvec_i - \vvec_j \neq 0$, $i \in \{0,\dots,m-1\}$ and $j \in \{0,\dots,n-1\}$.
+\end{itemize}
+\Cref{figure:ch2-example_structure_matrices} shows the representation of the parameters sharing of Hankel, Vandermonde and Cauchy matrices.
+These matrices with matrices from the Toeplitz family can be unified thanks to the notion of \emph{Low Displacement Rank} (LDR).
+Although these matrices appear to have very different kinds of parameter sharing, they can be all associated with a specific displacement operator $\triangleopdown_{\Amat, \Bmat}: \Rbb^{m \times n} \rightarrow \Rbb^{m \times n}$ which takes a matrix, $\Mmat$, and outputs a low rank matrix $\triangleopdown_{\Amat, \Bmat}(\Mmat)$ such that $\rank(\triangleopdown_{\Amat, \Bmat}(\Mmat)) \ll \min(m,n)$.
+
+\begin{table}[ht]
+  \centering
+  \begin{tabular}{c|c|c|c}
+    \toprule
+    \multicolumn{2}{c|}{\textbf{Operator Matrices}} & \textbf{Class of structured} & \textbf{Rank of } \\
+    \textbf{A} & \textbf{B} & \textbf{matrices M} & $\triangleopdown_{\Amat, \Bmat}(\Mmat)$ \\
+    \midrule
+    $\Zmat_1$                & $\Zmat_0$                & Toeplitz               & $\leq 2$ \\
+    $\Zmat_1$                & $\Zmat_0^\top$           & Hankel                 & $\leq 2$ \\
+    $\Zmat_0 + \Zmat_0^\top$ & $\Zmat_0 + \Zmat_0^\top$ & Toeplitz + Hankel      & $\leq 4$ \\
+    $\diag(\vvec)$           & $\Zmat_0$                & Vandermonde            & $\leq 1$ \\
+    $\Zmat_0$                & $\diag(\vvec)$           & Inverse of Vandermonde & $\leq 1$ \\
+    $\diag(\uvec)$           & $\diag(\vvec)$           & Cauchy                 & $\leq 1$ \\
+    $\diag(\vvec)$           & $\diag(\uvec)$           & Inverse of Cauchy      & $\leq 1$ \\
+    \bottomrule
+  \end{tabular}
+  \caption{Displacing Matrices Associated with Families of Structured Matrices \cite{pan2001structured}}
+  \label{table:ch2-displacing_matrices}
+\end{table}
+
+This displacement rank approach has been initially proposed by~\citet{kailath1979displacement} and has been further studied by~\citet{kailath1995displacement,pan2001structured}.
+More formally, we can define two displacement operators (for simplification, we consider $m = n$):
+\begin{definition}[\emph{Sylvester} \& \emph{Stein} displacement operators]
+  Let $\Amat, \Bmat \in \Rbb^{n \times n}$, the \emph{Sylvester} displacement operator denoted $\triangleopdown_{\Amat, \Bmat} = \triangleopdown_{\Amat, \Bmat}: \Rbb^{n \times n} \rightarrow \Rbb^{n \times n}$ is defined as follows:
+  \begin{equation}
+    \triangleopdown_{\Amat, \Bmat} (\Mmat) \triangleq \Amat \Mmat - \Mmat \Bmat
+  \end{equation}
+  The \emph{Stein} displacement operator denoted $\triangleopup_{\Amat, \Bmat} = \triangleopup_{\Amat, \Bmat}: \Rbb^{n \times n} \rightarrow \Rbb^{n \times n}$ is defined as follows:
+  \begin{equation}
+    \triangleopup_{\Amat, \Bmat} (\Mmat) \triangleq \Mmat - \Amat \Mmat \Bmat
+  \end{equation}
+  where $\triangleopdown_{\Amat, \Bmat} = \Amat \triangleopup_{\Amat^{-1}, \Bmat}$ if the operator matrix $\Amat$ is non-singular, and $\triangleopdown_{\Amat, \Bmat} = -\triangleopup_{\Amat, \Bmat^{-1}}$ if the operator matrix $\Bmat$ is non-singular.
+\end{definition}
+
+
+\noindent
+Based on this definition, if $\Mmat$ is a structured matrix, there exist operator matrices $\Amat$ and $\Bmat$ such that $\triangleopdown_{\Amat, \Bmat} (\Mmat)$ is low rank.
+In particular, $\Amat$ and $\Bmat$ can be chosen to be diagonal or $f$-unit-circulant matrices (see \Cref{definition:ch2-f_circulant_matrix}) for several classes of structured matrices.
+\Cref{table:ch2-displacing_matrices} shows some specific choices of operators for the four basic classes of structured matrices and for some related matrices.
+We now define the matrices that can be considered structured with respect to the Sylvester or Stein operator.
+\begin{definition}[L-like matrices]
+  For an $n \times n$ matrix $\Mmat$ and an associated operator $\triangleopdown_{\Amat, \Bmat}$ (or $\triangleopup_{\Amat, \Bmat}$), the value $r = \rank(\triangleopdown_{\Amat, \Bmat}(\Mmat))$ (or $r = \rank(\triangleopup_{\Amat, \Bmat}(\Mmat))$) is called the \emph{displacement rank}.
+    If the value of $r$ is small relative to $n$ as $n$ grows large, then we call the matrix $\Mmat$ \emph{L-like} having a structure of type $L$.
+    For example, in the case where the operator $\triangleopdown_{\Amat, \Bmat}$ is associated with Toeplitz matrices (\ie, $\Amat = \Zmat_1$ and $\Bmat = \Zmat_0$, see~\Cref{table:ch2-displacing_matrices}), we call the matrix $\Mmat$, \emph{Toeplitz-Like}.
+  \label{definition:ch2-l_like_matrices}
+\end{definition}
+
+An important result allows us to express structured matrices with low-displacement rank directly as a function of its low displacement generators.  
+For the Stein type displacement operator, the following result holds:
+\begin{theorem}[Krylov Decomposition~\citet{pan2003inversion,sindhwani2015structured}] \label{theorem:ch2-krylov_decomposition}
+  If an $n \times n$ matrix $\Mmat$ is such that $\triangleopup_{\Amat, \Bmat}(\Mmat) = \Gmat \Hmat^\top$ where 
+  $\Gmat = (\gvec^{(1)} \ldots \gvec^{(r)}), \Hmat = (\hvec^{(1)} \ldots \hvec^{(r)}) \in \Rbb^{n \times r}$ 
+  and the operator matrices satisfy: $\Amat^n = a \Imat$, $\Bmat^n = b \Imat$ for some scalars $a, b$, then $\Mmat$ can be expressed as: 
+  \begin{equation} \label{equation:ch2-krylov_decomposition}
+    \Mmat = \frac{1}{1 - ab} \sum_{j=1}^{r} ~\krylov(\Amat, \gvec^{(j)}) ~\krylov(\Bmat^\top, \hvec^{(j)})^\top
+  \end{equation}
+  where $\krylov(\Amat, \vvec)$ is defined by:
+  \begin{equation}
+    \krylov(\Amat, \vvec) = [\vvec~~\Amat\vvec~~\Amat^2 \vvec~~\ldots~~\Amat^{n-1} \vvec]
+  \end{equation}
+  \removespace
+\end{theorem}
+
+\noindent
+This theorem can be used to decompose structured matrices and define efficient algorithms for matrix-vector products.
+For example, this theorem can be simplified for \emph{Toeplitz-like matrices} as follows:
+\begin{theorem}[Toeplitz-like matrix decomposition \citet{pan2001structured}]
+  If an $n \times n$ matrix $\Mmat$ satisfies $\triangleopdown_{\Zmat_1, \Zmat_{0}}(\Mmat) = \Gmat \Hmat^\top$ $(\Mmat \text{ is Toeplitz-like})$ where $\Gmat = (\gvec ^{(1)} \ldots \gvec^{(r)}), \Hmat = (\hvec^{(1)} \ldots \hvec^{(r)}) \in \Rbb^{n \times r}$, then $\Mmat$ can be written as: 
+  \begin{equation} \label{equation:ch2-toeplitz_like_matrix_decomposition}
+    \Mmat = \sum_{j=1}^{r} \Zmat_1(\gvec^{(j)}) \Zmat_{0}(\Jmat_n \hvec^{(j)})
+  \end{equation}
+  where $\Jmat_n$ is the reflection matrix of size $n \times n$ (reflection of the identity matrix such that $\Jmat^2 = \Imat$) and $\Zmat_1$ and $\Zmat_{0}$ are $f$-unit-circulant matrices (see \Cref{definition:ch2-f_circulant_matrix}).
+\end{theorem}
+\noindent
+In the next chapter, we will see how this general framework have been used in the context of compact neural networks.
+
+
 
