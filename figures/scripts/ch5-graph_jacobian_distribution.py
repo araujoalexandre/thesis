@@ -11,7 +11,7 @@ def pickle_load(path):
 
 def plot_graph_jacobian(path):
 
-  data_path = 'ch5-plot_jacobian_distribution_data'
+  data_path = 'ch5-graph_jacobian_distribution_data'
 
   # this test data
   filename_baseline = '{}/2020-05-02_21.05.41_7393.pkl'.format(data_path)
