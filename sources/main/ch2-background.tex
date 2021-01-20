@@ -7,10 +7,10 @@
 \section*{}
 
 % This chapter gives a short introduction on the theory of Toeplitz matrices~\cite{gray2006toeplitz} and on supervised learning and neural networks~\cite{shalev2014understanding}.
-This chapter gives a short introduction on the theory of Toeplitz matrices and on supervised learning and neural networks.
-First, we describe the mathematical properties of Toeplitz matrices and known theorems that we use in this thesis. 
-In linear algebra, a Toeplitz matrix, named after Otto Toeplitz, is a matrix in which each descending diagonal, from left to right, is constant.
-This simple property has led to wonderful theoretical results and numerous applications.
+This chapter gives an overview on the theory of Toeplitz matrices and on supervised learning with neural networks.
+First, we describe the mathematical properties of Toeplitz matrices and known theorems that we use in this thesis.
+A Toeplitz matrix, named after Otto Toeplitz, is a matrix in which each descending diagonal, from left to right, is constant.
+This simple property has led to interesting theoretical results and numerous applications.
 We will use a number of these results in the context of neural networks.
 Neural networks are parametric functions trained to map an input to an output.
 For example, an image (input) to the content of the image (output).
@@ -19,9 +19,6 @@ First, we review notions of supervised learning which refer to the problem of op
 Then, we formally define neural networks and some of their properties.
 The next section formally introduces the concept of adversarial examples which we will use in \Cref{chapter:ch5-lipschitz_bound}.
 Finally, in the final section, we present some recent theoretical results on neural networks that allow a better understanding of the contributions of this thesis.
-
-
-
 
 % In the statistical learning framework, supervised learning refers to the problem of optimizing the parameters of a function in order to map an input to an output based on a series of input-output pairs.
 % For example, an image (input) mapped to a class (output) describing its content.
@@ -36,7 +33,7 @@ Finally, in the final section, we present some recent theoretical results on neu
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Supervised Learning \& Neural Networks}
+\section{Supervised Learning and Neural Networks}
 \label{section:ch2-supervised_learning_neural_networks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \input{sources/main/ch2-background_neural_networks}
@@ -50,11 +47,11 @@ Finally, in the final section, we present some recent theoretical results on neu
 As explained in the Introduction (\Cref{chapter:ch1-introduction}), our contributions lie at the intersection between neural networks and structured matrices.
 In this chapter, we have reviewed the necessary concepts to present our contributions and some related work.
 
-First, \Cref{section:ch2-a_primer_on_toeplitz_and_circulant_matrices} introduces Toeplitz and Circulant matrices which are the main mathematical objects used in this thesis.
-Toeplitz and circulant matrices are structured matrices in which each descending diagonal, from left to right, is constant.
+First, \Cref{section:ch2-a_primer_on_toeplitz_and_circulant_matrices} introduces circulant and Toeplitz matrices which are the main mathematical objects used in this thesis.
+Circulant and Toeplitz matrices are structured matrices in which each descending diagonal, from left to right, is constant.
 These structured matrices are the building blocks of our contribution on compact neural networks (\Cref{chapter:ch4-diagonal_circulant_neural_network}) and enable fast approximation of the Lipschitz constant of convolutional layers leading to a new regularization scheme (\Cref{chapter:ch5-lipschitz_bound}).
 
-Finally, in \Cref{subsection:ch2-introduction_on_supervised_learning}, we gave a quick overview of the concept of supervised learning, which presents the mathematical tools for optimizing a parameterized function in order to map an input to an output based on a series of input-output pairs. 
+Finally, in \Cref{subsection:ch2-introduction_on_supervised_learning}, we gave a quick overview of the concept of supervised learning, which presents the mathematical tools for optimizing a parameterized function in order to map an input to an output based on a series of input-output pairs.
 Although the statistical learning framework considers generic hypothesis space, in this work we use a class of functions called neural networks presented in \Cref{subsection:ch2-preliminaries_on_neural_networks}.
 We also presented, in \Cref{subsection:ch2-adversarial_attacks_robustness_of_neural_networks}, the concept of adversarial attacks and robustness of neural networks.
 We showed how a neural network can be sensitive to small perturbations to its input and thus vulnerable to adversarial examples.

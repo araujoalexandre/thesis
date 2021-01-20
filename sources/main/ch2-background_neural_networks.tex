@@ -5,19 +5,19 @@
 
 Supervised learning consists in learning a function that maps an input to an output based on input-output pairs.
 For example, one could learn to ``predict'' if a fruit will be tasty based on its features (\eg size, weight, color, consistency, etc.).
-These features are used as inputs to the function and the function outputs a value characterizing the taste of the fruit. 
+These features are used as inputs to the function and the function outputs a value characterizing the taste of the fruit.
 
 In the following, we will formalize the learning problem described above with the \emph{statistical learning framework}.
 First, let us define the domain space $\Xset$ which corresponds to the set of inputs that we wish to label.
-Let us denote the label space $\Yset$ and a finite sequence of pairs $\mathcal{S} = \left\{ \left(\xvec^{(1)}, y^{(1)} \right) \dots \left( \xvec^{(m)}, y^{(m)} \right) \right\}$ in $\Xset \times \Yset$. 
-Such pairs \ie, labeled examples, are called \emph{training examples} and the set $\mathcal{S}$ is called the \emph{training set}.
-We denote $\mathcal{D}$ the \emph{joint distribution} over $\Xset \times \Yset$.
+Let us denote the label space $\Yset$ and a finite sequence of pairs $\Sset = \left\{ \left(\xvec^{(1)}, y^{(1)} \right) \dots \left( \xvec^{(m)}, y^{(m)} \right) \right\}$ in $\Xset \times \Yset$.
+Such pairs \ie, labeled examples, are called \emph{training examples} and the set $\Sset$ is called the \emph{training set}.
+We denote $\Dset$ the \emph{joint distribution} over $\Xset \times \Yset$.
 The main objective of the task at hand is to output a \emph{prediction rule} $h: \Xset \rightarrow \Yset$ that maps the input $\xvec \in \Xset$ to the output $y \in \Yset$.
-This function is called the \emph{hypothesis} or the \emph{classifier}. 
-Given the probability distribution $\mathcal{D}$, we aim to measure how \emph{likely} the hypothesis $h$ makes an error when labeled points are randomly drawn from the distribution $\mathcal{D}$.
+This function is called the \emph{hypothesis} or the \emph{classifier}.
+Given the probability distribution $\Dset$, we aim to measure how \emph{likely} the hypothesis $h$ makes an error when labeled points are randomly drawn from the distribution $\Dset$.
 Let us define the true error or \emph{risk} of the hypothesis $h$ that we wish to minimize:
 \begin{equation} \label{equation:ch2-risk}
-  R_{\mathcal{D}}(h) \triangleq \Ebb_{(\xvec, y) \sim \mathcal{D}} \left[ L\big( h(\xvec), y \big) \right] \enspace.
+  R_{\Dset}(h) \triangleq \Ebb_{(\xvec, y) \sim \Dset} \left[ L\big( h(\xvec), y \big) \right] \enspace.
 \end{equation}
 where $L: \Yset \times \Yset \rightarrow \Rbb_{+}$ is a \emph{loss function} which measures the correctness of the hypothesis.
 For example, for classification problems, we can use the 0-1 loss define as: %$L(h(\xvec), y) = \mathds{1}_\big[ h(\xvec) \neq y \big]$.
@@ -25,41 +25,42 @@ For example, for classification problems, we can use the 0-1 loss define as: %$L
   L(h(\xvec), y) \triangleq \mathds{1}_{\big[ h(\xvec) \neq y \big]}
 \end{equation}
 
-However, in practice, the joint probability distribution $\mathcal{D}$ is unknown; therefore, the true error is not directly available to the learner.
-The learner only has access to the training data, $\mathcal{S}$, and can calculate the \emph{empirical error} \ie, the error over the training samples.
+However, in practice, the joint probability distribution $\Dset$ is unknown; therefore, the true error is not directly available to the learner.
+The learner only has access to the training data, $\Sset$, and can calculate the \emph{empirical error} \ie, the error over the training samples.
 We define the \emph{empirical risk} as follows:
 \begin{equation} \label{equation:ch2-empirical_risk}
-  R_{\mathcal{S}}(h) \triangleq \frac{1}{|\mathcal{S}|} \sum_{(\xvec, y) \in \mathcal{S}} L\big( h(\xvec), y \big) \enspace.
+  R_{\Sset}(h) \triangleq \frac{1}{|\Sset|} \sum_{(\xvec, y) \in \Sset} L\big( h(\xvec), y \big) \enspace.
 \end{equation}
-This learning paradigm is called \emph{Empirical Risk Minimization} denoted ERM.
+The learning paradigm which consists in minimizing this value is called \emph{Empirical Risk Minimization} denoted ERM.
+
 
 
 % \begin{equation}
-%   R_{\mathcal{S}}(h) \triangleq \frac{\left| \left\{i \in [m]: h\left(\xvec^{(i)}\right) \neq y^{(i)} \right\}\right|}{m} \enspace.
+%   R_{\Sset}(h) \triangleq \frac{\left| \left\{i \in [m]: h\left(\xvec^{(i)}\right) \neq y^{(i)} \right\}\right|}{m} \enspace.
 % \end{equation}
 % We can generalize our measure of correctness so that it can be applied to multiple learning tasks.
 % Let us define a \emph{loss function} from $\Yset \times \Yset$ to the set of nonnegative real numbers, $L: \Yset \times \Yset \rightarrow \Rbb_{+}$.
 % We can express the \emph{risk} as follows:
 % \begin{equation}
-%   R_{\mathcal{D}}(h) \triangleq \Ebb_{(\xvec, y) \sim \mathcal{D}} \left[ L\big( h(\xvec), y \big) \right] \enspace.
+%   R_{\Dset}(h) \triangleq \Ebb_{(\xvec, y) \sim \Dset} \left[ L\big( h(\xvec), y \big) \right] \enspace.
 %   \label{equation:ch2-risk}
 % \end{equation}
 % Similarly, we express the empirical risk as follows:
 % \begin{equation}
-%   R_{\mathcal{S}}(h) \triangleq \frac{1}{m} \sum_{(\xvec, y) \sim \mathcal{S}} L\big( h(\xvec), y \big) \enspace.
+%   R_{\Sset}(h) \triangleq \frac{1}{m} \sum_{(\xvec, y) \sim \Sset} L\big( h(\xvec), y \big) \enspace.
 % \end{equation}
 % The loss functions used for classification problems and regression problems are as follows: 
 % \begin{itemize}
 %   \item \textbf{0-1 Loss}: $L_{0-1}\big( h(\xvec), y \big) = \mathds{1}_\big[ h(\xvec) \neq y \big]$ \\
 %   This loss is used for classification problems, for example, when the learner have to recognizing hand-written digits in images.
-%   We can notice that the definitions of $R_{\mathcal{D}}$ given in \Cref{equation:ch2-risk1} and \Cref{equation:ch2-risk2} coincide.
+%   We can notice that the definitions of $R_{\Dset}$ given in \Cref{equation:ch2-risk1} and \Cref{equation:ch2-risk2} coincide.
 %   \item \textbf{Square Loss}: $L_{\text{sq}} \big( h(\xvec), y \big) = \big( h(\xvec) - y \big)^2$ \\	
 %   This loss is used for another common type of learning problem \ie, \emph{regression problem}, in which the label domain $\Yset$ is the set of real numbers.
 %   For example, one wishes to predict the price of an apartment given its characteristics.
 % \end{itemize}
 
 
-% The goal of the learning algorithm is to find the hypothesis $h$ that minimizes the risk $R_{\mathcal{S}}$, this learning paradigm is called \emph{Empirical Risk Minimization} (ERM).
+% The goal of the learning algorithm is to find the hypothesis $h$ that minimizes the risk $R_{\Sset}$, this learning paradigm is called \emph{Empirical Risk Minimization} (ERM).
 We use the ERM paradigm as a surrogate to find a hypothesis $h$ that minimizes the true risk $R_\Dset$.
 However, all hypotheses that minimize the empirical error do not necessarily minimize the true risk.
 For example, consider the following function:
@@ -70,56 +71,60 @@ For example, consider the following function:
     0 &\quad \text{otherwise}
   \end{cases}
 \end{equation}
-Clearly, this function, for any training set, $\mathcal{S}$, will have $R_\mathcal{S}(h^*) = 0$, whereas the true risk would certainly be high.
+Clearly, this function, for any training set, $\Sset$, will have $R_\Sset(h^*) = 0$, whereas the true risk would certainly be high.
 The phenomenon, called \emph{overfitting}, happens when the classifier fits the training data ``too well'' but will likely have a high error on unseen data.
 One possible solution to this phenomenon is to apply ERM with a restricted search space to prevent the learning algorithm to output a function such as $h^*$ in \Cref{equation:ch2-perfect_function}.
-We call this set the \emph{hypothesis class} and is denoted $\mathcal{H}$.
-Each $h \in \mathcal{H}$ is a function mapping from $\Xset$ to $\Yset$.
-We call $\mathrm{ERM}_{\mathcal{H}}$, the set of learned hypotheses that uses the $\mathrm{ERM}$ paradigm over the hypothesis class $\mathcal{H}$ and a training data $\mathcal{S}$.
+We call this set the \emph{hypothesis class} and is denoted $\Hset$.
+Each $h \in \Hset$ is a function mapping from $\Xset$ to $\Yset$.
+We call $\mathrm{ERM}_{\Hset}$, the set of learned hypotheses that uses the $\mathrm{ERM}$ paradigm over the hypothesis class $\Hset$ and a training data $\Sset$.
 Formally,
 \begin{equation}
-  \mathrm{ERM}_{\mathcal{H}}(\mathcal{S}) \in \argmin_{h \in \mathcal{H}} R_{\mathcal{S}}(h) \enspace.
+  \mathrm{ERM}_{\Hset}(\Sset) = \argmin_{h \in \Hset} R_{\Sset}(h) \enspace.
 \end{equation}
-For a training sample $\mathcal{S}$, we denote $h_\mathcal{S}$, one solution of applying $\text{ERM}_\mathcal{H}$ on the set $\mathcal{S}$, if there exists multiple hypotheses with minimal error on the training sample, then the minimization problem returns an arbitrary one.
-In practice, the hypothesis class is chosen based on a hypothesis on the relation between the data and its label.
+For a training sample $\Sset$, we denote $h_\Sset \in \mathrm{ERM}_{\Hset}(\Sset)$, one solution of applying $\mathrm{ERM}_\Hset$ on the set $\Sset$, if there exists multiple hypotheses with minimal error on the training sample, then the minimization problem returns an arbitrary one.
+% In practice, the hypothesis class is chosen based on a hypothesis on the relation between the data and its label.
+In practice, the hypothesis class is chosen on the basis of an assumption about the relationship between the data and its label.
 For example, if the relation between the data and its label is supposedly linear then the hypothesis class can be the set of all linear functions.
 This kind of restriction is called an \emph{inductive bias} because the learner is \emph{biased} toward a particular set of predictors.
 
-The ERM paradigm assumes that an hypothesis $h_\mathcal{S}$ that minimizes the risk $R_\mathcal{S}$ will also minimize the true risk $R_\mathcal{D}$.
-This assumption mean that as the \emph{size} of the training set increases the minimization becomes more ``accurate'' or equivalently the empirical risk $R_\mathcal{S}(h)$ \emph{converge uniformly} to the actual risk $R_\mathcal{D}(h)$ over $h \in \mathcal{H}$ where the \emph{uniform convergence} is defined as follows:
-\begin{equation}
-	\Pbb \left[ \sup_{h \in \mathcal{H}} \left| R_\mathcal{D}(h) - R_\mathcal{S}(h) \right| < \epsilon \right] \rightarrow 0 \quad \text{ when } \quad |\mathcal{S}| \rightarrow \infty, \quad \forall \epsilon > 0
+The ERM paradigm assumes that an hypothesis $h_\Sset$ that minimizes the risk $R_\Sset$ will also minimize the true risk $R_\Dset$.
+% This assumption mean that as the \emph{size} of the training set increases the minimization becomes more ``accurate'' or equivalently the empirical risk $R_\Sset(h)$ \emph{converge uniformly} to the actual risk $R_\Dset(h)$ over $h \in \Hset$.
+% where the \emph{uniform convergence} is defined as follows:
+% \begin{equation}
+% 	\Pbb \left[ \sup_{h \in \Hset} \left| R_\Dset(h) - R_\Sset(h) \right| < \epsilon \right] \rightarrow 0 \quad \text{ when } \quad |\Sset| \rightarrow \infty, \quad \forall \epsilon > 0
+% \end{equation}
+To verify that this assumption is correct, we need to ensure that all hypotheses in the hypothesis class $\Hset$ are good approximators of their true risk.
+We say that an hypothesis class has \emph{uniform convergence property} if there exists a function $m_\Hset:(0, 1)^2 \rightarrow \Nbb$ such that for every $\epsilon, \delta \in (0, 1)$, if $\Sset$ is a sample of $m \leq m_\Hset(\epsilon, \delta)$ examples drawn \emph{independent and identically distributed} according to $\Dset$, then, with probability of at least $1 - \delta$:
+\begin{equation} \label{equation:ch2-eps_representative}
+  \forall h \in \Hset, \quad |R_\Dset(h) - R_\Sset(h)| \leq \epsilon \enspace,
 \end{equation}
-To verify that this assumption is correct, we need to ensure that all hypotheses in the hypothesis class $\mathcal{H}$ are good approximators of their true risk.
-We say that an hypothesis class has \emph{uniform convergence property} if there exists a function $m_\mathcal{H}:(0, 1)^2 \rightarrow \Nbb$ such that for every $\epsilon, \delta \in (0, 1)$, if $\mathcal{S}$ is a sample of $m \leq m_\mathcal{H}(\epsilon, \delta)$ examples drawn \emph{independent and identically distributed} according to $\mathcal{D}$, then, with probability of at least $1 - \delta$:
-\begin{equation}
-	\forall h \in \mathcal{H}, \quad |R_\mathcal{D}(h) - R_\mathcal{S}(h)| \leq \epsilon \enspace.	
-	\label{equation:ch2-eps_representative}
-\end{equation}
-where the function $m_\mathcal{H}$, called \emph{the sample complexity}, measures the minimal number of examples needed to ensure that with probability of at least $1 - \delta$ the sample verify \Cref{equation:ch2-eps_representative}. 
+where the function $m_\Hset$, called \emph{the sample complexity}, measures the minimal number of examples needed to ensure that with probability of at least $1 - \delta$ the sample verify \Cref{equation:ch2-eps_representative}.
 The ``independent and identically distributed'' assumption is common in statistical learning theory.
-It is easy to see that the error between $R_\mathcal{S}(h)$ and $R_\mathcal{D}(h)$ is dependent on the quality of the sampling $\mathcal{S}$ with respect to the underlying distribution $\mathcal{D}$.
-Therefore, we need to make the assumption that the training set $\mathcal{S}$ is a representative sample of the distribution $\mathcal{D}$.
+It is easy to see that the error between $R_\Sset(h)$ and $R_\Dset(h)$ is dependent on the quality of the sampling $\Sset$ with respect to the underlying distribution $\Dset$.
+Therefore, the parameter $\delta$ characterizes the probability of having a nonrepresentative sample. We call $1 - \delta$ the \emph{confidence parameter} of our prediction.
+
+
+% Therefore, we need to make the assumption that the training set $\Sset$ is a representative sample of the distribution $\Dset$.
 
 Now we can state a result which gives the sample complexity measure the maximum value for which the hypothesis class has \emph{uniform convergence property}.
 \begin{theorem}[\citet{shalev2014understanding}] \label{theorem:ch2-sample_complexity_bound}
-  Let $\mathcal{H}$ be a \emph{finite} hypothesis class, then $\mathcal{H}$ enjoys the uniform convergence property with sample complexity:
+  Let $\Hset$ be a \emph{finite} hypothesis class, then $\Hset$ enjoys the uniform convergence property with sample complexity:
   \begin{equation}
-      m_\mathcal{H}(\epsilon, \delta) \leq \left\lceil \frac{\log(2 |\mathcal{H}|	/ \delta)}{2 \epsilon^2} \right\rceil \enspace.
+      m_\Hset(\epsilon, \delta) \leq \left\lceil \frac{\log(2 |\Hset|	/ \delta)}{2 \epsilon^2} \right\rceil \enspace.
   \end{equation}
   \removespace
 \end{theorem}
 \noindent
-Note that we can also write the bound from~\Cref{theorem:ch2-sample_complexity_bound} as follows:
+Note that we can also write the bound from~\Cref{theorem:ch2-sample_complexity_bound} as follows, $\forall h \in \Hset$, with probability $1 - \delta$, we have:
 \begin{equation}
-  \underbrace{\vphantom{\sqrt{\frac{\log(|\mathcal{H}|/\delta)}{2 m_\mathcal{H}(\epsilon, \delta)}}} R_\mathcal{D}(h)}_{\text{Error}} \leq \underbrace{\vphantom{\sqrt{\frac{\log(|\mathcal{H}|/\delta)}{2 m_\mathcal{H}(\epsilon, \delta)}}} R_\mathcal{S}(h)}_{\text{Estimation Error}} + \underbrace{\sqrt{\frac{\log(|\mathcal{H}|/\delta)}{2 m_\mathcal{H}(\epsilon, \delta)}}}_{\text{Complexity penality}} \enspace.
+  \underbrace{\vphantom{\sqrt{\frac{\log(|\Hset|/\delta)}{2 m_\Hset(\epsilon, \delta)}}} R_\Dset(h)}_{\text{Error}} \leq \underbrace{\vphantom{\sqrt{\frac{\log(|\Hset|/\delta)}{2 m_\Hset(\epsilon, \delta)}}} R_\Sset(h)}_{\text{Estimation Error}} + \underbrace{\sqrt{\frac{\log(|\Hset|/\delta)}{2 m_\Hset(\epsilon, \delta)}}}_{\text{Complexity penality}} \enspace.
 \end{equation}
-This bound is called a \emph{generalization bound} and consists in bounding the true error by the empirical error and a complexity penalty. 
+This bound is called a \emph{generalization bound} and consists in bounding the true error by the empirical error and a complexity penalty.
 In the above theorem, the condition on the finiteness of the hypothesis class might by too strong.
 For example, if we consider the set of linear functions parameterized by a set of parameters in $\Rbb$ the hypothesis class is infinite and the theorem above does not apply.
 To characterize the learnability of infinite hypothesis class, several complexity measures have been proposed.
 One of the first, discovered by~\citet{vapnik2015uniform}, relies on a combinatorial notion called the Vapnik-Chervonenkis dimension (VC-dimension).
-In the same vein, the Rademacher complexity, measures the richness of a class of real-valued functions with respect to a probability distribution.
+In the same vein, the Rademacher complexity~\cite{koltchinskii2000rademacher}, measures the richness of a class of real-valued functions with respect to a probability distribution.
 In \Cref{subsection:ch2-recent_results_on_the_theory_of_neural_networks}, we will study recent generalization bounds specific to neural networks where the complexity penalty is dependent on the Lipschitz constant of the weights matrices.
 
 
@@ -149,12 +154,12 @@ In \Cref{subsection:ch2-recent_results_on_the_theory_of_neural_networks}, we wil
 \end{figure}
 
 
-A fundamental question of the ERM paradigm remains: \emph{how to choose the correct hypothesis class for which $\text{ERM}_\mathcal{H}$ will not lead to overfitting?} 
+A fundamental question of the ERM paradigm remains: \emph{how to choose the correct hypothesis class for which $\text{ERM}_\Hset$ will not lead to overfitting?} 
 We answer this question by decomposing the true risk into two different components as follows: 
 \begin{equation} \label{equation:ch2-bias_complexity_tradeoff}
-  R_\mathcal{D} (h_\mathcal{S}) = 
-  \underbrace{\left[ \min_{h \in \mathcal{H}} R_\mathcal{D}(h) \right]}_{\text{\scriptsize Approximation Error}} + \quad 
-  \underbrace{\left[ R_\mathcal{D}(h_\mathcal{S}) - \min_{h \in \mathcal{H}} R_\mathcal{D}(h) \right]}_{\text{\scriptsize Estimation Error}} 
+  R_\Dset (h_\Sset) = 
+  \underbrace{\left[ \min_{h \in \Hset} R_\Dset(h) \right]}_{\text{\scriptsize Approximation Error}} + \quad 
+  \underbrace{\left[ R_\Dset(h_\Sset) - \min_{h \in \Hset} R_\Dset(h) \right]}_{\text{\scriptsize Estimation Error}} 
 \end{equation}
 \begin{itemize}
   \item \textbf{Approximation Error}: The approximation error corresponds to the minimum risk achievable by a classifier in the given hypothesis class.
@@ -162,9 +167,9 @@ We answer this question by decomposing the true risk into two different componen
   Enlarging the hypothesis class, \ie, allowing more complex functions, can decrease the approximation error.
   \item \textbf{Estimation Error}: The estimation error is the difference between the approximation error and the error made by the ERM predictor.
   Recall that the empirical risk is only an estimate of the true risk.
-  This error is dependent on the sample size and the complexity of the hypothesis class. 
+  This error is dependent on the sample size and the complexity of the hypothesis class.
 \end{itemize}
-Recall that the main goal is to minimize the true risk $R_\mathcal{D} (h_\mathcal{S})$, however, \Cref{equation:ch2-bias_complexity_tradeoff} shows a tradeoff called the \emph{bias-complexity tradeoff}.
+Recall that the main goal is to minimize the true risk $R_\Dset (h_\Sset)$, however, \Cref{equation:ch2-bias_complexity_tradeoff} shows a tradeoff called the \emph{bias-complexity tradeoff}.
 The tradeoff is as follows: if we choose a large and complex hypothesis space, we reduce the approximation error but at the same time we can increase the estimation error because a complex hypothesis space might lead to overfitting.
 Conversely, choosing a small hypothesis space might reduce the estimation error but increase the approximation error leading to an \emph{underfitting} phenomenon.
 We can illustrate the \emph{overfitting} and \emph{underfitting} phenomenons with \Cref{figure:ch2-fitting_points} which shows the decision boundary of 3 classifiers for the same set of samples.
@@ -174,13 +179,13 @@ Finally, \Cref{figure:ch2-fitting_points_c} shows a classifier that seems to hav
 
 
 As seen above, defining a small hypothesis class might lead to underfitting and a large hypothesis class might lead to overfitting.
-A good way to best balance the trade-off would be to minimize the empirical risk while also minimizing the complexity of the hypothesis class. 
-Let us define a \emph{regularization} function $r: \mathcal{H} \rightarrow \Rbb$ which takes an hypothesis as input and a measure of the ``complexity'' of the hypothesis.
+A good way to best balance the trade-off would be to minimize the empirical risk while also minimizing the complexity of the hypothesis class.
+Let us define a \emph{regularization} function $r: \Hset \rightarrow \Rbb$ which takes an hypothesis as input and a measure of the ``complexity'' of the hypothesis.
 We could now update the learning rule as follows:
 \begin{equation}
-  \argmin_{h \in \mathcal{H}} \left[ R_\mathcal{S}(h) + r(h) \right]
+  \argmin_{h \in \Hset} \left[ R_\Sset(h) + r(h) \right]
 \end{equation}
-This learning rule minimizes the empirical risk $R_\mathcal{S}(h)$ and the regularization function $r$, thus, preventing overfitting and improving generalization on unseen data.
+This learning rule minimizes the empirical risk $R_\Sset(h)$ and the regularization function $r$, thus, preventing overfitting and improving generalization on unseen data.
 This learning rule is closely related to \emph{Structural Minimization Paradigm} (SRM) \cite{shalev2014understanding}.
 In the next section, we will present a classical regularization function for neural networks and we will introduce a new regularization scheme in \Cref{chapter:ch5-lipschitz_bound}.
 
@@ -188,13 +193,13 @@ In the next section, we will present a classical regularization function for neu
 
 
 % A good way to offset a large hypothesis class would be to specific preference over hypothesis within the hypothesis class.
-% The \emph{Structural Minimization Paradigm} (SRM) assumes that the hypothesis class can be written as the union of multitude smaller hypothesis class as follows: $\mathcal{H} = \bigcup_{n \in \Nbb} \mathcal{H}_n$ with a weight function $w: \Nbb \rightarrow [0, 1]$ which assigns a weight to each hypothesis class, $\mathcal{H}_n$, such that a higher weights reflects a lower preference for the hypothesis class.
+% The \emph{Structural Minimization Paradigm} (SRM) assumes that the hypothesis class can be written as the union of multitude smaller hypothesis class as follows: $\Hset = \bigcup_{n \in \Nbb} \Hset_n$ with a weight function $w: \Nbb \rightarrow [0, 1]$ which assigns a weight to each hypothesis class, $\Hset_n$, such that a higher weights reflects a lower preference for the hypothesis class.
 % Intuitively, the weight function is a measure of the ``complexity'' of the hypotesis.
 % The SRM learning paradigm can then be defined as follows:
 % \begin{equation}
-%   \text{SRM}_\mathcal{H} \in \argmin_{h \in \mathcal{H}, n \in \Nbb} \left[ R_\mathcal{S}(h) + w(n) \right]
+%   \text{SRM}_\Hset \in \argmin_{h \in \Hset, n \in \Nbb} \left[ R_\Sset(h) + w(n) \right]
 % \end{equation}
-% The SRM learning paradigm minimizes the empirical risk $R_\mathcal{S}(h)$ and the weight function $w$; therefore, ovoiding overfitting and improving generalization by reducing the complexity of the hypotesis while maintening a low empirical risk. 
+% The SRM learning paradigm minimizes the empirical risk $R_\Sset(h)$ and the weight function $w$; therefore, ovoiding overfitting and improving generalization by reducing the complexity of the hypotesis while maintening a low empirical risk.
 % In the next section, we will present neural networks which are the type of function we will use as predictors and we will see how to implement the ERM and SRM paradigm.
 
 
@@ -208,36 +213,36 @@ In the next section, we will present a classical regularization function for neu
 % \‰\‰\‰
 %
 % The ERM paradigm with inductive bias is based on an important assumption.
-% We assume that uniformly over all $h \in \mathcal{H}$, the empirical risk is close to the true risk, meaning, an $h$ that minimize the empirical risk with respect to a data set $\mathcal{S}$ will also minimize the \emph{true} risk.
+% We assume that uniformly over all $h \in \Hset$, the empirical risk is close to the true risk, meaning, an $h$ that minimize the empirical risk with respect to a data set $\Sset$ will also minimize the \emph{true} risk.
 % More formally, 
 % \begin{equation}
-%   \forall h \in \mathcal{H}, \quad \left| R_\mathcal{S}(h) - R_\mathcal{D}(h) \right| \leq \epsilon \enspace.
+%   \forall h \in \Hset, \quad \left| R_\Sset(h) - R_\Dset(h) \right| \leq \epsilon \enspace.
 %   \label{equation:ch2-eps_respresentative_sample} 
 % \end{equation}
-% If this assumption is met, then the ERM paradigm will always return a good classifier. 
+% If this assumption is met, then the ERM paradigm will always return a good classifier.
 % \begin{lemma}[Lemma 4.2 \citet{shalev2014understanding}] 
-%   If \Cref{equation:ch2-eps_respresentative_sample} hold, then any output of $\mathrm{ERM}_\mathcal{H}(\mathcal{S})$, namely, any $h_\mathcal{S} \in \argmin_{h \in \mathcal{H}} R_\mathcal{S}(h)$, satisfies
+%   If \Cref{equation:ch2-eps_respresentative_sample} hold, then any output of $\mathrm{ERM}_\Hset(\Sset)$, namely, any $h_\Sset \in \argmin_{h \in \Hset} R_\Sset(h)$, satisfies
 %   \begin{equation}
-%     R_\mathcal{D}(h_\mathcal{S}) \leq \min_{h \in \mathcal{H}} R_\mathcal{S}(h) + 2\epsilon
+%     R_\Dset(h_\Sset) \leq \min_{h \in \Hset} R_\Sset(h) + 2\epsilon
 %   \end{equation}
 % \end{lemma}
 %
 % \‰\‰\‰
 
 
-% Let us consider an input space $\Xset = [0, 1]^d$ of dimension $d$, an output space $\Yset = [k]$ where $k$ is the number of class and a data distribution $\mathcal{D}$ over $\Xset \times \Yset$.
-% We seek to find a function $h: \Xset \rightarrow \Yset$ that maps the input $\xvec \in \Xset$ to the output $y \in \Yset$ with $h \in \mathcal{H}$ where $h$ is called the \emph{hypothesis} and $\mathcal{H}$ the \emph{hypothesis space}.
+% Let us consider an input space $\Xset = [0, 1]^d$ of dimension $d$, an output space $\Yset = [k]$ where $k$ is the number of class and a data distribution $\Dset$ over $\Xset \times \Yset$.
+% We seek to find a function $h: \Xset \rightarrow \Yset$ that maps the input $\xvec \in \Xset$ to the output $y \in \Yset$ with $h \in \Hset$ where $h$ is called the \emph{hypothesis} and $\Hset$ the \emph{hypothesis space}.
 % in order to measure how well the function fits, we de\emph{loss function} $l: \mathcal{y} \times \mathcal{y} \rightarrow \rbb^{+}$ is defined.
 % The \emph{risk} $R$ associated with the hypothesis $h(\xvec)$ is defined as follows:
 % \begin{equation}
-%   R(h) \triangleq \Ebb_{(\xvec, y) \sim \mathcal{D}}\  L \left( h(\xvec), y \right)
+%   R(h) \triangleq \Ebb_{(\xvec, y) \sim \Dset}\  L \left( h(\xvec), y \right)
 % \end{equation}
-% The goal of a \emph{learning algorithm} is to find a hypothesis $h^* \in \mathcal{H}$ which minimize the risk $R(h)$:
+% The goal of a \emph{learning algorithm} is to find a hypothesis $h^* \in \Hset$ which minimize the risk $R(h)$:
 % \begin{equation}
-%   h^* \triangleq \argmin_{h \in \mathcal{H}} R(h) .
+%   h^* \triangleq \argmin_{h \in \Hset} R(h) .
 % \end{equation}
 
-% In practice, the joint probability distribution $\mathcal{D}$ is unknown.
+% In practice, the joint probability distribution $\Dset$ is unknown.
 % Instead, we have $n$ independent observations of the distribution called the \emph{training set}
 % \begin{equation}
 %   \mathcal{T} \triangleq \left\{ \left(\xvec^{(1)}, y^{(1)} \right), \dots, \left( \xvec^{(n)}, y^{(n)} \right) \right\} ,
@@ -250,47 +255,49 @@ In the next section, we will present a classical regularization function for neu
 % \end{equation}
 % the learning algorithm then becomes:
 % \begin{equation}
-%   \hat{h}^* \triangleq \argmin_{h \in \mathcal{H}} E(h, n)  .
+%   \hat{h}^* \triangleq \argmin_{h \in \Hset} E(h, n)  .
 % \end{equation}
 
 
 % \paragraph{Structural Risk Minimization} (SRM).
 % The ERM principle assumes that the function $\hat{h}^*$ minimizing $E(h, n)$ leads to the risk $R(\hat{h}^*)$ being close to the minimum.
-% This assumption mean that as the \emph{size} of the training set increase the minimization becomes more accurate. More formally, the ERM principle assumes that $R(\hat{h}^*)$ converge to its minimum value on the set $h \in \mathcal{H}$ when $n \rightarrow \infty$.  
-% \citet{Vapnik1991TheNA} have shown that this equivalent to say that the empirical risk $E(h, n)$ \emph{converge uniformly} to the actual risk $R(h)$ over $h \in \mathcal{H}$ where the \emph{uniform convergence} is defined as follows:
+% This assumption mean that as the \emph{size} of the training set increase the minimization becomes more accurate.
+% More formally, the ERM principle assumes that $R(\hat{h}^*)$ converge to its minimum value on the set $h \in \Hset$ when $n \rightarrow \infty$.
+% \citet{Vapnik1991TheNA} have shown that this equivalent to say that the empirical risk $E(h, n)$ \emph{converge uniformly} to the actual risk $R(h)$ over $h \in \Hset$ where the \emph{uniform convergence} is defined as follows:
 % \begin{equation}
-%   \Pbb \left[ \sup_{h \in \mathcal{H}} \left| R(h) - E(h, n) \right| < \epsilon \right] \rightarrow 0 \quad \text{ when } \quad n \rightarrow \infty, \quad \forall \epsilon > 0 
+%   \Pbb \left[ \sup_{h \in \Hset} \left| R(h) - E(h, n) \right| < \epsilon \right] \rightarrow 0 \quad \text{ when } \quad n \rightarrow \infty, \quad \forall \epsilon > 0 
 % \end{equation}
 
 
-% \citet{Vapnik1991TheNA} have shown that this assumption is equivalent to the following: does the empirical risk $E(h, n)$ \emph{converge uniformly} to the actual risk $R(h)$ over $h \in \mathcal{H}$ where the \emph{uniform convergence} is defined as follows:
+% \citet{Vapnik1991TheNA} have shown that this assumption is equivalent to the following: does the empirical risk $E(h, n)$ \emph{converge uniformly} to the actual risk $R(h)$ over $h \in \Hset$ where the \emph{uniform convergence} is defined as follows:
 % \begin{equation}
-%   \Pbb \left[ \sup_{h \in \mathcal{H}} \left| R(h) - E(h, n) \right| < \epsilon \right] \rightarrow 0 \quad \text{ when } \quad n \rightarrow \infty, \quad \forall \epsilon > 0 
+%   \Pbb \left[ \sup_{h \in \Hset} \left| R(h) - E(h, n) \right| < \epsilon \right] \rightarrow 0 \quad \text{ when } \quad n \rightarrow \infty, \quad \forall \epsilon > 0 
 % \end{equation}
 
 
-% However, does increasing the \emph{size} of the training set allow a better minimisation of the actual risk. More formally, does $R(\hat{h}^*)$ converge to its minimum value on the set $h \in \mathcal{H}$ when $n \rightarrow \infty$. 
+% However, does increasing the \emph{size} of the training set allow a better minimisation of the actual risk.
+% More formally, does $R(\hat{h}^*)$ converge to its minimum value on the set $h \in \Hset$ when $n \rightarrow \infty$.
 
 % \citet{vapnik1992principles} 
 
-% The 0-1 loss function is a natural loss function to use because it assigns 0 for a correct classification and 1 for an incorrect classification. 
+% The 0-1 loss function is a natural loss function to use because it assigns 0 for a correct classification and 1 for an incorrect classification.
 
 
-% of the ERM principle \ie, does $R(\hat{h}^*)$ converge to its minimum value on the set $h \in \mathcal{H}$ when $n \rightarrow \infty$ is equivalent to the question: 
+% of the ERM principle \ie, does $R(\hat{h}^*)$ converge to its minimum value on the set $h \in \Hset$ when $n \rightarrow \infty$ is equivalent to the question: 
 
 % is equivalent to the question: does the empirical risk E(h, n) \emph{converge uniformly} to the actual risk $R(h)$ over $h \in \mat
 
 % \begin{equation}
-%   h^* = \argmin_{h \in \mathcal{H}} \frac{1}{n} \sum_{i = 0}^{n} L(h(\xvec_i), y) + \lambda C(\theta) 
+%   h^* = \argmin_{h \in \Hset} \frac{1}{n} \sum_{i = 0}^{n} L(h(\xvec_i), y) + \lambda C(\theta) 
 % \end{equation}
 
-% Because the relation between $\xvec \in \Xset$ and $y \in \Yset$ is unknown, we aim to find the best approximation of the function $h$ with a parameterized function $h_\theta \in \mathcal{H}$ where $\mathcal{H}$ is called the \emph{hypothesis space}.
+% Because the relation between $\xvec \in \Xset$ and $y \in \Yset$ is unknown, we aim to find the best approximation of the function $h$ with a parameterized function $h_\theta \in \Hset$ where $\Hset$ is called the \emph{hypothesis space}.
 
-% The goal of a \textbf{learning algorithm} is to learn a function $f: \Xset \rightarrow \Yset$ which outputs $y \in \Yset$ given an input $\xvec \in \Xset$ with $f \in \mathcal{H}$ where $\mathcal{H}$ is called the \emph{hypothesis space}.
+% The goal of a \textbf{learning algorithm} is to learn a function $f: \Xset \rightarrow \Yset$ which outputs $y \in \Yset$ given an input $\xvec \in \Xset$ with $f \in \Hset$ where $\Hset$ is called the \emph{hypothesis space}.
 
-% The supervised learning settings assume that a function $f: \Xset \rightarrow \Yset$ exists. 
+% The supervised learning settings assume that a function $f: \Xset \rightarrow \Yset$ exists.
 
-% The supervised learning settings assume that a function $f$ that maps $\xvec \sim \Xset$ to $y \sim \mathcal{y}$ exists. 
+% The supervised learning settings assume that a function $f$ that maps $\xvec \sim \Xset$ to $y \sim \mathcal{y}$ exists.
 
 % The goal of a \textbf{learning algorithm} is to approximate $f$ by a parameterized function $f_\theta$.
 % The standard method to learn the set of parameters $\theta$ is the \textbf{empirical risk minimization (ERM)}:
@@ -299,7 +306,7 @@ In the next section, we will present a classical regularization function for neu
 % \end{equation*}
 
 % \begin{equation}
-%   \min_{\theta} \Ebb_{(\xvec, y) \sim \mathcal{D}} \left[ L(f_\theta(x), y) \right]. 
+%   \min_{\theta} \Ebb_{(\xvec, y) \sim \Dset} \left[ L(f_\theta(x), y) \right].
 % \end{equation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -318,13 +325,13 @@ In the next section, we will present a classical regularization function for neu
 % In \citeyear{lecun1998gradient}, \citeauthor{lecun1998gradient} had successfully learned a function capable of recognizing handwritten digits in images.
 % They used the MNIST dataset \cite{lecun1998gradient} consisting of black and white images of size $28 \times 28$ pixels (\Cref{figure:ch2-mnist-database} presents a sample of images from the MNIST database).
 % Their goal was to develop an algorithm that takes a vector as input and produces one digit from 0 to 9 as the output.
-% Although simple for a human, this task is a non-trivial problem for computers due to the uniqueness of each image. 
+% Although simple for a human, this task is a non-trivial problem for computers due to the uniqueness of each image.
 % To solve this problem, \citet{lecun1998gradient} trained a neural network based on the images of the MNIST dataset and their labels.
 
-% This is a non-trivial problem because each image is unique and while digits can be differentiated based on their shapes and strokes, these features give poor results for an automated system. 
+% This is a non-trivial problem because each image is unique and while digits can be differentiated based on their shapes and strokes, these features give poor results for an automated system.
 
 % In the previous section, we said that we restrict the learner towards a specific set of predictors.
-% In this thesis, we focus on neural networks. 
+% In this thesis, we focus on neural networks.
 Neural networks, which find their roots in the work of \citet{mcculloch1943logical,rosenblatt1958perceptron}, can be analytically described as a composition of linear functions interlaced with nonlinear functions (also called activation functions).
 A neural network can be defined as follows:
 
@@ -337,14 +344,14 @@ A neural network can be defined as follows:
 % %   Let $\dim^{w} = \{ \dim_1^w, \dots, \dim_\depth^w \}$ and $\dim^{b} = \{ \dim_1^b, \dots, \dim_\depth^b \}$ 
 % % be sequences of ``dimension'', let $\dim_{\text{in}} = \dim_\depth^w$ and $\dim_{\text{out}} = \dim_\depth^w$.
 %   Let $\Xset \subset \Rbb^{\dim_{\text{in}}}$ and 
-%   $\Yset \subset \Rbb^{\dim_\text{out}^w}$ be the input space and output space respectively. 
+%   $\Yset \subset \Rbb^{\dim_\text{out}^w}$ be the input space and output space respectively.
 %   % Given a depth $\depth$, a set of weights matrices and bias vectors $\weights = \left\{ \left( \Wmat^{(i)}, \bvec^{(i)} \right) \right\}_{i \in [\depth]}$ and a sequence of activation functions $\act = \{\act_i \}_{i \in [\depth]}$, a neural network is a function $N^\act_\weights : \Xset \rightarrow \Yset$ such that
 %   A neural network is a function $N^\act_\weights : \Xset \rightarrow \Yset$ such that
 %   \begin{equation}
 %     \nn^\act_{\weights}(\xvec) \triangleq \layer^{\act_\depth}_{\Wmat^{(\depth)}, \bvec^{(\depth)}} \circ \cdots \circ \layer^{\act_1}_{\Wmat^{(1)}, \bvec^{(1)}}(\xvec)
 %   \end{equation}
 %   % where $d$ corresponds to the depth of the network (\ie, the number of layers), $\weights$ is the set of weights matrices and bias vectors $\weights = \left\{ \left( \Wmat^{(1)}, \bvec^{(1)} \right) \dots \left( \Wmat^{(d)}, \bvec^{(d)} \right) \right\}$.
-%   % $\Bmat$ is the set of bias vectors $\Bmat = \left\{ \right\}$. 
+%   % $\Bmat$ is the set of bias vectors $\Bmat = \left\{ \right\}$.
 %   where $\layer^{\act_i}_{\Wmat^{(i)},\bvec^{(i)}}: \Rbb^{w^{(i)}} \rightarrow \Rbb^{w^{(i+1)}}$ (also called layer) is a function parameterized by the weight matrix $\Wmat^{(i)}$, the bias vector $\bvec^{(i)}$ and the activation function $\act_i$ and can be expressed as follows: 
 %   \begin{equation}
 %     \layer^{\act_i}_{\Wmat^{(i)},\bvec^{(i)}} (\xvec) \triangleq \act_i \left(\Wmat^{(i)}\xvec + \bvec^{(i)}\right)
@@ -355,7 +362,7 @@ A neural network can be defined as follows:
   Given a depth $\depth \in \Nbb$, 
   let $\dimw = \{ \dimw^{(i)} \}_{i \in [\depth]}$ and $\dimb = \{ \dimb^{(i)} \}_{i \in [\depth]}$ be sequences of integers, $\weights = \left\{ \left( \Wmat^{(i)}, \bvec^{(i)} \right) \right\}_{i \in [\depth]}$ a set of weights matrices and bias vectors 
   such that $\Wmat^{(i)} \in \Rbb^{\dimw^{(i)}}$ and $\bvec^{(i)} \in \Rbb^{\dimb^{(i)}}$ and a sequence of activation functions $\act = \{\act_i \}_{i \in [\depth]}$.
-  Let $\Xset \subset \Rbb^{\dimw^{(1)}}$ and $\Yset \subset \Rbb^{\dimw^{(\depth)}}$ be the input and output spaces respectively. 
+  Let $\Xset \subset \Rbb^{\dimw^{(1)}}$ and $\Yset \subset \Rbb^{\dimw^{(\depth)}}$ be the input and output spaces respectively.
 	$\dimw^{(1)}$ and $\dimw^{(\depth)}$ refer to the input and output dimension respectively.
   % $\dimw^{(1)}$ refers to the input dimension and $\dimw^{(\depth)}$ refers to the output dimension.
   A neural network is a function $\nn^\act_\weights : \Xset \rightarrow \Yset$ such that
@@ -371,9 +378,9 @@ A neural network can be defined as follows:
 \end{definition}
 
 \noindent
-Based on this definition, for a given training set $\mathcal{S} = \Xset \times [k]$, a set of activation functions $\act$, a set of weights and biases $\weights$ and a loss function $L: \Yset \times [k] \rightarrow \Rbb_+$, the ERM learning paradigm for neural networks is given by
+Based on this definition, for a given training set $\Sset \subset \Xset \times \Yset$, a set of activation functions $\act$, a set of weights and biases $\weights$ and a loss function $L: \Yset \times [k] \rightarrow \Rbb_+$, the ERM learning paradigm for neural networks is given by
 \begin{equation} \label{equation:ch2-erm_neural_network}
-  \argmin_{\weights} \frac{1}{|\mathcal{S}|} \sum_{(\xvec, y) \in \mathcal{S}} L(N^\act_\weights(\xvec), y) 
+  \argmin_{\weights} \frac{1}{|\Sset|} \sum_{(\xvec, y) \in \Sset} L(N^\act_\weights(\xvec), y) 
 \end{equation}
 For classification problems, the zero-one loss is known to be non-convex and non-smooth, and it has been shown that solving for the optimal solution is an NP-hard combinatorial optimization problem~\cite{feldman2012agnostic,bendavid2003difficulty}.
 Instead, a common approach is to use a surrogate such as the cross-entropy loss function and estimate the parameters by maximizing the \emph{likelihood} over the data.
@@ -408,7 +415,7 @@ It has been shown that the $\ell_2$ norm of the weights of a network can be used
 This \emph{regularization} \cite{tikhonov1977solutions,krogh1992simple}, also called \emph{weight decay}, prevents weights from growing too large unless it is necessary.
 The SRM learning algorithm with the weight decay regularization can be expressed as follows:
 \begin{equation}
-  \argmin_{\weights} \frac{1}{|\mathcal{S}|} \sum_{(\xvec, y) \in \mathcal{S}} L(N^\act_\weights(\xvec), y) + \lambda \sum_{(\Wmat, \bvec) \in \weights} \left( \norm{\Wmat}_\mathrm{F} + \norm{\bvec}_\mathrm{2} \right)
+  \argmin_{\weights} \frac{1}{|\Sset|} \sum_{(\xvec, y) \in \Sset} L(N^\act_\weights(\xvec), y) + \lambda \sum_{(\Wmat, \bvec) \in \weights} \left( \norm{\Wmat}_\mathrm{F} + \norm{\bvec}_\mathrm{2} \right)
 \end{equation}
 where $\lambda > 0$ is the regularization parameter.
 
@@ -434,7 +441,7 @@ where $\lambda > 0$ is the regularization parameter.
 \end{figure}
 
 
-Choosing the right activation function has been an active area of research. 
+Choosing the right activation function has been an active area of research.
 Hereafter, we present three common activation functions used by practitioners.
 \begin{itemize}
   \item \textbf{Sigmoid activation} \cite{han1995influence}
@@ -447,7 +454,7 @@ Hereafter, we present three common activation functions used by practitioners.
     \begin{equation*}
       \act(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}
     \end{equation*}
-    The hyperbolic tangent activation function is similar to the sigmoid activation function but instead of returning between 0 and 1, the function returns values between -1 and 1.     
+    The hyperbolic tangent activation function is similar to the sigmoid activation function but instead of returning between 0 and 1, the function returns values between -1 and 1.
   \item \textbf{Rectified Linear activation (ReLU)} \cite{nair2010rectified,maas2013rectifier}
     \begin{equation*}
       \act(x) = \max(0, x)
@@ -473,7 +480,8 @@ We simplify the notation $\nn^\act_\weights$ with $\nn_\weights$.
 
 
 
-% From $\mathcal{N}$, we can easily build a deep ReLU network $\mathcal{N'}$ of width exactly $n+3$, such that $\forall x \in [0,1]^{n+3}$, $\left|f(\xvec_{1} \ldots \xvec_{n}) - \left(\mathcal{N}'\left(\xvec\right)\right)_{1}\right| < \epsilon$. Thanks to \Cref{lemma:dcnn_approx_neural_network}, this last network can be approximated arbitrarily well by a DCNN of width $n+3$.
+% From $\mathcal{N}$, we can easily build a deep ReLU network $\mathcal{N'}$ of width exactly $n+3$, such that $\forall x \in [0,1]^{n+3}$, $\left|f(\xvec_{1} \ldots \xvec_{n}) - \left(\mathcal{N}'\left(\xvec\right)\right)_{1}\right| < \epsilon$.
+% Thanks to \Cref{lemma:dcnn_approx_neural_network}, this last network can be approximated arbitrarily well by a DCNN of width $n+3$.
 %
 % \begin{theorem}
 %   Let $\Xset \subset \Rbb^{w_{(1)}}$.
@@ -510,12 +518,13 @@ However, it has been shown that such neural networks are vulnerable to \emph{adv
 Because it is difficult to characterize the space of visually imperceptible variations of a natural image, existing adversarial attacks use $\ell_p$ norms as surrogate measures.
 We can formally define an adversarial example as follows:
 \begin{definition}[Adversarial Pertubation]
-  Given a dataset $\mathcal{S} = \Xset \times \Yset$, a pair $(\xvec, y) \in \mathcal{S}$ and a trained neural network $\nn_\weights$ on $\mathcal{S}$ such that $\argmax_{i} \{ \nn_\weights(\xvec)_i \} = y$, let $\adv \in \Xset$ be an adversarial perturbation such that:
+  Given an example $\xvec$ and its label $y$, a trained neural network $\nn_\weights$ with $\argmax_i \{ \nn_\weights(\xvec)_i \} = y$, let $\adv \in \Xset$ be an adversarial perturbation such that:
+  % Given a dataset $\Sset \subset \Xset \times \Yset$, a pair $(\xvec, y) \in \Sset$ and a trained neural network $\nn_\weights$ on $\Sset$ such that $\argmax_{i} \{ \nn_\weights(\xvec)_i \} = y$, let $\adv \in \Xset$ be an adversarial perturbation such that:
   \begin{align}
     &\argmax_{i} \{ \nn_\weights (\xvec + \adv)_i \} \neq y \\
     &\st\ \norm{\adv}_p \leq \epsilon \notag
   \end{align}
-  where $\epsilon$ is a small value defined by the attacker. 
+  where $\epsilon$ is a small value defined by the attacker.
 \end{definition}
 
 Note that this definition assumes that the attacker (the person crafting the attack) has access to the parameters of the model.
@@ -523,7 +532,7 @@ Typically, an attack method is either \emph{white-box} (complete knowledge of th
 It is possible to consider the white-box setting admits too strong assumptions because a model and its parameters could very well be hidden from the public.
 In general, it is safer to assume that the adversary has complete knowledge of the model and its defense.
 This principle is known in the field of security as Kerckhoffs’ principle~\cite{kerckhoffs1883cryptographie} or Shannon's maxim~\cite{shannon1949communication}.
-Therefore, in this thesis, we only consider defenses against white-box attacks which imply robustness against black-box adversaries.  
+Therefore, in this thesis, we only consider defenses against white-box attacks which imply robustness against black-box adversaries.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -547,17 +556,17 @@ In this scenario, the procedure maximizes the loss objective function $L(\nn_\we
 \end{equation}
 The typical value of $\epsilon$ depends on the norm $\norm{\ \cdot\ }_p$ considered in the problem setting.
 % In order to compare $\linf$ and $\ltwo$ attacks of similar strength, we choose values of $\epsilon_\infty$ and $\epsilon_2$ (for $\linf$ and $\ltwo$ norms respectively) which result in $\linf$ and $\ltwo$ balls of equivalent volumes.
-% For the particular case of CIFAR-10, this would lead us to choose $\epsilon_\infty = 0.03$ and $\epsilon_2 = 0.8$ which correspond to the maximum values chosen empirically to avoid the generation of visually detectable perturbations. 
+% For the particular case of CIFAR-10, this would lead us to choose $\epsilon_\infty = 0.03$ and $\epsilon_2 = 0.8$ which correspond to the maximum values chosen empirically to avoid the generation of visually detectable perturbations.
 The current state-of-the-art method to solve \Cref{equation:ch2-lossmax} is based on a projected gradient descent (PGD)~\cite{madry2018towards} of radius~$\epsilon$.
 Given a budget $\epsilon$, it recursively computes
 \begin{equation} \label{equation:ch2-projectionPGD}
   \xvec^{(t+1)} = \prod_{\mathcal{B}_p(\xvec,\epsilon)}\left(\xvec^{(t)}
-    + \alpha \argmax_{\adv: \norm{\adv}_p \leq 1} \nabla_\xvec L\left( \nn_\weights \left(\xvec^{(t)} + \adv \right), y \right)
+    + \alpha \argmax_{\adv: \norm{\adv}_p \leq 1} \adv^\top \nabla_{\xvec^{(t)}} L\left( \nn_\weights \big(\xvec^{(t)} \big), y \right)
 \right)
 \end{equation}
-where $\mathcal{B}_p(\xvec,\epsilon) = \{ \xvec + \adv:\norm{\adv}_p \leq \epsilon\}$, $\alpha$ is a gradient step size, and $\prod_S$ is the projection operator on $S$.
+where $\Bset_p(\xvec,\epsilon) = \{ \xvec + \adv:\norm{\adv}_p \leq \epsilon\}$ is the ball of norm $p$ with radius $\epsilon$, centered at $\xvec$, $\alpha$ is a gradient step size, and $\prod_\Bset$ is the projection operator on the ball $\Bset$.
 The PGD attack is currently used in the literature with $p=2$ and $p=\infty$.
-The attack with the norm $p=\infty$ is state-of-the-art for the loss maximization problem. 
+The attack with the norm $p=\infty$ is state-of-the-art for the loss maximization problem.
 
 \paragraph{Perturbation minimization.}
 This type of procedure searches for the perturbation with the minimal $\lp$ norm, under the constraint that $L(\nn_\weights(\xvec + \adv), y)$ is bigger than a given bound $c$:
@@ -572,17 +581,17 @@ It aims at solving the following Lagrangian relaxation of \Cref{equation:ch2-nor
 \begin{equation}
   \argmin_{\adv} \norm{\adv}_p + \lambda g(\xvec+\adv)
 \end{equation}
-where $g(\xvec + \adv)<0$ if and only if $L(\nn_\weights(\xvec + \adv),y) \geq c$. 
+where $g(\xvec + \adv)<0$ if and only if $L(\nn_\weights(\xvec + \adv),y) \geq c$.
 The authors use a change of variable $\adv = \tanh(\wvec) - \xvec$ to ensure that $\xvec + \adv \in \Xset$, a binary search to optimize the constant $c$, and Adam or SGD to compute an approximated solution.
 The C\&W attack is currently used in the literature with $p \in \{1, 2, \infty \}$ and is state-of-the-art with $p=2$ for the perturbation minimization problem.
-% This attack with the norm $p=2$ is state-of-the-art for the perturbation minimization problem. 
+% This attack with the norm $p=2$ is state-of-the-art for the perturbation minimization problem.
 % The C\&W attack is well defined both for $p=2$, and $p=\infty$, but there is a clear empirical gap of efficiency in favor of the $\ltwo$ attack.
 
 
 % For example, \citet{goodfellow2014explaining} use the $\linf$ norm to measure the distance between the original image and the adversarial image whereas \citet{carlini2017towards} use the $\ltwo$ norm.
 % When the input dimension is low, the choice of the norm is of little importance because the $\linf$ and $\ltwo$ balls overlap by a large margin, and the adversarial examples lie in the same space.
 % For typical image datasets with large dimensionality, the two balls are mostly disjoint.
-% As a consequence, the $\linf$ and the $\ltwo$ adversarial examples lie in different areas of the space, and it explains why $\linf$ defense mechanisms perform poorly against $\ltwo$ attacks and vice versa. 
+% As a consequence, the $\linf$ and the $\ltwo$ adversarial examples lie in different areas of the space, and it explains why $\linf$ defense mechanisms perform poorly against $\ltwo$ attacks and vice versa.
 
 
 
@@ -596,7 +605,7 @@ Adversarial Training was introduced by~\citet{goodfellow2014explaining} and late
 It consists in augmenting training batches with adversarial examples generated during the training procedure.
 The structural risk minimization paradigm is thus replaced by the following $\min$ $\max$ problem, where the classifier tries to minimize the expected loss under the maximum perturbation of its input:
 \begin{equation}
-  \argmin_\weights \argmax_{\adv: \norm{\adv} \leq \epsilon} \frac{1}{|\mathcal{S}|} \sum_{(\xvec, y) \in \mathcal{S}} L\left( \nn_\weights \left(\xvec + \adv \right), y \right) + \lambda \sum_{(\Wmat, \bvec) \in \weights} \left( \norm{\Wmat}_\mathrm{F} + \norm{\bvec}_\mathrm{2} \right)
+  \argmin_\weights \argmax_{\adv: \norm{\adv} \leq \epsilon} \frac{1}{|\Sset|} \sum_{(\xvec, y) \in \Sset} L\left( \nn_\weights \left(\xvec + \adv \right), y \right) + \lambda \sum_{(\Wmat, \bvec) \in \weights} \left( \norm{\Wmat}_\mathrm{F} + \norm{\bvec}_\mathrm{2} \right)
 \end{equation}
 % In the case where $p = \infty$, this technique offers good robustness against $\linf$ attacks \cite{athalye2018obfuscated}.
 Although adversarial training lacks formal guarantees, it is one of the few techniques that proves to be empirically very effective.
@@ -614,7 +623,7 @@ Although adversarial training lacks formal guarantees, it is one of the few tech
 %
 % \%\%\%
 
-% Another important technique to defend against adversarial examples is to use \emph{noise injection} techniques.  
+% Another important technique to defend against adversarial examples is to use \emph{noise injection} techniques.
 % In contrast with adversarial Training, noise injection mechanisms are usually deployed after training.
 
 
@@ -626,7 +635,7 @@ Although adversarial training lacks formal guarantees, it is one of the few tech
 % where $\eta$ is a random variable on $\Rbb^d$.
 % Even though, Noise Injection is often less efficient than Adversarial Training in practice (see \eg, \Cref{table:764774}), it benefits from strong theoretical background.
 % In particular, recent works \cite{lecuyer2018certified,li2019certified}, followed by~\citet{cohen2019certified,pinot2019theoretical} demonstrated that noise injection from a Gaussian distribution can give provable defense against $\ltwo$ adversarial attacks.
-% In this work, besides the classical Gaussian noises already investigated in previous works, we evaluate the efficiency of Uniform distributions to defend against $\ltwo$ adversarial examples. 
+% In this work, besides the classical Gaussian noises already investigated in previous works, we evaluate the efficiency of Uniform distributions to defend against $\ltwo$ adversarial examples.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -635,17 +644,18 @@ Although adversarial training lacks formal guarantees, it is one of the few tech
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In this section, we give recent generalization bounds for neural networks.
-Neural networks have the astonishing property of providing a low error rate on unseen data although they have more parameters than the number of training samples and therefore have the capabilities to fit random labels \cite{zhang2016understanding}. 
+Neural networks have the astonishing property of providing a low error rate on unseen data although they have more parameters than the number of training samples and therefore have the capabilities to fit random labels \cite{zhang2016understanding}.
 In this context, traditional approaches of statistical learning  fail to explain why large neural networks generalize well in practice.
 
 \citet{harvey2017nearly} have devised a generalization of neural networks with the VC-dimension a complexity measure of the hypothesis class.
-They improved over previous bounds~\cite{bartlett1998almost} by showing that the VC-dimension of a $\depth$-layer neural network is equal to the depth times the number parameters.
-Unfortunately, this kind of bound with such a complexity measure is of little help to better understand the generalization capabilities of neural networks. 
+They improved over previous bounds~\cite{bartlett1998almost,anthony1999neural} by showing that the VC-dimension of a $\depth$-layer neural network is equal to the depth times the number parameters.
+Unfortunately, this kind of bound with such a complexity measure is of little help to better understand the generalization capabilities of neural networks.
 
-More recently, \citet{bartlett2017spectrally} have proposed to use a \emph{scale-sensitive} complexity measure instead of combinatorial ones (\ie, VC-dimension) which can work with real-valued function classes and are sensitive to their magnitudes. 
+More recently, \citet{bartlett2017spectrally} have proposed to use a \emph{scale-sensitive} complexity measure instead of combinatorial ones (\ie, VC-dimension) which can work with real-valued function classes and are sensitive to their magnitudes.
 They proposed to use the product of the spectral norms of the weight matrices (\ie, the Lipschitz constant of the weight matrices) of the network to this scale-sensitive complexity measure.
 In addition, \citeauthor{bartlett2017spectrally} investigate the margins (a precise measure of confidence) and show that normalizing these Lipschitz constants by the margin allows to better control their excess risk (the test error minus the training error) across
 training epochs.
+The margin has been previously studied in relationship to generalization by \citet{langford2002pac} and more recently by~\citet{neyshabur2018pacbayesian}.
 
 In what ensues, we present generalization bounds for neural networks which are independent of the number of parameters of the network and use as a complexity penalty the Lipschitz constant of the weight matrices.
 In addition, following the \Cref{subsection:ch2-adversarial_attacks_robustness_of_neural_networks} on Adversarial Attacks, we present the work of~\citet{farnia2018generalizable} which introduce \emph{adversarial risk} and \emph{empirical adversarial risk} and present an \emph{adversarial generalization bound} similarly to \citet{bartlett2017spectrally}.
@@ -658,6 +668,7 @@ Formally, the Lipschitz constant of a function is defined as follows:
   \begin{equation}
   \lipp{p}{f} \triangleq \sup_{\substack{\xvec, \yvec \in \Rbb^n \\ \xvec \neq \yvec}} \frac{\norm{f(\xvec) - f(\yvec)}_p}{\norm{\xvec - \yvec}_p}
   \end{equation}
+  \removespace
 \end{definition}
 \noindent
 In the following of this thesis, we denote $\lipp{2}{f}$ by $\lip{f}$ for simplicity and if $\lipp{p}{f}=k$, we denote the function $f$ as $k$-Lipschitz.
@@ -680,6 +691,7 @@ Let us recall the risk with respect to the neural network $N_\Omega$ and a distr
 \end{equation}
 where $\Sset$ is an i.i.d sample of the distribution $\Dset$.
 \citet{bartlett2017spectrally} extended this notion of risk with a \emph{margin operator} $\Mset: \Rbb^k \times [k] \rightarrow \Rbb$ defined as $\Mset(\vvec, j) \triangleq \vvec_j - \max_{i \neq j} \vvec_i$ and an extension to the 0-1 loss called the \emph{ramp loss} $L_\gamma: \Rbb \rightarrow \Rbb_+$ as:
+
 \begin{equation}
   L_\gamma(r) \triangleq 
   \begin{cases}
@@ -716,7 +728,7 @@ The generalization bound of~\citet{bartlett2017spectrally} for neural network is
 \end{theorem}
 
 As we stated in the introduction, the generalization of neural networks is important but should be the only metric to consider.
-Indeed, a neural network that performs well on natural data could be vulnerable to adversarial attacks. 
+Indeed, a neural network that performs well on natural data could be vulnerable to adversarial attacks.
 We saw in the previous section that \emph{adversarial training} is a technique that successfully improves the robustness of neural networks by learning on adversarial examples instead of natural ones.
 In the following, we present recent results devised by~\citet{farnia2018generalizable} on the generalization capabilities of neural networks trained with adversarial training.
 First, let us defined the \emph{adversarial margin risk} as:
@@ -725,7 +737,6 @@ First, let us defined the \emph{adversarial margin risk} as:
 \end{equation}
 where $\adv^{\text{adv}}_\Omega(\xvec)$ is an adversarial perturbation following the loss maximization strategy presented in~\Cref{subsubsection:ch2-adversarial_attacks}.
 The \emph{adversarial empirical margin risk} is defined similarly as in~\Cref{equation:ch2-emprical_margin_risk}.
-
 The adversarial generalization bound of~\citet{farnia2018generalizable} for neural network is stated as follows:
 \begin{theorem}[\citet{farnia2018generalizable}]
   Let $(\rho^{(1)}, \dots, \rho^{(\depth)})$ be nonlinearities where $\forall i \in [\depth], \lip{\rho^{(i)}} = 1$ and $\rho^{(i)}(0) = 0$.
@@ -750,7 +761,7 @@ The adversarial generalization bound of~\citet{farnia2018generalizable} for neur
 
 These generalizations bound for neural networks give us a theoretical justification for \emph{Lipschitz regularization}.
 However, computing the spectral norm of the weights matrices is a difficult task.
-In the next chapter, we will review some known techniques and we propose in \Cref{chapter:ch5-lipschitz_bound} new efficient method for regularizing the Lipschitz constant of neural networks. 
+In the next chapter, we will review some known techniques and we propose in \Cref{chapter:ch5-lipschitz_bound} new efficient method for regularizing the Lipschitz constant of neural networks.
 
 
 
