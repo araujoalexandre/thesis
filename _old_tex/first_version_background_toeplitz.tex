@@ -1,0 +1,266 @@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Circulant Matrices}
+\label{subsection:ch2-circulant_matrices}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Circulant matrices are a special case of Toeplitz matrices.
+In addition to having constant diagonals, each row of a circulant matrix is a cyclic right shift of the previous one.
+% Circulant matrices have been used to efficiently solve linear systems~\cite{golub1996matrix} and years later were used to perform dimensionality reduction~\cite{hinrichs2011johnson,vybiral2011variant}, binary embedding~\cite{yu2014circulant} and kernel approximation~\cite{yu2015compact} in the context of pattern recognition and machine learning.
+An $n \times n$ circulant matrix $\Cmat$ is fully determined by a sequence of scalars $\{c_h\}_{h \in \Pset_0}$ as follows:
+
+\begin{equation}
+  \Cmat =
+  \leftmatrix
+    c_0 & c_{n-1} & c_{n-2} & \cdots & \cdots & c_{1} \\
+    c_{1} & c_0 & c_{n-1} & \ddots & & \vdots \\
+    c_{2} & c_{1} & \ddots & \ddots & \ddots & \vdots \\
+    \vdots & \ddots & \ddots & \ddots & c_{n-1} & c_{n-2} \\
+    \vdots & & \ddots & c_{1} & c_{0} & c_{n-1} \\
+    c_{n-1} & \cdots & \cdots & c_{2} & c_{1} & c_0
+  \rightmatrix
+\end{equation}
+
+\noindent
+Because the circulant matrix $\Cmat$ is fully determined by the sequence $\{c_h\}_{h \in \Pset_0}$, it can be compactly represented in memory using only $n$ values instead of $n^2$.
+Circulant matrices can also be characterized by noting that the $(k,j)$ entry of $\Cmat$, $\leftmat \Cmat \rightmat_{j,k}$ is given by
+\begin{equation}
+  \leftmat \Cmat \rightmat_{j,k} = c_{\left(k-j\right) \mod n} \enspace.
+\end{equation}
+% We can also denote the sequence $\{c_h\}$ as a vector $\cvec$ such that $\forall i, \cvec_i = c_i$. The circulant matrices can then be expressed with $\Cmat = \circulant(\cvec)$.
+
+
+\todotext{here}
+In numerical analysis, circulant matrices are important because they are diagonalized by a discrete Fourier transform meaning that the columns of the Fourier matrix are the eigenvectors of every circulant matrix. 
+
+Circulant matrices exhibit several interesting properties which are based their link with the Discrete Fourier Transform (DFT).
+% on the fact that they can be diagonalized by the matrix expansion of the Discrete Fourier Transform (DFT).
+
+Circulant matrices exhibit several interesting properties  
+
+Circulant matrices arise, for example, in applications involving the discrete Fourier transform (DFT) and the study of cyclic codes for error correction.
+
+Recall that the Discrete Fourier Transform converts a finite sequence into a complex-valued sequence of frequency.
+It is possible to expand the discrete Fourier transform as a transformation matrix as follows:
+\begin{definition}[Fourier Matrix]
+  The Fourier matrix of order $n$ is defined as follows:
+  \begin{equation} \label{definition:ch2-fourier_matrix}
+    \Umat_n = 
+    \leftmatrix
+      1      & 1           & 1              & \cdots & 1           \\
+      1      & z_n       & z_n^2        & \cdots & z_n^{n-1} \\
+      1      & z_n^2     & z_n^4        & \cdots & z_n^{2(n-1)} \\
+      \vdots & \vdots      & \vdots         &        & \vdots      \\
+      1      & z_n^{n-1} & z_n^{2(n-1)} & \cdots & z_n^{(n-1)(n-1)}
+    \rightmatrix
+  \end{equation}
+  where $z_n = e^{-\frac{2\pi\ci}{n}}$ is an $n^{\text{th}}$ root of unity.
+\end{definition}
+
+\noindent
+
+
+Circulant matrices exhibit several interesting properties which are based their link with the Discrete Fourier Transform (DFT).
+% on the fact that they can be diagonalized by the matrix expansion of the Discrete Fourier Transform (DFT).
+
+In numerical analysis, circulant matrices are important because they are diagonalized by a discrete Fourier transform meaning that the columns of the Fourier matrix are the eigenvectors of every circulant matrix. 
+k-
+
+
+Circulant matrices exhibit several interesting properties which are based on the fact that they can be diagonalized by the matrix expansion of the Discrete Fourier Transform (DFT).
+
+
+
+\begin{theorem}[Theorem 3.1 of \citet{gray2006toeplitz}] \label{theorem:ch2-diagonalization_circulant_matrix}
+  Every $n \times n$ circulant matrix $\Cmat$, has eigenvectors  
+  \begin{equation}
+    \yvec^{(k)} = \frac{1}{\sqrt{n}} \leftmatrix 1, e^{-\frac{2 \pi \ci k}{n}}, \dots, e^{-\frac{2 \pi \ci k(n-1)}{n}} \rightmatrix^\top
+  \end{equation}
+  and corresponding eigenvalues
+  \begin{equation}
+    \psi_k = \sum_{j=0}^{n-1} c_j e^{-\frac{2 \pi \ci}{n} jk}
+  \end{equation}
+  The circulant matrix $\Cmat$ can be expressed in the form 
+  \begin{equation} \label{equation:ch2-diagonalization_circulant_matrix}
+    \Cmat = \frac{1}{n} \Umat_n^* \diag(\Umat_n \cvec) \Umat_n
+  \end{equation}
+  where $\cvec$ is a vector based on the scalars $\{c_h\}_{h \in \Pset_0}$.
+  In particular all circulant matrices share the same eigenvectors, the same matrix $\Umat_n$ works for all $n \times n$ circulant matrices.
+  Also, circulant matrices commute and are closed under sum and product.
+\end{theorem}
+
+
+The matrix-vector product between the Fourier matrix above and a vector is equivalent to applying the Discrete Fourier Transform on the vector.
+This matrix-vector product can be efficiently computed with the \emph{Fast Fourier transform} (FFT) algorithm~\cite{cooley1965algorithm}.
+The complexity is reduced from from $\bigO(n^2)$ to $\bigO(n \log n)$.
+
+
+\noindent
+Based on \Cref{theorem:ch2-diagonalization_circulant_matrix} and on the \emph{Fast Fourier transform} (FFT) algorithm, the matrix-vector product between a circulant matrix $\Cmat$ and a vector $\xvec$ can be reduced from $\bigO(n^2)$ to $\bigO(n \log n)$.
+If we denote the Fast Fourier transform algorithm by \textbf{FFT} and the inverse by \textbf{IFFT}, the pseudocode for the matrix-product between a circulant matrix and a vector is as follows:
+\begin{algorithm}[h]
+  \begin{algorithmic}[1]
+    \Procedure{CIRCMUL}{$\cvec, \xvec$} \Comment{first column of the circulant matrix $\Cmat$, vector $\xvec$}
+      \State $\tilde{\xvec} \gets \textbf{FFT}(\xvec)$
+      \State $\tilde{\cvec} \gets \textbf{FFT}(\cvec)$
+      \State $\yvec \gets \textbf{IFFT}(\tilde{\xvec} \cdot \tilde{\cvec})$ \Comment{element-wise vector-vector product}
+      \State \textbf{return} $\yvec$ \Comment{return the result of the product $\Cmat \xvec$}
+    \EndProcedure
+  \end{algorithmic}
+  \caption{Matrix-vector product with a circulant matrix}
+  \label{algorithm:ch2-matrix_vector_product_circulant_matrix}
+\end{algorithm}
+
+An important object based on circulant matrices is called \emph{$f$-circulant matrix} and is defined as follows:
+\begin{definition}[$f$-circulant matrix] \label{definition:ch2-f_circulant_matrix}
+  Given a vector $\xvec$, the $f$-circulant matrix, $\Zmat_f(\xvec)$, is defined as follows:
+  \begin{equation}
+    \Zmat_f(\xvec) \triangleq
+    \leftmatrix
+      \xvec_0 & $f$ \xvec_{n-1} & $f$ \xvec_{n-2} & \cdots & \cdots & $f$ \xvec_{1} \\
+      \xvec_{1} & \xvec_0 & $f$ \xvec_{n-1} & \ddots & & \vdots \\
+      \xvec_{2} & \xvec_{1} & \ddots & \ddots & \ddots & \vdots \\ 
+      \vdots & \ddots & \ddots & \ddots & $f$ \xvec_{n-1} & $f$ \xvec_{n-2} \\
+      \vdots & & \ddots & \xvec_{1} & \xvec_{0} & $f$ \xvec_{n-1} \\
+      \xvec_{n-1} & \cdots & \cdots & \xvec_{2} & \xvec_{1} & \xvec_0
+    \rightmatrix
+  \end{equation}
+  \removespace
+\end{definition}
+\noindent
+% An $f$-unit-circulant, denoted $\Zmat_f$, is a $f$-circulant matrix defined by the vector $\left(0, 1, \dots, 0 \right)$:
+An $f$-unit-circulant, $\Zmat_f$, defined by the vector $\left(0, 1, \dots, 0 \right)$ writes:
+\begin{equation}
+  \Zmat_f = \circulant \big(e^{(1)} \big) + (f - 1) \evec^{(0)} \evec^{(n-1)\top}
+\end{equation}
+\noindent
+Thus, in matrix form, we have:
+\begin{equation}
+  \Zmat_f = 
+    \leftmatrix
+      0      & 0      & 0      & \cdots & \cdots & f      \\
+      1      & 0      & 0      & \ddots &        & \vdots \\
+      0      & 1      & \ddots & \ddots & \ddots & \vdots \\ 
+      \vdots & \ddots & \ddots & \ddots & 0      & 0      \\
+      \vdots &        & \ddots & 1      & 0      & 0      \\
+      0      & \cdots & \cdots & 0      & 1      & 0
+    \rightmatrix
+\end{equation}
+
+\noindent
+As stated by~\citet{sindhwani2015structured}, the $f$-unit-circulant matrix performs a downward shift-and-scale transformation on a vector.
+More precisely, the matrix-vector product $\Zmat_f \xvec$ makes a circular shift on the elements and scales the last element of the vector resulting in $\Zmat_f \xvec = \leftmat f \xvec_{n-1}, \xvec_0, \dots, \xvec_{n-2} \rightmat^\top$.
+$f$-unit-circulant matrices are one of the building blocks of \emph{low displacement rank operator} presented in \Cref{subsection:ch2-building_compact_neural_networks_with_structured_matrices}.
+
+
+% The f-unit-circulant matrix is associated with a basic downward shift-and-scale transformation, i.e.,
+% the matrix-vector product Zfv shifts the elements of the column vector v “downwards”, and scales
+% and brings the last element vn to the “top”, resulting in [fvn, v1, . . . vn−1] T .
+% It has several basic
+% algebraic properties (see Proposition 1.1 [1]) that are crucial for the results stated in this section
+
+
+
+% the complexity of the matrix-vector product between a circulant matrix $\Cmat$ and a vector $\xvec$ can be reduced from $\bigO(n^2)$ to $\bigO(n \log n)$ with the \emph{Fast Fourier transform} (FFT) algorithm~\cite{cooley1965algorithm}.
+
+% More precisely, the eigenvalues $\psi_k$ of the matrix $\Cmat$ correspond to the discrete Fourier transform of the vector characteristic $\cvec$:
+% and the eigenvectors $\yvec^{(k)}$ can be expressed as follows:
+% \begin{equation}
+%   \yvec^{(k)} = \frac{1}{\sqrt{n}} \leftmatrix 1, e^{-\frac{2 \pi \ci k}{n}}, \dots, e^{-\frac{2 \pi \ci k(n-1)}{n}} \rightmatrix^\top
+% \end{equation}
+% In matrix form, we can diagonalize the matrix $\Cmat$ as follows:
+% \begin{equation}
+%   \Cmat = \frac{1}{n} \Umat_n^* \diag(\Umat_n \cvec) \Umat_n
+% \end{equation}
+% where $\Umat_n = \leftmatrix e^{-\frac{2 \pi \ci jk}{n}} \rightmatrix_{j,k = 0}^{n-1}$ is the DFT matrix and $\cvec$ is vector based of the scalars $\{c_h\}_{h \in \Pset_0}$.
+
+% The following Theorem summarize the propreties for circulant matrices derived above.
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Toeplitz Matrices}
+\label{subsection:ch2-toeplitz_matrices}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todotext{citer Toeplitz application}
+A Toeplitz matrix is a matrix in which each descending diagonal from left to right is constant.
+\todotext{set P}
+Let $\Pset = \{-n+1, \dots, n-1\}$, an $n\times n$ Toeplitz matrix $\Amat$ is fully determined by a two-sided sequence of scalars $\{a_h\}_{h \in \Pset}$ as follows:
+\begin{equation}
+  \Amat =
+  \leftmatrix
+    a_0      & a_1    & a_{2}  & \cdots & \cdots & a_{n-1} \\
+    a_{-1}   & a_0    & a_{1}  & \ddots &        & \vdots  \\
+    a_{-2}   & a_{-1} & \ddots & \ddots & \ddots & \vdots  \\
+    \vdots   & \ddots & \ddots & \ddots & a_{1}  & a_2     \\
+    \vdots   &        & \ddots & a_{-1} & a_{0}  & a_1     \\
+    a_{-n+1} & \cdots & \cdots & a_{-2} & a_{-1} & a_0
+  \rightmatrix
+\end{equation}
+\noindent
+Because the Toeplitz matrix $\Amat$ is fully determined by the sequence $\{a_h\}_{h \in \Pset}$, it can be compactly represented in memory using only $2n-1$ values instead of $n^2$ values required for arbitrary matrices.
+Toeplitz matrices can also be characterized by noting that the $(k,j)$ entry of $\Amat$, $\leftmat \Amat \rightmat_{j,k}$ is given by
+\begin{equation}
+  \leftmat \Amat \rightmat_{j,k} = a_{k-j} \enspace.
+\end{equation}
+
+A standard tool for manipulating Toeplitz matrices is the use of Fourier analysis.
+Let $\{a_h\}_{h \in \Pset}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n\times n}$.
+The complex-valued function 
+\begin{equation}
+  f(\omega) = \sum_{h \in \Pset} a_h e^{\ci h \omega}
+\end{equation}
+is the \emph{inverse Fourier transform} of the sequence $\{a_h\}_{h \in \Pset}$ with $\omega \in \Rbb$.
+From this function, one can recover the sequence $\{a_h\}_{h \in \Pset}$ using the standard Fourier transform:
+\begin{equation}
+  a_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} f(\omega) d\omega \enspace.
+\end{equation}
+
+\noindent
+From there, we can define an operator $\Tmat$ mapping integrable functions to matrices:
+\begin{equation} \label{equation:ch2-toeplitz_operator}
+  \Tmat_n(g) \triangleq \leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \Pset_0} \enspace.
+\end{equation}
+where $\Pset_0 = \{0, \ldots, n-1\}$.
+\todotext{check english}
+In the following of this thesis, when it is clear from context, we will write $\Tmat(g)$ instead of $\Tmat_n(g)$.
+
+\todotext{remove}
+We can show that if $f$ is the inverse Fourier transform of $\{a_h\}_{h \in \Pset}$, then $\Tmat_n(f)$ is equal to $\Amat$.
+\begingroup
+\allowdisplaybreaks
+  \begin{align}
+      \leftmat \Tmat_n(f) \rightmat_{i, j} &= \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i-j)\omega} f(\omega) \,d\omega  \\
+      &= \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i-j) \omega} \sum_{h \in N} a_h e^{\ci h \omega} \,d\omega  \\
+      &= \frac{1}{2\pi} \int_0^{2\pi} \sum_{h \in N} a_h e^{\ci (j - i + h) \omega} \,d\omega  \\
+      &= \sum_{h \in N} a_h \frac{1}{2\pi} \int_0^{2\pi} e^{\ci (j - i + h) \omega} \,d\omega 
+      = a_{j-i} .
+  \end{align}
+\endgroup
+Because:
+\begin{equation}
+  \frac{1}{2\pi} \int_0^{2\pi} e^{\ci k \omega} \,d\omega = 
+  \begin{cases}
+    1 \quad \text{if}\ k = 0, \\
+    0 \quad \text{if}\ k \neq 0
+  \end{cases}
+\end{equation}
+
+% Also, if $F$ is the inverse Fourier transform of $\{\Bmat_h\}_{h \in \Pset}$ as defined above, then the integral in \Cref{equation:expression_toeplitz_matrix} is matrix-valued, and thus $\Tmat(F) \in \Rbb^{mn \times mn}$ is the block matrix $\Bmat$.
+
+% The trigonometric polynomial that \emph{generates} the Toeplitz matrix $\Amat$ can be defined as follows:
+% \begin{equation}
+%   f_{\Amat}(\omega) \triangleq \sum_{h \in N} a_h e^{\ci h \omega}
+% \end{equation}
+% The function $f_{\Amat}$ is said to be the \emph{generating function} of $\Amat$.
+% To recover the Toeplitz matrix from its generating function, we have the following operator:
+% \begin{equation}
+%   \leftmat \Tmat(f) \rightmat_{i, j} \triangleq \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i - j)\omega} f(\omega) \,d\omega .
+%   \label{equation:ch2-toeplitz_operator}
+% \end{equation}
