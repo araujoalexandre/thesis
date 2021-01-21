@@ -3,17 +3,30 @@
 \label{chapter:ch3-related_work}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \localtoc
-\vspace{1cm}
 
+\section*{}
 
 % This thesis makes contributions on building compact and robust neural networks with help from Toeplitz matrix theory.
-This chapter aims at presenting an overview of the state-of-the-art related to our contributions.
-First, we present the current methods to build compact neural networks.  
-Given that the scope of these techniques is large, we choose to focus mainly on works which use tools from linear algebra and more particularly structured matrices.
-The second part of this chapter presents current methods for regularizing the Lipschitz constant of neural networks with the ail of improving their robustness. 
+This chapter, divided into two parts, is intended to provide an overview of the state of the art related to our contributions.
+First, we present current methods for building compact neural networks.
+Since the scope of application of these techniques is broad, we have chosen to focus mainly on work that uses linear algebra tools and more particularly structured matrices. 
+We present in the first subsection an overview of general techniques for building compact neural networks.
+In the next subsection, we present in more detail the current methods for building compact neural networks with structured matrices.
+Finally, we discuss these techniques with respect to our contribution to compact neural networks.
+
+The second part of this chapter presents current methods for regularizing the Lipschitz constant of neural networks with the aim of improving their robustness.
+This section is divided into four parts.
+First, we present techniques that focus on the computation of the Lipschitz constant of neural networks.
+Although theoretically and empirically interesting, we will see how these techniques do not scale and therefore cannot be applied to current neural network architectures.
+The following subsection presents the approach of Lipschitz regularization via the Lipschitz constant of individual layers of the networks.
+We describe the advantages and disadvantages of this approach.
+Moreover, in the third subsection, we focus our presentation on current techniques that compute the singular values of convolutional layers.
+Finally, we discuss these techniques with respect to our contribution on Lipschitz regularization on convolutional neural networks.
+
+
+
 % Our second contribution focuses on building robust neural networks by regularizing the Lipschitz constant of neural networks.
 % Hence, we present in a second part recent works on regularizing the Lipschitz constant of neural networks.
-
 
 % The second part of this chapter presents current methods for regularizing this constant that aim at improving the robustness of neural networks.
 % We omit methods that are orthogonal to our approach for clarity and conciseness.
@@ -37,7 +50,7 @@ Although, this diagonal circulant layers fit in the low displacement rank framew
 Indeed, thanks to a solid theoretical analysis and thorough experiments, we were able to train deep (up to 40 layers) circulant neural networks, and apply, for the first time, this structured architecture in the context of large-scale video classification.
 This contrasts with previous experiments in which only one or a few dense layers were replaced inside a large redundant network such as VGG~\cite{simonyan2014very}.
 
-\pagebreak
+% \pagebreak
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Related Work on Lipschitz Regularization}
@@ -50,8 +63,8 @@ This contrasts with previous experiments in which only one or a few dense layers
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 We have presented state-of-the-art methods for regularizing the Lipschitz constant of neural networks with the aim to improve their robustness against adversarial attacks.
-We have shown that the power method~\cite{golub2000eigenvalue} is a popular technique for approximating the maximal singular value of a matrix.
-Multiple works in deep learning use this method in a wide variety of settings, for example, robustness \cite{farnia2018generalizable,tsuzuku2018lipschitz}, generalization~\cite{yoshida2017spectral,gouk2018regularisation} or to stabilize the training of Generative Adversarial Networks (GANs) \cite{miyato2018spectral}.
+The power method~\cite{golub2000eigenvalue} is a popular technique for approximating the maximal singular value of a matrix (Google used it in their PageRank algorithm \cite{page1999pagerank} which was the build block of their search engine and Twitter uses it to show users recommendations of whom to follow \cite{gupta2013wtf}).
+Recent works in deep learning use this method in a wide variety of settings, for example, robustness \cite{farnia2018generalizable,tsuzuku2018lipschitz}, generalization~\cite{yoshida2017spectral,gouk2018regularisation} or to stabilize the training of Generative Adversarial Networks (GANs) \cite{miyato2018spectral}.
 Despite a number of interesting results, using the power method is expensive and results in prohibitive training times. 
 Other approaches to regularize the Lipschitz constant of neural networks have been proposed by~\citet{sedghi2018singular} and ~\citet{singla2019bounding}.
 The method of~\citet{sedghi2018singular,singla2019bounding} exploits the properties of circulant matrices to approximate the maximal singular value of a convolutional layer.
