@@ -12,7 +12,7 @@
 
 \begin{figure}[t]
   \centering
-  \includegraphics[scale=0.24]{figures/main/ch1-introduction/alexnet.png}
+  \includegraphics[scale=0.22]{figures/main/ch1-introduction/alexnet.png}
   \caption{The neural network architecture (AlexNet) proposed by~\citet{krizhevsky2012imagenet} which won the ImageNet Large-Scale Visual Recognition Challenge in 2012.}
   \label{figure:ch1-alexnet_network}
 \end{figure}
@@ -40,7 +40,6 @@ The figure also shows the distribution of the workload between the two GPUs.
   }
   \begin{subfigure}[b]{\textwidth}
     \centering
-    % {\footnotesize
     \begin{tabular}{
       L{5cm}
       L{3.5cm}
@@ -61,17 +60,15 @@ The figure also shows the distribution of the workload between the two GPUs.
       \citet{huang2019gpipe}         & AmoebaNet-B         & 556 & \si{M} & 97.0\% \\
       \bottomrule
     \end{tabular}
-    % }
     \caption{Computer Vision Models}
     \label{table:ch1-networks_parameters_cv}
   \end{subfigure}
   \par\bigskip
   \begin{subfigure}[b]{\textwidth}
     \centering
-    % {\footnotesize
     \begin{tabular}{
-      L{5cm}
-      L{3cm}
+      L{4.5cm}
+      L{4.5cm}
       S[table-format=3.0, table-text-alignment=left]@{\,}
       s[table-unit-alignment=left]
     }
@@ -88,9 +85,9 @@ The figure also shows the distribution of the workload between the two GPUs.
       \citet{raffel2020exploring}    & T5-11B          &  11 & \si{B} \\
       \citet{rosset2020turingnlg}    & T-NLG           &  17 & \si{B} \\
       \citet{brown2020language}      & GPT-3           & 175 & \si{B} \\
+      \citet{fedus2021switch}        & Switch Transformers & 1 & \si{T} \\
       \bottomrule
     \end{tabular}
-    % }
     \caption{Natural Language Processing Models}
     \label{table:ch1-networks_parameters_nlp}
   \end{subfigure}
@@ -111,10 +108,12 @@ As we can see, the accuracy of the models generally improves at the cost of the 
 For computer vision models, \citet{tan2019efficientnet} have shown that the relationship between model size and accuracy seems to obey a power law.
 % This discovery led them to develop a new scaling method that balances all dimensions of network width, depth, and resolution, leading to an efficient neural network with similar or higher accuracy than current ones.
 This relationship has also been observed for Natural Language Processing (NLP) neural networks \cite{rosenfeld2020a,kaplan2020scaling} and given the availability of large-scale datasets (Common Crawl dataset~\cite{raffel2019exploring} constitutes nearly a trillion words), researchers have been able to scale their models.
-The latest GPT-3 model, proposed by~\citet{brown2020language}, culminates at 175 billion parameters and requires 355 years of training on a single GPU and \$4,600,000 to train on a cloud computing platform \cite{li2020overview}.
+GPT-3 model, one of the latest models proposed by~\citet{brown2020language}, culminates at 175 billion parameters and requires 355 years of training on a single GPU and \$4,600,000 to train on a cloud computing platform \cite{li2020overview}.
+Furthermore, \citet{strubell2019energy} estimated model training and development costs in terms of $\mathrm{CO}_2$ emissions.
+For example, training the large Transformer model proposed by~\cite{vaswani2017attention} with neural architecture search emits an estimated \numprint{284019} kg of $\mathrm{CO}_2$ whereas a human life will consume an average of \numprint{5000} kg of $\mathrm{CO}_2$ for one year.
 
-As a result, Deep Neural Networks achieve state-of-the-art performances in a variety of domains such as image recognition~\cite{lecun1998gradient,krizhevsky2012imagenet,he2016deep,tan2019efficientnet}, object detection~\cite{redmon2016you,liu2016ssd,redmon2017yolo9000}, natural language processing~\cite{merity2016pointer,radford2018Language,brown2020language}, speech recognition~\cite{hinton2012deep,abdel2014convolutional,yu2016automatic}, health care \cite{faust2018deep} etc.
-Specifically, computer vision and natural language processing models have achieved sufficient performance for being used in real-world applications such as autonomous vehicles~\cite{fagnant2015preparing}, translation~\cite{wu2016google}, vocal assistants~\cite{li2017acoustic}, etc.
+As a result of their size and improved accuracy, deep neural networks now achieve state-of-the-art performances in a variety of domains such as image recognition~\cite{lecun1998gradient,krizhevsky2012imagenet,he2016deep,tan2019efficientnet}, object detection~\cite{redmon2016you,liu2016ssd,redmon2017yolo9000}, natural language processing~\cite{merity2016pointer,vaswani2017attention,radford2018Language,brown2020language}, speech recognition~\cite{hinton2012deep,abdel2014convolutional,yu2016automatic}, health care \cite{faust2018deep} etc.
+Specifically, computer vision and natural language processing models have achieved sufficient performance for being used in real-world applications such as autonomous vehicles~\cite{fagnant2015preparing,sharma2021automating}, translation~\cite{wu2016google}, vocal assistants~\cite{li2017acoustic}, etc.
 
 % However, recent findings suggest that the accuracy cannot be the only metric to optimize.
 However, accuracy is not the only concern, when implemented in a critical decision process, neural networks need to be compact, cost effective and secure.
