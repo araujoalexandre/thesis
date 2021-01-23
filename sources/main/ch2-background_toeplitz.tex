@@ -190,11 +190,11 @@ Thus, in matrix form, we have:
 \end{equation}
 \noindent
 The matrix-vector product $\Zmat_f \xvec$ makes a circular shift on the elements and scales the last element of the vector resulting in $\Zmat_f \xvec = \leftmat f \xvec_{n-1}, \xvec_0, \dots, \xvec_{n-2} \rightmat^\top$.
-$f$-unit-circulant matrices are one of the building blocks of \emph{low displacement rank operator} presented in \Cref{subsection:ch2-building_compact_neural_networks_with_structured_matrices} and also enjoy compact representation and fast matrix-vector product.
+$f$-unit-circulant matrices are one of the building blocks of \emph{low displacement rank operator} presented in \Cref{subsection:ch2-general_frameworks_for_structured_matrices} and also enjoy compact representation and fast matrix-vector product.
 
 
 
-\paragraph{A Fourier Representation of Toeplitz Matrices} ~\\ 
+\paragraph{A Fourier Representation of Toeplitz Matrices} ~\\
 
 Toeplitz matrices do not have a closed-form expression for their eigenvalues as circulant matrices.
 Studying the spectrum of Toeplitz matrices is therefore not as straightforward as their circulant counterpart.
@@ -308,7 +308,7 @@ Therefore, by using \Cref{theorem:ch2-diagonalization_circulant_matrix} we, have
 \end{equation}
 where $\boldsymbol{\Lambda} = \diag\left((\Umat_n \avec^{(0)}, \dots, \Umat_n \avec^{(n-1)})\right)$ and the vectors $\avec^{(0)}, \dots, \avec^{(n-1)}$ are the characteristic vectors of the circulant matrices $\Amat^{(0)}, \dots, \Amat^{(n-1)}$ such that $\Amat^{(h)} = \circulant(\avec^{(h)}), \forall h \in \Pset_0$.
 By combining \Cref{equation:ch2-block_diagonalization_block_circulant} and \Cref{equation:ch2-diagonalization_circulant_with_bdiag}, we obtain the eigenvalues decomposition for doubly-block circulant matrices. For a doubly-block circulant matrices $\Amat$, we have:
-\begin{equation}
+\begin{equation} \label{equation:ch2-diagonalization_doubly_block_circulant_matrix}
   \Amat = \frac{1}{n^2} (\Umat_n \otimes \Umat_n)^* \boldsymbol{\Lambda} (\Umat_n \otimes \Umat_n) 
 \end{equation}
 This decomposition allows to expressed the eigenvalues of a doubly-block circulant matrix with the characteristic vectors of the circulant matrices composing it.
