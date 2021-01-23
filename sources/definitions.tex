@@ -175,13 +175,6 @@
   \abx@macro@citeOrig%
     }%
 }
-% \let\abx@macro@textciteOrig\abx@macro@textcite
-% \renewbibmacro{textcite}{%
-%   \bibhyperref{%
-%     \let\bibhyperref\relax\relax%
-%     \abx@macro@textciteOrig%
-%   }%
-% }%
 
 % code that fix the color of the last bracket
 % https://tex.stackexchange.com/a/25972
@@ -195,42 +188,7 @@
   {}%
  \textcitedelim}
 {\usebibmacro{textcite:postnote}}
-
-% code that fix the color of the last bracket
-% https://tex.stackexchange.com/a/425289
-
-% \newcommand*{\linkblx@startlink}[1]{%
-%   \blx@sfsave\hyper@natlinkstart{\the\c@refsection @#1}\blx@sfrest}
-% \newcommand*{\linkblx@startlinkentry}{%
-%   \linkblx@startlink{\abx@field@entrykey}}
-% \newcommand*{\linkblx@endlink}{%
-%   \blx@sfsave\hyper@natlinkend\blx@sfrest}
-
-% \DeclareCiteCommand{\textcite}
-%   {\boolfalse{cbx:parens}}
-%   {\DeclareFieldFormat{bibhyperref}{####1}%
-%    \linkblx@startlinkentry
-%    \usebibmacro{citeindex}%
-%    \iffirstcitekey
-%      {\setcounter{textcitetotal}{1}}
-%      {\stepcounter{textcitetotal}}%
-%    \printtext[bibhyperref]{\usebibmacro{textcite}}%
-%    \iflastcitekey
-%      {}
-%      {\ifbool{cbx:parens}
-%         {\bibcloseparen\global\boolfalse{cbx:parens}}
-%         {}}%
-%    \ifnumequal
-%      {\value{citecount}}{\value{citetotal}}
-%      {\usebibmacro{textcite:postnote}}
-%      {}%
-%    \linkblx@endlink}
-%   {}
-%   {}
-
 \makeatother
-
-
 
 \DefineBibliographyStrings{english}{and={and}}
 \DefineBibliographyStrings{english}{in={in}}
@@ -270,7 +228,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Theorems
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 % maybe use nobreak to prevent theorem to be on multiple pages
 % mdframed={
@@ -447,6 +404,14 @@
     \color{mydarkblue}{\FourStar}
   \end{center}
 }
+
+\newcommand{\paperbox}[1]{
+\begin{mdframed}[linecolor=mydarkblue,linewidth=2pt,backgroundcolor=white]
+  #1
+\end{mdframed}
+}
+
+
 
 % \newcommand{\drn}{Deep ReLU network\xspace}
 % \newcommand{\drns}{Deep ReLU networks\xspace}
