@@ -7,7 +7,7 @@
 
 % \begin{abstract}
 % In this chapter, we study deep diagonal circulant neural networks, which are deep neural networks in which weight matrices are the product of diagonal and circulant ones.
-% Besides making a theoretical analysis of their expressivity, we introduce principled techniques for training these models: we devise an initialization scheme and propose a smart use of non-linearity functions in order to train deep diagonal circulant networks. 
+% Besides making a theoretical analysis of their expressivity, we introduce principled techniques for training these models: we devise an initialization scheme and propose a smart use of nonlinearity functions in order to train deep diagonal circulant networks. 
 % Furthermore, we show that these networks outperform recently introduced deep networks with other types of structured layers. We conduct a thorough experimental study to compare the performance of deep diagonal circulant networks with state-of-the-art models based on structured matrices and with dense models. We show that our models achieve better accuracy than other structured approaches while requiring 2x fewer weights than the next best approach. Finally, we train compact and accurate deep diagonal circulant networks on a real world video classification dataset with over 3.8 million training examples. 
 % \end{abstract}
 
@@ -45,7 +45,7 @@ We introduce a new bound on the number of diagonal-circulant products required t
 Building on this result, we demonstrate that a DCNN with bounded width and small depth can approximate any dense neural networks with ReLU activations. 
 
 To answer the second question, we first describe a theoretically sound initialization procedure for DCNN which allows the signal to propagate through the network without vanishing or exploding.
-Furthermore, we provide a number of empirical insights to explain the behavior of DCNNs and show the impact of the number of the non-linearities in the network on the convergence rate and the accuracy of the network. 
+Furthermore, we provide a number of empirical insights to explain the behavior of DCNNs and show the impact of the number of the nonlinearities in the network on the convergence rate and the accuracy of the network. 
 By combining all these insights, we are able (for the first time) to train large and deep DCNNs and demonstrate the good performance of these networks on a large-scale application (the \yt video classification problem) and obtain very competitive accuracy. 
 
 The chapter is organized as follows:
@@ -154,7 +154,7 @@ The $k$ first columns of the product $\Rmat\Omat$ will be equal to that of $\Rma
 \noindent
 Let us define $k$ diagonal matrices $\Dmat^{(i)} = \diagonal(d_1^{(i)} \ldots d_n^{(i)})$ for $i \in [k]$.
 For now, the values of $d_{j}^{(i)}$ are unknown, but we will show how to compute them.
-Let $\Wmat = \sum_{i=1}^{k} \Dmat^{(i)} \Zmat_1^{i-1}$ where $\Zmat_1$ is a $1$-unit-circulant matrix defined in \Cref{chapter:ch2-background},~\Cref{subsection:ch2-circulant_matrices}.
+Let $\Wmat = \sum_{i=1}^{k} \Dmat^{(i)} \Zmat_1^{i-1}$ where $\Zmat_1$ is a $1$-unit-circulant matrix defined in \Cref{chapter:ch2-background},~\Cref{subsection:ch2-toeplitz_and_circulant_matrices}.
 Note that the $n-k$ last columns of the product $\Wmat\Rmat\Omat$ will be zeros.
 For example, with $k=2$, we have: 
 
@@ -270,7 +270,7 @@ Finally, we make an analysis on the expressive power of small depth diagonal-cir
 
 % \todotext{introduce the definitions dense neural networks vs diagonal-circulant neural networks}
 % \todotext{definition with some instancition: the dimension of the networks are equal to n}
-% \todotext{the non-linear activation function is the complex ReLU}
+% \todotext{the nonlinear activation function is the complex ReLU}
 
 In the following, we present our formal definitions of dense and diagonal-circulant neural networks.
 We need to extend the definition of \Cref{chapter:ch2-background} in the complex domain, therefore, we first introduce an extension of the \relu function proposed by \citet{trabelsi2018deep}.
@@ -500,10 +500,10 @@ Nonetheless, \citet{cheng2015exploration} have provided empirical evidence that 
 In the following subsection, we study the theoretical expressiveness of diagonal-circulant neural networks with bounded-width and small depth.
 This study allows us to better understand why DCNNs show good empirical performances with limited depth.
 
-% $(2n+5)\depth$ is not a small depth (in our experiments, $n$ can be over 300~000), and a number of work provided empirical evidences that diagonal-circulant neural networks with small depth can offer good performances \cite{araujo2018training,cheng2015exploration}. 
+% $(2n+5)\depth$ is not a small depth (in our experiments, $n$ can be over 300~000), and a number of work provided empirical evidences that diagonal-circulant neural networks with small depth can offer good performances \cite{cheng2015exploration}. 
 
 
-% This is a first result, however $(2n+5)\depth$ is not a small depth (in our experiments, $n$ can be over 300~000), and a number of work provided empirical evidences that DCNN with small depth can offer good performances \cite{araujo2018training,cheng2015exploration}.
+% This is a first result, however $(2n+5)\depth$ is not a small depth (in our experiments, $n$ can be over 300~000), and a number of work provided empirical evidences that DCNN with small depth can offer good performances \cite{cheng2015exploration}.
 
 
 
@@ -740,7 +740,7 @@ However, training \emph{deep} neural networks has always been a challenging prob
 
 In the following, we devise two techniques to facilitate the training of deep diagonal-circulant neural networks.
 First, we propose an initialization procedure which guarantee the signal is propagated across the network without vanishing nor exploding.
-Secondly, we study the behavior of DCNNs with different non-linearity functions and determine the best parameters for different settings. 
+Secondly, we study the behavior of DCNNs with different nonlinearity functions and determine the best parameters for different settings. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Initialization scheme of Diagonal-Circulant Neural Networks}
@@ -845,8 +845,8 @@ The fact that the result of \Cref{proposition:ch4-initialization_dcnn} is indepe
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Analysis on the use of non-linearities}
-\label{subsection:ch4-analysis_on_the_use_of_non-linearities}
+\subsection{Analysis on the use of nonlinearities}
+\label{subsection:ch4-analysis_on_the_use_of_nonlinearities}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[htb]
@@ -860,11 +860,11 @@ The fact that the result of \Cref{proposition:ch4-initialization_dcnn} is indepe
 
 
 We empirically found that the ReLU activations had an impact on the training of deep diagonal-circulant neural networks.
-Indeed, the deeper the network, the more non-linear it is, which makes convergence difficult.
+Indeed, the deeper the network, the more nonlinear it is, which makes convergence difficult.
 In an experiment, we replace the ReLU activations with Leaky-ReLU activations (\cf \Cref{subsection:ch2-preliminaries_on_neural_networks}) and vary the slope of the Leaky-ReLU (a higher slope means an activation function that is closer to a linear function).
 The results of this experiment are presented in~\Cref{figure:ch4-cifar10_leaky_relu}.
 
-% In \Cref{figure:ch4-cifar10_leaky_relu}, we observe that reducing the non-linearity of the networks can be used to train deeper networks.
+% In \Cref{figure:ch4-cifar10_leaky_relu}, we observe that reducing the nonlinearity of the networks can be used to train deeper networks.
 In the experiment, we try different slopes for the Leaky-ReLU activation and train diagonal-circulant neural networks with different depth.
 We can observe that a higher slope (making the network more linear) facilitates convergence, allowing us to train deeper networks.
 This is an interesting result, since  we can use this technique to adjust the number of parameters in the network (increasing depth), without facing training difficulties.
@@ -872,11 +872,11 @@ We hence rely on this setting in the experimental section.
 
 \pagebreak
 
-% Indeed, the more non-linear activation a network 
+% Indeed, the more nonlinear activation a network 
 %
-% reducing the number of non-linearities in the networks simplifies the training of deep neural networks.
+% reducing the number of nonlinearities in the networks simplifies the training of deep neural networks.
 %
-% To support this claim, we conduct a series of experiments on various DCNNs with a varying number of ReLU activations (to reduce the number of non-linearities, we replace some ReLU activations with the identity function).
+% To support this claim, we conduct a series of experiments on various DCNNs with a varying number of ReLU activations (to reduce the number of nonlinearities, we replace some ReLU activations with the identity function).
 %
 % In a second experiment, 
 %
@@ -887,7 +887,7 @@ We hence rely on this setting in the experimental section.
 %   \rho \left( \prod_{i=1}^{k} \Dmat^{(i)}\Cmat^{(i)} \xvec + \bvec \right)
 % \end{equation}
 % % ``ReLU(DC)'' means that we interleave ReLU activation functions between every diagonal-circulant matrix, whereas ReLU(DCDC) means we interleave a ReLU activation every other block etc.
-% In both \Cref{figure:ch4-cifar10_factor,figure:ch4-cifar10_leaky_relu}, we observe that reducing the non-linearity of the networks can be used to train deeper networks.
+% In both \Cref{figure:ch4-cifar10_factor,figure:ch4-cifar10_leaky_relu}, we observe that reducing the nonlinearity of the networks can be used to train deeper networks.
 % This is an interesting result, since  we can use this technique to adjust the number of parameters in the network, without facing training difficulties.
 % We obtain a maximum accuracy of 0.56 with one ReLU every three layers and leaky-ReLUs with a slope of 0.5.
 % We hence rely on this setting in the experimental section. 
