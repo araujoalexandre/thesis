@@ -15,27 +15,26 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-The last few years have witnessed a growing interest in Lipschitz regularization of neural networks, with the aim of improving their generalization~\cite{bartlett2017spectrally}, their robustness to adversarial attacks~\cite{tsuzuku2018lipschitz, farnia2018generalizable}, or their generation abilities (\eg for GANs: \citealt{miyato2018spectral,arjovsky2017wasserstein}).
-Unfortunately computing  the exact Lipschitz constant of a neural network is NP-hard~\cite{scaman2018lipschitz} and in practice, existing techniques such as~\citet{scaman2018lipschitz, fazlyab2019efficient} or~\citet{latorre2020lipschitz} are difficult to implement for neural networks with more than one or two layers, which hinders their use in deep learning applications.
+The last few years have witnessed a growing interest in Lipschitz regularization of neural networks, with the aim of improving their generalization~\cite{bartlett2017spectrally}, their robustness to adversarial attacks~\cite{tsuzuku2018lipschitz, farnia2018generalizable}, or their generation abilities (\eg for GANs: \citet{miyato2018spectral,arjovsky2017wasserstein}).
+Unfortunately computing  the exact Lipschitz constant of a neural network is NP-hard~\cite{scaman2018lipschitz} and in practice, existing techniques such as~\citet{scaman2018lipschitz}, \citet{fazlyab2019efficient} or~\citet{latorre2020lipschitz} are difficult to implement for neural networks with more than one or two layers, which hinders their use in deep learning applications.
 
 To overcome this difficulty, most of the work has focused on computing the Lipschitz constant of \emph{individual layers} instead.
 The product of the Lipschitz constant of each layer is an upper-bound for the Lipschitz constant of the entire network, and it can be used as a surrogate to perform Lipschitz regularization.
-Since most common activation functions (such as ReLU) have a Lipschitz constant equal to one, the main bottleneck is to compute the Lipschitz constant of the underlying linear application which is equal to its maximal singular value.
+Since most common activation functions (such as ReLU) have a Lipschitz constant equal to one, the main bottleneck is to compute the Lipschitz constant of the underlying linear application which is equal to its largest singular value.
 The work in this line of research mainly relies on the celebrated iterative algorithm by~\citet{golub2000eigenvalue} used to approximate the maximum singular value of a linear function.
 Although generic and accurate, this technique is also computationally expensive, which impedes its usage in large training settings.
 
 In this chapter we introduce a new upper bound on the largest singular value of convolution layers that is both tight and easy to compute.
 Instead of using the power method to iteratively approximate this value, we rely on Toeplitz matrix theory and its links with Fourier analysis.
-Our work is based on the result \cite{gray2006toeplitz} that an upper bounded on the singular value of  Toeplitz matrices can be computed from 
-the inverse Fourier transform of the characteristic sequence of these matrices.
-We first extend this result to doubly-block Toeplitz matrices (\ie, block Toeplitz matrices where each block is Toeplitz) and then to convolutional operators, which can be represented as stacked sequences of doubly-block Toeplitz matrices. 
-From our analysis immediately follows an algorithm for bounding the Lipschitz constant of a convolutional layer, and by extension the Lipschitz constant of the whole network. We theoretically study the approximation of this algorithm and show experimentally that it is more efficient and accurate than competing approaches.
+Our work is based on the result of~\citet{gray2006toeplitz} which states that an upper bound on the singular value of Toeplitz matrices can be computed from the inverse Fourier transform of the characteristic sequence of these matrices.
+We first extend this result to doubly-block Toeplitz matrices (\ie, block Toeplitz matrices where each block is Toeplitz) and then to convolutional operators, which can be represented as stacked sequences of doubly-block Toeplitz matrices.
+From our analysis immediately follows an algorithm for bounding the Lipschitz constant of a convolutional layer, and by extension the Lipschitz constant of the whole network.
+We theoretically study the approximation of this algorithm and show experimentally that it is more efficient and accurate than competing approaches.
 
-Finally, we illustrate our approach on adversarial robustness. 
+Finally, we illustrate our approach on adversarial robustness.
 Recent work has shown that empirical methods such as adversarial training (AT) offer poor generalization~\cite{schmidt2018adversarially}, and can be improved by applying Lipschitz regularization~\cite{farnia2018generalizable}.
-To illustrate the benefit of our new method, we train a large, state-of-the-art Wide ResNet architecture with Lipschitz regularization and show that it offers a significant improvement over adversarial training alone, and over other methods for Lipschitz regularization. 
+To illustrate the benefit of our new method, we train a large, state-of-the-art Wide ResNet architecture with Lipschitz regularization and show that it offers a significant improvement over adversarial training alone, and over other methods for Lipschitz regularization.
 In summary, we make the three following contributions:
-
 \begin{enumerate}
   \item We devise an upper bound on the singular values of the operator matrix of convolutional layers by leveraging Toeplitz matrix theory and its links with Fourier analysis.
   \item We propose an efficient algorithm to compute this upper bound which enables its use in the context of Convolutional Neural Networks.
@@ -44,200 +43,23 @@ In summary, we make the three following contributions:
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{A Primer on Toeplitz and block Toeplitz matrices}
-\label{section:primer_toeplitz_matrix}
+\section{A Bound on the Spectrum of Toeplitz and Block Toeplitz Matrices}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \subsection{Convolution as Matrix Multiplication}\label{section:conv_matrix_multiplication}
-%
-% A discrete convolution between a signal $\mathbf{x}$ and a kernel $\mathbf{k}$ can be expressed as a  product between the vectorization of $\mathbf{x}$ and a doubly-block Toeplitz matrix $\textbf{M}$, whose coefficients have been chosen to match the convolution $\mathbf{x} * \mathbf{k}$.
-% For a 2-dimensional signal $\mathbf{x} \in \Rbb^{n \times n}$ and a kernel $\mathbf{k} \in \Rbb^{m \times m}$ with $m$ odd, the convolution operation can be written as follows:
-% \begin{equation} \label{equation:equation_conv_as_matrix}
-%     \reshape(\mathbf{y}) = \reshape(\pad(\mathbf{x}) * \mathbf{k}) = \Mmat \reshape(\mathbf{x})
-% \end{equation}
-% where $\Mmat$ is a $n^2$-by-$n^2$  doubly-block Toeplitz matrix, \ie a block Toeplitz matrix where the blocks are also Toeplitz (Note that this is not a doubly-block circulant matrix because of the padding.), $\mathbf{y}$ is the output of size $q \times q$ with $q = n - m + 2p + 1$, (see \eg \cite{dumoulin2016guide}).
-% The $\reshape: \Rbb^{n \times n} \rightarrow \Rbb^{n^2}$ operator is defined as follows: $\reshape(\mathbf{x})_q = \mathbf{x}_{\lfloor q/n \rfloor,\ q\mod n}$.
-% The $\pad: \Rbb^{n \times n} \rightarrow \Rbb^{(n+2p) \times (n+2p)}$ operator is a zero-padding operation which takes a signal $\mathbf{x}$ of shape $\Rbb^{n \times n}$ and adds $0$ on the edges so as to obtain a new signal $\mathbf{y}$ of shape $\Rbb^{(n+2p) \times (n+2p)}$.
-% In order to have the same shape between the convoluted signal and the signal, we set $ p = \lfloor m/2 \rfloor$ \footnote{We take a square signal and an odd size square kernel to simplify the notation but the same applies for any input and kernel size.
-% Also, we take a specific padding in order to have the same size between the input and output signal.
-% But everything in the paper can be generalized to any paddings.}.
-%
-% We now present an example of the convolution operation with doubly-block Toeplitz matrix.
-% Let us define a kernel $\mathbf{k} \in \Rbb^{3\times3}$ as follows:
-% \begin{equation}
-%     \mathbf{k} = \begin{pmatrix}
-%         k_{0} & k_{1} & k_{2} \\
-%         k_{3} & k_{4} & k_{5} \\
-%         k_{6} & k_{7} & k_{8} 
-%     \end{pmatrix}
-% \end{equation}
-% If we set the padding to 1, then, the matrix $\Mmat$ is a tridiagonal doubly-block Toeplitz matrix of size $n \times n$ and has the following form:
-% \begin{equation}
-%     \Mmat = \begin{pmatrix}
-%     \Tmat_0 & \Tmat_{1} &  &  & 0  \\
-%     \Tmat_{2} & \Tmat_0 & \Tmat_{1} &  &  \\
-%      & \Tmat_{2} & \scalebox{.70}{$\ddots$} & \scalebox{.70}{$\ddots$} &   \\
-%      &  & \scalebox{.70}{$\ddots$} & \Tmat_0 & \Tmat_{1}  \\
-%     0 &  &  & \Tmat_{2} & \Tmat_0  \\
-%     \end{pmatrix}
-%     \label{equation:operator_matrix}
-% \end{equation}
-%
-% where $\Tmat_j$ are banded Toeplitz matrices and the values of $\mathbf{k}$ are distributed in the Toeplitz blocks as follow:
-% \begin{align}
-% \Tmat_0 = \begin{psmallmatrix}
-%     k_{4} & k_{3} &  &  &  0 \\
-%     k_{5} & k_{4} & k_{3} &  &   \\
-%      & k_{5} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$}  \\
-%      &  &  \scalebox{.40}{$\ddots$} & k_{4} & k_{3}  \\
-%     0 &  &  & k_{5} & k_{4}  \\
-%     \end{psmallmatrix} &&
-% \Tmat_{1} = \begin{psmallmatrix}
-%     k_{7} & k_{6} &  &  &  0 \\
-%     k_{8} & k_{7} & k_{6} &  &   \\
-%      & k_{8} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$} &    \\
-%      &  &  \scalebox{.40}{$\ddots$} & k_{7} & k_{6}  \\
-%     0 &  &  & k_{8} & k_{7}  \\
-%     \end{psmallmatrix} &&
-% \Tmat_{2} = \begin{psmallmatrix}
-%     k_{1} & k_{0} &  &  &  0 \\
-%     k_{2} & k_{1} & k_{0} &  &   \\
-%      & k_{2} & \scalebox{.40}{$\ddots$} & \scalebox{.40}{$\ddots$} &    \\
-%      &  &  \scalebox{.40}{$\ddots$} & k_{1} & k_{0}  \\
-%     0 &  &  & k_{2} & k_{1}  \\
-%     \end{psmallmatrix} 
-% \end{align}
-%
-%
-% \paragraph{Remark 1: } Note that the size of the operator matrix $\Mmat$ of a convolution operation depends on the size of the signal. If a signal $\mathbf{x}$ has size $n \times n$, the vectorized signal will be of size $n^2$ and the operator matrix will be of size $n^2 \times n^2$ which can be very large. Indeed, in deep learning practice the size of the images used for training can range from 32 (CIFAR-10) to hundred for high definition images (ImageNet). Therefore, with classical methods, computing the singular values of this operator matrix can be very expensive.
-%
-% \paragraph{Remark 2: } In the particular case of zero padding convolution operation, the operator matrix is a Toeplitz block with circulant block (i.e. each block of the Toeplitz block is a circulant matrix) which is a particular case of doubly-block Toeplitz matrices. 
-
-
-\subsection{Generating a Toeplitz matrix and block Toeplitz matrix from a trigonometric polynomial}
-An $n\times n$ Toeplitz matrix $\mathbf A$ is fully determined by a two-sided sequence of scalars: $\{a_h\}_{h \in \mathcal{P}}$, whereas an $nm\times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat_h\}_{h \in \mathcal{P}}$ and where each block $\Bmat_h$ is an $m \times m$ matrix.  
-
-\begin{equation}
-  \Amat \triangleq \begin{psmallmatrix}
-    a_0 & a_{1}   & a_{2} & \cdots & \cdots & a_{n-1}  \\
-    a_{-1} & a_0 & a_{1} & \ddots & & \vdots \\
-    a_{-2} & a_{-1} & \ddots & \ddots & \ddots & \vdots \\ 
-   \vdots & \ddots & \ddots & \ddots & a_{1} & a_{2}\\
-   \vdots & & \ddots & a_{-1} & a_{0} & a_{1} \\
-  a_{-n+1} & \cdots & \cdots & a_{-2} & a_{-1} & a_0
-  \end{psmallmatrix} \quad \quad
-  \Bmat \triangleq  \begin{psmallmatrix}
-    \Bmat_0 & \Bmat_{1}   & \Bmat_{2} & \cdots & \cdots & \Bmat_{n-1}  \\
-    \Bmat_{-1} & \Bmat_0 & \Bmat_{1} & \ddots & & \vdots \\
-    \Bmat_{-2} & \Bmat_{-1} & \ddots & \ddots & \ddots & \vdots \\ 
-   \vdots & \ddots & \ddots & \ddots & \Bmat_{1} & \Bmat_{2}\\
-   \vdots & & \ddots & \Bmat_{-1} & \Bmat_{0} & \Bmat_{1} \\
-  \Bmat_{-n+1} & \cdots & \cdots & \Bmat_{-2} & \Bmat_{-1} & \Bmat_0
-  \end{psmallmatrix}
-\end{equation}
-
-The trigonometric polynomial that \emph{generates} the Toeplitz matrix $\Amat$ can be defined as follows:
-\begin{equation}
-  f_{\Amat}(\omega) \triangleq \sum_{h \in N} a_h e^{\ci h \omega}
-\end{equation}
-The function $f_{\Amat}$ is said to be the \emph{generating function} of $\Amat$. To recover the Toeplitz matrix from its generating function, we have the following operator presented in \Cref{subsection:ch5-bound_on_the_singular_value_of_toeplitz_and_block_toeplitz_matrices} of the main paper:
-\begin{equation} \label{equation:toeplitz_operator}
-  \leftmat \Tmat(f) \rightmat_{i, j} \triangleq  \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i - j)\omega} f(\omega) \,d\omega .
-\end{equation}
-We can now show that $\Tmat(f_{\Amat}) = \Amat$: 
-\begingroup
-\allowdisplaybreaks
-\begin{align}
-    \leftmat \Tmat(f_\Amat) \rightmat_{i, j} &= \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i-j)\omega} f_{\Amat}(\omega) \,d\omega  \\
-    &= \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i-j) \omega} \sum_{h \in N} a_h e^{\ci h \omega} \,d\omega  \\
-    &= \frac{1}{2\pi} \int_0^{2\pi} \sum_{h \in N} a_h e^{\ci (j - i + h) \omega} \,d\omega  \\
-    &= \sum_{h \in N} a_h \frac{1}{2\pi} \int_0^{2\pi} e^{\ci (j - i + h) \omega} \,d\omega 
-    = a_{j-i} .
-\end{align}
-\endgroup
-Because:
-\begin{equation}
-    \frac{1}{2\pi} \int_0^{2\pi} e^{\ci k \omega} \,d\omega = \left\{
-                \begin{array}{ll}
-                  1, & \text{if}\ k = 0, \\
-                  0, & \text{if}\ k\ \text{is a non-zero integer number.}
-                \end{array}
-                \right.
-\end{equation}
-
-The same reasoning can be applied to block Toeplitz matrices. Instead of being complex-valued, the trigonometric polynomial that {\em generates} the block Toeplitz $\Bmat$ is matrix-valued and can be defined as follows:
-\begin{equation}
-  f_{\Bmat}(\omega) \triangleq \sum_{h \in N} \Bmat_h e^{\ci h \omega}
-\end{equation}
-
-The function $f_{\Bmat}$ is said to be the \emph{generating function} of $\Bmat$. To recover the block Toeplitz matrix from its generating function, we use the Toeplitz operator defined in \Cref{equation:toeplitz_operator}. We can show that $\Tmat(f_\Bmat) = \Bmat$:
-
-\begingroup
-\allowdisplaybreaks
-\begin{align}
-    \leftmat \Tmat(f_\Bmat) \rightmat_{i, j} &= \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i-j)\omega} f_{\Bmat}(\omega) \,d\omega  \\
-    &= \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci (i-j) \omega} \sum_{h \in N} \Bmat_h e^{\ci h \omega} \,d\omega  \\
-    &= \frac{1}{2\pi} \int_0^{2\pi} \sum_{h \in N} \Bmat_h e^{\ci (j - i + h) \omega} \,d\omega  \\
-    &= \sum_{h \in N} \Bmat_h \frac{1}{2\pi} \int_0^{2\pi} e^{\ci (j - i + h) \omega} \,d\omega 
-    = \Bmat_{j-i} .
-\end{align}
-\endgroup
-
-
-
-
-In order to devise a bound on the Lipschitz constant of a convolution layer as used by the Deep Learning community, we study the properties of doubly-block Toeplitz matrices.
-In this section, we first introduce the necessary background on Toeplitz and block Toeplitz matrices, and introduce a new result on doubly-block Toeplitz matrices.
-
-Toeplitz matrices and block Toeplitz matrices are well-known types of structured matrices.
-A Toeplitz matrix  (respectively a block Toeplitz matrix) is a matrix in which each scalar (respectively block) is repeated identically along diagonals.
-
-An $n \times n$ Toeplitz matrix $\Amat$ is fully determined by a two-sided sequence of scalars: $\{a_h\}_{h \in \mathcal{P}}$, whereas an $nm\times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat_h\}_{h \in \mathcal{P}}$, where $\mathcal{P} = \{-n+1,\dots, n-1\}$ and where each block $\Bmat_h$ is an $m \times m$ matrix.
-
-\begin{equation*}
-  \Amat = \leftmatrix
-    a_0 & a_{1} & \cdots & a_{n-1} \\ \vspace{0.1cm}
-    a_{-1} & a_0 & \ddots & \vdots \\ \vspace{0.3cm}
-   \vdots & \ddots & a_{0} & a_{1} \\ 
-  a_{-n+1} & \cdots  & a_{-1}    & a_0 
-  \rightmatrix \quad \quad \quad \quad 
-    \Bmat = \leftmatrix
-    \Bmat_0 & \Bmat_{1} & \cdots & \Bmat_{n-1} \\ \vspace{0.1cm}
-    \Bmat_{-1} & \Bmat_0 & \ddots & \vdots \\ \vspace{0.3cm}
-   \vdots & \ddots & \Bmat_0 & \Bmat_{1} \\ 
-  \Bmat_{-n+1} & \cdots  & \Bmat_{-1}  & \Bmat_0 
-  \rightmatrix.
-\end{equation*}
-
-Finally, a doubly-block Toeplitz matrix is a block Toeplitz matrix in which each block is itself a Toeplitz matrix.
-In the remainder, we will use the standard notation $\leftmat\ \cdot\ \rightmat_{i,j \in \mathcal{P}}$ to construct (block) matrices.
-For example, $\Amat = \leftmat a_{j-i} \rightmat_{i,j \in \mathcal{P}}$ and $\Bmat = \leftmat \Bmat_{j-i} \rightmat_{i,j \in \mathcal{P}}$.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Bound on the Singular Value of Toeplitz and Block Toeplitz Matrices}
-\label{subsection:ch5-bound_on_the_singular_value_of_toeplitz_and_block_toeplitz_matrices}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-A standard tool for manipulating (block) Toeplitz matrices is the use of Fourier analysis.
-Let $\{a_h\}_{h \in \mathcal{P}}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n\times n}$ and let $\{\Bmat_h\}_{h \in \mathcal{P}}$ be the sequence of $m\times m$ blocks of the block Toeplitz matrix $\Bmat$.
-The complex-valued function $f(\omega) = \sum_{h \in \mathcal{P}} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \mathcal{P}} \Bmat_h e^{\ci h \omega}$ are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \mathcal{P}}$ and $\{\Bmat_h\}_{h \in \mathcal{P}}$, with $\omega \in \Rbb$.
-From these two functions, one can recover these two sequences using the standard Fourier transform:
-
-\begin{equation}
-    a_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} f(\omega) d\omega \quad \quad \Bmat_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} F(\omega) d\omega .
-\end{equation}
-
-From there, similarly to the work done by~\citet{gray2006toeplitz,gutierrez2012block}, we can define an operator $\Tmat$ mapping integrable functions to matrices:
+In order to devise a bound on the Lipschitz constant of a convolution layer as used by the Deep Learning community, we study the properties of \emph{doubly-block Toeplitz matrices}. 
+Doubly-block Toeplitz matrices inherits the properties of Toeplitz and block Toeplitz matrices.
+Recall that Toeplitz and block Toeplitz matrices do not have a closed-form expression of their eigenvalues as their circulant counterpart.
+However, we can represent Toeplitz and block Toeplitz matrices with a 2$\pi$-periodic function which can describe very precisely the spectrum of the matrices. 
+Let $\{a_h\}_{h \in \Pset}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n\times n}$ and let $\{\Bmat^{(h)}\}_{h \in \Pset}$ be the sequence of $m\times m$ blocks of the block Toeplitz matrix $\Bmat$.
+The matrices are therefore denoted $\Amat = \leftmat a_{j-i} \rightmat_{i,j \in \Pset}$ and $\Bmat = \leftmat \Bmat^{(j-i)} \rightmat_{i,j \in \Pset}$ where $\Pset = \left\{ -n+1, \cdots, n-1 \right\}$.
+We can then defined their generating functions $f(\omega) = \sum_{h \in \Pset} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Pset} \Bmat^{(h)} e^{\ci h \omega}$ which are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Pset}$ and $\{\Bmat^{(h)}\}_{h \in \Pset}$, with $\omega \in \Rbb$.
+From there, similarly to the work done by~\citet{grenander1958toeplitz}, we define an operator $\Tmat$ mapping integrable functions to matrices:
 \begin{equation} \label{equation:expression_toeplitz_matrix}
-  \Tmat(g)  \triangleq\leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \mathcal{P}_0} \enspace.
+  \Tmat(g)  \triangleq\leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \Pset_0} \enspace.
 \end{equation}
+Therefore, by construction, we have $\Tmat(f) = \Amat$ and $\Tmat(F) = \Bmat$.
 
-Note that if $f$ is the inverse Fourier transform of $\{a_h\}_{h \in \mathcal{P}}$, then $\Tmat(f)$ is equal to $\Amat$.
-Also, if $F$ is the inverse Fourier transform of $\{\Bmat_h\}_{h \in \mathcal{P}}$ as defined above, then the integral in \Cref{equation:expression_toeplitz_matrix} is matrix-valued, and thus $\Tmat(F) \in \Rbb^{mn \times mn}$ is the block matrix $\Bmat$.
-
-Now, we can state two known theorems which upper bound the maximal singular value of Toeplitz and block Toeplitz matrices with respect to their generating functions.
-In the rest of the paper, we refer to $\sigma_1(\ \cdot\ )$ as the maximal singular value. 
-
+Now, we can state two known theorems which upper bound the largest singular value of Toeplitz and block Toeplitz matrices with respect to their generating functions.
 \begin{theorem}[Bound on the singular values of Toeplitz matrices] \label{theorem:teoplitz_sup_singular}
   Let $f: \Rbb \rightarrow \Cbb$, be continuous and $2\pi$-periodic. Let $\Tmat(f) \in \Rbb^{n \times n}$ be a Toeplitz matrix generated by the function $f$, then:
   \begin{align}
@@ -245,9 +67,10 @@ In the rest of the paper, we refer to $\sigma_1(\ \cdot\ )$ as the maximal singu
   \end{align}
   \removespace
 \end{theorem}
-
+\noindent
 \Cref{theorem:teoplitz_sup_singular} is a direct application of  Lemma 4.1 by~\citet{gray2006toeplitz} for real Toeplitz matrices. 
-  \begin{theorem}[Bound on the singular values of Block Toeplitz matrices ~\citet{gutierrez2012block}] \label{theorem:block_teoplitz_sup_singular}
+
+\begin{theorem}[Bound on the singular values of Block Toeplitz matrices ~\citet{gutierrez2012block}] \label{theorem:block_teoplitz_sup_singular}
   Let $F: \Rbb \rightarrow \Cbb^{m \times m}$ be a matrix-valued function which is continuous and $2 \pi$-periodic.
   Let $\Tmat(F) \in \Rbb^{mn \times mn}$ be a block Toeplitz matrix generated by the function $F$, then:
   \begin{align}
@@ -255,6 +78,85 @@ In the rest of the paper, we refer to $\sigma_1(\ \cdot\ )$ as the maximal singu
   \end{align}
   \removespace
 \end{theorem}
+
+
+
+
+% The complex-valued function $f(\omega) = \sum_{h \in \Pset} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Pset} \Bmat_h e^{\ci h \omega}$ are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Pset}$ and $\{\Bmat_h\}_{h \in \Pset}$, with $\omega \in \Rbb$.
+% From these two functions, one can recover these two sequences using the standard Fourier transform:
+% \begin{equation}
+%   a_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} f(\omega) d\omega \quad \quad \Bmat_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} F(\omega) d\omega .
+% \end{equation}
+
+
+
+% In this section, we first introduce the necessary background on Toeplitz and block Toeplitz matrices, and introduce a new result on doubly-block Toeplitz matrices.
+%
+% Toeplitz matrices and block Toeplitz matrices are well-known types of structured matrices.
+
+
+% A Toeplitz matrix (respectively a block Toeplitz matrix) is a matrix in which each scalar (respectively block) is repeated identically along diagonals.
+% An $n \times n$ Toeplitz matrix $\Amat$ is fully determined by a two-sided sequence of scalars: $\{a_h\}_{h \in \Pset}$, whereas an $nm\times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat^{(h)}\}_{h \in \Pset}$, where $\Pset = \{-n+1,\dots, n-1\}$ and where each block $\Bmat_h$ is an $m \times m$ matrix.
+% \begin{equation*}
+%   \Amat = \leftmatrix
+%     a_0      & a_{1}  & \cdots & a_{n-1} \\ \vspace{0.1cm}
+%     a_{-1}   & a_0    & \ddots & \vdots  \\ \vspace{0.3cm}
+%     \vdots   & \ddots & a_{0}  & a_{1}   \\ 
+%     a_{-n+1} & \cdots & a_{-1} & a_0 
+%   \rightmatrix \quad \quad \quad \quad 
+%     \Bmat = \leftmatrix
+%     \Bmat^{(0)}    & \Bmat^{(1)} & \cdots        & \Bmat^{(n-1)} \\ \vspace{0.1cm}
+%     \Bmat^{(-1)}   & \Bmat^{(0)} & \ddots        & \vdots        \\ \vspace{0.3cm}
+%     \vdots         & \ddots      & \Bmat^{(0)}   & \Bmat^{(1)}   \\ 
+%     \Bmat^{(-n+1)} & \cdots      & \Bmat^{(-1)}  & \Bmat^{(0)}
+%   \rightmatrix.
+% \end{equation*}
+% Finally, a doubly-block Toeplitz matrix is a block Toeplitz matrix in which each block is itself a Toeplitz matrix.
+% In the remainder, we will use the standard notation $\leftmat\ \cdot\ \rightmat_{i,j \in \Pset}$ to construct (block) matrices.
+% For example, $\Amat = \leftmat a_{j-i} \rightmat_{i,j \in \Pset}$ and $\Bmat = \leftmat \Bmat^{(j-i)} \rightmat_{i,j \in \Pset}$.
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{Bound on the Singular Values of Toeplitz and Block Toeplitz Matrices}
+% \label{subsection:ch5-bound_on_the_singular_value_of_toeplitz_and_block_toeplitz_matrices}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% \todotext{update here}
+% A standard tool for manipulating (block) Toeplitz matrices is the use of Fourier analysis.
+% Let $\{a_h\}_{h \in \Pset}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n\times n}$ and let $\{\Bmat_h\}_{h \in \Pset}$ be the sequence of $m\times m$ blocks of the block Toeplitz matrix $\Bmat$.
+% The complex-valued function $f(\omega) = \sum_{h \in \Pset} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Pset} \Bmat_h e^{\ci h \omega}$ are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Pset}$ and $\{\Bmat_h\}_{h \in \Pset}$, with $\omega \in \Rbb$.
+% From these two functions, one can recover these two sequences using the standard Fourier transform:
+% \begin{equation}
+%     a_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} f(\omega) d\omega \quad \quad \Bmat_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} F(\omega) d\omega .
+% \end{equation}
+%
+% From there, similarly to the work done by~\citet{gray2006toeplitz,gutierrez2012block}, we can define an operator $\Tmat$ mapping integrable functions to matrices:
+% \begin{equation} \label{equation:expression_toeplitz_matrix}
+%   \Tmat(g)  \triangleq\leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \Pset_0} \enspace.
+% \end{equation}
+%
+% Note that if $f$ is the inverse Fourier transform of $\{a_h\}_{h \in \Pset}$, then $\Tmat(f)$ is equal to $\Amat$.
+% Also, if $F$ is the inverse Fourier transform of $\{\Bmat_h\}_{h \in \Pset}$ as defined above, then the integral in \Cref{equation:expression_toeplitz_matrix} is matrix-valued, and thus $\Tmat(F) \in \Rbb^{mn \times mn}$ is the block matrix $\Bmat$.
+%
+% Now, we can state two known theorems which upper bound the maximal singular value of Toeplitz and block Toeplitz matrices with respect to their generating functions.
+% In the rest of the paper, we refer to $\sigma_1(\ \cdot\ )$ as the maximal singular value. 
+%
+% \begin{theorem}[Bound on the singular values of Toeplitz matrices] \label{theorem:teoplitz_sup_singular}
+%   Let $f: \Rbb \rightarrow \Cbb$, be continuous and $2\pi$-periodic. Let $\Tmat(f) \in \Rbb^{n \times n}$ be a Toeplitz matrix generated by the function $f$, then:
+%   \begin{align}
+%     \sigma_1 \left( \Tmat(f) \right) \leq \sup_{\omega \in [0, 2\pi]} |f(\omega)|.
+%   \end{align}
+%   \removespace
+% \end{theorem}
+%
+% \Cref{theorem:teoplitz_sup_singular} is a direct application of  Lemma 4.1 by~\citet{gray2006toeplitz} for real Toeplitz matrices. 
+%   \begin{theorem}[Bound on the singular values of Block Toeplitz matrices ~\citet{gutierrez2012block}] \label{theorem:block_teoplitz_sup_singular}
+%   Let $F: \Rbb \rightarrow \Cbb^{m \times m}$ be a matrix-valued function which is continuous and $2 \pi$-periodic.
+%   Let $\Tmat(F) \in \Rbb^{mn \times mn}$ be a block Toeplitz matrix generated by the function $F$, then:
+%   \begin{align}
+%     \sigma_1 \left( \Tmat(F) \right) \leq \sup_{\omega \in [0, 2\pi]} \sigma_1 \left( F\left( \omega \right) \right) .
+%   \end{align}
+%   \removespace
+% \end{theorem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Bound on the singular value of Doubly-Block Toeplitz matrices}
@@ -265,34 +167,36 @@ We extend the reasoning from Toeplitz and block Toeplitz matrices to doubly-bloc
 A doubly-block Toeplitz matrix can be generated by a function $f: \Rbb^2 \rightarrow \Cbb$ using the 2-dimensional inverse Fourier transform.
 For this purpose, we define an operator $\Dmat$ which maps a function $f: \Rbb^2 \rightarrow \Cbb$ to a doubly-block Toeplitz matrix of size $nm \times nm$.
 For the sake of clarity, the dependence of $\Dmat(f)$  on $m$ and $n$ is omitted.
-Let $\Dmat(f) = \leftmat \Dmat_{i,j}(f)\rightmat_{i,j \in \mathcal{P}_0}$ where $\Dmat_{i,j}$ is defined as:
+Let $\Dmat(f) = \leftmat \Dmat_{i,j}(f)\rightmat_{i,j \in \Pset_0}$ where $\Dmat_{i,j}$ is defined as:
 \begin{equation} \label{equation:doubly_block_toeplitz_operator}
-  \Dmat_{i,j}(f) = \leftmat \frac{1}{4\pi^{2}} \int_{[0,2\pi]^{2}} e^{- \ci \left((i-j)\omega_{1}+(k-l)\omega_{2}\right)}f(\omega_{1},\omega_{2})\,d(\omega_{1},\omega_{2}) \rightmat_{k,l \in \mathcal{P}_0'} \enspace.
+  \Dmat_{i,j}(f) = \leftmat \frac{1}{4\pi^{2}} \int_{[0,2\pi]^{2}} e^{- \ci \left((i-j)\omega_{1}+(k-l)\omega_{2}\right)}f(\omega_{1},\omega_{2})\,d(\omega_{1},\omega_{2}) \rightmat_{k,l \in \Pset_0'} \enspace.
 \end{equation}
-where $\mathcal{P}_0 = \{0, \dots, n-1 \}$ and $\mathcal{P}_0' = \{0, \dots, m-1 \}$.
+where $\Pset_0 = \{0, \dots, n-1 \}$ and $\Pset_0' = \{0, \dots, m-1 \}$.
 
-We are now able to combine \Cref{theorem:teoplitz_sup_singular,theorem:block_teoplitz_sup_singular} to bound the maximal singular value of doubly-block Toeplitz matrices with respect to their generating functions. 
-Note that in the following, we only consider generating functions as trigonometric polynomials with real coefficients therefore the matrices generated by $\Dmat(f)$ are real. We can now combine \Cref{theorem:teoplitz_sup_singular,theorem:block_teoplitz_sup_singular} to bound the maximal singular value of a doubly-block Toeplitz Matrix. 
+We are now able to combine \Cref{theorem:teoplitz_sup_singular,theorem:block_teoplitz_sup_singular} to bound the largest singular value of doubly-block Toeplitz matrices with respect to their generating functions. 
+Note that in the following, we only consider generating functions as trigonometric polynomials with real coefficients therefore the matrices generated by $\Dmat(f)$ are real. We can now combine \Cref{theorem:teoplitz_sup_singular,theorem:block_teoplitz_sup_singular} to bound the largest singular value of a doubly-block Toeplitz Matrix. 
 
-\begin{maintheorem}[Bound on the maximal singular value of a Doubly-Block Toeplitz Matrix] \label{theorem:doubly_block_teoplitz_sup_singular}
+\begin{maintheorem}[Bound on the largest singular value of a Doubly-Block Toeplitz Matrix] \label{theorem:doubly_block_teoplitz_sup_singular}
   Let $\Dmat(f) \in \Rbb^{nm \times nm}$ be a doubly-block Toeplitz matrix generated by the function $f$, then:
   \begin{align}
     \sigma_{1} \left( \Dmat(f) \right) &\leq \sup_{\omega_1, \omega_2 \in [0, 2\pi]^2}|f(\omega_1,\omega_2)|
   \end{align}
   where the function $f: \Rbb^2 \rightarrow \Cbb$, is a multivariate trigonometric polynomial of the form:
   \begin{equation}\label{equation:muli_variate_poly_on_M}
-      f(\omega_1, \omega_2) \triangleq \sum_{h_1 \in \mathcal{P}} \sum_{h_2 \in \mathcal{P}'} d_{h_1, h_2} e^{\ci (h_1 \omega_1 + h_2 \omega_2)},
+      f(\omega_1, \omega_2) \triangleq \sum_{h_1 \in \Pset} \sum_{h_2 \in \Pset'} d_{h_1, h_2} e^{\ci (h_1 \omega_1 + h_2 \omega_2)},
   \end{equation}
-  where $d_{h_{1},h_{2}}$ is the ${h_2}^\textrm{th}$ scalar of the ${h_1}^\textrm{th}$ block of the doubly-Toeplitz matrix $\Dmat(f)$, and where $\mathcal{P}' = \{-m+1, \dots, m-1\}$.
+  where $d_{h_{1},h_{2}}$ is the ${h_2}^\textrm{th}$ scalar of the ${h_1}^\textrm{th}$ block of the doubly-Toeplitz matrix $\Dmat(f)$, and where $\Pset' = \{-m+1, \dots, m-1\}$.
 \end{maintheorem}
 
 
 \begin{proof}[\Cref{theorem:doubly_block_teoplitz_sup_singular}]
-  A doubly-block Toeplitz matrix is by definition a block matrix where each block is a Toeplitz matrix. We can then express a doubly-block Toeplitz matrix with the operator $\Tmat(F)$ where the matrix-valued generating function $F$ has Toeplitz coefficient. Let us define a matrix-valued trigonometric polynomial $F:\Rbb\rightarrow\Cbb^{n \times n}$ of the form:
+  A doubly-block Toeplitz matrix is by definition a block matrix where each block is a Toeplitz matrix.
+  We can then express a doubly-block Toeplitz matrix with the operator $\Tmat(F)$ where the matrix-valued generating function $F$ has Toeplitz coefficient.
+  Let us define a matrix-valued trigonometric polynomial $F:\Rbb\rightarrow\Cbb^{n \times n}$ of the form:
   \begin{equation}
-      F(\omega_1) = \sum_{h_1 \in N} \Amat_{h_1}e^{\ci h_1\omega_1}
+    F(\omega_1) = \sum_{h_1 \in N} \Amat^{(h_1)} e^{\ci h_1\omega_1}
   \end{equation}
-  where $\Amat_{h_1}$ are Toeplitz matrices of size $m \times m$ determined by the sequence $\{d_{h_1, -m+1}, \dots, d_{h_1, m-1} \}$. 
+  where $\Amat^{(h_1)}$ are Toeplitz matrices of size $m \times m$ determined by the sequence $\{d_{h_1, -m+1}, \dots, d_{h_1, m-1} \}$. 
   From \Cref{theorem:block_teoplitz_sup_singular} we have:
   \begin{equation}
   \sigma_1\left(\Tmat(F) \right) \leq \sup_{\omega_1 \in [0,2\pi] } \sigma_{1}\left( F(\omega_1) \right) \label{equation:th_bound_block_toeplitz}
@@ -330,7 +234,7 @@ Therefore, the kernel, which must take into account \emph{channels in} and \emph
 The operation performed by a 4-dimensional kernel on a 3d signal can be expressed by the concatenation (horizontally and vertically) of doubly-block Toeplitz matrices.
 Hereafter, we bound the singular value of multiple vertically stacked doubly-block Toeplitz matrices which corresponds to the operation performed by a 3d kernel on a 3d signal.
 
-\begin{theorem}[Bound on the maximal singular value of stacked Doubly-block Toeplitz matrices] \label{theorem:bound_sv_stacked_dbt} 
+\begin{theorem}[Bound on the largest singular value of stacked Doubly-block Toeplitz matrices] \label{theorem:bound_sv_stacked_dbt} 
   Consider doubly-block Toeplitz matrices $\Dmat(f_1), \dots, \Dmat(f_{\cin})$ where $f_i: \Rbb^2 \rightarrow \Cbb$ is a generating function.
   Construct a matrix $\Mmat$ with $\cin\times n^2$ rows and $n^2$ columns, as follows:
   \begin{equation}
@@ -342,23 +246,8 @@ Hereafter, we bound the singular value of multiple vertically stacked doubly-blo
   \end{align}
 \end{theorem}
 
+\noindent
 In order to prove \Cref{theorem:bound_sv_stacked_dbt}, we will need the following lemmas:
-
-\begin{lemma}[\citet{zhang2011matrix}] \label{theorem:diff_positive_semidefinite_matrices}
-Let $\Amat$ and $\Bmat$ be Hermitian positive semi-definite matrices. If $\Amat - \Bmat$ is positive semi-definite, then:
-  \begin{equation}
-      \lambda_1 \left( \Bmat \right) \leq \lambda_1 \left( \Amat \right)
-  \end{equation}
-  \removespace
-\end{lemma}
-
-\begin{lemma}[\citet{serra1994preconditioning}] \label{theorem:block_toeplitz_positive_definite}
-  If the doubly-block Toeplitz matrix $\Dmat(f)$ is generated by a non-negative function $f$ not identically zero, then the matrix $\Dmat(f)$ is positive definite. 
-\end{lemma}
-
-\begin{lemma}[\citet{serra1994preconditioning}] \label{theorem:block_toeplitz_hermitian}
-  If the doubly-block Toeplitz matrix $\Dmat(f)$ is generated by a function $f: \Rbb^2 \rightarrow \Rbb$, then the matrix $\Dmat(f)$ is Hermitian. 
-\end{lemma}
 
 \begin{lemma}[\citet{gutierrez2012block}] \label{theorem:properties_block_toeplitz}
   Let $f:\Rbb^2 \rightarrow \Cbb$ and $g:\Rbb^2 \rightarrow \Cbb$ be two continuous and $2\pi$-periodic functions. Let $\Dmat(f)$ and $\Dmat(g)$ be doubly-block Toeplitz matrices generated by the function $f$ and $g$ respectively. Then:
@@ -369,17 +258,35 @@ Let $\Amat$ and $\Bmat$ be Hermitian positive semi-definite matrices. If $\Amat 
   \removespace
 \end{lemma}
 
-Before proving \Cref{theorem:bound_sv_stacked_dbt}, we generalize the famous Widom identity \cite{widom1976asymptotic} that express the relation between Toeplitz and Hankel matrix to doubly-block Toeplitz and Hankel matrices.
-We will need to generalize the doubly-block Toeplitz operator presented in~\Cref{subsection:ch5-bound_on_the_singular_value_of_doubly-block_toeplitz_matrices}.
-From now on, without loss of generality, we will assume that $n=m$ to simplify notations. 
+\begin{lemma}[\citet{serra1994preconditioning}] \label{theorem:block_toeplitz_hermitian}
+  If the doubly-block Toeplitz matrix $\Dmat(f)$ is generated by a function $f: \Rbb^2 \rightarrow \Rbb$, then the matrix $\Dmat(f)$ is Hermitian. 
+\end{lemma}
 
-Let $\Hmat^{\alpha_p} (f) = \leftmat \Hmat^{\alpha_p}_{i,j}(f) \rightmat_{i,j \in \mathcal{P}_0}$ where $\Hmat^{\alpha_p}_{i,j}$ is defined as:
+\begin{lemma}[\citet{serra1994preconditioning}] \label{theorem:block_toeplitz_positive_definite}
+  If the doubly-block Toeplitz matrix $\Dmat(f)$ is generated by a non-negative function $f$ not identically zero, then the matrix $\Dmat(f)$ is positive definite. 
+\end{lemma}
+
+\begin{lemma}[\citet{zhang2011matrix}] \label{theorem:diff_positive_semidefinite_matrices}
+Let $\Amat$ and $\Bmat$ be Hermitian positive semi-definite matrices. If $\Amat - \Bmat$ is positive semi-definite, then:
+  \begin{equation}
+      \lambda_1 \left( \Bmat \right) \leq \lambda_1 \left( \Amat \right)
+  \end{equation}
+  \removespace
+\end{lemma}
+
+
+Before proving \Cref{theorem:bound_sv_stacked_dbt}, we generalize the famous Widom identity \cite{widom1976asymptotic} that expresses the relation between Toeplitz and Hankel matrices to doubly-block Toeplitz and Hankel matrices.
+We will need to generalize the doubly-block Toeplitz operator presented in~\Cref{subsection:ch5-bound_on_the_singular_value_of_doubly-block_toeplitz_matrices}.
+
+Let $\Hmat^{\alpha_p} (f) = \leftmat \Hmat^{\alpha_p}_{i,j}(f) \rightmat_{i,j \in \Pset_0}$ where $\Hmat^{\alpha_p}_{i,j}$ is defined as:
 \begin{equation}
   \Hmat^{\alpha_p}_{i,j}(f) =\leftmat \frac{1}{4\pi^{2}}\int_{[0,2\pi]^{2}} e^{-\ci \alpha_p(i, j, k, l, \omega_1, \omega_2)}  f(\omega_{1},\omega_{2})\,d(\omega_{1},\omega_{2})
-  \rightmat_{k,l \in \mathcal{P}_0} \enspace.
+  \rightmat_{k,l \in \Pset_0} \enspace.
 \end{equation}
 Note that as with the operator $\Dmat(f)$ we only consider generating functions as trigonometric polynomials with real coefficients therefore the matrices generated by $\Hmat(f)$ are real. 
+And as with the operator $\Dmat(f)$, the matrices generated by the operator $\Hmat^{\alpha_p}$ are of size $n^2 \times n^2$. 
 
+\noindent
 We will use the following $\alpha$ functions:
 \begin{itemize}
     \item[] $\alpha_0(i, j, k, l, \omega_1, \omega_2) = (-j-i-1)\omega_1 + (k-l)\omega_2$
@@ -387,21 +294,23 @@ We will use the following $\alpha$ functions:
     \item[] $\alpha_2(i, j, k, l, \omega_1, \omega_2) = (-j-i-1)\omega_1 + (-l-k-1)\omega_2$
     \item[] $\alpha_3(i, j, k, l, \omega_1, \omega_2) = (-j-i+n)\omega_1 + (-l-k-1)\omega_2$
 \end{itemize}
-As with the doubly-block Toeplitz operator $\Dmat(f)$, the matrices generated by the operator $\Hmat^{\alpha_p}$ are of size $n^2 \times n^2$. 
 
+\noindent
 We now present the generalization of the Widom identity for Doubly-Block Toeplitz matrices below:
-\begin{lemma}[Generalization of Widom Identity]
+\begin{lemma}[Generalization of Widom Identity] \label{lemma:ch5-widom_idenity}
   Let $f:\Rbb^2 \rightarrow \Cbb$ and $g:\Rbb^2 \rightarrow \Cbb$ be two continuous and $2\pi$-periodic functions. 
-We can decompose the Doubly-Block Toeplitz matrix $\Dmat(fg)$ as follows:
-\begin{equation}
-    \Dmat(fg) = \Dmat(f)\Dmat(g) + \sum_{p=0}^3 \Hmat^{\alpha_p \top}(f^*) \Hmat^{\alpha_p}(g) + \Jmat \left( \sum_{p=0}^3 \Hmat^{\alpha_p \top}(f) \Hmat^{\alpha_p }(g^*) \right) \Jmat.
-\end{equation}
-where $\Jmat$ is the anti-identity matrix of size $n^2 \times n^2$.
- \label{lemma:ch5-widom_idenity}
+  We can decompose the Doubly-Block Toeplitz matrix $\Dmat(fg)$ as follows:
+  \begin{equation}
+      \Dmat(fg) = \Dmat(f)\Dmat(g) + \sum_{p=0}^3 \Hmat^{\alpha_p \top}(f^*) \Hmat^{\alpha_p}(g) + \Jmat \left( \sum_{p=0}^3 \Hmat^{\alpha_p \top}(f) \Hmat^{\alpha_p }(g^*) \right) \Jmat.
+  \end{equation}
+  where $\Jmat$ is the reflection of the identity matrix of size $n^2 \times n^2$.
 \end{lemma}
 
+\noindent
+Now we can prove \Cref{theorem:bound_sv_stacked_dbt} which bounds the largest singular value of vertically stacked doubly-block Toeplitz matrices with their generating functions. 
 
-Now we can prove \Cref{theorem:bound_sv_stacked_dbt} which bounds the maximal singular value of vertically stacked doubly-block Toeplitz matrices with their generating functions. 
+\begingroup
+\addtolength{\jot}{1.5em}
 
 \begin{proof}[\Cref{theorem:bound_sv_stacked_dbt}]
 First, let us observe the following:
@@ -416,21 +325,20 @@ And the fact that:
     \quad &\stackrel{\text{by \Cref{theorem:doubly_block_teoplitz_sup_singular}}}{\leq} \quad \sup_{\omega_1, \omega_2 \in [0, 2\pi]^2} \sum_{i=1}^{\cin} |f_i(\omega_1, \omega_2)|^2.
 \end{align}
 
+\noindent
 To prove the Theorem, we simply need to verify the following inequality:
-
 \begin{equation} \label{equation:eq2}
     \lambda_1 \left( \sum_{i=1}^{\cin} \Dmat^{\top} \left(f_i \right) \Dmat (f_i) \right) \leq \lambda_1 \left( \Dmat \left( \sum_{i=1}^{\cin} |f_i|^2 \right) \right). 
 \end{equation}
 
+\noindent
 From the positive definiteness of the following matrix:
-
 \begin{equation}
     \Dmat \left( \sum_{i=1}^{\cin} |f_i|^2 \right) - \sum_{i=1}^{\ci} \Dmat^{\top} \left(f_i \right) \Dmat (f_i),
 \end{equation}
 
-one can observe that the r.h.s is a real symmetric positive definite matrix by \Cref{theorem:block_toeplitz_positive_definite,theorem:block_toeplitz_hermitian}. Furthermore, the l.h.s is a sum of positive semi-definite matrices. Therefore, if the subtraction of the two is positive semi-definite, one could apply \Cref{theorem:diff_positive_semidefinite_matrices} to prove the \Cref{equation:eq2}. 
-
-
+\noindent
+One can observe that the r.h.s is a real symmetric positive definite matrix by \Cref{theorem:block_toeplitz_positive_definite,theorem:block_toeplitz_hermitian}. Furthermore, the l.h.s is a sum of positive semi-definite matrices. Therefore, if the subtraction of the two is positive semi-definite, one could apply \Cref{theorem:diff_positive_semidefinite_matrices} to prove the \Cref{equation:eq2}. 
 We know from \Cref{lemma:ch5-widom_idenity} that 
 \begin{equation}
     \Dmat(fg) - \Dmat(f)\Dmat(g) = \sum_{p=0}^3 \Hmat^{\alpha_p \top}(f^*) \Hmat^{\alpha_p}(g) + \Jmat \left( \sum_{p=0}^3 \Hmat^{\alpha_p \top}(f) \Hmat^{\alpha_p}(g^*) \right) \Jmat.
@@ -442,93 +350,106 @@ By instantiating $f = f^*$, $g = f$ and with the use of \Cref{theorem:properties
   &= \sum_{p=0}^3 \Hmat^{\alpha_p \top}(f)\Hmat^{\alpha_p}(f) + \Jmat \left( \sum_{p=0}^3 \Hmat^{\alpha_p \top}(f^*)\Hmat^{\alpha_p} (f^*) \right) \Jmat .
 \end{align}
 
+\noindent
 From \Cref{equation:widom_identity_block_topelitz}, we can see that the matrix $\Dmat(|f|^2) - \Dmat^{\top}(f)\Dmat(f)$
-is positive semi-definite because it can be decomposed into a sum of positive semi-definite matrices.
-Therefore, because positive semi-definiteness is closed under addition, we have:
+is positive semi-definite because it can be decomposed into a sum of positive semi-definite matrices and because positive semi-definiteness is closed under addition, we have:
+
 \begin{align}
     \sum_{i=1}^{\cin} \leftmat \Dmat \left( |f_i|^2 \right) - \Dmat^{\top} \left(f_i \right) \Dmat (f_i) \rightmat &\geq 0
 \end{align}
 
+\noindent
 By re-arranging and with the use \Cref{theorem:properties_block_toeplitz}, we obtain:
 \begin{align}
    \sum_{i=1}^{\cin} \leftmat \Dmat \left( |f_i|^2 \right) \rightmat - \sum_{i=1}^{\cin} \leftmat \Dmat^{\top} \left(f_i \right) \Dmat (f_i) \rightmat &\geq 0 \\
     \Dmat \left( \sum_{i=1}^{\cin} |f_i|^2 \right) - \sum_{i=1}^{\cin} \leftmat \Dmat^{\top} \left(f_i \right) \Dmat (f_i) \rightmat &\geq 0
 \end{align}
 
-
+\noindent
 We can conclude that the \Cref{equation:eq2} is true and therefore by \Cref{theorem:diff_positive_semidefinite_matrices} we have:
 \begin{align}
-    \lambda_1 \left( \sum_{i=1}^{\cin} \Dmat^{\top} \left(f_i \right) \Dmat (f_i) \right) &\leq \lambda_1 \left( \Dmat \left( \sum_{i=1}^{\cin} |f_i|^2 \right) \right) \\
-    \Leftrightarrow \sigma_1^2 \left( \Mmat \right) &\leq \sup_{\omega_1, \omega_2 \in [0, 2\pi]^2} \sum_{i=1}^{\cin} |f_i(\omega_1, \omega_2)|^2 \\
-    \Leftrightarrow \sigma_1 \left( \Mmat \right) &\leq \sup_{\omega_1, \omega_2 \in [0, 2\pi]^2} \sqrt{ \sum_{i=1}^{\cin} |f_i(\omega_1, \omega_2)|^2 }
+  \lambda_1 \left( \sum_{i=1}^{\cin} \Dmat^{\top} \left(f_i \right) \Dmat (f_i) \right) &\leq \lambda_1 \left( \Dmat \left( \sum_{i=1}^{\cin} |f_i|^2 \right) \right) \\
+  \Leftrightarrow \sigma_1^2 \left( \Mmat \right) &\leq \sup_{\omega_1, \omega_2 \in [0, 2\pi]^2} \sum_{i=1}^{\cin} |f_i(\omega_1, \omega_2)|^2 \\
+  \Leftrightarrow \sigma_1 \left( \Mmat \right) &\leq \sup_{\omega_1, \omega_2 \in [0, 2\pi]^2} \sqrt{ \sum_{i=1}^{\cin} |f_i(\omega_1, \omega_2)|^2 }
 \end{align}
 which concludes the proof. 
 \end{proof}
 
+\endgroup
+
+\pagebreak
 
 To have a bound on the full convolution operation, we extend \Cref{theorem:bound_sv_stacked_dbt} to take into account the number of output channels.
-The matrix of a full convolution operation is a block matrix where each block is a doubly-block Toeplitz matrices. Below, we present our main result:
+The matrix of a full convolution operation is a block matrix where each block is a doubly-block Toeplitz matrix.
+Below, we present our main result:
 
-\begin{maintheorem}[Bound on the maximal singular value on the convolution operation] \label{theorem:bound_max_sv_convolution} 
-Let us define doubly-block Toeplitz matrices $\Dmat(f_{11}), \dots, \Dmat(f_{\cin\times \cout})$ where $f_{ij}: \Rbb^2 \rightarrow \Cbb$ is a generating function. Construct a matrix $\Mmat$ with $\cin\times n^2$ rows and $\cout\times n^2$ columns such as
-Then, with $f_{ij}$ a multivariate polynomial of the same form as \Cref{equation:muli_variate_poly_on_M}, we have:
-\begin{equation} \label{equation:lipbound_sv}
- \sigma_1 \left( \Mmat \right) \leq \sqrt{ \sum_{i=1}^{\cout} \sup_{\omega_1, \omega_2 \in [0, 2\pi]^2} \sum_{j = 1}^{\cin} \left|f_{ij}(\omega_1, \omega_2) \right|^2 } .
-\end{equation} 
+\begin{maintheorem}[Bound on the largest singular value on the convolution operation] \label{theorem:ch5-bound_max_sv_convolution} 
+  Let us define doubly-block Toeplitz matrices $\Dmat(f_{11}), \dots, \Dmat(f_{\cin\times \cout})$ where $f_{ij}: \Rbb^2 \rightarrow \Cbb$ is a generating function. Construct a matrix $\Mmat$ with $\cin\times n^2$ rows and $\cout\times n^2$ columns such as
+  Then, with $f_{ij}$ a multivariate polynomial of the same form as \Cref{equation:muli_variate_poly_on_M}, we have:
+  \begin{equation} \label{equation:lipbound_sv}
+     \sigma_1 \left( \Mmat \right) \leq \sqrt{ \sum_{i=1}^{\cout} \sup_{\omega_1, \omega_2 \in [0, 2\pi]^2} \sum_{j = 1}^{\cin} \left|f_{ij}(\omega_1, \omega_2) \right|^2 } .
+  \end{equation} 
+  \removespace
 \end{maintheorem}
 
-
-First, in order to prove \Cref{theorem:bound_max_sv_convolution}, we will need the following lemma which bound the singular values of a matrix constructed from the concatenation of multiple matrix. 
-
-\begin{lemma}[Bound on the singular values of concatenation of matrices] \label{theorem:bound_concatenation_matrices}
-Let us define matrices $\Amat_1, \dots, \Amat_p$ with $\Amat_i \in \Rbb^{n \times n}$. Let us construct the matrix $\Mmat \in \Rbb^{n \times pn}$ as follows:
-\begin{equation}
-    \Mmat \triangleq \leftmat \Amat_1, \dots, \Amat_p \rightmat
-\end{equation}
-where $\leftmat\ \cdot\ \rightmat$ define the concatenation operation. Then, we can bound the singular values of the matrix $\Mmat$ as follows:
-\begin{equation}
-    \sigma_1(\Mmat) \leq \sqrt{\sum_{i=1}^p \sigma_1(\Amat_i)^2}
-\end{equation}
+First, in order to prove \Cref{theorem:ch5-bound_max_sv_convolution}, we will need the following lemma which bound the singular values of a matrix constructed from the concatenation of multiple matrices.
+\begin{lemma}[Bound on the singular values of concatenation of matrices] \label{theorem:ch2-bound_concatenation_matrices}
+  Let us define matrices $\Amat^{(1)}, \dots, \Amat^{(p)}$ with $\Amat^{(i)} \in \Rbb^{n \times n}$. Let us construct the matrix $\Mmat \in \Rbb^{n \times pn}$ as follows:
+  \begin{equation}
+    \Mmat \triangleq \leftmat \Amat^{(1)}, \dots, \Amat^{(p)} \rightmat
+  \end{equation}
+  where $\leftmat\ \cdot\ \rightmat$ define the concatenation operation. Then, we can bound the singular values of the matrix $\Mmat$ as follows:
+  \begin{equation}
+    \sigma_1(\Mmat) \leq \sqrt{\sum_{i=1}^p \sigma_1(\Amat^{(i)})^2}
+  \end{equation}
 \end{lemma}
-\begin{proof}[\Cref{theorem:bound_concatenation_matrices}]
-\begin{align}
+
+\begingroup
+\allowdisplaybreaks
+\addtolength{\jot}{1.5em}
+
+\begin{proof}[\Cref{theorem:ch2-bound_concatenation_matrices}]
+  \begin{align}
     \sigma_1\left(\Mmat\right)^2 &= \lambda_1\left(\Mmat \Mmat^\top\right) \\
-    &= \lambda_1\left( \sum_{i=1}^p\Amat_i \Amat_i^\top  \right) \\
-    &\leq \sum_{i=1}^p \lambda_1\left( \Amat_i \Amat_i^\top  \right) \\
-    &\leq \sum_{i=1}^p \sigma_1\left( \Amat_i \right)^2 \\
-    \Leftrightarrow \sigma_1\left(\Mmat\right) &\leq \sqrt{\sum_{i=1}^p \sigma_1(\Amat_i)^2}
-\end{align}
-which concludes the proof.
+    &= \lambda_1\left( \sum_{i=1}^p\Amat^{(i)} \Amat^{(i)\top}  \right) \\
+    &\leq \sum_{i=1}^p \lambda_1\left( \Amat^{(i)} \Amat^{(i)\top}  \right) \\
+    &\leq \sum_{i=1}^p \sigma_1\left( \Amat^{(i)} \right)^2 \\
+    \Leftrightarrow \sigma_1\left(\Mmat\right) &\leq \sqrt{\sum_{i=1}^p \sigma_1(\Amat^{(i)})^2}
+  \end{align}
+  which concludes the proof.
 \end{proof}
 
+\noindent
+Now, the proof of \Cref{theorem:ch5-bound_max_sv_convolution} is a simple combination of \Cref{theorem:ch2-bound_concatenation_matrices} and \Cref{theorem:bound_sv_stacked_dbt}.
 
-\begin{proof}[\Cref{theorem:bound_max_sv_convolution}]
-Let us define the matrix $\Mmat_i$ as follows:
+\begin{proof}[\Cref{theorem:ch5-bound_max_sv_convolution}]
+  Let us define the matrix $\Mmat^{(i)}$ as follows:
 \begin{equation}
-    \Mmat_i = \leftmat \Dmat(f_{1, i})^\top, \dots, \Dmat(f_{\cin, i})^\top \rightmat^\top .
+  \Mmat^{(i)} = \leftmat \Dmat(f_{1, i})^\top, \dots, \Dmat(f_{\cin, i})^\top \rightmat^\top .
 \end{equation}
-We can express the matrix $\Mmat$ as the concatenation of multiple $\Mmat_i$ matrices:
+We can express the matrix $\Mmat$ as the concatenation of multiple $\Mmat^{(i)}$ matrices:
 \begin{equation}
-    \Mmat = \leftmat \Mmat_1, \dots, \Mmat_{\cout} \rightmat
+  \Mmat = \leftmat \Mmat^{(1)}, \dots, \Mmat^{(\cout)} \rightmat
 \end{equation}
 Then, we can bound the singular values of the matrix $\Mmat$ as follows:
 \begin{align}
-    \sigma_1\left(\Mmat\right) &\stackrel{\text{by \Cref{theorem:bound_concatenation_matrices}}}{\leq} \sqrt{\sum_{i=1}^{\cout} \sigma_1(\Mmat_i)^2} \\
-    \sigma_1\left(\Mmat\right) &\stackrel{\text{by \Cref{theorem:bound_sv_stacked_dbt}}}{\leq} \sqrt{\sum_{j=1}^{\cout} \sup_{\omega_1, \omega_2 \in [0, 2\pi]^2} \sum_{i=1}^{\cin} |f_{ij}(\omega_1, \omega_2)|^2 }
+  \sigma_1\left(\Mmat\right) &\stackrel{\text{by \Cref{theorem:ch2-bound_concatenation_matrices}}}{\leq} \sqrt{\sum_{i=1}^{\cout} \sigma_1(\Mmat^{(i)})^2} \\
+  \sigma_1\left(\Mmat\right) &\stackrel{\text{by \Cref{theorem:bound_sv_stacked_dbt}}}{\leq} \sqrt{\sum_{j=1}^{\cout} \sup_{\omega_1, \omega_2 \in [0, 2\pi]^2} \sum_{i=1}^{\cin} |f_{ij}(\omega_1, \omega_2)|^2 }
 \end{align}
 which concludes the proof. 
 \end{proof}
 
+\endgroup
+\pagebreak
 
-
-We can easily express the bound in \Cref{theorem:bound_max_sv_convolution} with the values of a 4-dimensional kernel.
-Let us define a kernel $\mathbf{k} \in \Rbb^{\cout \times \cin \times s \times s}$, a padding $p \in \Nbb$ and $d = \lfloor s / 2 \rfloor$ the degree of the trigonometric polynomial, then:
+We can easily express the bound in \Cref{theorem:ch5-bound_max_sv_convolution} with the values of a 4-dimensional kernel.
+Let us define a kernel $\Kmat \in \Rbb^{\cout \times \cin \times s \times s}$, a padding $p \in \Nbb$ and $d = \lfloor s / 2 \rfloor$ the degree of the trigonometric polynomial, then:
 \begin{equation}
   f_{ij}(\omega_1, \omega_2) = \sum_{h_1 = -d}^d \sum_{h_2 = -d}^d k_{i, j, h_1,h_2} e^{\ci (h_1 \omega_1 + h_2 \omega_2)}.
 \end{equation}
-where $k_{i, j, h_1,h_2} = \leftmat \mathbf{k} \rightmat_{i, j, a, b}$ with $a =  s - p - 1 + i$ and $b =  s - p - 1 + j$.
+where $k_{i, j, h_1,h_2} = \leftmat \Kmat \rightmat_{i, j, a, b}$ with $a =  s - p - 1 + i$ and $b =  s - p - 1 + j$.
 
-In the rest of the paper, we will refer to the bound in \Cref{theorem:bound_max_sv_convolution} applied to a kernel as $\lipbound$ and we denote $\lipbound(\mathbf{k})$ the Lipschitz upper bound of the convolution performed by the kernel $\mathbf{k}$. 
+In the rest of the paper, we will refer to the bound in \Cref{theorem:ch5-bound_max_sv_convolution} applied to a kernel as $\lipbound$ and we denote $\lipbound(\Kmat)$ the Lipschitz upper bound of the convolution performed by the kernel $\Kmat$. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -536,8 +457,8 @@ In the rest of the paper, we will refer to the bound in \Cref{theorem:bound_max_
 \label{section:ch5-computation_and_performance_analysis_of_lipbound}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-This section aims at analyzing the bound introduced in \Cref{theorem:bound_max_sv_convolution}.
-First, we present an algorithm to efficiently compute the bound, we analyze its tightness by comparing it against the true maximal singular value.
+This section aims at analyzing the bound introduced in \Cref{theorem:ch5-bound_max_sv_convolution}.
+First, we present an algorithm to efficiently compute the bound, we analyze its tightness by comparing it against the true largest singular value.
 Finally, we compare the efficiency and the accuracy of our bound against the state-of-the-art. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -545,12 +466,11 @@ Finally, we compare the efficiency and the accuracy of our bound against the sta
 \label{subsection:ch5-computing_the_maximum_modulus_of_a_trigonometric_polynomial}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In order to compute $\lipbound$ from \Cref{theorem:bound_max_sv_convolution}, we have to compute the maximum modulus of several trigonometric polynomials.
+In order to compute $\lipbound$ from \Cref{theorem:ch5-bound_max_sv_convolution}, we have to compute the maximum modulus of several trigonometric polynomials.
 However, finding the maximum modulus of a trigonometric polynomial has been known to be NP-Hard~\cite{pfister2018bounding}, and in practice they exhibit low convexity (see \Cref{figure:contour_plot_trigonometric_polynomials}).
-We found that for 2-dimensional kernels, a simple grid search algorithm such as PolyGrid (see \Cref{algorithm:PolyGrid}), works better than more sophisticated approximation algorithms (\eg ~\citet{green1999calculating,de2009finding}).
+We found that for 2-dimensional kernels, a simple grid search algorithm such as PolyGrid (see \Cref{algorithm:ch5-polygrid}), works better than more sophisticated approximation algorithms (\eg ~\citet{green1999calculating,de2009finding}).
 This is because the complexity of the computation depends on the degree of the polynomial which is equal to $\lfloor s / 2 \rfloor$ where $s$ is the size of the kernel and is usually small in most practical settings (\eg $s=3$).
 Furthermore, the grid search algorithm can be parallelized effectively on CPUs or GPUs and runs within less time than alternatives with lower asymptotic complexity. 
-
 
 \begin{figure}[htb]
   \centering
@@ -582,13 +502,9 @@ Furthermore, the grid search algorithm can be parallelized effectively on CPUs o
 
 
 \begin{algorithm}[htb]
-  \caption{PolyGrid Algorithm} \label{algorithm:ch5-polygrid}
   \begin{algorithmic}[1]
     \Procedure{PolyGrid}{$f, S$}\Comment{polynomial $f$, number of samples $S$}
-      \State $\sigma \gets 0$, 
-      \State $\omega_1 \gets 0$
-      \State $\omega_2 \gets 0$
-      \State $\epsilon \gets \frac{2\pi}{S}$
+      \State $\sigma \gets 0$, $\omega_1 \gets 0$, $\omega_2 \gets 0$ $\epsilon \gets \frac{2\pi}{S}$
       \For{$i=0$ \textbf{to} $S-1$}
 	\For{$j=0$ \textbf{to} $S-1$}
 	  \State $\omega_2 \gets \omega_2 + \epsilon$
@@ -598,6 +514,8 @@ Furthermore, the grid search algorithm can be parallelized effectively on CPUs o
       \State \textbf{return} $\sigma$ \Comment{approximated maximum modulus of $f$}
     \EndProcedure
   \end{algorithmic}
+  \caption{PolyGrid Algorithm}
+  \label{algorithm:ch5-polygrid}
 \end{algorithm}
 
 
@@ -628,7 +546,7 @@ For each $n \in \Nbb$, we define the matrix  $\Mmat^{(n)}$ of size $kn^2 \times 
   \Mmat^{(n)} \triangleq \textstyle \leftmat \Dmat^{(n)\top}(f_1), \dots, \Dmat^{(n)\top}(f_k) \textstyle \rightmat^\top
 \end{equation}
 where the matrices $\Dmat^{(n)}(f_i)$ are of size $n^2 \times n^2$. 
-To analyze the tightness of the bound, we define the function $\Gamma$, which computes the difference between $\lipbound$ and the maximal singular value of the function $\Mmat^{(n)}$:
+To analyze the tightness of the bound, we define the function $\Gamma$, which computes the difference between $\lipbound$ and the largest singular value of the function $\Mmat^{(n)}$:
 \begin{equation} \label{equation:function_convergence}
   \Gamma(n) = \lipbound(\mathbf{k}_{\Mmat^{(n)}}) - \sigma_1(\Mmat^{(n)})
 \end{equation}
@@ -647,7 +565,7 @@ The results of this experiment are presented in \Cref{figure:convergence_bound}.
 We observe that the difference between the bound and the actual value (approximation gap) quickly decreases as the input size increases.
 For an input size of $50$, the approximation gap is as low as $0.012$ using a standard $6\times3\times3$ convolution kernel.
 For a larger input size such as ImageNet ($224$), the gap is lower than $4.10^{-4}$.
-Therefore $\lipbound$ gives an almost exact value of the maximal singular value of the operator matrix for most realistic settings.
+Therefore $\lipbound$ gives an almost exact value of the largest singular value of the operator matrix for most realistic settings.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Comparison of LipBound with other state-of-the-art approaches}
@@ -687,12 +605,11 @@ Therefore $\lipbound$ gives an almost exact value of the maximal singular value 
     \bottomrule
   \end{tabular}%
   }
-  \caption{The following table compares different approaches for computing an approximation of the maximal singular value of a convolutional layer. It shows the ratio between the approximation and the true maximal singular value. The approximation is better for a ratio close to one.}
+  \caption{The following table compares different approaches for computing an approximation of the largest singular value of a convolutional layer. It shows the ratio between the approximation and the true largest singular value. The approximation is better for a ratio close to one.}
   \label{table:ch5-comparaison_bounds}%
 \end{table}
 
 
-\todotext{preciser farnia power method with 10 iter}
 
 \begin{table}[h]
   \centering
@@ -740,38 +657,38 @@ Therefore $\lipbound$ gives an almost exact value of the maximal singular value 
     \bottomrule
   \end{tabular}%
   \caption{This table shows the efficiency of LipBound computation vs the Power Method with 10 iterations on the full networks.}
-  \label{tab:efficiency_lipbound_full_model}%
+  \label{table:ch5-efficiency_lipbound_full_model}%
 \end{table}%
 
-\todo{inclure les citations}
-\cite{krizhevsky2012imagenet}, \cite{he2016deep}, \cite{huang2017densely}, \cite{simonyan2014very}, \cite{zagoruyko2016wide}, \cite{iandola2016squeezenet}
-\todo{add comment on table}
-
-
-
 In this section we compare our PolyGrid algorithm with the values obtained using alternative approaches.
-We consider the 3 alternative techniques by~\citet{sedghi2018singular,singla2019bounding,farnia2018generalizable} which have been described in \Cref{chapter:ch3-related_work}, \Cref{section:ch3-related_work_on_lipschitz_regularization}. 
+We consider the 3 alternative techniques by~\citet{sedghi2018singular,singla2019bounding,farnia2018generalizable} which have been described in \Cref{chapter:ch3-related_work}, \Cref{section:ch3-related_work_on_lipschitz_regularization}.
 
 To compare the different approaches, we extracted 20 kernels from a trained model.
 For each kernel we construct the corresponding doubly-block Toeplitz matrix and compute its largest singular value.
 Then, we compute the ratio between the approximation obtained with the approach in consideration and the exact singular value obtained by SVD, and average the ratios over the 20 kernels.
 Thus good approximations result in approximation ratios that are close to 1.
 The results of this experiment are presented in \Cref{table:ch5-comparaison_bounds}.
-The comparison has been made on a Tesla V100 GPU. 
+The comparison has been made on a Tesla V100 GPU.
 The time was computed with the PyTorch CUDA profiler and we warmed up the GPU before starting the timer.
 
-The method introduced by~\citet{sedghi2018singular} computes an approximation of the singular values of convolutional layers.
+The method introduced by~\citet{sedghi2018singular} and presented in~\Cref{subsection:ch3-singular_values_of_convolutional_layers} computes the largest singular value of convolutional layers based on doubly-block circulant matrices.
+Doubly-block circulant matrices perform a convolution with a ``wrapping around'' operation which do not correspond to the more general setting.
 We can see in \Cref{table:ch5-comparaison_bounds} that the value is off by an important margin.
 This technique is also computationally expensive as it requires computing the SVD of $n^2$ small matrices where $n$ is the size of inputs.
-\citet{singla2019bounding} have shown that the singular value of the reshape kernel is a bound on the maximal singular value of the convolution layer.
+\citet{singla2019bounding} have shown that the singular value of the reshape kernel is a bound on the largest singular value of the convolution layer.
 Their approach is very efficient but the approximation is loose and overestimate the real value.
 As said previously, the power method provides a good approximation at the expense of the efficiency.
-We use the special Convolutional Power Method from~\citet{farnia2018generalizable} with 10 iterations.
+We also compare our approach to the power method with 10 iterations from ~\citet{farnia2018generalizable} (see~\Cref{algorithm:ch3-power_method_generic}).
 The results show that our proposed technique: PolyGrid algorithm can get the best of both worlds.
-It achieves a near perfect accuracy while being very efficient to compute. 
+It achieves a near perfect accuracy while being very efficient to compute.
 
-\todotext{here}
-We provide in the supplementary material a benchmark on the efficiency of $\lipbound$ on multiple convolutional architectures. 
+
+We also compare in~\Cref{table:ch5-efficiency_lipbound_full_model} our method against the power method of~\citet{farnia2018generalizable} on the following convolutional architectures: AlexNet \cite{krizhevsky2012imagenet}, ResNet \cite{he2016deep}, DenseNet \cite{huang2017densely}, VGG \cite{simonyan2014very}, WideResnet \cite{zagoruyko2016wide}, SqueezeNet \cite{iandola2016squeezenet}.
+During training, Lipbound or the power method need to be computed for every layer of the network and the computation time is dependent on the architecture of the network, for example, the size of the activations or the size of the kernels.
+\Cref{table:ch5-efficiency_lipbound_full_model} shows that for full networks Lipbound is systematically faster than the power method by a factor up to 12.
+This demonstrates the scalability of our method.
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -798,6 +715,8 @@ We provide in the supplementary material a benchmark on the efficiency of $\lipb
    \caption{Figures XXX show the distribution of the norm of the Jacobian matrix w.r.t the CIFAR10 test set from a Wide Resnet trained with different schemes. Although Lipschitz regularization is not a Jacobian regularization, we can observe a clear shift in the distribution. This suggests that our method does not only work layer-wise, but also at the level of the entire network.}
 \end{figure}
 
+\todotext{fix captions: \Cref{figure:ch5-jacobian_distribution_v1} and \Cref{figure:ch5-jacobian_distribution_v2}}
+
 
 \begin{figure}[h]
    \centering
@@ -816,6 +735,8 @@ We provide in the supplementary material a benchmark on the efficiency of $\lipb
    \end{subfigure}
    \caption{Figures xxx show the Accuracy under attack on CIFAR10 test set with PGD-$\ell_\infty$ and C\&W-$\ell_2$ attacks for several classifiers trained with Adversarial Training given the number of iterations.}
 \end{figure}
+
+\todotext{fix captions: \Cref{figure:ch5-attacks_pgd} and \Cref{figure:ch5-attacks_cw}}
 
 
 \begin{table}[t]
@@ -870,7 +791,7 @@ We provide in the supplementary material a benchmark on the efficiency of $\lipb
     \caption{Results on CIFAR100 dataset}
     \label{subfigure:ch5-results_cifar100_data}
   \end{subfigure}
-  \caption{This table shows the Accuracy under $\ell_2$ and $\ell_\infty$ attacks of CIFAR10/100 datasets. We compare vanilla Adversarial Training with the combination of Lipschitz regularization and Adversarial Training. We also compare the effectiveness of the power method by~\citet{farnia2018generalizable} and $\lipbound$. The parameters $\lambda_2$ (Eq.~\ref{equation:obj_function}) is equal to $0.008$ for AT+PM and AT+LipReg. It has been chosen from a grid search among 10 values. The attacks below are computed with 200 iterations. }
+  \caption{This table shows the Accuracy under $\ell_2$ and $\ell_\infty$ attacks of CIFAR10/100 datasets. We compare vanilla Adversarial Training with the combination of Lipschitz regularization and Adversarial Training. We also compare the effectiveness of the power method by~\citet{farnia2018generalizable} and $\lipbound$. The parameters $\lambda_2$ (Eq.~\ref{equation:ch5-obj_function}) is equal to $0.008$ for AT+PM and AT+LipReg. It has been chosen from a grid search among 10 values. The attacks below are computed with 200 iterations. }
   \label{table:cifar_robustness}%
 \end{table}%
 
@@ -902,29 +823,35 @@ Empirical techniques to improve robustness against adversarial examples such as 
 \citet{farnia2018generalizable} have shown that the adversarial generalization error depends on the Lipschitz constant of the network, which suggests that the adversarial test error can be improved by applying Lipschitz regularization in addition to adversarial training.
 
 In this section, we illustrate the usefulness of LipBound by training a state-of-the-art Wide ResNet architecture~\citep{zagoruyko2016wide} with Lipschitz regularization and adversarial training.
-Our regularization scheme is inspired by the one used by \citet{yoshida2017spectral} but instead of using the power method, we use our \textbf{PloyGrid} algorithm presented in~\Cref{subsection:ch5-computing_the_maximum_modulus_of_a_trigonometric_polynomial} which efficiently computes an upper bound on the maximal singular value of convolutional layers.
+Our regularization scheme is inspired by the one used by \citet{yoshida2017spectral} but instead of using the power method, we use our \textbf{PloyGrid} algorithm presented in~\Cref{subsection:ch5-computing_the_maximum_modulus_of_a_trigonometric_polynomial} which efficiently computes an upper bound on the largest singular value of convolutional layers.
 
 We introduce the \textbf{AT+LipReg} loss to combine Adversarial Training and our Lipschitz regularization scheme in which layers with a large Lipschitz constant are penalized.
 We consider a neural network $\mathcal N_\theta : \mathcal X \rightarrow \mathcal Y$ with $\ell$ layers $\phi^{(1)}_{\theta_1}, \dots, \phi^{(\ell)}_{\theta_\ell}$ where $\theta^{(1)}, \dots, \theta^{(\ell -1)}$ are the kernels of the first $\ell - 1$ convolutional layers and $\theta_\ell$ is the weight matrix of the last fully-connected  layer $\phi^{(\ell)}_{\theta_\ell}$.
 Given a distribution $\mathcal D$ over $\mathcal X \times \mathcal Y$, we can train the parameters $\theta$ of the network by minimizing the AT+LipReg loss as follows:
-\begin{equation}
-  \min_{\theta} \Ebb_{x,y \sim \mathcal D} \left[ \max_{\norm{\tau}_\infty \leq \epsilon} L(N_\theta(x + \tau), y) + \lambda_1 \sum_{i=1}^\ell \norm{\theta_i}_\fro + \lambda_2 \sum_{i=1}^{\ell-1} \log\left( \lipbound\left(\theta_i\right)\right) \right]
-  \label{equation:obj_function}
+\begin{equation} \label{equation:ch5-obj_function}
+  \min_{\theta} \Ebb_{\xvec,y \sim \Dset} \left[ L(N_\theta(\xvec + \adv^{\text{adv}}_\Omega(\xvec)), y) + R(\Omega) \right]
 \end{equation}
-where $\mathcal L$ is the cross-entropy loss function, and $\lambda_1$, $\lambda_2$ are two user-defined hyper-parameters.
+where $L$ is the cross-entropy loss function, $\adv^{\text{adv}}_\Omega(\xvec)$ is an adversarial perturbation following the loss maximization strategy presented in~\Cref{subsubsection:ch2-adversarial_attacks} and the regularization function $R$ is defined as follows:
+\begin{equation}
+  R(\Omega) =  \lambda_1 \underbrace{\sum_{(\Wmat, \bvec) \in \Omega} \left( \norm{\Wmat}_\fro + \norm{\bvec}_2 \right)}_{
+  \text{Tikhonov regularization}} + \lambda_2 \underbrace{\vphantom{\sum_{(\Wmat, \bvec) \in \Omega}} \sum_{i=1}^{\depth-1} \log\left(\lipbound\left(\Wmat^{(i)}\right)\right)}_{\text{Lipschitz regularization}} 
+\end{equation}
+where $\lambda_1$, $\lambda_2$ are two user-defined hyper-parameters.
 Note that regularizing the sum of logs is equivalent to regularizing the product of all the $\lipbound$ which is an upper bound on the global Lipschitz constant.
-In practice, we also include the upper bound on the Lipschitz of the batch normalization because we can compute it very efficiently (see C.4.1 of ~\citealt{tsuzuku2018lipschitz}) but we omit the last fully connected layer.
+In practice, we also include the upper bound on the Lipschitz of the batch normalization because we can compute it very efficiently (see C.4.1 of ~\citet{tsuzuku2018lipschitz}) but we omit the last fully connected layer.
 
 In this section, we compare the robustness of Adversarial Training~\cite{goodfellow2014explaining, madry2018towards} against the combination of Adversarial Training and Lipschitz regularization.
-To regularize the Lipschitz constant of the network, we use the objective function defined in Equation~\ref{equation:obj_function}.
-We train Lipschitz regularized neural networks with LipBound (Theorem~\ref{theorem:theorem5}) implemented with PolyGrid (Algorithm~\ref{algorithm:ch5-polygrid}) (AT+LipBound) with $S = 10$ or with the specific power method for convolutions introduced by~\citet{farnia2018generalizable} with 10 iterations (AT+PM).
+To regularize the Lipschitz constant of the network, we use the objective function defined in Equation~\ref{equation:ch5-obj_function}.
+We train Lipschitz regularized neural networks with LipBound (see~\Cref{theorem:ch5-bound_max_sv_convolution}) implemented with PolyGrid (see~\Cref{algorithm:ch5-polygrid}) (AT+LipBound) with $S = 10$ or with the specific power method for convolutions introduced by~\citet{farnia2018generalizable} with 10 iterations (AT+PM).
 
 Table~\ref{table:cifar_robustness} shows the gain in robustness against strong adversarial attacks across different datasets.
 We can observe that both AT+LipBound and AT+PM offer a better defense against adversarial attacks and that AT+LipBound offers a further improvement over the Power Method.
 The Figure~\ref{figure:dist_jacobian_attacks_iter} (c) and (d) shows the Accuracy under attack with different number of iterations.
 Table~\ref{table:imagenet_robustness} presents our results on the ImageNet Dataset.
 First, we can observe that the networks AT+LipReg offers a better generalization than with standalone Adversarial Training.
-Secondly, we can observe the gain in robustness against strong adversarial attacks. Network trained with Lipschitz regularization and Adversarial Training offer a consistent increase in robustness across $\ell_\infty$ and $\ell_2$ attacks with different $\epsilon$ value. We can also note that increasing the regularization lead to an increase in generalization and robustness.
+Secondly, we can observe the gain in robustness against strong adversarial attacks.
+Network trained with Lipschitz regularization and Adversarial Training offer a consistent increase in robustness across $\ell_\infty$ and $\ell_2$ attacks with different $\epsilon$ value.
+We can also note that increasing the regularization lead to an increase in generalization and robustness.
 
 Finally, we also conducted an experiment to study the impact of the regularization on the gradients of the whole network by measuring the norm of the Jacobian matrix, averaged over the inputs from the test set.
 The results of this experiment are presented in Figure~\ref{figure:dist_jacobian_attacks_iter}(a) and show more concentrated gradients with  Lipschitz regularization, which is the expected effect.
@@ -936,7 +863,9 @@ Hence they offer an increased robustness to adversarial attacks as demonstrated 
 
 \paragraph{Experimental Settings CIFAR10/100 Dataset.}
 For all our experiments, we use the Wide ResNet architecture introduced by~\citet{zagoruyko2016wide} to train our classifiers.
-We use Wide Resnet networks with 28 layers and a width factor of 10. We train our networks for 200 epochs with a batch size of $200$. We use Stochastic Gradient Descent with a momentum of $0.9$, an initial learning rate of $0.1$ with exponential decay of 0.1 (MultiStepLR gamma = 0.1) after the epochs $60$, $120$ and $160$.
+We use Wide Resnet networks with 28 layers and a width factor of 10.
+We train our networks for 200 epochs with a batch size of $200$.
+We use Stochastic Gradient Descent with a momentum of $0.9$, an initial learning rate of $0.1$ with exponential decay of 0.1 (MultiStepLR gamma = 0.1) after the epochs $60$, $120$ and $160$.
 For Adversarial Training ~\cite{madry2018towards}, we use Projected Gradient Descent with an $\epsilon = 8/255 (\approx 0.031)$, a step size of $\epsilon/5 (\approx 0.0062)$ and 10 iterations, we use a random initialization but run the attack only once.
 To evaluate the robustness of our classifiers, we rigorously followed the experimental protocol proposed by~\citet{tramer2020adaptive} and~\citet{carlini2019evaluating}.
 More precisely, as an $\ell_\infty$ attack, we use PGD with the same parameters ($\epsilon = 8/255$, a step size of $\epsilon/5$) but we increase the number of iterations up to 200 with 10 restarts.
@@ -963,6 +892,8 @@ We have used $1$, $2$ and $3$ as bounds for the $\ell_2$ perturbation.
 \section{Discussion}
 \label{section:ch5-dicussion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\todotext{update here}
 
 In this paper, we introduced a new bound on the Lipschitz constant of convolutional layers that is both accurate and efficient to compute.
 We used this bound to regularize the Lipschitz constant of neural networks and demonstrated its computational efficiency in training large neural networks with a regularized Lipschitz constant.
