@@ -8,7 +8,7 @@
 The regularization of the Lipschitz constant of neural networks has seen a growing interest in the training of neural networks.
 Indeed, numerous results have shown that neural networks with a low Lipschitz constant exhibit better generalization~\cite{bartlett2017spectrally} and higher robustness to adversarial attacks~\cite{szegedy2013intriguing,tsuzuku2018lipschitz, farnia2018generalizable}.
 
-The Lipschitz constant, defined in~\Cref{defintion:ch2-lipschitz_constant}, is a measure of the stability of the network
+The Lipschitz constant, defined in~\Cref{definition:ch2-lipschitz_constant}, is a measure of the stability of the network
 If the Lipschitz constant is high, the network will tend to be more sensitive to input perturbation.
 Intuitively, the Lipschitz constant $k$ of a function $f$ is a bound on the slope of $f$.
 Meaning, if the input changes by $\epsilon$, the output changes by at most $k\epsilon$.
@@ -130,7 +130,7 @@ The global Lipschitz of a neural network can easily be upper bound by the produc
 
 \begin{remark}
   The Lipschitz constant of a layer $\layer_{\Wmat, \bvec}^\rho$ (with a 1-Lipschitz activation function) is equal to the spectral norm of the matrix $\Wmat$ (largest singular value).
-  Let $\layer_{\Wmat, \bvec}^\rho: \Rbb^n \rightarrow \Rbb^m$ such that $\layer_{\Wmat, \bvec}^\rho = \rho(\Wmat \xvec + \bvec)$ then by definition of the Lipschitz constant (\Cref{definition:ch3-lipschitz_constant}) and of the operator norm, we have:
+  Let $\layer_{\Wmat, \bvec}^\rho: \Rbb^n \rightarrow \Rbb^m$ such that $\layer_{\Wmat, \bvec}^\rho = \rho(\Wmat \xvec + \bvec)$ then by definition of the Lipschitz constant (see \Cref{definition:ch2-lipschitz_constant}) and of the operator norm, we have:
   \begin{equation}
     \lip{\layer_{\Wmat, \bvec}^\rho} = \sup_{\substack{\xvec \in \Rbb^n \\ \xvec \neq 0}} \frac{\norm{\Wmat \xvec}_2}{\norm{\xvec}_2} = \norm{\Wmat}_2
   \end{equation}
@@ -315,8 +315,8 @@ To compute the singular values of doubly-block circulant matrices, \citet{sedghi
 \end{theorem}
 
 \noindent
-To prove \Cref{theorem:ch3-singular_values_doubly_block_circulant}, \citet{sedghi2018singular} used \Cref{theorem:ch2-diaginalization_doubly_block_circulant_matrix} presented in \Cref{chapter:ch2-background}.
-The main advantage of this approach is that the singular values of a doubly-block circulant matrix can be computed with the Fast Fourier Transform algorithm (see \Cref{subsection:ch2-circulant_matrices}) which offers a reduced complexity compared to classical approaches for computing the singular values of a matrix. 
+To prove \Cref{theorem:ch3-singular_values_doubly_block_circulant}, \citet{sedghi2018singular} used used the diagonalization of doubly-block circulant matrices (see~\Cref{chapter:ch2-background}, \Cref{equation:ch2-diagonalization_doubly_block_circulant_matrix}).
+The main advantage of this approach is that the singular values of a doubly-block circulant matrix can be computed with the Fast Fourier Transform algorithm (see \Cref{subsection:ch2-toeplitz_and_circulant_matrices}) which offers a reduced complexity compared to classical approaches for computing the singular values of a matrix. 
 However, this approach exhibits several limitations.
 First, this method results in a loose approximation of the maximal singular value of a convolutional layer which does not use the circulant padding which is often the case in practical settings.
 Also, the complexity of their algorithm is dependent on the size of the input which can be high for large datasets.
@@ -348,7 +348,7 @@ Finally, for multi-channel convolution, their method requires the computation of
 
 
 In the same vein, \citet{singla2019bounding} have used the properties of convolutions to devise several bounds on the singular values of convolution layers.
-Recall from \Cref{subsection:ch2-the_structure_of_the_convolution_operator} that a convolution kernel is a 4 dimensional tensor of size $\cout \times \cin \times k_1 \times k_2$.
+Recall from \Cref{subsubsection:ch2-relation_with_the_convolution_operator} that a convolution kernel is a 4 dimensional tensor of size $\cout \times \cin \times k_1 \times k_2$.
 \citet{singla2019bounding} have demonstrated that the largest singular value of a convolution layer $\layer_\Kmat$ parameterized by a kernel $\Kmat$ can be upper-bounded as follows:
 
 \begin{theorem}[Reformulation of Theorem 1 from \citet{singla2019bounding}]
