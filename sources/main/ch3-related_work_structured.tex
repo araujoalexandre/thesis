@@ -46,7 +46,7 @@ Although interesting for deployment purposes, this approach still requires to tr
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.80\textwidth]{figures/main/ch3-related_work/scalecompare.pdf}
-  \caption{Illustration of the scaling of the EfficientNet architecture \cite{tan2019efficientnet}.}
+  \caption{Illustration of the scaling of the EfficientNet architecture.}
   \label{figure:p1-ch3-illustration_efficientnet}
 \end{figure}
 
@@ -220,7 +220,7 @@ Despite the reduction of expressivity, \citet{cheng2015exploration} demonstrated
 
 
 \citet{moczulski2016acdc} built upon the work of~\citet{cheng2015exploration} and \citet{huhtanen2015factoring} and introduced two \emph{Structured Efficient Linear Layers} (SELL) based on the Fourier and cosine transforms.
-First, by observing that the \DC transform cannot express an arbitrary linear operator they proposed to apply the result of \citet{huhtanen2015factoring} which states that almost all matrices can be decomposed as a product of \DC transforms.
+First, by observing that the DC transform cannot express an arbitrary linear operator they proposed to apply the result of \citet{huhtanen2015factoring} which states that almost all matrices can be decomposed as a product of DC transforms.
 \begin{theorem}[Reformulation from \citet{huhtanen2015factoring}] \label{theorem:ch3-huhtanen}
   For every matrix $\Mmat \in \Cnn$, for any $\epsilon > 0$, there exists a sequence of matrices $\{ \Amat^{(i)} \}_{i \in [2n-1]}$ where $\Amat^{(i)}$ is a circulant matrix if $i$ is odd, and a diagonal matrix otherwise, such that $\norm{\Amat^{(1)} \ldots \Amat^{(2n-1)} - \Mmat} < \epsilon$.
 \end{theorem}
