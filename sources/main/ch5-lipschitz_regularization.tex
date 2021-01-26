@@ -50,12 +50,12 @@ In order to devise a bound on the Lipschitz constant of a convolution layer as u
 Doubly-block Toeplitz matrices inherits the properties of Toeplitz and block Toeplitz matrices.
 Recall that Toeplitz and block Toeplitz matrices do not have a closed-form expression of their eigenvalues as their circulant counterpart.
 However, we can represent Toeplitz and block Toeplitz matrices with a 2$\pi$-periodic function which can describe very precisely the spectrum of the matrices. 
-Let $\{a_h\}_{h \in \Iset}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n\times n}$ and let $\{\Bmat^{(h)}\}_{h \in \Iset}$ be the sequence of $m\times m$ blocks of the block Toeplitz matrix $\Bmat$.
-The matrices are therefore denoted $\Amat = \leftmat a_{j-i} \rightmat_{i,j \in \Iset}$ and $\Bmat = \leftmat \Bmat^{(j-i)} \rightmat_{i,j \in \Iset}$ where $\Iset = \left\{ -n+1, \cdots, n-1 \right\}$.
-We can then defined their generating functions $f(\omega) = \sum_{h \in \Iset} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Iset} \Bmat^{(h)} e^{\ci h \omega}$ which are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Iset}$ and $\{\Bmat^{(h)}\}_{h \in \Iset}$, with $\omega \in \Rbb$.
+Let $\{a_h\}_{h \in \Iset(n)}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n\times n}$ and let $\{\Bmat^{(h)}\}_{h \in \Iset(n)}$ be the sequence of $m\times m$ blocks of the block Toeplitz matrix $\Bmat$.
+The matrices are therefore denoted $\Amat = \leftmat a_{j-i} \rightmat_{i,j \in \Iset(n)}$ and $\Bmat = \leftmat \Bmat^{(j-i)} \rightmat_{i,j \in \Iset(n)}$ where $\Iset(n) = \left\{ -n+1, \cdots, n-1 \right\}$.
+We can then defined their generating functions $f(\omega) = \sum_{h \in \Iset(n)} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Iset(n)} \Bmat^{(h)} e^{\ci h \omega}$ which are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Iset(n)}$ and $\{\Bmat^{(h)}\}_{h \in \Iset(n)}$, with $\omega \in \Rbb$.
 From there, similarly to the work done by~\citet{grenander1958toeplitz}, we define an operator $\Tmat$ mapping integrable functions to matrices:
 \begin{equation} \label{equation:expression_toeplitz_matrix}
-  \Tmat(g)  \triangleq\leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \Iset_0} \enspace.
+  \Tmat(g)  \triangleq\leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \Iset_0(n)} \enspace.
 \end{equation}
 Therefore, by construction, we have $\Tmat(f) = \Amat$ and $\Tmat(F) = \Bmat$.
 
@@ -82,7 +82,7 @@ Now, we can state two known theorems which upper bound the largest singular valu
 
 
 
-% The complex-valued function $f(\omega) = \sum_{h \in \Iset} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Iset} \Bmat_h e^{\ci h \omega}$ are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Iset}$ and $\{\Bmat_h\}_{h \in \Iset}$, with $\omega \in \Rbb$.
+% The complex-valued function $f(\omega) = \sum_{h \in \Iset(n)} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Iset(n)} \Bmat_h e^{\ci h \omega}$ are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Iset(n)}$ and $\{\Bmat_h\}_{h \in \Iset(n)}$, with $\omega \in \Rbb$.
 % From these two functions, one can recover these two sequences using the standard Fourier transform:
 % \begin{equation}
 %   a_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} f(\omega) d\omega \quad \quad \Bmat_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} F(\omega) d\omega .
@@ -96,7 +96,7 @@ Now, we can state two known theorems which upper bound the largest singular valu
 
 
 % A Toeplitz matrix (respectively a block Toeplitz matrix) is a matrix in which each scalar (respectively block) is repeated identically along diagonals.
-% An $n \times n$ Toeplitz matrix $\Amat$ is fully determined by a two-sided sequence of scalars: $\{a_h\}_{h \in \Iset}$, whereas an $nm\times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat^{(h)}\}_{h \in \Iset}$, where $\Iset = \{-n+1,\dots, n-1\}$ and where each block $\Bmat_h$ is an $m \times m$ matrix.
+% An $n \times n$ Toeplitz matrix $\Amat$ is fully determined by a two-sided sequence of scalars: $\{a_h\}_{h \in \Iset(n)}$, whereas an $nm\times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat^{(h)}\}_{h \in \Iset(n)}$, where $\Iset(n) = \{-n+1,\dots, n-1\}$ and where each block $\Bmat_h$ is an $m \times m$ matrix.
 % \begin{equation*}
 %   \Amat = \leftmatrix
 %     a_0      & a_{1}  & \cdots & a_{n-1} \\ \vspace{0.1cm}
@@ -112,18 +112,17 @@ Now, we can state two known theorems which upper bound the largest singular valu
 %   \rightmatrix.
 % \end{equation*}
 % Finally, a doubly-block Toeplitz matrix is a block Toeplitz matrix in which each block is itself a Toeplitz matrix.
-% In the remainder, we will use the standard notation $\leftmat\ \cdot\ \rightmat_{i,j \in \Iset}$ to construct (block) matrices.
-% For example, $\Amat = \leftmat a_{j-i} \rightmat_{i,j \in \Iset}$ and $\Bmat = \leftmat \Bmat^{(j-i)} \rightmat_{i,j \in \Iset}$.
+% In the remainder, we will use the standard notation $\leftmat\ \cdot\ \rightmat_{i,j \in \Iset(n)}$ to construct (block) matrices.
+% For example, $\Amat = \leftmat a_{j-i} \rightmat_{i,j \in \Iset(n)}$ and $\Bmat = \leftmat \Bmat^{(j-i)} \rightmat_{i,j \in \Iset(n)}$.
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsection{Bound on the Singular Values of Toeplitz and Block Toeplitz Matrices}
 % \label{subsection:ch5-bound_on_the_singular_value_of_toeplitz_and_block_toeplitz_matrices}
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% \todotext{update here}
 % A standard tool for manipulating (block) Toeplitz matrices is the use of Fourier analysis.
-% Let $\{a_h\}_{h \in \Iset}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n\times n}$ and let $\{\Bmat_h\}_{h \in \Iset}$ be the sequence of $m\times m$ blocks of the block Toeplitz matrix $\Bmat$.
-% The complex-valued function $f(\omega) = \sum_{h \in \Iset} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Iset} \Bmat_h e^{\ci h \omega}$ are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Iset}$ and $\{\Bmat_h\}_{h \in \Iset}$, with $\omega \in \Rbb$.
+% Let $\{a_h\}_{h \in \Iset(n)}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n\times n}$ and let $\{\Bmat_h\}_{h \in \Iset(n)}$ be the sequence of $m\times m$ blocks of the block Toeplitz matrix $\Bmat$.
+% The complex-valued function $f(\omega) = \sum_{h \in \Iset(n)} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Iset(n)} \Bmat_h e^{\ci h \omega}$ are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Iset(n)}$ and $\{\Bmat_h\}_{h \in \Iset(n)}$, with $\omega \in \Rbb$.
 % From these two functions, one can recover these two sequences using the standard Fourier transform:
 % \begin{equation}
 %     a_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} f(\omega) d\omega \quad \quad \Bmat_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} F(\omega) d\omega .
@@ -131,11 +130,11 @@ Now, we can state two known theorems which upper bound the largest singular valu
 %
 % From there, similarly to the work done by~\citet{gray2006toeplitz,gutierrez2012block}, we can define an operator $\Tmat$ mapping integrable functions to matrices:
 % \begin{equation} \label{equation:expression_toeplitz_matrix}
-%   \Tmat(g)  \triangleq\leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \Iset_0} \enspace.
+%   \Tmat(g)  \triangleq\leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \Iset_0(n)} \enspace.
 % \end{equation}
 %
-% Note that if $f$ is the inverse Fourier transform of $\{a_h\}_{h \in \Iset}$, then $\Tmat(f)$ is equal to $\Amat$.
-% Also, if $F$ is the inverse Fourier transform of $\{\Bmat_h\}_{h \in \Iset}$ as defined above, then the integral in \Cref{equation:expression_toeplitz_matrix} is matrix-valued, and thus $\Tmat(F) \in \Rbb^{mn \times mn}$ is the block matrix $\Bmat$.
+% Note that if $f$ is the inverse Fourier transform of $\{a_h\}_{h \in \Iset(n)}$, then $\Tmat(f)$ is equal to $\Amat$.
+% Also, if $F$ is the inverse Fourier transform of $\{\Bmat_h\}_{h \in \Iset(n)}$ as defined above, then the integral in \Cref{equation:expression_toeplitz_matrix} is matrix-valued, and thus $\Tmat(F) \in \Rbb^{mn \times mn}$ is the block matrix $\Bmat$.
 %
 % Now, we can state two known theorems which upper bound the maximal singular value of Toeplitz and block Toeplitz matrices with respect to their generating functions.
 % In the rest of the paper, we refer to $\sigma_1(\ \cdot\ )$ as the maximal singular value. 
@@ -167,11 +166,10 @@ We extend the reasoning from Toeplitz and block Toeplitz matrices to doubly-bloc
 A doubly-block Toeplitz matrix can be generated by a function $f: \Rbb^2 \rightarrow \Cbb$ using the 2-dimensional inverse Fourier transform.
 For this purpose, we define an operator $\Dmat$ which maps a function $f: \Rbb^2 \rightarrow \Cbb$ to a doubly-block Toeplitz matrix of size $nm \times nm$.
 For the sake of clarity, the dependence of $\Dmat(f)$  on $m$ and $n$ is omitted.
-Let $\Dmat(f) = \leftmat \Dmat_{i,j}(f)\rightmat_{i,j \in \Iset_0}$ where $\Dmat_{i,j}$ is defined as:
+Let $\Dmat(f) = \leftmat \Dmat_{i,j}(f)\rightmat_{i,j \in \Iset_0(n)}$ where $\Dmat_{i,j}$ is defined as:
 \begin{equation} \label{equation:doubly_block_toeplitz_operator}
-  \Dmat_{i,j}(f) = \leftmat \frac{1}{4\pi^{2}} \int_{[0,2\pi]^{2}} e^{- \ci \left((i-j)\omega_{1}+(k-l)\omega_{2}\right)}f(\omega_{1},\omega_{2})\,d(\omega_{1},\omega_{2}) \rightmat_{k,l \in \Iset_0'} \enspace.
+  \Dmat_{i,j}(f) = \leftmat \frac{1}{4\pi^{2}} \int_{[0,2\pi]^{2}} e^{- \ci \left((i-j)\omega_{1}+(k-l)\omega_{2}\right)}f(\omega_{1},\omega_{2})\,d(\omega_{1},\omega_{2}) \rightmat_{k,l \in \Iset_0(m)} \enspace.
 \end{equation}
-where $\Iset_0 = \{0, \dots, n-1 \}$ and $\Iset_0' = \{0, \dots, m-1 \}$.
 
 We are now able to combine \Cref{theorem:teoplitz_sup_singular,theorem:block_teoplitz_sup_singular} to bound the largest singular value of doubly-block Toeplitz matrices with respect to their generating functions. 
 Note that in the following, we only consider generating functions as trigonometric polynomials with real coefficients therefore the matrices generated by $\Dmat(f)$ are real. We can now combine \Cref{theorem:teoplitz_sup_singular,theorem:block_teoplitz_sup_singular} to bound the largest singular value of a doubly-block Toeplitz Matrix. 
@@ -183,9 +181,9 @@ Note that in the following, we only consider generating functions as trigonometr
   \end{align}
   where the function $f: \Rbb^2 \rightarrow \Cbb$, is a multivariate trigonometric polynomial of the form:
   \begin{equation}\label{equation:muli_variate_poly_on_M}
-      f(\omega_1, \omega_2) \triangleq \sum_{h_1 \in \Iset} \sum_{h_2 \in \Iset'} d_{h_1, h_2} e^{\ci (h_1 \omega_1 + h_2 \omega_2)},
+    f(\omega_1, \omega_2) \triangleq \sum_{h_1 \in \Iset(n)} \sum_{h_2 \in \Iset(m)} d_{h_1, h_2} e^{\ci (h_1 \omega_1 + h_2 \omega_2)},
   \end{equation}
-  where $d_{h_{1},h_{2}}$ is the ${h_2}^\textrm{th}$ scalar of the ${h_1}^\textrm{th}$ block of the doubly-Toeplitz matrix $\Dmat(f)$, and where $\Iset' = \{-m+1, \dots, m-1\}$.
+  where $d_{h_{1},h_{2}}$ is the ${h_2}^\textrm{th}$ scalar of the ${h_1}^\textrm{th}$ block of the doubly-Toeplitz matrix $\Dmat(f)$.
 \end{maintheorem}
 
 
@@ -278,10 +276,10 @@ Let $\Amat$ and $\Bmat$ be Hermitian positive semi-definite matrices. If $\Amat 
 Before proving \Cref{theorem:bound_sv_stacked_dbt}, we generalize the famous Widom identity \cite{widom1976asymptotic} that expresses the relation between Toeplitz and Hankel matrices to doubly-block Toeplitz and Hankel matrices.
 We will need to generalize the doubly-block Toeplitz operator presented in~\Cref{subsection:ch5-bound_on_the_singular_value_of_doubly-block_toeplitz_matrices}.
 
-Let $\Hmat^{\alpha_p} (f) = \leftmat \Hmat^{\alpha_p}_{i,j}(f) \rightmat_{i,j \in \Iset_0}$ where $\Hmat^{\alpha_p}_{i,j}$ is defined as:
+Let $\Hmat^{\alpha_p} (f) = \leftmat \Hmat^{\alpha_p}_{i,j}(f) \rightmat_{i,j \in \Iset_0(n)}$ where $\Hmat^{\alpha_p}_{i,j}$ is defined as:
 \begin{equation}
   \Hmat^{\alpha_p}_{i,j}(f) =\leftmat \frac{1}{4\pi^{2}}\int_{[0,2\pi]^{2}} e^{-\ci \alpha_p(i, j, k, l, \omega_1, \omega_2)}  f(\omega_{1},\omega_{2})\,d(\omega_{1},\omega_{2})
-  \rightmat_{k,l \in \Iset_0} \enspace.
+  \rightmat_{k,l \in \Iset_0(n)} \enspace.
 \end{equation}
 Note that as with the operator $\Dmat(f)$ we only consider generating functions as trigonometric polynomials with real coefficients therefore the matrices generated by $\Hmat(f)$ are real. 
 And as with the operator $\Dmat(f)$, the matrices generated by the operator $\Hmat^{\alpha_p}$ are of size $n^2 \times n^2$. 
@@ -656,7 +654,7 @@ Therefore $\lipbound$ gives an almost exact value of the largest singular value 
     SqueezeNet 1-1 & & 18.26 & 6.65 & & 209.80 &  3.59 & & 11.48 \\
     \bottomrule
   \end{tabular}%
-  \caption{This table shows the efficiency of LipBound computation vs the Power Method with 10 iterations on the full networks.}
+  \caption{Efficiency of LipBound computation \vs the Power Method with 10 iterations on full networks.}
   \label{table:ch5-efficiency_lipbound_full_model}%
 \end{table}%
 
@@ -697,46 +695,96 @@ This demonstrates the scalability of our method.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\begin{figure}[h]
-   \centering
-   \begin{subfigure}[b]{\textwidth}
-     \centering
-     \includegraphics[width=\scalefigure\textwidth]{figures/main/ch5-lipschitz_regularization/jacobian_distribution_v1.pdf}
-     \caption{xxx}
-     \label{figure:ch5-jacobian_distribution_v1}
-   \end{subfigure}
-   \\[2cm]
-   \begin{subfigure}[b]{\textwidth}
-      \centering
-      \includegraphics[width=\scalefigure\textwidth]{figures/main/ch5-lipschitz_regularization/jacobian_distribution_v2.pdf}
-      \caption{xxx}
-      \label{figure:ch5-jacobian_distribution_v2}
-   \end{subfigure}
-   \caption{Figures XXX show the distribution of the norm of the Jacobian matrix w.r.t the CIFAR10 test set from a Wide Resnet trained with different schemes. Although Lipschitz regularization is not a Jacobian regularization, we can observe a clear shift in the distribution. This suggests that our method does not only work layer-wise, but also at the level of the entire network.}
-\end{figure}
 
-\todotext{fix captions: \Cref{figure:ch5-jacobian_distribution_v1} and \Cref{figure:ch5-jacobian_distribution_v2}}
+One promising application of Lipschitz regularization is in the area of adversarial robustness.
+Empirical techniques to improve robustness against adversarial examples such as Adversarial Training only impact the training data,  and often show poor generalization capabilities~\cite{schmidt2018adversarially}.
+\citet{farnia2018generalizable} have shown that the adversarial generalization error depends on the Lipschitz constant of the network, which suggests that the adversarial test error can be improved by applying Lipschitz regularization in addition to adversarial training.
 
+In this section, we illustrate the usefulness of LipBound by training a state-of-the-art Wide ResNet architecture~\citep{zagoruyko2016wide} with Lipschitz regularization and adversarial training.
+Our regularization scheme is inspired by the one used by \citet{yoshida2017spectral} but instead of using the power method, we use our \textbf{PloyGrid} algorithm presented in~\Cref{subsection:ch5-computing_the_maximum_modulus_of_a_trigonometric_polynomial} which efficiently computes an upper bound on the largest singular value of convolutional layers.
 
-\begin{figure}[h]
+We introduce the \textbf{AT+LipReg} loss to combine Adversarial Training and our Lipschitz regularization scheme in which layers with a large Lipschitz constant are penalized.
+We consider a neural network $\mathcal N_\theta : \mathcal X \rightarrow \mathcal Y$ with $\ell$ layers $\phi^{(1)}_{\theta_1}, \dots, \phi^{(\ell)}_{\theta_\ell}$ where $\theta^{(1)}, \dots, \theta^{(\ell -1)}$ are the kernels of the first $\ell - 1$ convolutional layers and $\theta_\ell$ is the weight matrix of the last fully-connected  layer $\phi^{(\ell)}_{\theta_\ell}$.
+Given a distribution $\mathcal D$ over $\mathcal X \times \mathcal Y$, we can train the parameters $\theta$ of the network by minimizing the AT+LipReg loss as follows:
+\begin{equation} \label{equation:ch5-obj_function}
+  \min_{\theta} \Ebb_{\xvec,y \sim \Dset} \left[ L(N_\theta(\xvec + \adv^{\text{adv}}_\Omega(\xvec)), y) + R(\Omega) \right]
+\end{equation}
+where $L$ is the cross-entropy loss function, $\adv^{\text{adv}}_\Omega(\xvec)$ is an adversarial perturbation following the loss maximization strategy presented in~\Cref{subsubsection:ch2-adversarial_attacks} and the regularization function $R$ is defined as follows:
+\begin{equation}
+  R(\Omega) =  \lambda_1 \underbrace{\sum_{(\Wmat, \bvec) \in \Omega} \left( \norm{\Wmat}_\fro + \norm{\bvec}_2 \right)}_{
+  \text{Tikhonov regularization}} + \lambda_2 \underbrace{\vphantom{\sum_{(\Wmat, \bvec) \in \Omega}} \sum_{i=1}^{\depth-1} \log\left(\lipbound\left(\Wmat^{(i)}\right)\right)}_{\text{Lipschitz regularization}} 
+\end{equation}
+where $\lambda_1$, $\lambda_2$ are two user-defined hyper-parameters.
+Note that regularizing the sum of logs is equivalent to regularizing the product of all the $\lipbound$ which is an upper bound on the global Lipschitz constant.
+In practice, we also include the upper bound on the Lipschitz of the batch normalization because we can compute it very efficiently (see C.4.1 of ~\citet{tsuzuku2018lipschitz}) but we omit the last fully connected layer.
+
+In this section, we compare the robustness of Adversarial Training~\cite{goodfellow2014explaining, madry2018towards} against the combination of Adversarial Training and Lipschitz regularization.
+To regularize the Lipschitz constant of the network, we use the objective function defined in Equation~\ref{equation:ch5-obj_function}.
+We train Lipschitz regularized neural networks with LipBound (see~\Cref{theorem:ch5-bound_max_sv_convolution}) implemented with PolyGrid (see~\Cref{algorithm:ch5-polygrid}) (AT+LipBound) with $S = 10$ or with the specific power method for convolutions introduced by~\citet{farnia2018generalizable} with 10 iterations (AT+PM).
+
+Table~\ref{table:ch5-cifar_robustness} shows the gain in robustness against strong adversarial attacks across different datasets.
+We can observe that both AT+LipBound and AT+PM offer a better defense against adversarial attacks and that AT+LipBound offers a further improvement over the Power Method.
+The \Cref{figure:ch5-attacks_pgd,figure:ch5-attacks_cw} shows the Accuracy under attack with different number of iterations.
+Table~\ref{table:ch5-results_imagenet_dataset} presents our results on the ImageNet Dataset.
+First, we can observe that the networks AT+LipReg offers a better generalization than with standalone Adversarial Training.
+Secondly, we can observe the gain in robustness against strong adversarial attacks.
+Network trained with Lipschitz regularization and Adversarial Training offer a consistent increase in robustness across $\ell_\infty$ and $\ell_2$ attacks with different $\epsilon$ value.
+We can also note that increasing the regularization lead to an increase in generalization and robustness.
+
+\afterpage{
+\begin{figure}[p!]
    \centering
    \begin{subfigure}[b]{\textwidth}
      \centering
      \includegraphics[width=\scalefigure\textwidth]{figures/main/ch5-lipschitz_regularization/attacks_iter_pgd.pdf}
-     \caption{xxx}
+     \caption{Robustness against $\ell_\infty$ attacks for different classifiers trained with Adversarial Training given the number of iterations.}
      \label{figure:ch5-attacks_pgd}
    \end{subfigure}
-   \\[2cm]
+   ~\\[1cm]
+   \begin{subfigure}[b]{\textwidth}
+     \centering
+     \includegraphics[width=\scalefigure\textwidth]{figures/main/ch5-lipschitz_regularization/attacks_iter_cw.pdf}
+     \caption{Robustness against $\ell_\infty$ attacks for different classifiers trained with Adversarial Training given the number of iterations.}
+     \label{figure:ch5-attacks_cw}
+   \end{subfigure}
+   ~\\[1cm]
+   \caption{Accuracy under attack on CIFAR10 test set with $\ell_\infty$ and $\ell_2$ attacks for several classifiers trained with Adversarial Training given the number of iterations.}
+\end{figure}
+\clearpage
+}
+
+
+\afterpage{
+\begin{figure}[p!]
+   \centering
+   \begin{subfigure}[b]{\textwidth}
+     \centering
+     \includegraphics[width=\scalefigure\textwidth]{figures/main/ch5-lipschitz_regularization/jacobian_distribution_v1.pdf}
+     \caption{Comparaison of Jacobian distribution of the baseline model against the model trainined with Lispchitz regularization.}
+     \label{figure:ch5-jacobian_distribution_v1}
+   \end{subfigure}
+   ~\\[1cm]
    \begin{subfigure}[b]{\textwidth}
       \centering
-      \includegraphics[width=\scalefigure\textwidth]{figures/main/ch5-lipschitz_regularization/attacks_iter_cw.pdf}
-      \caption{xxx}
-      \label{figure:ch5-attacks_cw}
+      \includegraphics[width=\scalefigure\textwidth]{figures/main/ch5-lipschitz_regularization/jacobian_distribution_v2.pdf}
+      \caption{Comparaison of Jacobian distribution of the model trained with Adversarrial training against the model trainined with Adversarrial training and Lispchitz regularization.}
+      \label{figure:ch5-jacobian_distribution_v2}
    \end{subfigure}
-   \caption{Figures xxx show the Accuracy under attack on CIFAR10 test set with PGD-$\ell_\infty$ and C\&W-$\ell_2$ attacks for several classifiers trained with Adversarial Training given the number of iterations.}
+   ~\\[1cm]
+   \caption{Distribution of the norm of the Jacobian matrix with respect to the CIFAR10 test set from a Wide Resnet trained with different schemes.} 
 \end{figure}
+\clearpage
+}
 
-\todotext{fix captions: \Cref{figure:ch5-attacks_pgd} and \Cref{figure:ch5-attacks_cw}}
+
+Finally, we also conducted an experiment to study the impact of the regularization on the gradients of the whole network by measuring the norm of the Jacobian matrix, averaged over the inputs from the test set.
+The results of this experiment are presented in~\Cref{figure:ch5-jacobian_distribution_v1} and show more concentrated gradients with  Lipschitz regularization, which is the expected effect.
+Although Lipschitz regularization is not a Jacobian regularization, we can observe a clear shift in the distribution.
+This suggests that our method does not only work layer-wise, but also at the level of the entire network.
+A second experiment, using Adversarial Training, presented in~\Cref{figure:ch5-jacobian_distribution_v2} demonstrates that the effect is even stronger when the two techniques are combined together.
+This corroborates the work by~\citet{farnia2018generalizable}.
+It also demonstrates that Lipschitz regularization and Adversarial Training (or other Jacobian regularization techniques) are complementary.
+Hence they offer an increased robustness to adversarial attacks as demonstrated above.
 
 
 \begin{table}[t]
@@ -791,8 +839,8 @@ This demonstrates the scalability of our method.
     \caption{Results on CIFAR100 dataset}
     \label{subfigure:ch5-results_cifar100_data}
   \end{subfigure}
-  \caption{This table shows the Accuracy under $\ell_2$ and $\ell_\infty$ attacks of CIFAR10/100 datasets. We compare vanilla Adversarial Training with the combination of Lipschitz regularization and Adversarial Training. We also compare the effectiveness of the power method by~\citet{farnia2018generalizable} and $\lipbound$. The parameters $\lambda_2$ (Eq.~\ref{equation:ch5-obj_function}) is equal to $0.008$ for AT+PM and AT+LipReg. It has been chosen from a grid search among 10 values. The attacks below are computed with 200 iterations. }
-  \label{table:cifar_robustness}%
+  \caption{Accuracy under $\ell_2$ and $\ell_\infty$ attacks of CIFAR10/100 datasets. We compare vanilla Adversarial Training with the combination of Lipschitz regularization and Adversarial Training. We also compare the effectiveness of the power method by~\citet{farnia2018generalizable} and $\lipbound$. We fix the parameter $\lambda_2$ from \Cref{equation:ch5-obj_function}) to $0.008$ for AT+PM and AT+LipReg. It has been chosen from a grid search among 10 values. The attacks are computed with 200 iterations. }
+  \label{table:ch5-cifar_robustness}%
 \end{table}%
 
 
@@ -806,7 +854,7 @@ This demonstrates the scalability of our method.
     \cmidrule{4-5}\cmidrule{7-9} 
     &  &  & \multicolumn{1}{c}{0.02} & \multicolumn{1}{c}{0.031} &   & \multicolumn{1}{c}{1.00} & \multicolumn{1}{c}{2.00} & \multicolumn{1}{c}{3.00} \\
     \midrule
-    \citeauthor{he2016deep} & \textbf{0.782} & & 0.000 & 0.000 & & 0.000 & 0.000 & 0.000 \\
+    \textbf{Baseline} \cite{he2016deep} & \textbf{0.782} & & 0.000 & 0.000 & & 0.000 & 0.000 & 0.000 \\
     \textbf{AT} & 0.509 &   & 0.251 & 0.118 &   & 0.307 & 0.168 & 0.099 \\
     \textbf{AT+LipReg} ($\lambda_2 = 0.0006$) & \textbf{0.515} &   & \textbf{0.255} & \textbf{0.121} &   & \textbf{0.316} & \textbf{0.177} & \textbf{0.105} \\
     \textbf{AT+LipReg} ($\lambda_2 = 0.0010$) & \textbf{0.519} &   & \textbf{0.259} & \textbf{0.123} &   & \textbf{0.338} & \textbf{0.204} & \textbf{0.129} \\
@@ -818,48 +866,8 @@ This demonstrates the scalability of our method.
 \end{table}%
 
 
-One promising application of Lipschitz regularization is in the area of adversarial robustness.
-Empirical techniques to improve robustness against adversarial examples such as Adversarial Training only impact the training data,  and often show poor generalization capabilities~\cite{schmidt2018adversarially}.
-\citet{farnia2018generalizable} have shown that the adversarial generalization error depends on the Lipschitz constant of the network, which suggests that the adversarial test error can be improved by applying Lipschitz regularization in addition to adversarial training.
 
-In this section, we illustrate the usefulness of LipBound by training a state-of-the-art Wide ResNet architecture~\citep{zagoruyko2016wide} with Lipschitz regularization and adversarial training.
-Our regularization scheme is inspired by the one used by \citet{yoshida2017spectral} but instead of using the power method, we use our \textbf{PloyGrid} algorithm presented in~\Cref{subsection:ch5-computing_the_maximum_modulus_of_a_trigonometric_polynomial} which efficiently computes an upper bound on the largest singular value of convolutional layers.
 
-We introduce the \textbf{AT+LipReg} loss to combine Adversarial Training and our Lipschitz regularization scheme in which layers with a large Lipschitz constant are penalized.
-We consider a neural network $\mathcal N_\theta : \mathcal X \rightarrow \mathcal Y$ with $\ell$ layers $\phi^{(1)}_{\theta_1}, \dots, \phi^{(\ell)}_{\theta_\ell}$ where $\theta^{(1)}, \dots, \theta^{(\ell -1)}$ are the kernels of the first $\ell - 1$ convolutional layers and $\theta_\ell$ is the weight matrix of the last fully-connected  layer $\phi^{(\ell)}_{\theta_\ell}$.
-Given a distribution $\mathcal D$ over $\mathcal X \times \mathcal Y$, we can train the parameters $\theta$ of the network by minimizing the AT+LipReg loss as follows:
-\begin{equation} \label{equation:ch5-obj_function}
-  \min_{\theta} \Ebb_{\xvec,y \sim \Dset} \left[ L(N_\theta(\xvec + \adv^{\text{adv}}_\Omega(\xvec)), y) + R(\Omega) \right]
-\end{equation}
-where $L$ is the cross-entropy loss function, $\adv^{\text{adv}}_\Omega(\xvec)$ is an adversarial perturbation following the loss maximization strategy presented in~\Cref{subsubsection:ch2-adversarial_attacks} and the regularization function $R$ is defined as follows:
-\begin{equation}
-  R(\Omega) =  \lambda_1 \underbrace{\sum_{(\Wmat, \bvec) \in \Omega} \left( \norm{\Wmat}_\fro + \norm{\bvec}_2 \right)}_{
-  \text{Tikhonov regularization}} + \lambda_2 \underbrace{\vphantom{\sum_{(\Wmat, \bvec) \in \Omega}} \sum_{i=1}^{\depth-1} \log\left(\lipbound\left(\Wmat^{(i)}\right)\right)}_{\text{Lipschitz regularization}} 
-\end{equation}
-where $\lambda_1$, $\lambda_2$ are two user-defined hyper-parameters.
-Note that regularizing the sum of logs is equivalent to regularizing the product of all the $\lipbound$ which is an upper bound on the global Lipschitz constant.
-In practice, we also include the upper bound on the Lipschitz of the batch normalization because we can compute it very efficiently (see C.4.1 of ~\citet{tsuzuku2018lipschitz}) but we omit the last fully connected layer.
-
-In this section, we compare the robustness of Adversarial Training~\cite{goodfellow2014explaining, madry2018towards} against the combination of Adversarial Training and Lipschitz regularization.
-To regularize the Lipschitz constant of the network, we use the objective function defined in Equation~\ref{equation:ch5-obj_function}.
-We train Lipschitz regularized neural networks with LipBound (see~\Cref{theorem:ch5-bound_max_sv_convolution}) implemented with PolyGrid (see~\Cref{algorithm:ch5-polygrid}) (AT+LipBound) with $S = 10$ or with the specific power method for convolutions introduced by~\citet{farnia2018generalizable} with 10 iterations (AT+PM).
-
-Table~\ref{table:cifar_robustness} shows the gain in robustness against strong adversarial attacks across different datasets.
-We can observe that both AT+LipBound and AT+PM offer a better defense against adversarial attacks and that AT+LipBound offers a further improvement over the Power Method.
-The Figure~\ref{figure:dist_jacobian_attacks_iter} (c) and (d) shows the Accuracy under attack with different number of iterations.
-Table~\ref{table:imagenet_robustness} presents our results on the ImageNet Dataset.
-First, we can observe that the networks AT+LipReg offers a better generalization than with standalone Adversarial Training.
-Secondly, we can observe the gain in robustness against strong adversarial attacks.
-Network trained with Lipschitz regularization and Adversarial Training offer a consistent increase in robustness across $\ell_\infty$ and $\ell_2$ attacks with different $\epsilon$ value.
-We can also note that increasing the regularization lead to an increase in generalization and robustness.
-
-Finally, we also conducted an experiment to study the impact of the regularization on the gradients of the whole network by measuring the norm of the Jacobian matrix, averaged over the inputs from the test set.
-The results of this experiment are presented in Figure~\ref{figure:dist_jacobian_attacks_iter}(a) and show more concentrated gradients with  Lipschitz regularization, which is the expected effect.
-This suggests that our method does not only work layer-wise, but also at the level of the entire network.
-A second experiment, using Adversarial Training, presented in Figure~\ref{figure:dist_jacobian_attacks_iter}(b) demonstrates that the effect is even stronger when the two techniques are combined together.
-This corroborates the work by~\citet{farnia2018generalizable}.
-It also demonstrates that Lipschitz regularization and Adversarial Training (or other Jacobian regularization techniques) are complementary.
-Hence they offer an increased robustness to adversarial attacks as demonstrated above.
 
 \paragraph{Experimental Settings CIFAR10/100 Dataset.}
 For all our experiments, we use the Wide ResNet architecture introduced by~\citet{zagoruyko2016wide} to train our classifiers.
@@ -889,13 +897,11 @@ We have used $1$, $2$ and $3$ as bounds for the $\ell_2$ perturbation.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Discussion}
-\label{section:ch5-dicussion}
+\section{Concluding Remarks}
+\label{section:ch5-concluding_remarks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todotext{update here}
-
-In this paper, we introduced a new bound on the Lipschitz constant of convolutional layers that is both accurate and efficient to compute.
+In this chapter, we introduced a new bound on the Lipschitz constant of convolutional layers that is both accurate and efficient to compute.
 We used this bound to regularize the Lipschitz constant of neural networks and demonstrated its computational efficiency in training large neural networks with a regularized Lipschitz constant.
 As an illustrative example, we combined our bound with adversarial training, and showed that this increases the robustness of the trained networks to  adversarial attacks.
 The scope of our results goes beyond this application and can be used in a wide variety of settings, for example, to stabilize the training of Generative Adversarial Networks (GANs) and invertible networks, or to improve generalization capabilities of classifiers.
