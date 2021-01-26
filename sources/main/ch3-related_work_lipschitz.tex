@@ -316,7 +316,7 @@ To compute the singular values of doubly-block circulant matrices, \citet{sedghi
 
 \noindent
 To prove \Cref{theorem:ch3-singular_values_doubly_block_circulant}, \citet{sedghi2018singular} used used the diagonalization of doubly-block circulant matrices (see~\Cref{chapter:ch2-background}, \Cref{equation:ch2-diagonalization_doubly_block_circulant_matrix}).
-The main advantage of this approach is that the singular values of a doubly-block circulant matrix can be computed with the Fast Fourier Transform algorithm (see \Cref{subsection:ch2-toeplitz_and_circulant_matrices}) which offers a reduced complexity compared to classical approaches for computing the singular values of a matrix. 
+The main advantage of this approach is that the singular values of a doubly-block circulant matrix can be computed with the Fast Fourier Transform algorithm (see \Cref{section:ch2-a_primer_on_circulant_and_toeplitz_matrices}) which offers a reduced complexity compared to classical approaches for computing the singular values of a matrix.
 However, this approach exhibits several limitations.
 First, this method results in a loose approximation of the maximal singular value of a convolutional layer which does not use the circulant padding which is often the case in practical settings.
 Also, the complexity of their algorithm is dependent on the size of the input which can be high for large datasets.
