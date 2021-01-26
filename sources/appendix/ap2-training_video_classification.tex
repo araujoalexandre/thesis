@@ -152,7 +152,7 @@ Building on the matrix decomposition presented in~\Cref{chapter:ch4-diagonal_cir
 \begin{figure}[ht]
   \centering
   \input{figures/appendix/ap2-training_video_classification/fig_baseline}
-  \caption{Diagram of the architecture proposed by~\citet{miech2017learnable} and used for the experiments. The network samples at random video and audio frames from the input. The sample goes through an embedding layer and is reduced with a Fully Connected layer. The results are then concatenated and classified with a Mixture-of-Experts and Context Gating layer.}
+  \caption{Diagram of the architecture proposed by~\citet{miech2017learnable} and used for the experiments. The sample goes through an embedding layer and is reduced with a Fully Connected layer. The results are then concatenated and classified with a Mixture-of-Experts and Context Gating layer.}
   \label{figure:ap2-model_baseline}
 \end{figure}
 
@@ -246,7 +246,7 @@ As such, with $m=1$, the weight matrix of size $1024 \times 8192$ of the video e
 We denote layers in their classic form as \emph{``Dense''} and layers represented with circulant and diagonal factors as \emph{``Compact''}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Leveraging architectural diversity}
+\subsection{Leveraging Architectural Diversity}
 \label{subsection:ap2-leveraging_architectural_diversity}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -260,7 +260,7 @@ For example, the diversity model with a NetVLAD embedding (cluster size of 256) 
 \begin{figure}[ht]
   \centering
   \input{figures/appendix/ap2-training_video_classification/fig_ensemble_with_fc}
-  \caption{This figure shows an evolution of the first architecture from~\Cref{figure:ap2-model_baseline} with several embeddings. This architecture is made to leverage the diversity of an Ensemble in a single model.}
+  \caption{Diagram of architecture with several embeddings devised to leverage the diversity of an Ensemble in a single model.}
   \label{figure:ap2-diverstiy_architecture}
 \end{figure}
 
@@ -273,21 +273,18 @@ In this section, we first evaluate the pooling technique proposed in~\Cref{subse
 Then, we conduct experiments to evaluate the accuracy of our compact models.
 In particular, we investigate which layer benefits the most from a circulant representation and show that our approach where both the diagonal and the circulant is learned performs better than the approach from~\citet{cheng2015exploration} for the video classification problem.
 Finally, we compare all our models on a two dimensional size \vs accuracy scale in order to evaluate the trade-off between size and accuracy of each one of our models.
+All the figures of this section can be found at the end of the chapter.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Experimental Setup}
-\label{subsection:ap2-experimental_setup}
+\paragraph{Experimental Setup}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\paragraph{Dataset}
 All the experiments of this appendix have been done in the context of the \emph{2nd YouTube-8M Video Understanding Challenge} with the \yt dataset.
 We trained our models with the full training set and 70\% of the validation set which corresponds to a total of \numprint{4822555} examples.
 We used the data augmentation technique proposed by~\citet{skalic2017deep} to virtually double the number of inputs. 
 The method consists in splitting the videos into two equal parts.
 This approach is motivated by the observation that a human could easily label the video by watching either the beginning or the ending of the video. 
-
-\paragraph{Hyper-parameters}
 All our experiments are developed with TensorFlow Framework~\cite{tensorflow2015-whitepaper}.
 We trained our models with the CrossEntropy loss and used Adam optimizer with a 0.0002 learning rate and a 0.8 exponential decay every 4 million examples.
 All fully connected layers are composed of 512 units.
@@ -295,8 +292,6 @@ DBoF, NetVLAD and NetFV are respectively 8192, 64 and 64 of cluster size for vid
 We used 4 mixtures for the MoE Layer.
 We used all the available 150 frames and robust max pooling introduced in~\Cref{subsection:ap2-robust_deep_bag-of-frames_pooling_method} for the DBoF embedding.
 In order to stabilize and accelerate the training, we used batch normalization before each non linear activation and gradient clipping. 
-
-\paragraph{Evaluation Metric}
 We used the GAP (Global Average Precision), as used in the \emph{2nd YouTube-8M Video Understanding Challenge}, to compare our experiments.
 The GAP metric is defined as follows:
 \begin{equation}
@@ -304,38 +299,11 @@ The GAP metric is defined as follows:
 \end{equation}
 where $P$ is the number of final predictions, $p(i)$ the precision, and $r(i)$ the recall.
 We limit our evaluation to 20 predictions for each video. 
-
-\paragraph{Hardware}
 All experiments have been realized on a cluster of 12 nodes. Each node has 160 POWER8 processor, 128 Go of RAM and 4 Nividia Titan P100.
 
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\scalefigure\textwidth]{figures/appendix/ap2-training_video_classification/graph_robust_dbof.pdf}
-  \caption{Impact of \emph{robust DBoF} (\ie blue line) with $n=10$ and $k=15$ on the Deep Bag-of-Frames embedding compared to max and average pooling.}
-  \label{figure:ap2-learning_curve_bagging}
-\end{figure}
-
-
-\afterpage{
-\begin{figure}[p!]
-  \centering
-  \includegraphics[width=\scalefigure\textwidth]{figures/appendix/ap2-training_video_classification/graph_compact_layers}
-  \caption{Validation GAP according to the number of epochs for different compact models.}
-  \label{figure:ap2-learning_curve_layers}
-  \vspace{2cm}
-  \includegraphics[width=\scalefigure\textwidth]{figures/appendix/ap2-training_video_classification/graph_comparison_learned_diagonal}
-  \caption{GAP difference between the approach proposed by~\citet{cheng2015exploration} where the diagonals from the decomposition are initialized from the set $\{-1, +1\}$ and kept fixed and our approach where the values of the diagonals are learned.} 
-  \label{figure:ap2-learning_dc_cd}
-\end{figure}
-\clearpage
-}
-
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Robust Deep Bag-of-Frames pooling method}
+\paragraph{Robust Deep Bag-of-Frames pooling method}
 \label{subsection:ap2-robust_deep_bag-of-frames_pooling_method_experiements}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -344,6 +312,10 @@ We evaluate the performance of our Robust DBoF embedding.
 In accordance with the work of~\citet{abu2016youtube}, we find that average pooling performs better than maximum pooling. 
 \Cref{figure:ap2-learning_curve_bagging} shows that the proposed robust maximum pooling method outperforms both maximum and average pooling.
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Impact of Circulant Matrices on Different Layers}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{table}[ht]
   \centering
@@ -362,9 +334,6 @@ In accordance with the work of~\citet{abu2016youtube}, we find that average pool
 \end{table}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Impact of circulant matrices on different layers}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 This series of experiments aims at understanding the effect of compactness over different layers.
 \Cref{table:ap4-circulant_layer} shows the result in terms of number of weights, compression ratio (CR) with respect to the dense model and GAP score.
@@ -419,14 +388,13 @@ On the basis of this result, \ie given the performance and compression ratio, we
     6 & 147K & 97.6 & 0.859 \\
     \bottomrule
   \end{tabular}
-  \caption{This table shows the evolution of the number of parameters and the accuracy according to the number of factors. Despite the addition of degrees of freedom for the weight matrix of the fully connected layer, the model does not improve in performance.}
+  \caption{Evolution of the number of parameters and accuracy according to the number of factors.} 
   \label{table:ap2-factors}
 \end{table}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Comparison with related works}
-\label{subsection:ap2-comparison_with_related_works}
+\paragraph{Comparison with Related Works}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Circulant matrices have already been used in neural networks by~\citet{cheng2015exploration}.
@@ -444,12 +412,13 @@ We compare our more general framework with their approach.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Compact Baseline model with different embeddings}
-\label{subsection:ap2-compact_baseline_model_with_different_embeddings}
+\paragraph{Compact Baseline Model with Different Embeddings}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 To compare the performance and the compression ratio we can expect, we consider different settings where the compact fully connected layer is used together with different embeddings.
- Figures~\ref{figure:ap2-validation_gap_compact_dbof}, \ref{figure:ap2-validation_gap_compact_netvlad}, \ref{figure:ap2-validation_gap_compact_netfv} and \Cref{table:ap2-fc_circulant_with_diff_embedding} show the performance of the base model with DBoF, NetVLAD and NetFV embeddings with a \emph{Dense} and \emph{Compact} layer.
+Figures~\ref{figure:ap2-validation_gap_compact_dbof}, \ref{figure:ap2-validation_gap_compact_netvlad}, 
+\ref{figure:ap2-validation_gap_compact_netfv} and \Cref{table:ap2-fc_circulant_with_diff_embedding} 
+show the performance of the base model with DBoF, NetVLAD and NetFV embeddings with a \emph{Dense} and \emph{Compact} layer.
 Notice that we can get a bigger compression rate with NetVLAD and NetFV due to the fact that the output of the embedding is in a higher dimensional space which implies a larger weight matrix for the fully connected layer.
 Although the compression rate is higher, it is at the expense of accuracy.
 
@@ -490,48 +459,11 @@ Although the compression rate is higher, it is at the expense of accuracy.
 % \end{table}
 
 
-\afterpage{
-\begin{figure}[p!]
-  \center
-  \includegraphics[width=\scalefigure\textwidth]{figures/appendix/ap2-training_video_classification/graph_fc_circulant_embedding_dbof}
-  \caption{Validation GAP of compact DBoF embedding and dense fully connected layer.}
-  \label{figure:ap2-validation_gap_compact_dbof}
-  \vspace{2cm}
-  \includegraphics[width=\scalefigure\textwidth]{figures/appendix/ap2-training_video_classification/graph_fc_circulant_embedding_netvlad}
-  \caption{Validation GAP of compact NetVLAD embedding and dense fully connected layer.}
-  \label{figure:ap2-validation_gap_compact_netvlad}
-\end{figure}
-\clearpage
-}
-
-\afterpage{
-\begin{figure}[p!]
-  \center
-  \includegraphics[width=\scalefigure\textwidth]{figures/appendix/ap2-training_video_classification/graph_fc_circulant_embedding_netfv}
-  \caption{Validation GAP of compact NetFV embedding and dense fully connected layer.}
-  \label{figure:ap2-validation_gap_compact_netfv}
-  \vspace{2cm}
-  \includegraphics[width=\scalefigure\textwidth]{figures/appendix/ap2-training_video_classification/graph_benchmark_models}
-  \caption{Comparison between different models with compact fully connected layers.}
-  \label{figure:ap2-models}
-\end{figure}
-\clearpage
-}
-
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Tradeoff between Model Size and Accuracy}
-\label{subsection:ap2-tradeoff_between_model_size_and_accuracy}
+\paragraph{Tradeoff Between Model Size and Accuracy}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% \begin{figure}[ht]
-%   \centering
-%   \input{figures/appendix/ap2-training_video_classification/graph_models}
-%   \caption{Comparison between different models with compact fully connected layers.}
-%   \label{figure:ap2-models}
-% \end{figure}
 
 To conclude our experimental evaluation, we compare all our models in terms of size and accuracy.
 The results are presented in~\Cref{figure:ap2-models}. 
@@ -557,9 +489,11 @@ Finally, the best trade-off between size and accuracy is obtained using the DBoF
      & FC Circulant & 51M & 58.1 & 0.848 \\
     \bottomrule
   \end{tabular}
-  \caption{Impact of the compression of the fully connected layer of the model architecture shown in~\Cref{figure:ap2-model_baseline} with Audio and Video features vector and different types of embeddings.} 
+  \caption{Impact of the compression of the fully connected layer of the model architecture with Audio and Video features vector and different types of embeddings.} 
   \label{table:ap2-fc_circulant_with_diff_embedding}
 \end{table}
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -574,5 +508,44 @@ The good performance of Ensemble models, \ie, why aggregating different distinct
 Our future work will be devoted to address this challenging question and to pursue our effort to devise compact models achieving the same accuracy as larger one, and to study their theoretical properties.
 
 
+\begin{figure}[p!]
+  \centering
+  \includegraphics[width=\scalefigure\textwidth]{figures/appendix/ap2-training_video_classification/graph_robust_dbof.pdf}
+  \caption{Impact of \emph{robust DBoF} with $n=10$ and $k=15$ on the Deep Bag-of-Frames embedding compared to max and average pooling.}
+  \label{figure:ap2-learning_curve_bagging}
+\end{figure}
+
+\begin{figure}[p!]
+  \centering
+  \includegraphics[width=\scalefigure\textwidth]{figures/appendix/ap2-training_video_classification/graph_compact_layers}
+  \caption{GAP score of models according to the number of epochs for different compact models.}
+  \label{figure:ap2-learning_curve_layers}
+  \vspace{2cm}
+  \includegraphics[width=\scalefigure\textwidth]{figures/appendix/ap2-training_video_classification/graph_comparison_learned_diagonal}
+  \caption{GAP difference between the approach proposed by~\citet{cheng2015exploration} where the diagonals from the decomposition are initialized from the set $\{-1, +1\}$ and kept fixed and our approach where the values of the diagonals are learned.} 
+  \label{figure:ap2-learning_dc_cd}
+\end{figure}
+
+\begin{figure}[p!]
+  \center
+  \includegraphics[width=\scalefigure\textwidth]{figures/appendix/ap2-training_video_classification/graph_fc_circulant_embedding_dbof}
+  \caption{GAP score of models with compact DBoF embedding and dense fully connected layer.}
+  \label{figure:ap2-validation_gap_compact_dbof}
+  \vspace{2cm}
+  \includegraphics[width=\scalefigure\textwidth]{figures/appendix/ap2-training_video_classification/graph_fc_circulant_embedding_netvlad}
+  \caption{GAP score of models with compact NetVLAD embedding and dense fully connected layer.}
+  \label{figure:ap2-validation_gap_compact_netvlad}
+\end{figure}
+
+\begin{figure}[p!]
+  \center
+  \includegraphics[width=\scalefigure\textwidth]{figures/appendix/ap2-training_video_classification/graph_fc_circulant_embedding_netfv}
+  \caption{GAP score of models with compact NetFV embedding and dense fully connected layer.}
+  \label{figure:ap2-validation_gap_compact_netfv}
+  \vspace{2cm}
+  \includegraphics[width=\scalefigure\textwidth]{figures/appendix/ap2-training_video_classification/graph_benchmark_models}
+  \caption{Comparison between different models with compact fully connected layers.}
+  \label{figure:ap2-models}
+\end{figure}
 
 
