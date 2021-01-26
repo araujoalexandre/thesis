@@ -53,7 +53,7 @@ The chapter is organized as follows:
 \Cref{section:ch4-analysis_of_diagonal_circulant_neural_networks} proposes a theoretical analysis on the expressivity of DCNNs.
 \Cref{section:ch4-how_to_train_deep_diagonal_circulant_neural_networks} describes two efficient techniques for training deep diagonal circulant neural networks.
 \Cref{section:ch4-experiments} presents extensive experiments to compare the performance of deep diagonal circulant neural networks in different settings with respect to other state-of-the-art approaches.
-Finally, \Cref{section:ch4-discussion} provides concluding remarks. 
+Finally, \Cref{section:ch4-concluding_remarks} provides concluding remarks.
 
 
 
@@ -365,7 +365,7 @@ Let $\depth_1$ and $\depth_2$ be the depth of a dense neural network and a diago
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{From Matrix decomposition to Neural Networks}
+\subsection{From Matrix Decomposition to Neural Networks}
 \label{subsection:ch4-from_matrix_decomposition_to_neural_networks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -703,7 +703,7 @@ By \Cref{theorem:ch4-low_rank_nn}, we can replace the layers with low rank appro
     \begin{center}
       \input{figures/main/ch4-diagonal_circulant/illustration_properties.tex}
     \end{center}
-    \caption{Illustration of \Cref{property:eq1,property:eq2}.}
+    \caption{Illustration of the expressiveness of diagonal-circulant neural networks.}
     \label{figure:ch4-circfig}
 \end{figure}
 
@@ -743,7 +743,7 @@ First, we propose an initialization procedure which guarantee the signal is prop
 Secondly, we study the behavior of DCNNs with different nonlinearity functions and determine the best parameters for different settings. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Initialization scheme of Diagonal-Circulant Neural Networks}
+\subsection{Initialization Scheme of Diagonal-Circulant Neural Networks}
 \label{subsection:ch4-initialization_scheme_of_diagonal-circulant_neural_networks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -845,16 +845,14 @@ The fact that the result of \Cref{proposition:ch4-initialization_dcnn} is indepe
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Analysis on the use of nonlinearities}
+\subsection{Analysis on the Use of Nonlinearities}
 \label{subsection:ch4-analysis_on_the_use_of_nonlinearities}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}[htb]
   \centering
   \includegraphics[width=\scalefigure\textwidth]{figures/main/ch4-diagonal_circulant/cifar10_leaky_relu.pdf}
-  \caption{
-    Impact of increasing the slope of a Leaky-ReLU in DCNNs.
-    Deep DCNNs with a larger slope are easier to train.}
+  \caption{Impact of increasing the slope of a Leaky-ReLU in DCNNs.}
   \label{figure:ch4-cifar10_leaky_relu}
 \end{figure}
 
@@ -863,8 +861,6 @@ We empirically found that the ReLU activations had an impact on the training of 
 Indeed, the deeper the network, the more nonlinear it is, which makes convergence difficult.
 In an experiment, we replace the ReLU activations with Leaky-ReLU activations (\cf \Cref{subsection:ch2-preliminaries_on_neural_networks}) and vary the slope of the Leaky-ReLU (a higher slope means an activation function that is closer to a linear function).
 The results of this experiment are presented in~\Cref{figure:ch4-cifar10_leaky_relu}.
-
-% In \Cref{figure:ch4-cifar10_leaky_relu}, we observe that reducing the nonlinearity of the networks can be used to train deeper networks.
 In the experiment, we try different slopes for the Leaky-ReLU activation and train diagonal-circulant neural networks with different depth.
 We can observe that a higher slope (making the network more linear) facilitates convergence, allowing us to train deeper networks.
 This is an interesting result, since  we can use this technique to adjust the number of parameters in the network (increasing depth), without facing training difficulties.
@@ -941,7 +937,7 @@ This experimental section aims at answering the following questions:
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Comparison with other structured approaches}
+\subsection{Comparison with Other Structured Approaches}
 \label{subsection:ch4-comparison_with_other_structured_approches}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -961,32 +957,32 @@ This experimental section aims at answering the following questions:
 %        \caption{Test accuracy on the CIFAR-10 dataset.~\\ \phantom{.}}
 %        \label{figure:ch4-acdc_cifar10}
 %    \end{subfigure}
-%    \caption{Comparison of DCNNs and \ACDC networks on two different tasks.}
+%    \caption{Comparison of DCNNs and ACDC networks on two different tasks.}
 % \end{figure}
 
 
 \begin{figure}[ht]
    \centering
    \includegraphics[width=\scalefigure\textwidth]{figures/main/ch4-diagonal_circulant/acdc_regression.pdf}
-   \caption{Evolution of the training loss on a regression task with synthetic data.}
+   \caption{Comparison of the training loss of DCNNs and ACDC networks on a regression task with synthetic data.}
    \label{figure:ch4-acdc_regression}
 \end{figure}
 
 \begin{figure}[ht]
    \centering
    \includegraphics[width=\scalefigure\textwidth]{figures/main/ch4-diagonal_circulant/acdc_cifar10.pdf}
-   \caption{Comparison of DCNNs and \ACDC networks on two different tasks. - Test accuracy on the CIFAR-10 dataset.}
+   \caption{Comparison of the training loss of DCNNs and ACDC networks on a CIFAR-10 dataset.}
    \label{figure:ch4-acdc_cifar10}
 \end{figure}
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Comparison with \ACDC}
+\subsubsection{Comparison with ACDC}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In \Cref{chapter:ch3-related_work}, we have discussed the differences between the \ACDC framework and our approach from a theoretical perspective.
-In this section, we conduct experiments to compare the performance of DCNNs with neural networks based on \ACDC layers. 
+In \Cref{chapter:ch3-related_work}, we have discussed the differences between the ACDC framework and our approach from a theoretical perspective.
+In this section, we conduct experiments to compare the performance of DCNNs with neural networks based on ACDC layers. 
 We first reproduce the experimental setting from \citet{moczulski2016acdc}, and compare both approaches using only linear networks (\ie networks without any ReLU activations).
 The synthetic dataset has been created in order to reproduce the experiment on the regression linear problem proposed by~\citet{moczulski2016acdc}.
 We draw $\Xmat$ and $\Wmat$ from a uniform distribution between [-1, +1] and $\epsilon$ from a normal distribution with mean 0 and variance $0.01$.
@@ -995,10 +991,10 @@ The results are presented in \Cref{figure:ch4-acdc_regression}.
 In this simple setting, while both architectures demonstrate good performance, we can observe that DCNNs offer a better convergence rate.
 In \Cref{figure:ch4-acdc_cifar10}, we compare neural networks with ReLU activations on CIFAR-10. 
 
-We found that networks which are based only on \ACDC layers are difficult to train and offer poor accuracy on CIFAR-10 (we have tried different initialization schemes including the one from the original paper, and the one we introduce in this chapter).
+We found that networks which are based only on ACDC layers are difficult to train and offer poor accuracy on CIFAR-10 (we have tried different initialization schemes including the one from the original paper, and the one we introduce in this chapter).
 \citet{moczulski2016acdc} manage to train a large VGG network  however these networks are generally highly redundant and the contribution of the structured layer is difficult to quantify. 
-We also observe that adding a single dense layer improves the convergence rate of \ACDC in the linear case, which explains the good results of \citet{moczulski2016acdc}.
-However, it is difficult to characterize the true contribution of the \ACDC layers when the network has a large number of expressive layers.
+We also observe that adding a single dense layer improves the convergence rate of ACDC in the linear case, which explains the good results of \citet{moczulski2016acdc}.
+However, it is difficult to characterize the true contribution of the ACDC layers when the network has a large number of expressive layers.
 
 In contrast, deep DCNNs can be trained and offer good performance without additional dense layers (these results are in line with our experiments on the \yt dataset).
 We can conclude that DCNNs are able to model complex relations at a low cost. 
@@ -1014,7 +1010,7 @@ We can conclude that DCNNs are able to model complex relations at a low cost.
 \begin{figure}
    \centering
    \includegraphics[width=\scalefigure\textwidth]{figures/main/ch4-diagonal_circulant/cifar10_type.pdf}
-   \caption{Network size vs. Accuracy compared on Dense networks, DCNNs (our approach), DTNNs (our approach), neural networks based on Toeplitz matrices and neural networks based on Low Rank-based matrices. DCNNs outperforms alternatives structured approaches.}
+   \caption{Network size \vs Accuracy compared on Dense networks, DCNNs, DTNNs, neural networks based on Toeplitz matrices and neural networks based on Low Rank-based matrices.} 
    \label{figure:ch4-cifar10_type}
 \end{figure}
 
@@ -1031,7 +1027,7 @@ We can conclude that DCNNs are able to model complex relations at a low cost.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Comparison with Dense networks, Toeplitz networks and Low Rank networks.}
+\subsubsection{Comparison with Dense Networks, Toeplitz Networks and Low Rank Networks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 We now compare DCNNs with other state-of-the-art structured networks by measuring the accuracy on a flattened version of the CIFAR-10 dataset.
@@ -1068,7 +1064,7 @@ Other approaches also offer good trade-offs but they are not able to reach the a
     Toeplitz-like $(r =3)$	         & 52K  & 0.496 \\
     \bottomrule
     \end{tabular}
-    \caption{LDR networks compared with DCNNs on a flattend version of CIFAR-10. DCNNs outperform all LDR configurations with fewer weights. Remark: the numbers may differ from the original experiments by~\citet{thomas2018learning} because we use the original dataset instead of a monochrome version.}
+    \caption{Comparison of LDR networks and DCNNs on a flattened version of CIFAR-10.} 
     \label{table:ch4-xp_ldr}
 \end{table}
 
@@ -1078,14 +1074,13 @@ The results are presented in \Cref{table:ch4-xp_ldr} and demonstrate that DCNNs 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Comparison with other compression based approaches}
+\subsection{Comparison with Other Compression Based Approaches}
 \label{subsection:ch4-comparison_with_other_compression_based_approaches}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \begin{table}
   \centering
-    \caption{Comparison with compression based approaches}
     \begin{tabular}{lcrc}
     \toprule
     \multicolumn{1}{c}{\textbf{Architecture}} & \multicolumn{1}{c}{\textbf{\#Params}} & \textbf{Error (\%)} \\
@@ -1099,17 +1094,18 @@ The results are presented in \Cref{table:ch4-xp_ldr} and demonstrate that DCNNs 
           &  78 125 & 2.16 \\
     \bottomrule
     \end{tabular}%
-  \label{tab:mnist}%
+    \caption{Comparison with compression based approaches.}
+  \label{table:ch4-mnist}%
 \end{table}%
 
 
 We provide a comparison with other compression based approaches such as HashNet \cite{chen2015compressing}, Dark Knowledge \cite{hinton2015distilling} and Fast Food Transform (FF) \cite{yang2015deep}. 
-\Cref{tab:mnist} shows the test error of DCNN against other known compression techniques on the MNIST datasets.
+\Cref{table:ch4-mnist} shows the test error of DCNN against other known compression techniques on the MNIST datasets.
 We can observe that DCNN outperforms HashNet \cite{chen2015compressing} and Dark Knowledge \cite{hinton2015distilling} with fewer number of parameters.
 The architecture with Fast Food (FF) \cite{yang2015deep} achieves better performance but with convolutional layers and only $1$ Fast Food Layer as the last Softmax layer. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Large-scale video classification on the \yt dataset}
+\subsection{Large-scale Video Classification on the \yt Dataset}
 \label{subsection:ch4-large_scale_video_classification}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1137,7 +1133,6 @@ The 32 layers DCNN is 46 times smaller than the original model in terms of numbe
 
 \begin{table}
   \centering
-  \caption{This table shows the GAP score for the \yt dataset with DCNNs. We can see a large increase in the score with deeper networks.}
   \begin{tabular}{lccc}
     \toprule
     \textbf{Architecture} & \textbf{\#Weights} &
@@ -1149,12 +1144,12 @@ The 32 layers DCNN is 46 times smaller than the original model in terms of numbe
     4 DC + 1 FC & 4.46M \textit{(77)} & \textbf{0.747} \\
   \hline
   \end{tabular}
+  \caption{GAP score on the \yt dataset with DCNNs.}
   \label{table:youtube_agg_xp}
 \end{table}
 
 \begin{table}
   \centering
-  \caption{This table shows the GAP score for the \yt dataset with different layer represented with our DC decomposition.}
   \begin{tabular}{lccc}
   \toprule
   \textbf{Architecture} & \textbf{\#Weights} & \textbf{GAP@20} \\
@@ -1165,6 +1160,7 @@ The 32 layers DCNN is 46 times smaller than the original model in terms of numbe
   MoE with DC   & 12M (\textit{\textbf{26}}) & 0.805 \\
   \hline
   \end{tabular}
+  \caption{GAP score on the \yt dataset with different layers represented with diagonal-circulant decomposition.}
   \label{table:youtube_full_xp}
 \end{table}
 
@@ -1180,7 +1176,7 @@ We conclude that DCNN are both theoretically sound and of practical interest in 
 \begin{figure}[htb]
   \centering
   \input{figures/main/ch4-diagonal_circulant/archi_youtube.tex}
-  \caption{This figure shows the state-of-the-art neural network architecture, initially proposed by~\citet{abu2016youtube} and later improved by~\citet{miech2017learnable}, used in our experiment.}
+  \caption{Diagram of the state-of-the-art neural network architecture, initially proposed by~\citet{abu2016youtube} and later improved by~\citet{miech2017learnable}.}
   \label{figure:ch4-archi_youtube}
 \end{figure}
 
@@ -1216,7 +1212,7 @@ In order to stabilize and accelerate the training, we used batch normalization b
     Toeplitz-like $(r=10)$ & 388K & 0.720 \\
     \bottomrule
     \end{tabular}
-    \caption{Two depths scattering on CIFAR-10 followed by LDR or DC layer. Networks with DC layers outperform all LDR configurations with fewer weights.}
+    \caption{Accuracy of scattering models followed by LDR or DC layer on CIFAR-10 dataset.}
     \label{table:ch4-xp_ldr_scattering}
 \end{table}
 
@@ -1238,13 +1234,10 @@ We can also see that scattering followed by a DC layer systematically outperform
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Conclusion}
-\label{section:ch4-discussion}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% \todotext{review this conclusion}
-% \todotext{we need to open on the next chapter}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Concluding Remarks}
+\label{section:ch4-concluding_remarks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 This chapter deals with the training of diagonal circulant neural networks.
 To the best of our knowledge, training such networks with a large number of layers had not been done before.
