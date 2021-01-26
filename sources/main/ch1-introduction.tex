@@ -116,8 +116,9 @@ Federated learning involves training a model across multiple decentralized devic
 This avoids the step of centralizing all users' data into one server, thus addressing the issue of data privacy.
 Thus, building compact and cost effective neural networks have been an important goal in order to reduce training time, reduce cost and allow for faster research and development.
 
-Large neural networks due to a high complexity and expressivity exhibit instability to small perturbations of their inputs.
-The best example of this phenomenon is the vulnerability of neural networks to \emph{adversarial examples}, \ie, imperceptible variations of natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,szegedy2013intriguing}.
+In addition to being compact and cost-effective, neural networks also need to be secure.
+Due to a high complexity and expressivity, large neural networks exhibit instability to small perturbations of their inputs.
+Unstable neural networks tend to be vulnerable to \emph{adversarial examples}, \ie, imperceptible variations of natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,szegedy2013intriguing}.
 The \Cref{figure:ch1-adversarial_image_example} gives an example of an adversarial attack on an image.
 The small perturbation (center) is added to the original image (left) leading to an adversarial image (right).
 This behavior can cause serious security problems when neural networks used for critical decision-making (\eg judicial decision, self-driving cars, etc.).
@@ -191,8 +192,8 @@ Based on the success of convolutional neural networks, researchers have studied 
 \Cref{figure:ch1-example_structure_matrices} shows different types of structured matrices that have been used for deep learning.
 Although convolutional neural networks have been state-of-the-art for computer vision tasks, it remains unclear whether other types of structured neural networks can be beneficial to other types of applications and which structure can provide both accuracy and efficient computation.
 
-In this thesis, we build compact and secure neural networks by leveraging the properties of structured matrices from the Toeplitz family.
-Our contributions lie at the intersection of linear algebra, Fourier analysis and deep learning.
+The contribution of this thesis lie at the intersection of linear algebra, Fourier analysis and deep learning.
+As a result, we build compact and secure neural networks by leveraging the properties of structured matrices from the Toeplitz family.
 Hereafter, we present in more detail our contributions.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -206,7 +207,7 @@ Hereafter, we present in more detail our contributions.
 % Indeed, \citeauthor{vapnik1982estimation} linked the generalization capability of neural networks to their VC-dimension which is a measure of expressivity of the class of functions.
 % This complexity measure is based on the number of parameters, therefore, reducing the number of parameters leads to a smaller VC-Dimension, which then leads to better generalization.
 
-In this thesis, we use circulant matrices, which are a particular type of Toeplitz matrices, to devise a new compact architecture replacing fully connected neural networks.
+As a first contribution of this thesis, we use circulant matrices, which are a particular type of Toeplitz matrices, to devise a new compact architecture replacing fully connected neural networks.
 More precisely, we study deep diagonal-circulant neural networks, which are deep neural networks in which weight matrices are the product of diagonal and circulant ones.
 Besides making a theoretical analysis of their expressivity, we introduce principled techniques for training these models: we devise an initialization scheme and propose a smart use of nonlinearity functions in order to train deep diagonal circulant networks.
 Furthermore, we show that these networks outperform recently introduced deep networks with other types of structured layers.
@@ -237,7 +238,7 @@ Then, the theoretical analysis of the expressivity of diagonal-circulant neural 
 \label{subsection:ch1-training_robust_neural_networks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this thesis, we build robust neural networks by studying the properties of the structure of convolution.
+As a second contribution of this thesis, we build robust neural networks by studying the properties of the structure of convolution.
 We devise a new upper bound on the largest singular value of convolution layers that is both tight and easy to compute.
 Our work is based on the result of~\citet{gray2006toeplitz} which states that an upper bound on the singular value of Toeplitz matrices can be computed from the inverse Fourier transform of the characteristic sequence of these matrices.
 From our analysis immediately follows an algorithm for bounding the Lipschitz constant of a convolutional layer, and by extension the Lipschitz constant of the whole network.
