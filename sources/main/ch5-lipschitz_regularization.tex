@@ -50,12 +50,12 @@ In order to devise a bound on the Lipschitz constant of a convolution layer as u
 Doubly-block Toeplitz matrices inherits the properties of Toeplitz and block Toeplitz matrices.
 Recall that Toeplitz and block Toeplitz matrices do not have a closed-form expression of their eigenvalues as their circulant counterpart.
 However, we can represent Toeplitz and block Toeplitz matrices with a 2$\pi$-periodic function which can describe very precisely the spectrum of the matrices. 
-Let $\{a_h\}_{h \in \Pset}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n\times n}$ and let $\{\Bmat^{(h)}\}_{h \in \Pset}$ be the sequence of $m\times m$ blocks of the block Toeplitz matrix $\Bmat$.
-The matrices are therefore denoted $\Amat = \leftmat a_{j-i} \rightmat_{i,j \in \Pset}$ and $\Bmat = \leftmat \Bmat^{(j-i)} \rightmat_{i,j \in \Pset}$ where $\Pset = \left\{ -n+1, \cdots, n-1 \right\}$.
-We can then defined their generating functions $f(\omega) = \sum_{h \in \Pset} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Pset} \Bmat^{(h)} e^{\ci h \omega}$ which are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Pset}$ and $\{\Bmat^{(h)}\}_{h \in \Pset}$, with $\omega \in \Rbb$.
+Let $\{a_h\}_{h \in \Iset}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n\times n}$ and let $\{\Bmat^{(h)}\}_{h \in \Iset}$ be the sequence of $m\times m$ blocks of the block Toeplitz matrix $\Bmat$.
+The matrices are therefore denoted $\Amat = \leftmat a_{j-i} \rightmat_{i,j \in \Iset}$ and $\Bmat = \leftmat \Bmat^{(j-i)} \rightmat_{i,j \in \Iset}$ where $\Iset = \left\{ -n+1, \cdots, n-1 \right\}$.
+We can then defined their generating functions $f(\omega) = \sum_{h \in \Iset} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Iset} \Bmat^{(h)} e^{\ci h \omega}$ which are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Iset}$ and $\{\Bmat^{(h)}\}_{h \in \Iset}$, with $\omega \in \Rbb$.
 From there, similarly to the work done by~\citet{grenander1958toeplitz}, we define an operator $\Tmat$ mapping integrable functions to matrices:
 \begin{equation} \label{equation:expression_toeplitz_matrix}
-  \Tmat(g)  \triangleq\leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \Pset_0} \enspace.
+  \Tmat(g)  \triangleq\leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \Iset_0} \enspace.
 \end{equation}
 Therefore, by construction, we have $\Tmat(f) = \Amat$ and $\Tmat(F) = \Bmat$.
 
@@ -82,7 +82,7 @@ Now, we can state two known theorems which upper bound the largest singular valu
 
 
 
-% The complex-valued function $f(\omega) = \sum_{h \in \Pset} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Pset} \Bmat_h e^{\ci h \omega}$ are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Pset}$ and $\{\Bmat_h\}_{h \in \Pset}$, with $\omega \in \Rbb$.
+% The complex-valued function $f(\omega) = \sum_{h \in \Iset} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Iset} \Bmat_h e^{\ci h \omega}$ are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Iset}$ and $\{\Bmat_h\}_{h \in \Iset}$, with $\omega \in \Rbb$.
 % From these two functions, one can recover these two sequences using the standard Fourier transform:
 % \begin{equation}
 %   a_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} f(\omega) d\omega \quad \quad \Bmat_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} F(\omega) d\omega .
@@ -96,7 +96,7 @@ Now, we can state two known theorems which upper bound the largest singular valu
 
 
 % A Toeplitz matrix (respectively a block Toeplitz matrix) is a matrix in which each scalar (respectively block) is repeated identically along diagonals.
-% An $n \times n$ Toeplitz matrix $\Amat$ is fully determined by a two-sided sequence of scalars: $\{a_h\}_{h \in \Pset}$, whereas an $nm\times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat^{(h)}\}_{h \in \Pset}$, where $\Pset = \{-n+1,\dots, n-1\}$ and where each block $\Bmat_h$ is an $m \times m$ matrix.
+% An $n \times n$ Toeplitz matrix $\Amat$ is fully determined by a two-sided sequence of scalars: $\{a_h\}_{h \in \Iset}$, whereas an $nm\times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat^{(h)}\}_{h \in \Iset}$, where $\Iset = \{-n+1,\dots, n-1\}$ and where each block $\Bmat_h$ is an $m \times m$ matrix.
 % \begin{equation*}
 %   \Amat = \leftmatrix
 %     a_0      & a_{1}  & \cdots & a_{n-1} \\ \vspace{0.1cm}
@@ -112,8 +112,8 @@ Now, we can state two known theorems which upper bound the largest singular valu
 %   \rightmatrix.
 % \end{equation*}
 % Finally, a doubly-block Toeplitz matrix is a block Toeplitz matrix in which each block is itself a Toeplitz matrix.
-% In the remainder, we will use the standard notation $\leftmat\ \cdot\ \rightmat_{i,j \in \Pset}$ to construct (block) matrices.
-% For example, $\Amat = \leftmat a_{j-i} \rightmat_{i,j \in \Pset}$ and $\Bmat = \leftmat \Bmat^{(j-i)} \rightmat_{i,j \in \Pset}$.
+% In the remainder, we will use the standard notation $\leftmat\ \cdot\ \rightmat_{i,j \in \Iset}$ to construct (block) matrices.
+% For example, $\Amat = \leftmat a_{j-i} \rightmat_{i,j \in \Iset}$ and $\Bmat = \leftmat \Bmat^{(j-i)} \rightmat_{i,j \in \Iset}$.
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsection{Bound on the Singular Values of Toeplitz and Block Toeplitz Matrices}
@@ -122,8 +122,8 @@ Now, we can state two known theorems which upper bound the largest singular valu
 %
 % \todotext{update here}
 % A standard tool for manipulating (block) Toeplitz matrices is the use of Fourier analysis.
-% Let $\{a_h\}_{h \in \Pset}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n\times n}$ and let $\{\Bmat_h\}_{h \in \Pset}$ be the sequence of $m\times m$ blocks of the block Toeplitz matrix $\Bmat$.
-% The complex-valued function $f(\omega) = \sum_{h \in \Pset} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Pset} \Bmat_h e^{\ci h \omega}$ are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Pset}$ and $\{\Bmat_h\}_{h \in \Pset}$, with $\omega \in \Rbb$.
+% Let $\{a_h\}_{h \in \Iset}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n\times n}$ and let $\{\Bmat_h\}_{h \in \Iset}$ be the sequence of $m\times m$ blocks of the block Toeplitz matrix $\Bmat$.
+% The complex-valued function $f(\omega) = \sum_{h \in \Iset} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Iset} \Bmat_h e^{\ci h \omega}$ are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Iset}$ and $\{\Bmat_h\}_{h \in \Iset}$, with $\omega \in \Rbb$.
 % From these two functions, one can recover these two sequences using the standard Fourier transform:
 % \begin{equation}
 %     a_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} f(\omega) d\omega \quad \quad \Bmat_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} F(\omega) d\omega .
@@ -131,11 +131,11 @@ Now, we can state two known theorems which upper bound the largest singular valu
 %
 % From there, similarly to the work done by~\citet{gray2006toeplitz,gutierrez2012block}, we can define an operator $\Tmat$ mapping integrable functions to matrices:
 % \begin{equation} \label{equation:expression_toeplitz_matrix}
-%   \Tmat(g)  \triangleq\leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \Pset_0} \enspace.
+%   \Tmat(g)  \triangleq\leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \Iset_0} \enspace.
 % \end{equation}
 %
-% Note that if $f$ is the inverse Fourier transform of $\{a_h\}_{h \in \Pset}$, then $\Tmat(f)$ is equal to $\Amat$.
-% Also, if $F$ is the inverse Fourier transform of $\{\Bmat_h\}_{h \in \Pset}$ as defined above, then the integral in \Cref{equation:expression_toeplitz_matrix} is matrix-valued, and thus $\Tmat(F) \in \Rbb^{mn \times mn}$ is the block matrix $\Bmat$.
+% Note that if $f$ is the inverse Fourier transform of $\{a_h\}_{h \in \Iset}$, then $\Tmat(f)$ is equal to $\Amat$.
+% Also, if $F$ is the inverse Fourier transform of $\{\Bmat_h\}_{h \in \Iset}$ as defined above, then the integral in \Cref{equation:expression_toeplitz_matrix} is matrix-valued, and thus $\Tmat(F) \in \Rbb^{mn \times mn}$ is the block matrix $\Bmat$.
 %
 % Now, we can state two known theorems which upper bound the maximal singular value of Toeplitz and block Toeplitz matrices with respect to their generating functions.
 % In the rest of the paper, we refer to $\sigma_1(\ \cdot\ )$ as the maximal singular value. 
@@ -167,11 +167,11 @@ We extend the reasoning from Toeplitz and block Toeplitz matrices to doubly-bloc
 A doubly-block Toeplitz matrix can be generated by a function $f: \Rbb^2 \rightarrow \Cbb$ using the 2-dimensional inverse Fourier transform.
 For this purpose, we define an operator $\Dmat$ which maps a function $f: \Rbb^2 \rightarrow \Cbb$ to a doubly-block Toeplitz matrix of size $nm \times nm$.
 For the sake of clarity, the dependence of $\Dmat(f)$  on $m$ and $n$ is omitted.
-Let $\Dmat(f) = \leftmat \Dmat_{i,j}(f)\rightmat_{i,j \in \Pset_0}$ where $\Dmat_{i,j}$ is defined as:
+Let $\Dmat(f) = \leftmat \Dmat_{i,j}(f)\rightmat_{i,j \in \Iset_0}$ where $\Dmat_{i,j}$ is defined as:
 \begin{equation} \label{equation:doubly_block_toeplitz_operator}
-  \Dmat_{i,j}(f) = \leftmat \frac{1}{4\pi^{2}} \int_{[0,2\pi]^{2}} e^{- \ci \left((i-j)\omega_{1}+(k-l)\omega_{2}\right)}f(\omega_{1},\omega_{2})\,d(\omega_{1},\omega_{2}) \rightmat_{k,l \in \Pset_0'} \enspace.
+  \Dmat_{i,j}(f) = \leftmat \frac{1}{4\pi^{2}} \int_{[0,2\pi]^{2}} e^{- \ci \left((i-j)\omega_{1}+(k-l)\omega_{2}\right)}f(\omega_{1},\omega_{2})\,d(\omega_{1},\omega_{2}) \rightmat_{k,l \in \Iset_0'} \enspace.
 \end{equation}
-where $\Pset_0 = \{0, \dots, n-1 \}$ and $\Pset_0' = \{0, \dots, m-1 \}$.
+where $\Iset_0 = \{0, \dots, n-1 \}$ and $\Iset_0' = \{0, \dots, m-1 \}$.
 
 We are now able to combine \Cref{theorem:teoplitz_sup_singular,theorem:block_teoplitz_sup_singular} to bound the largest singular value of doubly-block Toeplitz matrices with respect to their generating functions. 
 Note that in the following, we only consider generating functions as trigonometric polynomials with real coefficients therefore the matrices generated by $\Dmat(f)$ are real. We can now combine \Cref{theorem:teoplitz_sup_singular,theorem:block_teoplitz_sup_singular} to bound the largest singular value of a doubly-block Toeplitz Matrix. 
@@ -183,9 +183,9 @@ Note that in the following, we only consider generating functions as trigonometr
   \end{align}
   where the function $f: \Rbb^2 \rightarrow \Cbb$, is a multivariate trigonometric polynomial of the form:
   \begin{equation}\label{equation:muli_variate_poly_on_M}
-      f(\omega_1, \omega_2) \triangleq \sum_{h_1 \in \Pset} \sum_{h_2 \in \Pset'} d_{h_1, h_2} e^{\ci (h_1 \omega_1 + h_2 \omega_2)},
+      f(\omega_1, \omega_2) \triangleq \sum_{h_1 \in \Iset} \sum_{h_2 \in \Iset'} d_{h_1, h_2} e^{\ci (h_1 \omega_1 + h_2 \omega_2)},
   \end{equation}
-  where $d_{h_{1},h_{2}}$ is the ${h_2}^\textrm{th}$ scalar of the ${h_1}^\textrm{th}$ block of the doubly-Toeplitz matrix $\Dmat(f)$, and where $\Pset' = \{-m+1, \dots, m-1\}$.
+  where $d_{h_{1},h_{2}}$ is the ${h_2}^\textrm{th}$ scalar of the ${h_1}^\textrm{th}$ block of the doubly-Toeplitz matrix $\Dmat(f)$, and where $\Iset' = \{-m+1, \dots, m-1\}$.
 \end{maintheorem}
 
 
@@ -278,10 +278,10 @@ Let $\Amat$ and $\Bmat$ be Hermitian positive semi-definite matrices. If $\Amat 
 Before proving \Cref{theorem:bound_sv_stacked_dbt}, we generalize the famous Widom identity \cite{widom1976asymptotic} that expresses the relation between Toeplitz and Hankel matrices to doubly-block Toeplitz and Hankel matrices.
 We will need to generalize the doubly-block Toeplitz operator presented in~\Cref{subsection:ch5-bound_on_the_singular_value_of_doubly-block_toeplitz_matrices}.
 
-Let $\Hmat^{\alpha_p} (f) = \leftmat \Hmat^{\alpha_p}_{i,j}(f) \rightmat_{i,j \in \Pset_0}$ where $\Hmat^{\alpha_p}_{i,j}$ is defined as:
+Let $\Hmat^{\alpha_p} (f) = \leftmat \Hmat^{\alpha_p}_{i,j}(f) \rightmat_{i,j \in \Iset_0}$ where $\Hmat^{\alpha_p}_{i,j}$ is defined as:
 \begin{equation}
   \Hmat^{\alpha_p}_{i,j}(f) =\leftmat \frac{1}{4\pi^{2}}\int_{[0,2\pi]^{2}} e^{-\ci \alpha_p(i, j, k, l, \omega_1, \omega_2)}  f(\omega_{1},\omega_{2})\,d(\omega_{1},\omega_{2})
-  \rightmat_{k,l \in \Pset_0} \enspace.
+  \rightmat_{k,l \in \Iset_0} \enspace.
 \end{equation}
 Note that as with the operator $\Dmat(f)$ we only consider generating functions as trigonometric polynomials with real coefficients therefore the matrices generated by $\Hmat(f)$ are real. 
 And as with the operator $\Dmat(f)$, the matrices generated by the operator $\Hmat^{\alpha_p}$ are of size $n^2 \times n^2$. 
