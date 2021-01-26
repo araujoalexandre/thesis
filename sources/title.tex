@@ -1,21 +1,26 @@
 \begin{titlepage}
-  \vspace*{5cm}
+  \vspace*{1cm}
   \makeatletter
   \begin{center}
-    \begin{Huge}
-      \@title
-    \end{Huge} \\[0.3cm]
-    %
+    \begin{mdframed}[linecolor=mydarkblue,linewidth=2pti,leftline=false,rightline=false]
+        \centering
+	\huge
+	\textbf{\color{mydarkblue} \@title }
+      \end{mdframed}
+    ~\\[0.3cm]
     \begin{Large}
       \emph{by} ~\\[0.3cm]
-      \@author
+      \textbf{\@author}
     \end{Large}
-    %
-    \vfill
-    A thesis submitted in fulfillment of the requirements for ~\\
-    the degree of \emph{Doctor of Philosophy} ~\\
-    at ~\\
-    \textsc{\@institute}
+    ~\\[3cm]
+    \begin{Large}
+      Dissertation submitted in fulfillment of the requirements for ~\\
+      the degree of \emph{Doctor of Philosophy} ~\\[1cm]
+      \emph{at} ~\\[1cm]
+      \textsc{\@institute} ~\\[1cm]
+      \emph{under the joint supervision of}~\\[1cm]
+      \textbf{Benjamin Negrevergne}, \textbf{Yann Chevaleyre} and \textbf{Jamal Atif}
+    \end{Large}
   \end{center}
   \makeatother
 \end{titlepage}
