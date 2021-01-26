@@ -25,7 +25,7 @@ A circulant matrix is a matrix in which each descending diagonal from left to ri
   \rightmatrix
 \end{equation}
 \noindent
-The $n \times n$ circulant matrix $\Cmat$ is fully determined by the sequence of scalars $\{c_h\}_{h \in \Iset_0}$ where $\Iset_0 = \{0, \ldots, n-1\}$ and the $(k,j)$ entry of $\Cmat$, $\leftmat \Cmat \rightmat_{j,k}$ is given by
+The $n \times n$ circulant matrix $\Cmat$ is fully determined by the sequence of scalars $\{c_h\}_{h \in \Iset_0(n)}$ where $\Iset_0(n)= \{0, \ldots, n-1\}$ and the $(k,j)$ entry of $\Cmat$, $\leftmat \Cmat \rightmat_{j,k}$ is given by
 \begin{equation}
   \leftmat \Cmat \rightmat_{j,k} = c_{\left(k-j\right) \mod n} \enspace.
 \end{equation}
@@ -76,13 +76,13 @@ The diagonalization of circulant matrices is presented in the following theorem:
   \end{equation}
   and corresponding eigenvalues
   \begin{equation}
-    \psi_k = \sum_{j \in \Iset_0} c_j e^{-\frac{2 \pi \ci}{n} jk} \quad \Leftrightarrow \quad \psi_k = \left( \Umat \cvec \right)_k
+    \psi_k = \sum_{j \in \Iset_0(n)} c_j e^{-\frac{2 \pi \ci}{n} jk} \quad \Leftrightarrow \quad \psi_k = \left( \Umat \cvec \right)_k
   \end{equation}
   The circulant matrix $\Cmat$ can be expressed in the form 
   \begin{equation} \label{equation:ch2-diagonalization_circulant_matrix}
     \Cmat = \frac{1}{n} \Umat_n^* \diag(\Umat_n \cvec) \Umat_n
   \end{equation}
-  where $\cvec$ is a vector such that $\cvec_i = c_i, \forall i \in \Iset_0$.
+  where $\cvec$ is a vector such that $\cvec_i = c_i, \forall i \in \Iset_0(n)$.
   In particular all circulant matrices share the same eigenvectors, the same matrix $\Umat_n$ works for all $n \times n$ circulant matrices.
 \end{theorem}
 
@@ -184,7 +184,7 @@ Therefore, a Toeplitz matrix is a matrix in which each descending diagonal from 
   \rightmatrix
 \end{equation}
 \noindent
-The $n \times n$ Toeplitz matrix $\Amat$ is fully determined by a two-sided sequence of scalars $\{a_h\}_{h \in \Iset}$ where $\Iset = \{-n+1, \dots, n-1\}$ and the $(k,j)$ entry of $\Amat$, $\leftmat \Amat \rightmat_{j,k}$ is given by
+The $n \times n$ Toeplitz matrix $\Amat$ is fully determined by a two-sided sequence of scalars $\{a_h\}_{h \in \Iset(n)}$ where $\Iset(n) = \{-n+1, \dots, n-1\}$ and the $(k,j)$ entry of $\Amat$, $\leftmat \Amat \rightmat_{j,k}$ is given by
 \begin{equation}
   \leftmat \Amat \rightmat_{j,k} = a_{k-j} \enspace.
 \end{equation}
@@ -215,23 +215,23 @@ This representation of Toeplitz matrices has been widely studied in contexts suc
 
 
 The Fourier representation of Toeplitz matrices can be described as follows.
-Let $\{a_h\}_{h \in \Iset}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n\times n}$.
+Let $\{a_h\}_{h \in \Iset(n)}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n\times n}$.
 The complex-valued function $f: \Rbb \mapsto \Cbb$ of the form
 \begin{equation}
-  f(\omega) = \sum_{h \in \Iset} a_h e^{\ci h \omega}
+  f(\omega) = \sum_{h \in \Iset(n)} a_h e^{\ci h \omega}
 \end{equation}
-is the \emph{inverse Fourier transform} of the sequence $\{a_h\}_{h \in \Iset}$ with $\omega \in \Rbb$.
-From this function, one can recover the sequence $\{a_h\}_{h \in \Iset}$ using the standard Fourier transform:
+is the \emph{inverse Fourier transform} of the sequence $\{a_h\}_{h \in \Iset(n)}$ with $\omega \in \Rbb$.
+From this function, one can recover the sequence $\{a_h\}_{h \in \Iset(n)}$ using the standard Fourier transform:
 \begin{equation}
   a_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} f(\omega) d\omega \enspace.
 \end{equation}
 \noindent
 From there, we can define an operator $\Tmat$ mapping integrable functions to matrices:
 \begin{equation} \label{equation:ch2-toeplitz_operator}
-  \Tmat_n(g) \triangleq \leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \Iset_0} \enspace.
+  \Tmat_n(g) \triangleq \leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \Iset_0(n)} \enspace.
 \end{equation}
 In the following, when it is clear from context, we will write $\Tmat(g)$ instead of $\Tmat_n(g)$.
-% We can show that if $f$ is the inverse Fourier transform of $\{a_h\}_{h \in \Iset}$, then $\Tmat_n(f)$ is equal to $\Amat$.
+% We can show that if $f$ is the inverse Fourier transform of $\{a_h\}_{h \in \Iset(n)}$, then $\Tmat_n(f)$ is equal to $\Amat$.
 % This representation has led to important results on the asymptotic distribution of the eigenvalues of Toeplitz matrices (\eg, Szeg\"{o}'s theorem \cite{szego1915grenzwertsatz}).
 % In this thesis, we extend the representation to doubly-block Toeplitz matrices and use this representation to upper-bound the largest singular value of doubly-block Toeplitz matrices with respect to the generating function.
 
@@ -250,8 +250,8 @@ In the following, when it is clear from context, we will write $\Tmat(g)$ instea
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 We can extend the logic of circulant matrices and their properties to block circulant matrices, \ie, a block matrix where each block is repeated identically along diagonals and each ``row of blocks'' is a cyclic right shift of the previous one.
-Therefore, an $nm \times nm$ block circulant matrix $\Amat$ is fully determined by a sequence of blocks $\{\Amat^{(h)}\}_{h \in \Iset_0}$ and where each block $\Amat^{(h)}$ is an $m \times m$ matrix.
-The block circulant matrix $\Amat = \leftmat \Amat^{((k-j) \mod n)} \rightmat_{i, j = \Iset_0} $ is given by:
+Therefore, an $nm \times nm$ block circulant matrix $\Amat$ is fully determined by a sequence of blocks $\{\Amat^{(h)}\}_{h \in \Iset_0(n)}$ and where each block $\Amat^{(h)}$ is an $m \times m$ matrix.
+The block circulant matrix $\Amat = \leftmat \Amat^{((k-j) \mod n)} \rightmat_{i, j = \Iset_0(n)} $ is given by:
 \begin{equation}
   \Amat = 
   \leftmatrix
@@ -268,11 +268,11 @@ The block circulant matrix $\Amat = \leftmat \Amat^{((k-j) \mod n)} \rightmat_{i
 The diagonalization of circulant matrices can be extend to block circulant matrices where the diagonalization is done by blocks and the unit matrix is the Kronecker product of the Fourier matrix with the identity.
 The following theorem describes this block diagonalization:
 \begin{theorem}[Lemma 5.1 of \citet{gutierrez2012block}]
-  Let $\Amat$ be an $n^2 \times n^2$ block circulant matrix defined by the sequence of blocks $\{\Amat^{(h)}\}_{h \in \Iset_0}$, then:
+  Let $\Amat$ be an $n^2 \times n^2$ block circulant matrix defined by the sequence of blocks $\{\Amat^{(h)}\}_{h \in \Iset_0(n)}$, then:
   \begin{equation} \label{equation:ch2-block_diagonalization_block_circulant}
     \Amat = \frac{1}{n} (\Umat_n \otimes \Imat_n)^* \bdiag(\Psi^{(0)}, \cdots, \Psi^{(n-1)}) (\Umat_n \otimes \Imat_n)
   \end{equation}
-  where $\otimes$ is the Kronecker product, $\bdiag$ is the block diagonal operator, $\Umat_n$ is the Fourier matrix of size $n \times n$ and $\{\Psi^{(h)}\}_{h \in \Iset_0}$ are blocks computed as follows:
+  where $\otimes$ is the Kronecker product, $\bdiag$ is the block diagonal operator, $\Umat_n$ is the Fourier matrix of size $n \times n$ and $\{\Psi^{(h)}\}_{h \in \Iset_0(n)}$ are blocks computed as follows:
   \begin{equation}
     \leftmatrix
       \Psi^{(0)} \\
@@ -294,12 +294,12 @@ The following theorem describes this block diagonalization:
 One can remark that when the blocks are of size $1 \times 1$, \ie, scalars, this theorem coincides with \Cref{equation:ch2-diagonalization_circulant_matrix} of \Cref{theorem:ch2-diagonalization_circulant_matrix}.
 Although interesting, this representation does not provide a closed formed expression on the eigenvalues of the block circulant matrix.
 However, in the special case where the blocks are also circulant matrices -- the matrix is called a doubly-block circulant matrix -- then we can extend the diagonalization and get an explicit formula of the eigenvalues of doubly-block circulant matrices.
-First, we can remark that if the blocks $\{\Amat^{(h)}\}_{h \in \Iset_0}$ are circulant then the matrices $\{\Psi^{(h)}\}_{h \in \Iset_0}$ are also circulant because their are linear combination of circulant matrices and circulant matrices are closed by sum and product. 
+First, we can remark that if the blocks $\{\Amat^{(h)}\}_{h \in \Iset_0(n)}$ are circulant then the matrices $\{\Psi^{(h)}\}_{h \in \Iset_0(n)}$ are also circulant because their are linear combination of circulant matrices and circulant matrices are closed by sum and product. 
 Therefore, by using \Cref{theorem:ch2-diagonalization_circulant_matrix} we, have:
 \begin{equation} \label{equation:ch2-diagonalization_circulant_with_bdiag}
   \bdiag\leftmat \Amat^{(0)}, \cdots, \Amat^{(n-1)} \rightmat = \frac{1}{n} (\Imat \otimes \Umat_n)^* \boldsymbol{\Lambda} (\Imat \otimes \Umat_n)
 \end{equation}
-where $\boldsymbol{\Lambda} = \diag\left((\Umat_n \avec^{(0)}, \dots, \Umat_n \avec^{(n-1)})\right)$ and the vectors $\avec^{(0)}, \dots, \avec^{(n-1)}$ are the characteristic vectors of the circulant matrices $\Amat^{(0)}, \dots, \Amat^{(n-1)}$ such that $\Amat^{(h)} = \circulant(\avec^{(h)}), \forall h \in \Iset_0$.
+where $\boldsymbol{\Lambda} = \diag\left((\Umat_n \avec^{(0)}, \dots, \Umat_n \avec^{(n-1)})\right)$ and the vectors $\avec^{(0)}, \dots, \avec^{(n-1)}$ are the characteristic vectors of the circulant matrices $\Amat^{(0)}, \dots, \Amat^{(n-1)}$ such that $\Amat^{(h)} = \circulant(\avec^{(h)}), \forall h \in \Iset_0(n)$.
 By combining \Cref{equation:ch2-block_diagonalization_block_circulant} and \Cref{equation:ch2-diagonalization_circulant_with_bdiag}, we obtain the eigenvalues decomposition for doubly-block circulant matrices.
 For a doubly-block circulant matrices $\Amat$, we have:
 \begin{equation} \label{equation:ch2-diagonalization_doubly_block_circulant_matrix}
@@ -310,8 +310,8 @@ Furthermore, one can note that the eigenvectors are independent of the values of
 
 
 Akin to circulant and block circulant matrices, we can extend the block structure to Toeplitz matrices.
-An $nm \times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat^{(j)}\}_{h \in \Iset}$ and where each block $\Bmat^{(h)}$ is an $m \times m$ matrix.
-The block Toeplitz matrix $\Bmat = \leftmat\Bmat^{(k-j)} \rightmat_{j,k = \Iset_0}$ is given by
+An $nm \times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat^{(j)}\}_{h \in \Iset(n)}$ and where each block $\Bmat^{(h)}$ is an $m \times m$ matrix.
+The block Toeplitz matrix $\Bmat = \leftmat\Bmat^{(k-j)} \rightmat_{j,k = \Iset_0(n)}$ is given by
 
 \begin{equation} \label{equation:ch2-block_toeplitz_matrices}
   \Bmat = 
@@ -330,7 +330,7 @@ Block Toeplitz and doubly-block Toeplitz matrices (block Toeplitz matrix where t
 However, the Fourier representation of Toeplitz matrices with a \emph{generating function} can be extend to block Toeplitz and doubly-block Toeplitz matrices.
 For block Toeplitz matrices, instead of being complex-valued, the trigonometric polynomial that \emph{generates} the block Toeplitz matrix $\Bmat$ is matrix-valued and can be defined as follows:
 \begin{equation}
-  F_{\Bmat}(\omega) \triangleq \sum_{h \in \Iset} \Bmat^{(h)} e^{\ci h \omega}
+  F_{\Bmat}(\omega) \triangleq \sum_{h \in \Iset(n)} \Bmat^{(h)} e^{\ci h \omega}
 \end{equation}
 The function $F_{\Bmat}$ is said to be the \emph{generating function} of the block matrix $\Bmat$.
 To recover the block Toeplitz matrix from its generating function, we use the Toeplitz operator defined in \Cref{equation:ch2-toeplitz_operator}; therefore by construction, we have $\Tmat_n(F_\Bmat) = \Bmat$.
@@ -566,7 +566,7 @@ More formally, we can define two displacement operators (for simplification, we 
     $\diag(\vvec)$           & $\diag(\uvec)$           & Inverse of Cauchy      & $\leq 1$ \\
     \bottomrule
   \end{tabular}
-  \caption{Displacing Matrices Associated with Families of Structured Matrices \cite{pan2001structured}}
+  \caption{Displacing Matrices Associated with Families of Structured Matrices.}
   \label{table:ch2-displacing_matrices}
 \end{table}
 
