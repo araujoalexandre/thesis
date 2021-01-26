@@ -86,10 +86,11 @@ The figure also shows the distribution of the workload between the two GPUs.
     \label{table:ch1-networks_parameters_nlp}
   \end{subfigure}
   \par\bigskip
-  \caption{
-    Tables showing the different network architectures developed in the years after AlexNet.
-    \Cref{table:ch1-networks_parameters_cv} shows networks developed for computer vision tasks and \Cref{table:ch1-networks_parameters_nlp} shows networks developed for natural language processing.
-  }
+  \caption{Evolution of the number of parameters for Computer Vision and Natural Language Processing models developed in the years after AlexNet.}
+  %   List of Computer Vision and Natural Language Processing models with their number of param
+  %   Tables showing the different network architectures developed in the years after AlexNet.
+  %   \Cref{table:ch1-networks_parameters_cv} shows networks developed for computer vision tasks and \Cref{table:ch1-networks_parameters_nlp} shows networks developed for natural language processing.
+  % }
   \label{table:ch1-networks_parameters}
 \end{table}
 
@@ -121,7 +122,7 @@ Due to a high complexity and expressivity, large neural networks exhibit instabi
 Unstable neural networks tend to be vulnerable to \emph{adversarial examples}, \ie, imperceptible variations of natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,szegedy2013intriguing}.
 The \Cref{figure:ch1-adversarial_image_example} gives an example of an adversarial attack on an image.
 The small perturbation (center) is added to the original image (left) leading to an adversarial image (right).
-This behavior can cause serious security problems when neural networks used for critical decision-making (\eg judicial decision, self-driving cars, etc.).
+This behavior can cause serious security problems when neural networks are used for critical decision-making (\eg judicial decision, self-driving cars, etc.).
 
 This thesis focuses on the problem of training neural networks which are not only accurate, but also compact, easy to train, reliable and robust to adversarial examples.
 
@@ -188,7 +189,7 @@ Indeed, the convolution operation can be represented with a structured matrix \i
 
 
 In addition to offering a more compact representation, the structure of certain matrices can be exploited to obtain better algorithms for the matrix-vector product, thus optimizing memory and computing operations.
-Based on the success of convolutional neural networks, researchers have studied and proposed other types of neural networks based on weight matrices with different structures~\cite{moczulski2016acdc,sindhwani2015structured,denil2013predicting}.
+Based on the success of convolutional neural networks, researchers have studied and proposed other types of neural networks based on weight matrices with different structures~\cite{moczulski2016acdc,sindhwani2015structured}.
 \Cref{figure:ch1-example_structure_matrices} shows different types of structured matrices that have been used for deep learning.
 Although convolutional neural networks have been state-of-the-art for computer vision tasks, it remains unclear whether other types of structured neural networks can be beneficial to other types of applications and which structure can provide both accuracy and efficient computation.
 
@@ -207,29 +208,18 @@ Hereafter, we present in more detail our contributions.
 % Indeed, \citeauthor{vapnik1982estimation} linked the generalization capability of neural networks to their VC-dimension which is a measure of expressivity of the class of functions.
 % This complexity measure is based on the number of parameters, therefore, reducing the number of parameters leads to a smaller VC-Dimension, which then leads to better generalization.
 
-As a first contribution of this thesis, we use circulant matrices, which are a particular type of Toeplitz matrices, to devise a new compact architecture replacing fully connected neural networks.
+As a first contribution, we use circulant matrices, which are a particular type of Toeplitz matrices, to devise a new compact architecture replacing fully connected neural networks.
 More precisely, we study deep diagonal-circulant neural networks, which are deep neural networks in which weight matrices are the product of diagonal and circulant ones.
 Besides making a theoretical analysis of their expressivity, we introduce principled techniques for training these models: we devise an initialization scheme and propose a smart use of nonlinearity functions in order to train deep diagonal circulant networks.
 Furthermore, we show that these networks outperform recently introduced deep networks with other types of structured layers.
-We conduct a thorough experimental study to compare the performance of deep diagonal circulant networks with state-of-the-art models based on structured matrices and with dense models.
+We conduct a thorough experimental study to compare the performance of deep diagonal circulant networks with state-of-the-art models. 
+%based on structured matrices and with dense models.
 We show that our models achieve better accuracy than other structured approaches while requiring 2x fewer weights than the next best approach.
-Finally, we train compact and accurate deep diagonal circulant networks on a real-world video classification dataset with over 3.8 million training examples.
+Finally, we train accurate deep diagonal circulant networks on a real-world video classification dataset with over 3.8 million training examples.
+% Finally, we train deep diagonal circulant networks on a real-world video classification dataset with over 3.8 million training examples.
 
 The training procedure we have developed to train large diagonal-circulant neural networks was first published in the \textbf{\color{mydarkblue} European Conference on Computer Vision Workshops on Video Classification}, as part of the \yt challenge.
 Then, the theoretical analysis of the expressivity of diagonal-circulant neural networks has been published in a second paper in the \textbf{\color{mydarkblue} 24th European Conference on Artificial Intelligence}.
-
-
-% \paperbox{
-%   \underline{Alexandre Araujo}, Benjamin Negrevergne, Yann Chevaleyre and Jamal Atif,
-%   \emph{Training Compact Deep Learning Models for Video Classification using Circulant Matrices},
-%   Proceedings of the 2018 European Conference on Computer Vision Workshops on Video Classification 
-% }
-
-% \paperbox{
-%   \underline{Alexandre Araujo}, Benjamin Negrevergne, Yann Chevaleyre and Jamal Atif,
-%   \emph{Understanding and Training Deep Diagonal Circulant Neural Networks},
-%   Proceedings of the 24th European Conference on Artificial Intelligence
-% }
 
 
 
@@ -238,7 +228,7 @@ Then, the theoretical analysis of the expressivity of diagonal-circulant neural 
 \label{subsection:ch1-training_robust_neural_networks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-As a second contribution of this thesis, we build robust neural networks by studying the properties of the structure of convolution.
+As a second contribution, we build robust neural networks by studying the properties of the structure of convolution.
 We devise a new upper bound on the largest singular value of convolution layers that is both tight and easy to compute.
 Our work is based on the result of~\citet{gray2006toeplitz} which states that an upper bound on the singular value of Toeplitz matrices can be computed from the inverse Fourier transform of the characteristic sequence of these matrices.
 From our analysis immediately follows an algorithm for bounding the Lipschitz constant of a convolutional layer, and by extension the Lipschitz constant of the whole network.
