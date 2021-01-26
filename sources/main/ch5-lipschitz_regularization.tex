@@ -43,7 +43,7 @@ In summary, we make the three following contributions:
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{A Bound on the Spectrum of Toeplitz and Block Toeplitz Matrices}
+\section{Upper-Bounds the Spectrum of Toeplitz and Block Toeplitz Matrices}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In order to devise a bound on the Lipschitz constant of a convolution layer as used by the Deep Learning community, we study the properties of \emph{doubly-block Toeplitz matrices}. 
@@ -158,8 +158,8 @@ Now, we can state two known theorems which upper bound the largest singular valu
 % \end{theorem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Bound on the singular value of Doubly-Block Toeplitz matrices}
-\label{subsection:ch5-bound_on_the_singular_value_of_doubly-block_toeplitz_matrices}
+\section{Upper-Bound on the Largest Singular value of Doubly-Block Toeplitz matrices}
+\label{section:ch5-bound_on_the_singular_value_of_doubly-block_toeplitz_matrices}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 We extend the reasoning from Toeplitz and block Toeplitz matrices to doubly-block Toeplitz matrices (\ie block Toeplitz matrices where each block is also a Toeplitz matrix).
@@ -216,7 +216,7 @@ Note that in the following, we only consider generating functions as trigonometr
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Bound on the Singular Values of Convolutional Layers}
+\section{Extending the Bound to Convolutional Layers}
 \label{section:ch5-bound_on_the_singular_values_of_convolutional_layers}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -274,7 +274,7 @@ Let $\Amat$ and $\Bmat$ be Hermitian positive semi-definite matrices. If $\Amat 
 
 
 Before proving \Cref{theorem:bound_sv_stacked_dbt}, we generalize the famous Widom identity \cite{widom1976asymptotic} that expresses the relation between Toeplitz and Hankel matrices to doubly-block Toeplitz and Hankel matrices.
-We will need to generalize the doubly-block Toeplitz operator presented in~\Cref{subsection:ch5-bound_on_the_singular_value_of_doubly-block_toeplitz_matrices}.
+We will need to generalize the doubly-block Toeplitz operator presented in~\Cref{section:ch5-bound_on_the_singular_value_of_doubly-block_toeplitz_matrices}.
 
 Let $\Hmat^{\alpha_p} (f) = \leftmat \Hmat^{\alpha_p}_{i,j}(f) \rightmat_{i,j \in \Iset_0(n)}$ where $\Hmat^{\alpha_p}_{i,j}$ is defined as:
 \begin{equation}
@@ -494,7 +494,7 @@ Furthermore, the grid search algorithm can be parallelized effectively on CPUs o
     \includegraphics[scale=0.35]{figures/main/ch5-lipschitz_regularization/contour_poly_200_1_9_5.pdf}
     \caption{kernel $9\times5\times5$}
   \end{subfigure}
-  \caption{These figures represent the contour plot of multivariate trigonometric polynomials where the values of the coefficient are the values of a random convolutional kernel. The red dots in the figures represent the maximum modulus of the trigonometric polynomials.}
+  \caption{Contour plots of multivariate trigonometric polynomials where the values of the coefficient are the values of a random convolutional kernel. The red dots in the figures represent the maximum modulus of the trigonometric polynomials.}
   \label{figure:contour_plot_trigonometric_polynomials}
 \end{figure}%
 
@@ -553,7 +553,7 @@ where $\mathbf{k}_{\Mmat^{(n)}}$ is the  convolution kernel of the convolution d
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\scalefigure\textwidth]{figures/main/ch5-lipschitz_regularization/convergence_bounds.pdf}
-  \caption{This graph represents the function $\Gamma(n)$ defined in \Cref{subsection:ch2-analysis_of_the_tightness_of_the_bound} for different kernel size.}
+  \caption{Representation of the function $\Gamma(n)$ defined in \Cref{subsection:ch2-analysis_of_the_tightness_of_the_bound} for different kernel size.}
   \label{figure:convergence_bound}
 \end{figure}
 
@@ -603,7 +603,7 @@ Therefore $\lipbound$ gives an almost exact value of the largest singular value 
     \bottomrule
   \end{tabular}%
   }
-  \caption{The following table compares different approaches for computing an approximation of the largest singular value of a convolutional layer. It shows the ratio between the approximation and the true largest singular value. The approximation is better for a ratio close to one.}
+  \caption{Comparison of the accuracy of approximation methods for computing an approximation of the largest singular value of a convolutional layer.}
   \label{table:ch5-comparaison_bounds}%
 \end{table}
 
@@ -839,7 +839,8 @@ Hence they offer an increased robustness to adversarial attacks as demonstrated 
     \caption{Results on CIFAR100 dataset}
     \label{subfigure:ch5-results_cifar100_data}
   \end{subfigure}
-  \caption{Accuracy under $\ell_2$ and $\ell_\infty$ attacks of CIFAR10/100 datasets. We compare vanilla Adversarial Training with the combination of Lipschitz regularization and Adversarial Training. We also compare the effectiveness of the power method by~\citet{farnia2018generalizable} and $\lipbound$. We fix the parameter $\lambda_2$ from \Cref{equation:ch5-obj_function}) to $0.008$ for AT+PM and AT+LipReg. It has been chosen from a grid search among 10 values. The attacks are computed with 200 iterations. }
+  \caption{Accuracy under $\ell_2$ and $\ell_\infty$ attacks of different training schemes on CIFAR10/100 datasets.} 
+% We compare vanilla Adversarial Training with the combination of Lipschitz regularization and Adversarial Training. We also compare the effectiveness of the power method by~\citet{farnia2018generalizable} and $\lipbound$. We fix the parameter $\lambda_2$ from \Cref{equation:ch5-obj_function}) to $0.008$ for AT+PM and AT+LipReg. It has been chosen from a grid search among 10 values. The attacks are computed with 200 iterations. }
   \label{table:ch5-cifar_robustness}%
 \end{table}%
 
@@ -861,8 +862,9 @@ Hence they offer an increased robustness to adversarial attacks as demonstrated 
     \bottomrule
   \end{tabular}%
   }
-  \caption{This table shows the accuracy and accuracy under $\ell_2$ and $\ell_\infty$ attack of ImageNet dataset. We compare Adversarial Training with the combination of Lipschitz regularization and Adversarial Training \cite{madry2018towards}. }
-    \label{table:ch5-results_imagenet_dataset}
+  % \caption{This table shows the accuracy and accuracy under $\ell_2$ and $\ell_\infty$ attack of ImageNet dataset. We compare Adversarial Training with the combination of Lipschitz regularization and Adversarial Training \cite{madry2018towards}. }
+  \caption{Natural accuracy and accuracy under $\ell_2$ and $\ell_\infty$ attacks of different training schemes on the ImageNet dataset.} 
+  \label{table:ch5-results_imagenet_dataset}
 \end{table}%
 
 
