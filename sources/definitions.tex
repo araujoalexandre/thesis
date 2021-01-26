@@ -79,10 +79,6 @@
 % Hyperlinks
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \definecolor{mydarkblue}{rgb}{0,0.08,0.45}
-% \definecolor{mydarkblue}{rgb}{0,0.14,0.45}
-% \definecolor{mydarkblue}{rgb}{0.25, 0.41, 0.88}
-% \definecolor{mydarkblue}{rgb}{0.0, 0.22, 0.66}
 \definecolor{mydarkblue}{rgb}{0.02, 0.40, 0.62}
 \usepackage[
   colorlinks=true,
@@ -230,20 +226,6 @@
 % Theorems
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% maybe use nobreak to prevent theorem to be on multiple pages
-% mdframed={
-%   nobreak=true,
-%   topline=false,
-%   bottomline=false,
-%   rightline=false,
-%   leftline=false,
-%   linewidth=0pt,
-%   backgroundcolor=white,
-%   innerleftmargin=0pt,
-%   innerrightmargin=0pt,
-% }
-
-
 \declaretheoremstyle[
   spaceabove=6pt, spacebelow=6pt,
   bodyfont=\itshape,
@@ -349,8 +331,6 @@
 
 \declaretheoremstyle[
   notebraces={}{},
-  % spaceabove=30pt,
-  % spacebelow=30pt,
   headfont=\bfseries\itshape,
   notefont=\bfseries\itshape,
   postheadspace=1em,
@@ -365,8 +345,6 @@
     backgroundcolor=white,
     innerleftmargin=0.02\textwidth,
     innerrightmargin=0pt,
-    % innertopmargin=30pt,
-    % innerbottommargin=0pt
   }
 ]{proofstyle}
 
@@ -395,33 +373,6 @@
 \newcommand{\wrt}   {w.r.t.\xspace}
 
 
-\newcommand{\DC}    {$\mathbf{DC}$\xspace}
-\newcommand{\ACDC}  {$\mathbf{ACDC}$\xspace}
-% \newcommand{\AFDF}  {$\mathbf{AFDF}^{-1}$\xspace}
-
-% Star for separating paragraph
-\newcommand{\drawstar}{
-  \begin{center}
-    \color{mydarkblue}{\FourStar}
-  \end{center}
-}
-
-\newcommand{\paperbox}[1]{
-\begin{mdframed}[linecolor=mydarkblue,linewidth=2pt,backgroundcolor=white]
-  #1
-\end{mdframed}
-}
-
-
-
-% \newcommand{\drn}{Deep ReLU network\xspace}
-% \newcommand{\drns}{Deep ReLU networks\xspace}
-% \newcommand{\DCRN}{DCRN\xspace}
-% \newcommand{\DCRNs}{DCRNs\xspace}
-% \newcommand{\divisiblerank}{divisible rank}
-% \newcommand{\totalrank}{total rank}
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Specific Operators
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -438,35 +389,20 @@
 \DeclareMathOperator*{\ranfPCadvRisk}{Rand-PC-Risk_{\alpha}}
 \DeclareMathOperator*{\B}            {B(\alpha)}
 \DeclareMathOperator*{\probmap}      {M}
-
-% \DeclareMathOperator{\lipop}{Lip}
-% \DeclareMathOperator{\lipbound}{LipBound}
-% \newcommand{\lip}[1]{\lipop{(#1)}}
-% \newcommand{\lipbound}[1]{\lipboundop{(#1)}}
-
-% \DeclareMathOperator{\lipbound}{LipBound}
-% \DeclareMathOperator{\reshape}       {vec}
-% \DeclareMathOperator{\pad}           {pad}
-% \DeclareMathOperator{\relu}          {ReLU}
+\DeclareMathOperator*{\EoT}          {EoT}
+\DeclareMathOperator*{\Vol}          {Vol}
 
 % \relax\vec
 % \renewcommand{\vec}    {\ensuremath{\mathrm{vec}}\xspace}
 \newcommand{\relu}     {\ensuremath{\mathrm{ReLU}}\xspace}
 \newcommand{\pad}      {\ensuremath{\mathrm{pad}}\xspace}
-\newcommand{\lipp}[2]   {\ensuremath{\mathrm{Lip}_{#1} \left(#2\right)}}
+\newcommand{\lipp}[2]  {\ensuremath{\mathrm{Lip}_{#1} \left(#2\right)}}
 \newcommand{\lip}[1]   {\ensuremath{\mathrm{Lip}\left(#1\right)}}
 \newcommand{\lipbound} {\ensuremath{\mathrm{LipBound}}}
 \newcommand{\diag}     {\ensuremath{\mathrm{diag}}}
-\newcommand{\bdiag}     {\ensuremath{\mathrm{bdiag}}}
+\newcommand{\bdiag}    {\ensuremath{\mathrm{bdiag}}}
 \newcommand{\sign}     {\ensuremath{\mathrm{sign}}}
 \renewcommand{\mod}[1] {\ \mathrm{mod}\ #1}
-
-
-
-% \DeclareMathOperator*{\diag}         {diag}
-% \DeclareMathOperator{\sign}          {sign}
-\DeclareMathOperator*{\EoT}          {EoT}
-\DeclareMathOperator*{\Vol}          {Vol}
 
 % text in math environment 
 \newcommand{\circulant}   {\ensuremath \mathrm{circ}}
@@ -481,22 +417,15 @@
 % Custom Commands
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-% TODO delete these commands
-% \newcommand{\seqidx}{h}
-% \newcommand{\seqsetN}{N}
-% \newcommand{\seqsetM}{M}
 \newcommand{\Cnn}{\Cbb^{n \times n}}
 \newcommand{\Cn}{\Cbb^{n}}
 \newcommand{\F}{\ensuremath \mathcal{F}}
-
 
 \newcommand{\scalefigure}{0.80}
 \newcommand{\removespace}{\vspace{-\baselineskip}}
 
 % complex number i
 \newcommand{\ci}{\ensuremath \mathbf{i}}
-
 
 % norms
 \newcommand{\lzero} {\ensuremath \ell_0 \xspace}
@@ -506,15 +435,12 @@
 \newcommand{\lp}    {\ensuremath \ell_p \xspace}
 \newcommand{\fro}   {\ensuremath \mathrm{F}}
 
-
 % Vector of ones
 \newcommand{\onevec}[1]{\ensuremath \mathbf{1}_{#1}}
 \newcommand{\zerovec}[1]{\ensuremath \mathbf{0}_{#1}}
 
 % neural networks
 \newcommand{\nn}{N}
-% \newcommand{\dcnn}{DCNN\xspace}
-% \newcommand{\dcnns}{DCNNs\xspace}
 \newcommand{\act}{\rho}
 \newcommand{\layer}{\phi}
 \newcommand{\weights}{\Omega}
@@ -522,7 +448,6 @@
 \newcommand{\dimw}{w}
 \newcommand{\dimb}{b}
 \newcommand{\adv}{\boldsymbol{\tau}}
-
 
 % operator low displacement rank
 \newcommand{\triangleopup}{\boldsymbol{\bigtriangleup}}
@@ -558,8 +483,6 @@
 
 % special command for big O notation
 \newcommand{\bigO}{\ensuremath \mathcal{O}}
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Debugging
