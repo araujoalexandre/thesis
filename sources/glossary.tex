@@ -22,7 +22,7 @@
 
 \newglossaryentry{integer set}{%
   name        = {$[n]$},
-  description = {The set $\left\{ x \in \Nbb \mid 1 \leq x \leq b \right\}$},
+  description = {The set $\left\{ x \in \Nbb \mid 1 \leq x \leq n \right\}$},
 }
 
 \newglossaryentry{real numbers interval}{%
@@ -31,13 +31,8 @@
 }
 
 \newglossaryentry{set P}{%
-  name        = {$\mathcal{P}$},
-  description = {The set $\left\{ -n+1, \dots, n-1 \right\}$},
-}
-
-\newglossaryentry{set P 0}{%
-  name        = {$\mathcal{P}_0$},
-  description = {The set $\left\{ 0, \dots, n-1 \right\}$},
+  name        = {$\Iset(n)$, $\Iset_0(n)$},
+  description = {The sets $\left\{ -n+1, \dots, n-1 \right\}$ and $\left\{ 0, \dots, n-1 \right\}$ respectively},
 }
 
 \newglossaryentry{imaginary number}{%
@@ -125,7 +120,7 @@
   description = {Largest singular value of matrix $\Mmat$, \ie $\sigma_1(\Mmat) = \norm{\Mmat}_2$},
 }
 
-\newglossaryentry{largest eigenvalue of matrix}{%
+\newglossaryentry{largest eigenvalue of Hermitian matrix}{%
   name        = {$\lambda_1(\Mmat)$},
   description = {Largest eigenvalue of matrix $\Mmat$},
 }
@@ -140,11 +135,15 @@
   description = {$\Mmat$ is positive definite, \ie $\xvec^*\Mmat\xvec > 0 \text{ for all } \xvec \in \Cn$},
 }
 
-% \newglossaryentry{probability, expectation}{%
-%   name        = {$\Pbb, \Ebb$},
-%   description = {Probability and expectation of a random variable},
-% }
+\newglossaryentry{probability, expectation}{%
+  name        = {$\Pbb, \Ebb$},
+  description = {Probability and expectation of a random variable},
+}
 
+\newglossaryentry{normal distribution}{%
+  name        = {$\mathcal{N}$},
+  description = {Gaussian distribution},
+}
 
 
 
