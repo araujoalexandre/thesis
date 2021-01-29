@@ -4,10 +4,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \localtoc
 
-% \begin{abstract}
-% This paper tackles the problem of Lipschitz regularization of Convolutional Neural Networks. Lipschitz regularity is now established as a key property of modern deep learning with implications in training stability, generalization, robustness against adversarial examples, etc. However, computing the exact value of the Lipschitz constant of a neural network is known to be NP-hard. Recent attempts from the literature introduce upper bounds to approximate this constant that are either efficient but loose or accurate but computationally expensive. In this work, by leveraging the theory of Toeplitz matrices, we introduce a new upper bound for convolutional layers that is both tight and easy to compute. Based on this result we devise an algorithm to train Lipschitz regularized Convolutional Neural Networks.
-% \end{abstract}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
@@ -43,21 +39,32 @@ In summary, we make the three following contributions:
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Upper-Bounds the Spectrum of Toeplitz and Block Toeplitz Matrices}
+\section{Results on the Spectrum of Matrices from the Toeplitz Family}
+\label{section:ch5-results_on_the_spectrum_of_matrices_from_the_toeplitz_family}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Upper-Bounds on the Largest Singular Value of Toeplitz and Block Toeplitz Matrices}
+\label{subsection:ch5-upper_bounds_on_the_largest_singular_value_of_toeplitz_and_block_toeplitz_matrices}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In order to devise a bound on the Lipschitz constant of a convolution layer as used by the Deep Learning community, we study the properties of \emph{doubly-block Toeplitz matrices}. 
 Doubly-block Toeplitz matrices inherits the properties of Toeplitz and block Toeplitz matrices.
 Recall that Toeplitz and block Toeplitz matrices do not have a closed-form expression of their eigenvalues as their circulant counterpart.
 However, we can represent Toeplitz and block Toeplitz matrices with a 2$\pi$-periodic function which can describe very precisely the spectrum of the matrices. 
-Let $\{a_h\}_{h \in \Iset(n)}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n\times n}$ and let $\{\Bmat^{(h)}\}_{h \in \Iset(n)}$ be the sequence of $m\times m$ blocks of the block Toeplitz matrix $\Bmat$.
-The matrices are therefore denoted $\Amat = \leftmat a_{j-i} \rightmat_{i,j \in \Iset(n)}$ and $\Bmat = \leftmat \Bmat^{(j-i)} \rightmat_{i,j \in \Iset(n)}$ where $\Iset(n) = \left\{ -n+1, \cdots, n-1 \right\}$.
-We can then defined their generating functions $f(\omega) = \sum_{h \in \Iset(n)} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Iset(n)} \Bmat^{(h)} e^{\ci h \omega}$ which are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Iset(n)}$ and $\{\Bmat^{(h)}\}_{h \in \Iset(n)}$, with $\omega \in \Rbb$.
-From there, similarly to the work done by~\citet{grenander1958toeplitz}, we define an operator $\Tmat$ mapping integrable functions to matrices:
-\begin{equation} \label{equation:expression_toeplitz_matrix}
-  \Tmat(g)  \triangleq\leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \Iset_0(n)} \enspace.
+Let $\{a_h\}_{h \in \Iset_n}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n \times n}$ and let $\{\Bmatsf{(h)}\}_{h \in \Iset_n}$ be the sequence of $m \times m$ blocks of the block Toeplitz matrix $\Bmat \in \Rbb^{nm \times nm}$.
+The matrices are therefore denoted $\Amat = \leftmat a_{j-i} \rightmat_{i,j \in \Iset_n}$ and $\Bmat = ( \Bmatsf^{(j-i)} )_{i,j \in \Iset_n}$ where $\Iset_n = \left\{ -n+1, \cdots, n-1 \right\}$.
+We can defined trigonometric polynomials $f: \Rbb \rightarrow \Cbb$ and $F: \Rbb \rightarrow \Cbb^{m \times m}$ such that:
+\begin{equation}
+  f(\omega) = \sum_{h \in \Iset_n} a_h e^{\ci h \omega} \quad \quad  F(\omega) = \sum_{h \in \Iset_n} \Bmat^{(h)} e^{\ci h \omega}
 \end{equation}
-Therefore, by construction, we have $\Tmat(f) = \Amat$ and $\Tmat(F) = \Bmat$.
+which are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Iset_n}$ and $\{\Bmat^{(h)}\}_{h \in \Iset_n}$.
+From there, similarly to the work done by~\citet{grenander1958toeplitz}, we define an operator $\Tmat$ mapping integrable functions to Toeplitz matrices:
+\begin{equation} \label{equation:expression_toeplitz_matrix}
+  \Tmat(g) \triangleq\leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \Iset^+_n} \enspace,
+\end{equation}
+such that $\Tmat(f) = \Amat$ and $\Tmat(F) = \Bmat$.
+
 
 Now, we can state two known theorems which upper bound the largest singular value of Toeplitz and block Toeplitz matrices with respect to their generating functions.
 \begin{theorem}[Bound on the singular values of Toeplitz matrices] \label{theorem:teoplitz_sup_singular}
@@ -82,93 +89,19 @@ Now, we can state two known theorems which upper bound the largest singular valu
 
 
 
-% The complex-valued function $f(\omega) = \sum_{h \in \Iset(n)} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Iset(n)} \Bmat_h e^{\ci h \omega}$ are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Iset(n)}$ and $\{\Bmat_h\}_{h \in \Iset(n)}$, with $\omega \in \Rbb$.
-% From these two functions, one can recover these two sequences using the standard Fourier transform:
-% \begin{equation}
-%   a_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} f(\omega) d\omega \quad \quad \Bmat_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} F(\omega) d\omega .
-% \end{equation}
-
-
-
-% In this section, we first introduce the necessary background on Toeplitz and block Toeplitz matrices, and introduce a new result on doubly-block Toeplitz matrices.
-%
-% Toeplitz matrices and block Toeplitz matrices are well-known types of structured matrices.
-
-
-% A Toeplitz matrix (respectively a block Toeplitz matrix) is a matrix in which each scalar (respectively block) is repeated identically along diagonals.
-% An $n \times n$ Toeplitz matrix $\Amat$ is fully determined by a two-sided sequence of scalars: $\{a_h\}_{h \in \Iset(n)}$, whereas an $nm\times nm$ block Toeplitz matrix $\Bmat$ is fully determined by a two-sided sequence of blocks $\{\Bmat^{(h)}\}_{h \in \Iset(n)}$, where $\Iset(n) = \{-n+1,\dots, n-1\}$ and where each block $\Bmat_h$ is an $m \times m$ matrix.
-% \begin{equation*}
-%   \Amat = \leftmatrix
-%     a_0      & a_{1}  & \cdots & a_{n-1} \\ \vspace{0.1cm}
-%     a_{-1}   & a_0    & \ddots & \vdots  \\ \vspace{0.3cm}
-%     \vdots   & \ddots & a_{0}  & a_{1}   \\ 
-%     a_{-n+1} & \cdots & a_{-1} & a_0 
-%   \rightmatrix \quad \quad \quad \quad 
-%     \Bmat = \leftmatrix
-%     \Bmat^{(0)}    & \Bmat^{(1)} & \cdots        & \Bmat^{(n-1)} \\ \vspace{0.1cm}
-%     \Bmat^{(-1)}   & \Bmat^{(0)} & \ddots        & \vdots        \\ \vspace{0.3cm}
-%     \vdots         & \ddots      & \Bmat^{(0)}   & \Bmat^{(1)}   \\ 
-%     \Bmat^{(-n+1)} & \cdots      & \Bmat^{(-1)}  & \Bmat^{(0)}
-%   \rightmatrix.
-% \end{equation*}
-% Finally, a doubly-block Toeplitz matrix is a block Toeplitz matrix in which each block is itself a Toeplitz matrix.
-% In the remainder, we will use the standard notation $\leftmat\ \cdot\ \rightmat_{i,j \in \Iset(n)}$ to construct (block) matrices.
-% For example, $\Amat = \leftmat a_{j-i} \rightmat_{i,j \in \Iset(n)}$ and $\Bmat = \leftmat \Bmat^{(j-i)} \rightmat_{i,j \in \Iset(n)}$.
-
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \subsection{Bound on the Singular Values of Toeplitz and Block Toeplitz Matrices}
-% \label{subsection:ch5-bound_on_the_singular_value_of_toeplitz_and_block_toeplitz_matrices}
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% A standard tool for manipulating (block) Toeplitz matrices is the use of Fourier analysis.
-% Let $\{a_h\}_{h \in \Iset(n)}$ be the sequence of coefficients of the Toeplitz matrix $\Amat \in \Rbb^{n\times n}$ and let $\{\Bmat_h\}_{h \in \Iset(n)}$ be the sequence of $m\times m$ blocks of the block Toeplitz matrix $\Bmat$.
-% The complex-valued function $f(\omega) = \sum_{h \in \Iset(n)} a_h e^{\ci h \omega}$ and the matrix-valued function $F(\omega) = \sum_{h \in \Iset(n)} \Bmat_h e^{\ci h \omega}$ are the \emph{inverse Fourier transforms} of the sequences $\{a_h\}_{h \in \Iset(n)}$ and $\{\Bmat_h\}_{h \in \Iset(n)}$, with $\omega \in \Rbb$.
-% From these two functions, one can recover these two sequences using the standard Fourier transform:
-% \begin{equation}
-%     a_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} f(\omega) d\omega \quad \quad \Bmat_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} F(\omega) d\omega .
-% \end{equation}
-%
-% From there, similarly to the work done by~\citet{gray2006toeplitz,gutierrez2012block}, we can define an operator $\Tmat$ mapping integrable functions to matrices:
-% \begin{equation} \label{equation:expression_toeplitz_matrix}
-%   \Tmat(g)  \triangleq\leftmat\frac{1}{2\pi}\int_{0}^{2\pi}e^{-\ci(i-j)\omega}g(\omega)\,d\omega\rightmat_{i,j \in \Iset_0(n)} \enspace.
-% \end{equation}
-%
-% Note that if $f$ is the inverse Fourier transform of $\{a_h\}_{h \in \Iset(n)}$, then $\Tmat(f)$ is equal to $\Amat$.
-% Also, if $F$ is the inverse Fourier transform of $\{\Bmat_h\}_{h \in \Iset(n)}$ as defined above, then the integral in \Cref{equation:expression_toeplitz_matrix} is matrix-valued, and thus $\Tmat(F) \in \Rbb^{mn \times mn}$ is the block matrix $\Bmat$.
-%
-% Now, we can state two known theorems which upper bound the maximal singular value of Toeplitz and block Toeplitz matrices with respect to their generating functions.
-% In the rest of the paper, we refer to $\sigma_1(\ \cdot\ )$ as the maximal singular value. 
-%
-% \begin{theorem}[Bound on the singular values of Toeplitz matrices] \label{theorem:teoplitz_sup_singular}
-%   Let $f: \Rbb \rightarrow \Cbb$, be continuous and $2\pi$-periodic. Let $\Tmat(f) \in \Rbb^{n \times n}$ be a Toeplitz matrix generated by the function $f$, then:
-%   \begin{align}
-%     \sigma_1 \left( \Tmat(f) \right) \leq \sup_{\omega \in [0, 2\pi]} |f(\omega)|.
-%   \end{align}
-%   \removespace
-% \end{theorem}
-%
-% \Cref{theorem:teoplitz_sup_singular} is a direct application of  Lemma 4.1 by~\citet{gray2006toeplitz} for real Toeplitz matrices. 
-%   \begin{theorem}[Bound on the singular values of Block Toeplitz matrices ~\citet{gutierrez2012block}] \label{theorem:block_teoplitz_sup_singular}
-%   Let $F: \Rbb \rightarrow \Cbb^{m \times m}$ be a matrix-valued function which is continuous and $2 \pi$-periodic.
-%   Let $\Tmat(F) \in \Rbb^{mn \times mn}$ be a block Toeplitz matrix generated by the function $F$, then:
-%   \begin{align}
-%     \sigma_1 \left( \Tmat(F) \right) \leq \sup_{\omega \in [0, 2\pi]} \sigma_1 \left( F\left( \omega \right) \right) .
-%   \end{align}
-%   \removespace
-% \end{theorem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Upper-Bound on the Largest Singular value of Doubly-Block Toeplitz matrices}
-\label{section:ch5-bound_on_the_singular_value_of_doubly-block_toeplitz_matrices}
+\subsection{Upper-Bound on the Largest Singular Value of Doubly-Block Toeplitz Matrices}
+\label{subsection:ch5-bound_on_the_singular_value_of_doubly-block_toeplitz_matrices}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 We extend the reasoning from Toeplitz and block Toeplitz matrices to doubly-block Toeplitz matrices (\ie block Toeplitz matrices where each block is also a Toeplitz matrix).
 A doubly-block Toeplitz matrix can be generated by a function $f: \Rbb^2 \rightarrow \Cbb$ using the 2-dimensional inverse Fourier transform.
 For this purpose, we define an operator $\Dmat$ which maps a function $f: \Rbb^2 \rightarrow \Cbb$ to a doubly-block Toeplitz matrix of size $nm \times nm$.
 For the sake of clarity, the dependence of $\Dmat(f)$  on $m$ and $n$ is omitted.
-Let $\Dmat(f) = \leftmat \Dmat_{i,j}(f)\rightmat_{i,j \in \Iset_0(n)}$ where $\Dmat_{i,j}$ is defined as:
+Let $\Dmat(f) = \leftmat \Dmat_{i,j}(f)\rightmat_{i,j \in \Iset^+_n}$ where $\Dmat_{i,j}$ is defined as:
 \begin{equation} \label{equation:doubly_block_toeplitz_operator}
-  \Dmat_{i,j}(f) = \leftmat \frac{1}{4\pi^{2}} \int_{[0,2\pi]^{2}} e^{- \ci \left((i-j)\omega_{1}+(k-l)\omega_{2}\right)}f(\omega_{1},\omega_{2})\,d(\omega_{1},\omega_{2}) \rightmat_{k,l \in \Iset_0(m)} \enspace.
+  \Dmat_{i,j}(f) = \leftmat \frac{1}{4\pi^{2}} \int_{[0,2\pi]^{2}} e^{- \ci \left((i-j)\omega_{1}+(k-l)\omega_{2}\right)}f(\omega_{1},\omega_{2})\,d(\omega_{1},\omega_{2}) \rightmat_{k,l \in \Iset^+_m} \enspace.
 \end{equation}
 
 We are now able to combine \Cref{theorem:teoplitz_sup_singular,theorem:block_teoplitz_sup_singular} to bound the largest singular value of doubly-block Toeplitz matrices with respect to their generating functions. 
@@ -181,7 +114,7 @@ Note that in the following, we only consider generating functions as trigonometr
   \end{align}
   where the function $f: \Rbb^2 \rightarrow \Cbb$, is a multivariate trigonometric polynomial of the form:
   \begin{equation}\label{equation:muli_variate_poly_on_M}
-    f(\omega_1, \omega_2) \triangleq \sum_{h_1 \in \Iset(n)} \sum_{h_2 \in \Iset(m)} d_{h_1, h_2} e^{\ci (h_1 \omega_1 + h_2 \omega_2)},
+    f(\omega_1, \omega_2) \triangleq \sum_{h_1 \in \Iset_n} \sum_{h_2 \in \Iset_m} d_{h_1, h_2} e^{\ci (h_1 \omega_1 + h_2 \omega_2)},
   \end{equation}
   where $d_{h_{1},h_{2}}$ is the ${h_2}^\textrm{th}$ scalar of the ${h_1}^\textrm{th}$ block of the doubly-Toeplitz matrix $\Dmat(f)$.
 \end{maintheorem}
@@ -192,9 +125,9 @@ Note that in the following, we only consider generating functions as trigonometr
   We can then express a doubly-block Toeplitz matrix with the operator $\Tmat(F)$ where the matrix-valued generating function $F$ has Toeplitz coefficient.
   Let us define a matrix-valued trigonometric polynomial $F:\Rbb\rightarrow\Cbb^{n \times n}$ of the form:
   \begin{equation}
-    F(\omega_1) = \sum_{h_1 \in N} \Amat^{(h_1)} e^{\ci h_1\omega_1}
+    F(\omega_1) = \sum_{h_1 \in N} \Amatsf^{(h_1)} e^{\ci h_1\omega_1}
   \end{equation}
-  where $\Amat^{(h_1)}$ are Toeplitz matrices of size $m \times m$ determined by the sequence $\{d_{h_1, -m+1}, \dots, d_{h_1, m-1} \}$. 
+  where $\Amatsf^{(h_1)}$ are Toeplitz matrices of size $m \times m$ determined by the sequence $\{d_{h_1, -m+1}, \dots, d_{h_1, m-1} \}$. 
   From \Cref{theorem:block_teoplitz_sup_singular} we have:
   \begin{equation}
   \sigma_1\left(\Tmat(F) \right) \leq \sup_{\omega_1 \in [0,2\pi] } \sigma_{1}\left( F(\omega_1) \right) \label{equation:th_bound_block_toeplitz}
@@ -274,12 +207,12 @@ Let $\Amat$ and $\Bmat$ be Hermitian positive semi-definite matrices. If $\Amat 
 
 
 Before proving \Cref{theorem:bound_sv_stacked_dbt}, we generalize the famous Widom identity \cite{widom1976asymptotic} that expresses the relation between Toeplitz and Hankel matrices to doubly-block Toeplitz and Hankel matrices.
-We will need to generalize the doubly-block Toeplitz operator presented in~\Cref{section:ch5-bound_on_the_singular_value_of_doubly-block_toeplitz_matrices}.
+We will need to generalize the doubly-block Toeplitz operator presented in~\Cref{subsection:ch5-bound_on_the_singular_value_of_doubly-block_toeplitz_matrices}.
 
-Let $\Hmat^{\alpha_p} (f) = \leftmat \Hmat^{\alpha_p}_{i,j}(f) \rightmat_{i,j \in \Iset_0(n)}$ where $\Hmat^{\alpha_p}_{i,j}$ is defined as:
+Let $\Hmat^{\alpha_p} (f) = \leftmat \Hmat^{\alpha_p}_{i,j}(f) \rightmat_{i,j \in \Iset^+_n}$ where $\Hmat^{\alpha_p}_{i,j}$ is defined as:
 \begin{equation}
   \Hmat^{\alpha_p}_{i,j}(f) =\leftmat \frac{1}{4\pi^{2}}\int_{[0,2\pi]^{2}} e^{-\ci \alpha_p(i, j, k, l, \omega_1, \omega_2)}  f(\omega_{1},\omega_{2})\,d(\omega_{1},\omega_{2})
-  \rightmat_{k,l \in \Iset_0(n)} \enspace.
+  \rightmat_{k,l \in \Iset^+_n} \enspace.
 \end{equation}
 Note that as with the operator $\Dmat(f)$ we only consider generating functions as trigonometric polynomials with real coefficients therefore the matrices generated by $\Hmat(f)$ are real. 
 And as with the operator $\Dmat(f)$, the matrices generated by the operator $\Hmat^{\alpha_p}$ are of size $n^2 \times n^2$. 
@@ -305,7 +238,9 @@ We now present the generalization of the Widom identity for Doubly-Block Toeplit
 \end{lemma}
 
 \noindent
-Now we can prove \Cref{theorem:bound_sv_stacked_dbt} which bounds the largest singular value of vertically stacked doubly-block Toeplitz matrices with their generating functions. 
+The proof of this Lemma is rather involved, therefore we decided to defer it to the Appenix~\ref{appendix:ap1-proof_of_the_generalization_of_widom_identity}.
+
+Now we have all the element to prove \Cref{theorem:bound_sv_stacked_dbt} which bounds the largest singular value of vertically stacked doubly-block Toeplitz matrices with their generating functions. 
 
 \begingroup
 \addtolength{\jot}{1.5em}
@@ -447,7 +382,7 @@ Let us define a kernel $\Kmat \in \Rbb^{\cout \times \cin \times s \times s}$, a
 \end{equation}
 where $k_{i, j, h_1,h_2} = \leftmat \Kmat \rightmat_{i, j, a, b}$ with $a =  s - p - 1 + i$ and $b =  s - p - 1 + j$.
 
-In the rest of the paper, we will refer to the bound in \Cref{theorem:ch5-bound_max_sv_convolution} applied to a kernel as $\lipbound$ and we denote $\lipbound(\Kmat)$ the Lipschitz upper bound of the convolution performed by the kernel $\Kmat$. 
+In the rest of the chapter, we will refer to the bound in \Cref{theorem:ch5-bound_max_sv_convolution} applied to a kernel as $\lipbound$ and we denote $\lipbound(\Kmat)$ the Lipschitz upper bound of the convolution performed by the kernel $\Kmat$. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -460,7 +395,7 @@ First, we present an algorithm to efficiently compute the bound, we analyze its 
 Finally, we compare the efficiency and the accuracy of our bound against the state-of-the-art. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Computing the maximum modulus of a trigonometric polynomial}
+\subsection{The Maximum Modulus of a Trigonometric Polynomial}
 \label{subsection:ch5-computing_the_maximum_modulus_of_a_trigonometric_polynomial}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -566,7 +501,7 @@ For a larger input size such as ImageNet ($224$), the gap is lower than $4.10^{-
 Therefore $\lipbound$ gives an almost exact value of the largest singular value of the operator matrix for most realistic settings.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Comparison of LipBound with other state-of-the-art approaches}
+\subsection{Comparison of LipBound with State-of-the-Art Approaches}
 \label{subsection:ch5-comparison_of_lipbound_with_other_state-of-the-art_approaches}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -845,10 +780,17 @@ Hence they offer an increased robustness to adversarial attacks as demonstrated 
 \end{table}%
 
 
-\begin{table}[ht]
+\begin{table}[t]
   \centering
+  \tabcolsep=1.9mm
   {\small
-  \begin{tabular}{lcccccccc}
+  \begin{tabular}{
+    lc
+    c
+    cc
+    c
+    ccc
+  }
     \toprule
     \multicolumn{1}{c}{\multirow{2}[4]{*}{\textbf{Model}}} & \multicolumn{1}{c}{\multirow{2}[4]{*}{\textbf{Natural}}} &  
     & \multicolumn{2}{c}{\textbf{PGD}-$\ell_\infty$} &   & \multicolumn{3}{c}{\textbf{C\&W}-$\ell_2$} \\
@@ -877,7 +819,7 @@ We use Wide Resnet networks with 28 layers and a width factor of 10.
 We train our networks for 200 epochs with a batch size of $200$.
 We use Stochastic Gradient Descent with a momentum of $0.9$, an initial learning rate of $0.1$ with exponential decay of 0.1 (MultiStepLR gamma = 0.1) after the epochs $60$, $120$ and $160$.
 For Adversarial Training ~\cite{madry2018towards}, we use Projected Gradient Descent with an $\epsilon = 8/255 (\approx 0.031)$, a step size of $\epsilon/5 (\approx 0.0062)$ and 10 iterations, we use a random initialization but run the attack only once.
-To evaluate the robustness of our classifiers, we rigorously followed the experimental protocol proposed by~\citet{tramer2020adaptive} and~\citet{carlini2019evaluating}.
+To evaluate the robustness of our classifiers, we rigorously followed the experimental protocol proposed by~\citet{carlini2019evaluating,tramer2020adaptive}.
 More precisely, as an $\ell_\infty$ attack, we use PGD with the same parameters ($\epsilon = 8/255$, a step size of $\epsilon/5$) but we increase the number of iterations up to 200 with 10 restarts.
 For each image, we select the perturbation that maximizes the loss among all the iterations and the 10 restarts.
 As $\ell_2$ attacks, we use a bounded version of the~\citet{carlini2017towards} attack.
