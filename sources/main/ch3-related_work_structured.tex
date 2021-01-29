@@ -35,7 +35,7 @@ An important idea in model compression, proposed by~\citet{bucilua2006model}, is
 Indeed, compressed models after training can be deployed on smartphones or IoT devices.
 Based on this idea, multiple post-processing techniques have been developed: a quantization procedure which consists in converting the weights into a binary or integer formats \emph{after} the training phase~\cite{mellempudi2017ternary,rastegariECCV16}, pruning techniques~\cite{dai2018compressing,han2015deep,lin2017runtime} or sparsity regularizers~\cite{collins2014memory,dai2018compressing,liu2015sparse} which consists in removing redundant weights after training and taking advantage of the sparse structure of the weight matrices.
 
-Sparse neural networks have also been extensively studied since the seminal paper of \citet{frankle2018lottery} in which they propose the \emph{Lottery Ticket Hypothesis}. 
+Sparse neural networks have also been extensively studied since the seminal work of \citet{frankle2018lottery} in which they propose the \emph{Lottery Ticket Hypothesis}. 
 This hypothesis states that there exists a sparse subnetwork of a dense neural network that when trained in isolation can match the test accuracy of the original dense network after training for at most the same number of iterations. 
 This hypothesis led to a series of works on sparse neural networks \cite{zhou2019deconstructing,malach2019proving,evci2020rigging}.
 

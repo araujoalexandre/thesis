@@ -55,7 +55,7 @@ The following theorem shows that, even for shallow neural network, exact Lipschi
     \item[] \textbf{Input:} Two matrices $\Wmat^{(1)} \in \Rbb^{l \times n}$ and $\Wmat^{(2)} \in \Rbb^{m \times l}$, and a constant $c \geq 0$.
     \item[] \textbf{Question:} Let $N = \Wmat^{(2)} \circ \rho \circ \Wmat^{(1)}$ where $\rho$ is the $\relu$ activation function. \emph{Is the Lipschitz constant $\lip{N} \leq c$ ?}
   \end{itemize}
-  Then, assuming that $\mathbf{P} \neq \mathbf{NP}$, the problem above is \textbf{NP}-hard. 
+  Then, assuming that $P \neq NP$, the problem above is NP-hard. 
 \end{theorem}
 
 
@@ -302,17 +302,18 @@ To compute the singular values of doubly-block circulant matrices, \citet{sedghi
   Let $\Amat$ be a doubly-block circulant matrix such that:
   \begin{equation*}
     \Amat = \leftmatrix
-      \Cmat_0     & \Cmat_{n-1} & \Cmat_{n-2} & \cdots  & \cdots      & \Cmat_1     \\
-      \Cmat_1     & \Cmat_0     & \Cmat_{n-1} & \ddots  &             & \vdots      \\
-      \Cmat_2     & \Cmat_1     & \ddots      & \ddots  & \ddots      & \vdots      \\
-      \vdots      & \ddots      & \ddots      & \ddots  & \Cmat_{n-1} & \Cmat_{n-2} \\
-      \vdots      &             & \ddots      & \Cmat_1 & \Cmat_{0}   & \Cmat_{n-1} \\
-      \Cmat_{n-1} & \cdots      & \cdots      & \Cmat_2 & \Cmat_{1}   & \Cmat_0
+      \Cmatsf^{(0)}   & \Cmatsf^{(n-1)} & \Cmatsf^{(n-2)} & \cdots        & \cdots          & \Cmatsf^{(1)}   \\
+      \Cmatsf^{(1)}   & \Cmatsf^{(0)}   & \Cmatsf^{(n-1)} & \ddots        &                 & \vdots          \\
+      \Cmatsf^{(2)}   & \Cmatsf^{(1)}   & \ddots          & \ddots        & \ddots          & \vdots          \\
+      \vdots          & \ddots          & \ddots          & \ddots        & \Cmatsf^{(n-1)} & \Cmatsf^{(n-2)} \\
+      \vdots          &                 & \ddots          & \Cmatsf^{(1)} & \Cmatsf^{(0)}   & \Cmatsf^{(n-1)} \\
+      \Cmatsf^{(n-1)} & \cdots          & \cdots          & \Cmatsf^{(2)} & \Cmatsf^{(1)}   & \Cmatsf^{(0)}
     \rightmatrix
   \end{equation*}
-  where $\Cmat_i = \circulant({\cvec_i}),\ \forall i \in \mathcal{P}_0$.
+  where $\Cmatsf^{(i)} = \circulant({\cvec_i}),\ \forall i \in \Iset_n^+$.
   Let $\Kmat = \leftmat \cvec_0, \cvec_1, \cdots, \cvec_{n-1} \rightmat^\top$ then, the singular values of the doubly-block circulant matrix $\Amat$ are the modulus of the entries of $\Umat_n^\top \Kmat \Umat_n$.
 \end{theorem}
+
 
 \noindent
 To prove \Cref{theorem:ch3-singular_values_doubly_block_circulant}, \citet{sedghi2018singular} used used the diagonalization of doubly-block circulant matrices (see~\Cref{chapter:ch2-background}, \Cref{equation:ch2-diagonalization_doubly_block_circulant_matrix}).
