@@ -181,28 +181,6 @@ The context gating operation was introduced by~\citet{miech2017learnable} and ca
 For example, it can capture the correlation of the labels \emph{ski} and \emph{snow} and re-adjust the probabilities accordingly. 
 
 
-% \Cref{table:ap2-shape_dbof} shows the shapes of the layers as well as the shapes of the weight matrices. 
-% \begin{table}[ht]
-%   \centering
-%   % \begin{tabular}{L{2.5cm} | C{2cm} | C{2.5cm} | C{2.5cm} | C{2.5cm} }
-%   \begin{tabular}{l|c|c|c|c}
-%     \toprule
-%     \multirow{2}{*}{\textbf{Layer}} & \multirow{2}{*}{\textbf{Layer Size}} & \textbf{Activation shape} & \textbf{Weight matrix shape} & \multirow{2}{*}{\textbf{\#Weights}} \\
-%     \midrule
-%     \midrule
-%     Video DBoF & 8192 & (-1, 150, 1024) & (1024, 8192) & \numprint{8388608} \\
-% 	Audio DBoF & 4096 & (-1, 150, 128) & (128, 4096) & \numprint{524288} \\
-%     Video FC & 512 & (-1, 8192) & (8192, 512) & \numprint{4194304} \\
-% 	Audio FC & 512 & (-1, 4096) & (4096, 512) & \numprint{2097152} \\
-%     Concat & - & (-1, 1024) & - & - \\
-%     MoE Gating & 3 & (-1, 1024) & (1024, 19310) & \numprint{19773440} \\
-%     MoE Experts & 2 & (-1, 1024) & (1024, 15448) & \numprint{15818752} \\
-%     Context Gating & - & (-1, 3862) & (3862, 3862) & \numprint{14915044} \\
-%    \bottomrule
-%   \end{tabular}
-%   \caption{This table shows the architecture of our base model with a DBoF Embedding and 150 frames sampled from the input. For more clarity, weights from batch normalization layers have been ignored. The $-1$ in the activation shapes corresponds to the batch size. The size of the MoE layers corresponds to the number of mixtures used.}
-%   \label{table:ap2-shape_dbof}
-% \end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Robust Deep Bag-of-Frames pooling method}
@@ -219,7 +197,7 @@ The output of the robust-DBoF layer is:
   \frac{1}{n} \sum_{i=1}^{n} \max \left\{ \Wmat \vvec :\vvec \in S_{i} \right\} 
 \end{equation}
 \noindent
-Depending on $n$ and $k$, this pooling method is a tradeoff between the max pooling and the average pooling.
+Depending on $n$ and $k$, this pooling method is a trade-off between the max pooling and the average pooling.
 Thus, it is more robust to noise, as will be shown in the experiments section.
 
 
@@ -291,7 +269,7 @@ All fully connected layers are composed of 512 units.
 DBoF, NetVLAD and NetFV are respectively 8192, 64 and 64 of cluster size for video frames and 4096, 32, 32 for audio frames.
 We used 4 mixtures for the MoE Layer.
 We used all the available 150 frames and robust max pooling introduced in~\Cref{subsection:ap2-robust_deep_bag-of-frames_pooling_method} for the DBoF embedding.
-In order to stabilize and accelerate the training, we used batch normalization before each non linear activation and gradient clipping. 
+In order to stabilize and accelerate the training, we used batch normalization before each nonlinear activation and gradient clipping. 
 We used the GAP (Global Average Precision), as used in the \emph{2nd YouTube-8M Video Understanding Challenge}, to compare our experiments.
 The GAP metric is defined as follows:
 \begin{equation}
@@ -336,7 +314,7 @@ In accordance with the work of~\citet{abu2016youtube}, we find that average pool
 
 
 This series of experiments aims at understanding the effect of compactness over different layers.
-\Cref{table:ap4-circulant_layer} shows the result in terms of number of weights, compression ratio (CR) with respect to the dense model and GAP score.
+\Cref{table:ap4-circulant_layer} shows the result in terms of the number of weights, compression ratio (CR) with respect to the dense model and GAP score.
 In these experiments, for speeding-up the training phase, we did not use the audio features and exploited only the video information.
 The compact fully connected layer achieves a compression rate of 9.5 while having a very similar performance, whereas the compact DBoF and MoE achieve a higher compression rate at the expense of accuracy. 
 \Cref{figure:ap2-learning_curve_layers} shows that the model with a compact FC converges faster than the dense model.
