@@ -1,17 +1,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Advocating for Multiple Defense Strategies against Adversarial Examples}
-\label{chapter:advocating_multiple_defense_strategies_against_adversarial_examples}
+\label{appendix:ap4-advocating_multiple_defense_strategies_against_adversarial_examples}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \localtoc
 
-% \begin{abstract}
-%   It has been empirically observed that defense mechanisms designed to protect neural networks against $\linf$ adversarial examples offer poor performance against $\ltwo$ adversarial examples and vice versa. In this paper we conduct a geometrical analysis that validates this observation. Then, we provide a number of empirical insights to illustrate the effect of this phenomenon in practice. 
-%   Then, we review some of the existing defense mechanism that attempts to defend against multiple attacks by mixing defense strategies. Thanks to our numerical experiments, we discuss the relevance of this method and state open questions for the adversarial examples community.
-% \end{abstract}
 
-\emph{This Appendix concerns a collaboration ..}
+\vspace{\fill}
 
-\todo{write short context}
+\emph{
+This Appendix concerns a collaboration with Rafael Pinot, Laurent Meunier and Benjamin Negrevergne.
+This work has been published in the European Conference on Machine Learning Workshop for CyberSecurity.
+It conducts a geometrical analysis of defense mechanisms designed to protect neural networks against.
+This work shows that neural networks designed to be robust against one type of adversarial example offer poor against other types of attacks.
+}
+
+\vspace{\fill}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -19,19 +22,23 @@
 \label{section:ap4-introduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Deep neural networks achieve state-of-the-art performances in a variety of domains such as natural language processing~\cite{radford2018Language}, image recognition~\cite{he2016deep} and speech recognition~\cite{hinton2012deep}.
-However, it has been shown that such neural networks are vulnerable to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,szegedy2013intriguing}.
-Since their discovery, a variety of algorithms have been developed to generate adversarial examples (\aka attacks), for example FGSM \cite{goodfellow2014explaining}, PGD \cite{madry2018towards} and C\&W \cite{carlini2017towards}, to mention the most popular ones.
 
+
+
+% Deep neural networks achieve state-of-the-art performances in a variety of domains such as natural language processing~\cite{radford2018Language}, image recognition~\cite{he2016deep} and speech recognition~\cite{hinton2012deep}.
+% However, it has been shown that such neural networks are vulnerable to \emph{adversarial examples}, \ie, imperceptible variations of the natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,szegedy2013intriguing}.
+% Since their discovery, a variety of algorithms have been developed to generate adversarial examples (\aka attacks), for example FGSM \cite{goodfellow2014explaining}, PGD \cite{madry2018towards} and C\&W \cite{carlini2017towards}, to mention the most popular ones.
+
+We have seen that deep neural networks are vulnerable to \emph{adversarial examples}.
 Because it is difficult to characterize the space of visually imperceptible variations of a natural image, existing adversarial attacks use surrogates that can differ from one attack to another.
 For example, \citet{goodfellow2014explaining} use the $\linf$ norm to measure the distance between the original image and the adversarial image whereas \citet{carlini2017towards} use the $\ltwo$ norm.
 When the input dimension is low, the choice of the norm is of little importance because the $\linf$ and $\ltwo$ balls overlap by a large margin, and the adversarial examples lie in the same space.
-An important insight in this paper is to observe that the overlap between the two balls  diminishes exponentially quickly as the dimensionality of the input space increases.
+An important insight in this chapter is to observe that the overlap between the two balls diminishes exponentially quickly as the dimensionality of the input space increases.
 For typical image datasets with large dimensionality, the two balls are mostly disjoint.
 As a consequence, the $\linf$ and the $\ltwo$ adversarial examples lie in different areas of the space, and it explains why $\linf$ defense mechanisms perform poorly against $\ltwo$ attacks and vice versa. 
 
 Building on this insight, we advocate for designing models that incorporate defense mechanisms against both $\linf$ and $\ltwo$ attacks and review several ways of mixing existing defense mechanisms.
-In particular, we evaluate the performance of  {\em Mixed Adversarial Training} (MAT)~\cite{goodfellow2014explaining} which consists of  augmenting training batches using \emph{both} $\linf$ and $\ltwo$ adversarial examples, and {\em Randomized Adversarial Training} (RAT)~\cite{salman2019provably}, a solution to benefit from the advantages of both $\linf$ adversarial training, and $\ltwo$ randomized defense. 
+In particular, we evaluate the performance of \emph{Mixed Adversarial Training} (MAT)~\cite{goodfellow2014explaining} which consists of  augmenting training batches using \emph{both} $\linf$ and $\ltwo$ adversarial examples, and {\em Randomized Adversarial Training} (RAT)~\cite{salman2019provably}, a solution to benefit from the advantages of both $\linf$ adversarial training, and $\ltwo$ randomized defense. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -45,29 +52,30 @@ Our reasoning is perfectly general; hence we can similarly demonstrate the recip
 
 \begin{figure}
    \centering
-   \begin{subfigure}[b]{0.32\textwidth}
+   \begin{subfigure}[t]{0.32\textwidth}
        \centering
        \includegraphics[scale=0.22]{figures/appendix/ap4-advocating_for_multiple_defense_strategies/ball_inclusion_adversarial_training.pdf}
-       \caption{}
+       \caption{2D representation of the $\linf$ and $\ltwo$ balls of respective radius $\epsilon$ and $\epsilon'$}
        \label{figure:ap4-ball_inclusion_adversarial_training}
    \end{subfigure}
    \hfill
-   \begin{subfigure}[b]{0.32\textwidth}
+   \begin{subfigure}[t]{0.32\textwidth}
        \centering
        \includegraphics[scale=0.22]{figures/appendix/ap4-advocating_for_multiple_defense_strategies/ball_adversarial_l2.pdf}
-       \caption{}
+       \caption{A classifier trained with $\linf$ adversarial perturbations  (materialized by the red line) remains vulnerable to $\ltwo$ attacks.}
        \label{figure:ap4-ball_adversarial_l2}
    \end{subfigure}
    \hfill
-   \begin{subfigure}[b]{0.32\textwidth}
+   \begin{subfigure}[t]{0.32\textwidth}
        \centering
        \includegraphics[scale=0.22]{figures/appendix/ap4-advocating_for_multiple_defense_strategies/ball_adversarial_linf.pdf}
-       \caption{}
+       \caption{A classifier trained with $\ltwo$ adversarial perturbations (materialized by the blue line) remains vulnerable to $\linf$ attacks.}
        \label{figure:ap4-ball_adversarial_linf}
    \end{subfigure}
-   \caption{Left: 2D representation of the $\linf$ and $\ltwo$ balls of respective radius $\epsilon$ and $\epsilon'$. 
-    Middle: a classifier trained with $\linf$ adversarial perturbations  (materialized by the red line) remains vulnerable to $\ltwo$ attacks. 
-    Right: a classifier trained with $\ltwo$ adversarial perturbations (materialized by the blue line) remains vulnerable to $\linf$ attacks.}
+   \caption{2-dimensional representation of $\linf$ and $\ltwo$ balls}
+   % \caption{Left: 2D representation of the $\linf$ and $\ltwo$ balls of respective radius $\epsilon$ and $\epsilon'$. 
+   %  Middle: a classifier trained with $\linf$ adversarial perturbations  (materialized by the red line) remains vulnerable to $\ltwo$ attacks. 
+   %  Right: a classifier trained with $\ltwo$ adversarial perturbations (materialized by the blue line) remains vulnerable to $\linf$ attacks.}
 \end{figure}
 
 
@@ -77,7 +85,7 @@ Our reasoning is perfectly general; hence we can similarly demonstrate the recip
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Let us consider a classifier $f_{\infty}$ that is provably robust against adversarial examples with maximum $\linf$ norm of value $\epsilon_\infty$.
-It guarantees that for any input-output pair $(x,y) \sim \mathcal D$ and for any perturbation $\tau$ such that $\norm{\tau}_\infty \leq \epsilon_\infty$, $f_{\infty}$ is not misled by the perturbation, \ie, $f_{\infty}(x + \tau) = f_{\infty}(x)$.
+It guarantees that for any input-output pair $(x,y) \sim \Dset$ and for any perturbation $\tau$ such that $\norm{\tau}_\infty \leq \epsilon_\infty$, $f_{\infty}$ is not misled by the perturbation, \ie, $f_{\infty}(x + \tau) = f_{\infty}(x)$.
 We now focus our study on the performance of this classifier against adversarial examples bounded with a $\ltwo$ norm of value $\epsilon_2$.
 Using Figure~\ref{figure:ap4-ball_inclusion_adversarial_training}, we observe that any $\ltwo$ adversarial example that is also in the $\linf$ ball, will not fool $f_{\infty}$.
 Conversely, if it is outside the ball, we have no guarantee.
@@ -102,7 +110,7 @@ If for all $d$, we select $\epsilon$ and $\epsilon$' such that $\Vol\left(B_{2,d
 \label{theorem:ap4-nullvolume}
 \end{theorem} 
 
-\begin{proof}[\proofrefth{theorem:ap4-nullvolume}] 
+\begin{proof}[\Cref{theorem:ap4-nullvolume}] 
 Without loss of generality, let us fix $\epsilon = 1$. One can show that for all $d$, 
 \begin{equation}
     \Vol\left( B_{2,d}\left(\frac{2}{\sqrt{\pi}}\Gamma\left(\frac{d}{2}+1\right)^{1/d}\right)\right) = \Vol\left(B_{\infty,d}\left(1\right)\right)
@@ -158,20 +166,21 @@ In large dimensions, the volume of the corner of the $\linf$ ball is much bigger
 
 Our theoretical analysis shows that if adversarial examples were uniformly distributed in a high-dimensional space, then any mechanism that perfectly defends against $\linf$ adversarial examples has a null probability of protecting against $\ltwo$-bounded adversarial attacks.
 Although existing defense mechanisms do not necessarily assume such a distribution of adversarial examples, we demonstrate that whatever distribution they use, it offers no favorable bias with respect to the result of Theorem~\ref{theorem:ap4-nullvolume}.
-As we discussed in Chapter~\ref{chapter:lipschitz_regularization_for_adversarial_robustness}, there are two distinct attack settings: loss maximization (PGD) and perturbation minimization (C\&W).
+As we discussed in Chapter~\ref{chapter:ch5-lipschitz_bound}, there are two distinct attack settings: loss maximization (PGD) and perturbation minimization (C\&W).
 Our analysis is mainly focusing on loss maximization attacks.
 However, these attacks have a very strict geometry\footnote{Due to the projection operator, all PGD attacks saturate the constraint, which makes them all lies in a very small part of the ball.}.
 This is why, to present a deeper analysis of the behavior of adversarial attacks and defenses, we also present a set of experiments that use perturbation minimization attacks.
 
 \begin{table}[htbp]
   \centering 
-  \begin{tabular}{lrrrrrrrr}
+  \begin{tabular}{lccccccc}
     \toprule
-      & \phantom{...}  & \multicolumn{3}{c}{Attack PGD-$\ltwo$} & \phantom{...}  & \multicolumn{3}{c}{Attack PGD-$\linf$} \\
-  \cmidrule{3-5}\cmidrule{7-9}      &   & \multicolumn{1}{l}{Unprotected} &  \phantom{...} & \multicolumn{1}{l}{AT-$\linf$} &   & \multicolumn{1}{l}{Unprotected} & \phantom{...}  & \multicolumn{1}{l}{AT-$\ltwo$} \\
+    &  & \multicolumn{2}{c}{\textbf{Attack PGD-}$\ltwo$} & & \multicolumn{2}{c}{\textbf{Attack PGD-}$\linf$} \\
+  \cmidrule{3-4} \cmidrule{6-7}
+  &  & \textbf{Unprotected} & \textbf{AT-}$\linf$ & & \textbf{Unprotected} & \textbf{AT-}$\ltwo$ \\
     \midrule
-    Average $\ltwo$ norm &   & 0.830 &   & 0.830 &   & 1.400 &   & 1.640 \\
-    Average $\linf$ norm &   & 0.075 &   & 0.200 &   & 0.031 &   & 0.031 \\
+    \textbf{Average $\ltwo$ norm} &   & 0.830 & 0.830 &   & 1.400 & 1.640 \\
+    \textbf{Average $\linf$ norm} &   & 0.075 & 0.200 &   & 0.031 & 0.031 \\
     \bottomrule
   \end{tabular}%
   \caption{Average norms of PGD-$\ltwo$ and PGD-$\linf$ adversarial examples with and without $\linf$ adversarial training on CIFAR-10 ($d=3072$).}
@@ -181,7 +190,7 @@ This is why, to present a deeper analysis of the behavior of adversarial attacks
 \paragraph{Adversarial training vs. loss maximization attacks}
 
 To demonstrate that $\linf$ adversarial training is not robust against PGD-$\ltwo$ attacks we measure the evolution of $\ltwo$ norm of adversarial examples generated with PGD-$\linf$ between an unprotected model and a model trained with AT-$\linf$, \ie, AT where adversarial examples are generated with PGD-$\linf$ \footnote{To do so, we use the same experimental setting as in Section~\ref{section:ap4-reviewing_defenses_against_multiple_attacks} with $\epsilon_\infty$ and $\epsilon_2$ such that the volumes of the two balls are equal.}. 
-Results are presented in  Table~\ref{table:ap4-mean_norm_pgd_attack}. \footnote{All experiments in this section are conducted on CIFAR-10, and the experimental setting is fully detailed in Section~\ref{section:ap4-experimental_settings}. }
+Results are presented in  Table~\ref{table:ap4-mean_norm_pgd_attack}.
 
 The analysis is unambiguous: the average $\linf$ norm of a bounded $\ltwo$ perturbation more than double between an unprotected model and a model trained with AT PGD-$\linf$. This phenomenon perfectly reflects the illustration of Figure~\ref{figure:ap4-ball_adversarial_linf}. The attack will generate an adversarial example on the corner of the $\linf$ ball thus increasing the $\linf$ norm while maintaining the same $\ltwo$ norm. 
 We can observe the same phenomenon with AT-$\ltwo$ against PGD-$\linf$ attack (see Figure~\ref{figure:ap4-ball_adversarial_l2} and Table \ref{table:ap4-mean_norm_pgd_attack}). PGD-$\linf$ attack increases the $\ltwo$ norm while maintaining the same $\linf$ perturbation thus generating the perturbation in the upper area. 
@@ -219,21 +228,26 @@ This means that even after adversarial training, it is still easy to find good $
 \label{section:ap4-reviewing_defenses_against_multiple_attacks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{table}[htbp]
+\begin{table}[ht]
   \centering
+  \tabcolsep=0.13cm
+  {\small
   \begin{tabular}{lccccccccccccccccc}
     \toprule
-      &   & \textbf{Baseline} & \phantom{...}  & \multicolumn{2}{c}{\textbf{AT}} & \phantom{...}  & \multicolumn{2}{c}{\textbf{MAT}} &  \phantom{...} & \multicolumn{2}{c}{\textbf{NI}} &  \phantom{...} & \multicolumn{2}{c}{\textbf{RAT}-$\linf$} &  \phantom{...} & \multicolumn{2}{c}{\textbf{RAT}-$\ltwo$} \\
-  \cmidrule{3-3}\cmidrule{5-6}\cmidrule{8-9}\cmidrule{11-12}\cmidrule{14-15}\cmidrule{17-18}      &   & -- &   & $\linf$ & $\ltwo$ &   & Max & Rand &   & $\mathcal{N}$ & $\mathcal{U}$ &   & $\mathcal{N}$ & $\mathcal{U}$ &   & $\mathcal{N}$ & $\mathcal{U}$ \\
+     & & \multirow{2}{*}{\textbf{Baseline}} & & \multicolumn{2}{c}{\textbf{AT}} & & \multicolumn{2}{c}{\textbf{MAT}} & & \multicolumn{2}{c}{\textbf{NI}} & & \multicolumn{2}{c}{\textbf{RAT}-$\linf$} & & \multicolumn{2}{c}{\textbf{RAT}-$\ltwo$} \\
+    \cmidrule{5-6} \cmidrule{8-9} \cmidrule{11-12} \cmidrule{14-15} \cmidrule{17-18}
+     & & & & $\linf$ & $\ltwo$ &   & Max & Rand &   & $\mathcal{N}$ & $\mathcal{U}$ &   & $\mathcal{N}$ & $\mathcal{U}$ &   & $\mathcal{N}$ & $\mathcal{U}$ \\
     \midrule
-    Natural &   & 0.94 &   & 0.85 & 0.85 &   & 0.80 & 0.80 &   & 0.79 & 0.87 &   & 0.74 & 0.80 &   & 0.79 & 0.87 \\
-    PGD-$\linf$ &   & 0.00 &   & 0.43 & 0.37 &   & 0.37 & 0.40 &   & 0.23 & 0.22 &   & 0.35 & 0.40 &   & 0.23 & 0.22 \\
-    PGD-$\ltwo$ &   & 0.00 &   & 0.37 & 0.52 &   & 0.50 & 0.55 &   & 0.34 & 0.36 &   & 0.43 & 0.39 &   & 0.34 & 0.37 \\
+    \textbf{Natural}     &   & 0.94 &   & 0.85 & 0.85 &   & 0.80 & 0.80 &   & 0.79 & 0.87 &   & 0.74 & 0.80 &   & 0.79 & 0.87 \\
+    \textbf{PGD-$\linf$} &   & 0.00 &   & 0.43 & 0.37 &   & 0.37 & 0.40 &   & 0.23 & 0.22 &   & 0.35 & 0.40 &   & 0.23 & 0.22 \\
+    \textbf{PGD-$\ltwo$} &   & 0.00 &   & 0.37 & 0.52 &   & 0.50 & 0.55 &   & 0.34 & 0.36 &   & 0.43 & 0.39 &   & 0.34 & 0.37 \\
     \bottomrule
   \end{tabular}%
-  \caption{This table shows a comprehensive list of results consisting of the accuracy of several defense mechanisms against $\ltwo$ and $\linf$ attacks. This table main objective is to compare the overall performance of ‘single‘ norm defense mechanisms (AT and NI presented in the Chapter~\ref{chapter:75748} Section~\ref{section:96537834}) against mixed norms defense mechanisms (MAT \& RAT mixed defenses presented in Section~\ref{section:ap4-reviewing_defenses_against_multiple_attacks}).}
+  }
+  \caption{Comprehensive list of results consisting of the accuracy of several defense mechanisms against $\ltwo$ and $\linf$ attacks.}
   \label{table:ap4-results}
 \end{table}%
+
 
 Adversarial attacks have been an active topic in the machine learning community since their discovery~\cite{globerson2006nightmare, biggio2013evasion,szegedy2013intriguing}.
 Many attacks have been developed.
@@ -242,7 +256,6 @@ As we showed, these norms are really different in high dimension.
 Hence, defending against one norm-based attack is not sufficient to protect against another one. 
 In order to solve this problem, we review several strategies to build defenses against multiple adversarial attacks.
 These strategies are based on the idea that both types of defense must be used simultaneously in order for the classifier to be protected against multiple attacks.
-The detailed description of the experimental setting is described in Section~\ref{section:ap4-experimental_settings}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Experimental Setting}
@@ -250,7 +263,7 @@ The detailed description of the experimental setting is described in Section~\re
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 To compare the robustness provided by the different defense mechanisms, we use strong adversarial attacks and a conservative setting: the attacker has a total knowledge of the parameters of the model (white-box setting) and we only consider untargeted attacks  (a misclassification from one target to any other will be considered as adversarial).
-To evaluate defenses based on Noise Injection, we use {\em Expectation Over Transformation} (EOT), the rigorous experimental protocol  proposed by \cite{athalye2017synthesizing} and later used by \cite{athalye2018obfuscated,carlini2019evaluating} to identify flawed defense mechanisms. 
+To evaluate defenses based on Noise Injection, we use \emph{Expectation Over Transformation} (EOT), the rigorous experimental protocol  proposed by~\citet{athalye2017synthesizing} and later used by~\citet{athalye2018obfuscated,carlini2019evaluating} to identify flawed defense mechanisms. 
 
 To attack the models, we use state-of-the-art algorithms PGD.
 We run PGD with 20 iterations to generate adversarial examples and with 10 iterations when it is used for adversarial training.
@@ -259,7 +272,7 @@ We chose these values so that the $\linf$ and the $\ltwo$ balls have similar vol
 Note that $0.83$ is slightly above the values typically used in previous publications in the area, meaning the attacks are stronger, and thus  more difficult to defend against.
 
 All experiments are conducted on CIFAR-10 with the Wide-Resnet 28-10 architecture.
-We use the training procedure and the hyper-parameters described in the original paper by~\cite{zagoruyko2016wide}.
+We use the training procedure and the hyper-parameters described in the original paper by~\citet{zagoruyko2016wide}.
 Training time varies from 1 day (AT) to 2 days (MAT) on 4 GPUs-V100 servers. 
 
 
@@ -271,28 +284,25 @@ Training time varies from 1 day (AT) to 2 days (MAT) on 4 GPUs-V100 servers.
 Earlier results have shown that AT-$\lp$ improves the robustness against corresponding $\lp$-bounded adversarial examples, and the experiments we present in this section corroborate this observation (See Table~\ref{table:ap4-results}, column: AT).
 Building on this, it is natural to examine the efficiency of \emph{Mixed Adversarial Training} (MAT) against mixed $\linf$ and $\ltwo$ attacks.
 MAT is a variation of AT that uses both $\linf$-bounded adversarial examples and $\ltwo$-bounded adversarial examples as training examples.
-As discussed in~\cite{tramer2019adversarial}, there are several possible strategies to mix the adversarial training examples.
-The first strategy (MAT-Rand) consists in randomly selecting one adversarial example among the two most damaging $\linf$ and $\ltwo$, and to use it as a training example, as described in Equation~(\ref{eq:mat-rand}): 
+As discussed by~\citet{tramer2019adversarial}, there are several possible strategies to mix the adversarial training examples.
+The first strategy (MAT-Rand) consists in randomly selecting one adversarial example among the two most damaging $\linf$ and $\ltwo$, and to use it as a training example:
 
 \paragraph{MAT-Rand}:
-\begin{equation}
-  \min_{\theta} \Ebb_{(x, y) \sim \mathcal{D}} \left[\Ebb_{p\sim\mathcal{U}({\{2, \infty\})}} \max_{\norm{\tau}_p \leq \epsilon} \mathcal{L} \left( f_{\theta}(x+\tau), y \right) \right].
-  \label{eq:mat-rand}
+\begin{equation} \label{equation:ap4-mat_rand}
+  \min_{\theta} \Ebb_{(x, y) \sim \Dset} \left[\Ebb_{p\sim\mathcal{U}({\{2, \infty\})}} \max_{\norm{\tau}_p \leq \epsilon} L \left( f_{\theta}(x+\tau), y \right) \right].
 \end{equation}
 
-An alternative strategy is to systematically train the model with the most damaging adversarial example ($\linf$ or $\ltwo$). As described in Equation~(\ref{eq:mat-max}): 
-
+An alternative strategy is to systematically train the model with the most damaging adversarial example ($\linf$ or $\ltwo$):
 \paragraph{MAT-Max}:
-\begin{equation}
-    \min_{\theta} \Ebb_{(x, y) \sim \mathcal{D}} \left[ \max_{p \in \{2, \infty\}} \max_{\norm{\tau}_p \leq \epsilon} \mathcal{L} \left( f_{\theta}(x+\tau), y \right) \right].
-    \label{eq:mat-max}
+\begin{equation} \label{equation:ap4-mat_max}
+  \min_{\theta} \Ebb_{(x, y) \sim \Dset} \left[ \max_{p \in \{2, \infty\}} \max_{\norm{\tau}_p \leq \epsilon} L \left( f_{\theta}(x+\tau), y \right) \right].
 \end{equation}
 
-The accuracy of MAT-Rand and MAT-Max are reported in Table~\ref{table:ap4-results} (Column: MAT).
+The accuracy of MAT-Rand and MAT-Max are reported in~\Cref{table:ap4-results} (Column: MAT).
 As expected, we observe that MAT-Rand and MAT-Max offer better robustness both against PGD-$\ltwo$ and PGD-$\linf$ adversarial examples than the original AT does.
 More  generally, we can see that AT is a good strategy against loss maximization attacks, and thus it is not surprising that MAT is a good strategy against mixed loss maximization attacks.
 However efficient in practice, MAT (for the same reasons as AT) lacks theoretical arguments.
-In order to get the best of both worlds, \cite{salman2019provably} proposed to mix adversarial training with randomization.  
+In order to get the best of both worlds, \citet{salman2019provably} proposed to mix adversarial training with randomization.  
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -300,13 +310,13 @@ In order to get the best of both worlds, \cite{salman2019provably} proposed to m
 \label{subsection:ap4-randomized_adversarial_training}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-We now examine the performance of Randomized Adversarial Training (RAT) first introduced in~\cite{salman2019provably}.
+We now examine the performance of Randomized Adversarial Training (RAT) first introduced by~\citet{salman2019provably}.
 This technique mixes Adversarial Training with Noise Injection.
 The corresponding loss function is defined as follows:
 \begin{equation}
-  \min_{\theta} \Ebb_{(\xvec, y) \sim \mathcal{D}} \left[ \max_{\norm{\tau}_p \leq \epsilon} \mathcal{L} \left( \tilde{f}_{\theta}(\xvec+\tau), y)  \right) \right].
+  \min_{\theta} \Ebb_{(\xvec, y) \sim \Dset} \left[ \max_{\norm{\tau}_p \leq \epsilon} L\left( \tilde{f}_{\theta}(\xvec+\tau), y)  \right) \right].
 \end{equation}
-where $\tilde{f}_\theta$ is a randomized neural network with noise injection as described in Section~\ref{subsection:ch6-randomized_training}, and $\norm{\ \cdot\ }_p$ define which kind of AT is used.
+where $\tilde{f}_\theta$ is a randomized neural network with noise injection as described in Appendix~\ref{appendix:ap3-theoretical_evidence_for_adversarial_robustness_through_randomization}, and $\norm{\ \cdot\ }_p$ define which kind of AT is used.
 For each setting, we consider two noise distributions, Gaussian and Uniform as we did with NI.
 We also consider two different Adversarial training AT-$\linf$ as well as AT-$\ltwo$. 
 
@@ -321,7 +331,7 @@ These results are also consistent with the literature, since adversarial trainin
 \label{section:ap4-conclusion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this paper, we tackled the problem of protecting neural networks against multiple attacks crafted from different norms.
+In this chapter, we tackled the problem of protecting neural networks against multiple attacks crafted from different norms.
 We demonstrated and gave a geometrical interpretation to explain why most defense mechanisms can only protect against one type of attack.
 Then we reviewed existing strategies that mix defense mechanisms in order to build models that are robust against multiple adversarial attacks.
 We conduct a rigorous and full comparison of \emph{Randomized Adversarial Training} and \emph{Mixed Adversarial Training} as defenses against multiple attacks.
@@ -330,8 +340,8 @@ We could argue that both techniques offer benefits and limitations.
 We have observed that MAT offers the best empirical robustness against multiples adversarial attacks but this technique is computationally expensive which hinders its use in large-scale applications.
 Randomized techniques have the important advantage of providing theoretical guarantees of robustness and being computationally cheaper.
 However, the certificate provided by such defenses is still too small for strong attacks.
-Furthermore, certain Randomized defenses also suffer from the curse of dimensionality as recently shown by \cite{kumar2020curse}. 
+Furthermore, certain Randomized defenses also suffer from the curse of dimensionality as recently shown by~\citet{kumar2020curse}. 
 
-Although, randomized defenses based on noise injection seem limited in terms of accuracy under attack and scalability, they could be improved either by Learning the best distribution to use or by leveraging different types of randomization such as discrete randomization first proposed in \cite{pinot2020randomization}.
+Although, randomized defenses based on noise injection seem limited in terms of accuracy under attack and scalability, they could be improved either by Learning the best distribution to use or by leveraging different types of randomization such as discrete randomization first proposed by~\citet{pinot2020randomization}.
 We believe that these certified defenses are the best solution to ensure the robustness of classifiers deployed into real-world applications.
 
