@@ -97,7 +97,7 @@ The figure also shows the distribution of the workload between the two GPUs.
 
 Following this result, many architectures with an increasing number of parameters have been developed.
 This growth in the number of parameters has led to an increase in accuracy, exceeding even human performance, on the ImageNet dataset~\cite{he2015delving}.
-\Cref{table:ch1-networks_parameters} shows an historic of the different state-of-the-art architectures along with their size, and accuracy.
+\Cref{table:ch1-networks_parameters} shows a list of the different state-of-the-art architectures along with their size and accuracy.
 As we can see, the accuracy of the models generally improves at the cost of the model size.
 For computer vision models, \citet{tan2019efficientnet} have shown that the relationship between model size and accuracy seems to obey a power law.
 % This relationship has also been observed for Natural Language Processing (NLP) neural networks \cite{rosenfeld2020a,kaplan2020scaling} and given the availability of large-scale datasets (Common Crawl dataset~\cite{raffel2019exploring} constitutes nearly a trillion words), researchers have been able to scale their models.
@@ -106,25 +106,25 @@ This relationship has also been observed for Natural Language Processing (NLP) n
 As a result of their size and improved accuracy, deep neural networks now achieve state-of-the-art performances in a variety of domains such as image recognition~\cite{lecun1998gradient,krizhevsky2012imagenet,he2016deep,tan2019efficientnet}, object detection~\cite{redmon2016you,liu2016ssd,redmon2017yolo9000}, natural language processing~\cite{merity2016pointer,vaswani2017attention,radford2018Language,brown2020language}, speech recognition~\cite{hinton2012deep,abdel2014convolutional,yu2016automatic}, health care \cite{faust2018deep} etc.
 Specifically, computer vision and natural language processing models have achieved sufficient performance for being used in real-world applications such as autonomous vehicles~\cite{fagnant2015preparing,sharma2021automating}, translation~\cite{wu2016google}, vocal assistants~\cite{li2017acoustic}, etc.
 
-However, accuracy is not the only concern, when implemented in a critical decision process, neural networks need to be compact, cost effective and secure.
+However, accuracy is not the only concern, when implemented in a critical decision process, neural networks need to be compact, cost-effective and secure.
 Although accurate, large neural networks often lack these properties.
 Indeed, training state-of-the-art models on computer vision or natural language processing tasks requires gigabytes of memory and can take several months to train on a single GPU~\cite{krizhevsky2012imagenet,brown2020language}.
-For example, the GPT-3 model proposed by~\citet{brown2020language}, culminates at 175 billion parameters and requires 355 years of training on a single GPU and \$\numprint{4600000} to train on a cloud computing platform \cite{li2020overview}.
-It has also been estimated by \citet{strubell2019energy} that the training and developing costs of the large Transformer model proposed by~\citet{vaswani2017attention} with neural architecture search emits an estimated \numprint{284019} kg of $\mathrm{CO}_2$ whereas a human life will consume an average of \numprint{5000} kg of $\mathrm{CO}_2$ for one year. 
+For example, the GPT-3 model proposed by~\citet{brown2020language}, culminates at 175 billion parameters and requires 355 years of training on a single GPU and \$\numprint{4600000} to train on a cloud-computing platform \cite{li2020overview}.
+It has also been estimated by \citet{strubell2019energy} that the training and development costs of the large Transformer model proposed by~\citet{vaswani2017attention} with neural architecture search emits an estimated \numprint{284019} kg of $\mathrm{CO}_2$ whereas a human life will consume an average of \numprint{5000} kg of $\mathrm{CO}_2$ for one year. 
 Furthermore, with the rise of smartphones and ``Internet of things'' devices (IoT) with limited computational and memory resources, neural networks also need to be efficient during the inference phase.
 In addition, with the growing concern over data privacy, methods such as \emph{federated learning} are gaining ground.
 Federated learning involves training a model across multiple decentralized devices (\eg, smartphones) with local data samples.
 This avoids the step of centralizing all users' data into one server, thus addressing the issue of data privacy.
-Thus, building compact and cost effective neural networks have been an important goal in order to reduce training time, reduce cost and allow for faster research and development.
+Thus, building compact and cost-effective neural networks have been an important goal in order to reduce training time, reduce cost and allow for faster research and development.
 
 In addition to being compact and cost-effective, neural networks also need to be secure.
 Due to a high complexity and expressivity, large neural networks exhibit instability to small perturbations of their inputs.
 Unstable neural networks tend to be vulnerable to \emph{adversarial examples}, \ie, imperceptible variations of natural examples, crafted to deliberately mislead the models~\cite{globerson2006nightmare,biggio2013evasion,szegedy2013intriguing}.
 The \Cref{figure:ch1-adversarial_image_example} gives an example of an adversarial attack on an image.
 The small perturbation (center) is added to the original image (left) leading to an adversarial image (right).
-This behavior can cause serious security problems when neural networks are used for critical decision-making (\eg judicial decision, self-driving cars, etc.).
+This behavior can cause serious security problems when neural networks are used for critical decision-making (\eg, judicial decision, self-driving cars, etc.).
 
-This thesis focuses on the problem of training neural networks which are not only accurate, but also compact, easy to train, reliable and robust to adversarial examples.
+This thesis focuses on the problem of training neural networks which are not only accurate but also compact, easy to train, reliable and robust to adversarial examples.
 
 
 
@@ -157,7 +157,7 @@ More formally, a neural network is a function $N_{\Omega} : \Rbb^n \rightarrow \
   N_{\Omega}(\xvec) = \psi^{(\depth)} \circ \rho \circ \psi^{(\depth-1)} \cdots \circ \psi^{(2)} \circ \rho \circ \psi^{(1)} (\xvec) \enspace.
 \end{equation}
 Here, $\depth$ corresponds to the \emph{depth} of the network (\ie, the number of layers) and $\rho$ is a nonlinear function.
-Finally, each $\psi^{(i)}$ is a multi-dimensional linear function $\psi^{(i)}: \xvec \mapsto \Wmat^{(i)} \xvec + \bvec^{(i)}$ parameterized by a weight matrix $\Wmat^{(i)}$ and a bias vector $\bvec^{(i)}$ and $\Omega$ is the union of the parameters of each layers. 
+Finally, each $\psi^{(i)}$ is a multi-dimensional linear function $\psi^{(i)}: \xvec \mapsto \Wmat^{(i)} \xvec + \bvec^{(i)}$ parameterized by a weight matrix $\Wmat^{(i)}$ and a bias vector $\bvec^{(i)}$ and $\Omega$ is the union of the parameters of each layer. 
 % (we present a more formal definition of neural networks in~\Cref{chapter:ch2-background}). 
 
 
@@ -167,9 +167,9 @@ Classical neural networks typically have a large number of parameters to train.
 If they have no restrictions on the weight matrices $\Wmat^{(i)}$, the layers are said to be \emph{fully connected}.
 Typically, fully connected neural networks have a large number of parameters.
 For example, a fully connected neural network with $\depth$ layers and $n$ neurons on each layer ($\Wmat^{(i)} \in \Rbb^{n \times n}$) will have $\bigO\left(pn (n + 1)\right)$ parameters.
-Since, the input and output dimensions are generally large (\eg, ImageNet has an input dimension of $224^2 \times 3$ and an output of 1000), simple fully connected neural networks with few layers accumulate over hundred of millions of parameters.
+Since the input and output dimensions are generally large (\eg, ImageNet has an input dimension of $224^2 \times 3$ and an output of 1000), simple fully connected neural networks with few layers accumulate over hundreds of millions of parameters.
 Generally, this type of neural network has been shown to perform poorly due to a large search space.
-Moreover, they are computationally expensive which makes them impractical for a number of use cases (smartphones, IoT devices, etc.).
+Moreover, they are computationally expensive, which makes them impractical for a number of use cases (smartphones, IoT devices, etc.).
 To reduce the number of parameters on each layer, researchers have devised specific linear operations that reduce the number of parameters and have better properties for the problem at hand.
 
 
@@ -183,19 +183,19 @@ To reduce the number of parameters on each layer, researchers have devised speci
 An example of widely used neural networks with specialized and more compact linear operations are \emph{Convolutional Neural Networks} (CNN)~\cite{lecun1998gradient,krizhevsky2012imagenet,he2016deep,tan2019efficientnet} which achieve state-of-the-art results for computer vision tasks.
 Convolutional neural networks use specific weight matrices which encode the translation invariant property often desirable to process images.
 % They use convolutional layers which are specific to image processing and use very few parameters.
-Whereas a classical linear layer with a dense matrix will have $n \times n$ parameters, a convolution layer only has $k \times k$ parameters where $k \ll n$ is the kernel size and is usually small (\eg 3 or 5 for classical convolutional layers).
+Whereas a classical linear layer with a dense matrix will have $n \times n$ parameters, a convolution layer only has $k \times k$ parameters where $k \ll n$ is the kernel size and is usually small (\eg, 3 or 5 for classical convolutional layers).
 A convolutional neural network is the most common type of \emph{structured} neural network.
-Indeed, the convolution operation can be represented with a structured matrix \ie, a matrix that can be represented with less than $n^2$ parameters.
+Indeed, the convolution operation can be represented by a structured matrix \ie, a matrix that can be represented with less than $n^2$ parameters.
 
 
 In addition to offering a more compact representation, the structure of certain matrices can be exploited to obtain better algorithms for the matrix-vector product, thus optimizing memory and computing operations.
 Based on the success of convolutional neural networks, researchers have studied and proposed other types of neural networks based on weight matrices with different structures~\cite{moczulski2016acdc,sindhwani2015structured}.
 \Cref{figure:ch1-example_structure_matrices} shows different types of structured matrices that have been used for deep learning.
-Although convolutional neural networks have been state-of-the-art for computer vision tasks, it remains unclear whether other types of structured neural networks can be beneficial to other types of applications and which structure can provide both accuracy and efficient computation.
+Although convolutional neural networks have been state-of-the-art for computer vision tasks, it remains unclear whether other types of structured neural networks can be beneficial to other types of applications and which type of structure can provide both accuracy and efficient computation.
 
-The contribution of this thesis lie at the intersection of linear algebra, Fourier analysis and deep learning.
+The contributions of this thesis lie at the intersection of linear algebra, Fourier analysis and deep learning.
 As a result, we build compact and secure neural networks by leveraging the properties of structured matrices from the Toeplitz family.
-Hereafter, we present in more detail our contributions.
+Hereafter, we detail our contributions.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Training Compact Neural Networks}
@@ -208,7 +208,7 @@ Hereafter, we present in more detail our contributions.
 % Indeed, \citeauthor{vapnik1982estimation} linked the generalization capability of neural networks to their VC-dimension which is a measure of expressivity of the class of functions.
 % This complexity measure is based on the number of parameters, therefore, reducing the number of parameters leads to a smaller VC-Dimension, which then leads to better generalization.
 
-As a first contribution, we use circulant matrices, which are a particular type of Toeplitz matrices, to devise a new compact architecture replacing fully connected neural networks.
+As a first contribution, we use circulant matrices, which are a particular type of Toeplitz matrix, to devise a new compact architecture replacing fully connected neural networks.
 More precisely, we study deep diagonal-circulant neural networks, which are deep neural networks in which weight matrices are the product of diagonal and circulant ones.
 Besides making a theoretical analysis of their expressivity, we introduce principled techniques for training these models: we devise an initialization scheme and propose a smart use of nonlinearity functions in order to train deep diagonal circulant networks.
 Furthermore, we show that these networks outperform recently introduced deep networks with other types of structured layers.
@@ -228,49 +228,21 @@ Then, the theoretical analysis of the expressivity of diagonal-circulant neural 
 \label{subsection:ch1-training_robust_neural_networks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-As a second contribution, we build robust neural networks by studying the properties of the structure of convolution.
+As a second contribution, we build robust neural networks by studying the properties of the structure of convolutions.
 We devise a new upper bound on the largest singular value of convolution layers that is both tight and easy to compute.
 Our work is based on the result of~\citet{gray2006toeplitz} which states that an upper bound on the singular value of Toeplitz matrices can be computed from the inverse Fourier transform of the characteristic sequence of these matrices.
 From our analysis immediately follows an algorithm for bounding the Lipschitz constant of a convolutional layer, and by extension the Lipschitz constant of the whole network.
-Finally, we illustrate our approach on adversarial robustness.
-Recent work has shown that empirical methods such as adversarial training offer poor generalization~\cite{schmidt2018adversarially}, and can be improved by applying Lipschitz regularization~\cite{farnia2018generalizable}.
+Finally, we illustrate our approach to adversarial robustness.
+Recent work has shown that empirical methods such as adversarial training offer poor generalization~\cite{schmidt2018adversarially} and can be improved by applying Lipschitz regularization~\cite{farnia2018generalizable}.
 To illustrate the benefit of our new method, we train neural networks with Lipschitz regularization and show that it offers a significant improvement over adversarial training alone.
 
 The main result of the work described in \Cref{chapter:ch5-lipschitz_bound} has been published in the \textbf{\color{mydarkblue}\nth{35} AAAI Conference on Artificial Intelligence}.
 Additional joint contributions have also been published on the topic of robust neural networks.
-The first work published in the \textbf{\color{mydarkblue} Advances in Neural Information Processing Systems} studies the effectiveness of noise injection at training and inference time in the network to protect against adversarial attacks.
+The first work, published in the \textbf{\color{mydarkblue} Advances in Neural Information Processing Systems}, studies the effectiveness of noise injection at training and inference time in the network to protect against adversarial attacks.
 In this work, we show that noise drawn from the Exponential family offers a provable protection against adversarial attacks. 
-The second joint contributions published in the \textbf{\color{mydarkblue} European Conference on Machine Learning Workshop for CyberSecurity} conducts a geometrical analysis of defense mechanisms designed to protect neural networks against.
-This work shows that neural networks designed to be robust against one type of attacks adversarial examples offer poor against other types of attacks.
+The second joint contribution, published in the \textbf{\color{mydarkblue} European Conference on Machine Learning Workshop for CyberSecurity}, conducts a geometrical analysis of defense mechanisms designed to protect neural networks against.
+This work shows that neural networks designed to be robust against one type of adversarial example offer poor against other types of attacks.
 
-
-
-% The joint work on robustness to adversarial examples described in Appendix~\ref{appendix:ap3-theoretical_evidence_for_adversarial_robustness_through_randomization} and Appendix~\ref{appendix:ap4-advocating_multiple_defense_strategies_against_adversarial_examples} has led to two papers:
-
-
-
-
-
-% The work on Lipschitz regularization described in \Cref{chapter:ch5-lipschitz_bound} has been published in the \nth{35} AAAI Conference on Artificial Intelligence.
-% \paperbox{
-%     \underline{Alexandre Araujo}, Benjamin Negrevergne, Yann Chevaleyre and Jamal Atif,
-%     On Lipschitz Regularization of Convolutional Layers using Toeplitz Matrix Theory
-%     Proceedings of the \nth{35}AAAI Conference on Artificial Intelligence
-% }
-
-
-% The joint work on robustness to adversarial examples described in Appendix~\ref{appendix:ap3-theoretical_evidence_for_adversarial_robustness_through_randomization} and Appendix~\ref{appendix:ap4-advocating_multiple_defense_strategies_against_adversarial_examples} has led to two papers:
-
-% \paperbox{
-%   Rafael Pinot, Laurent Meunier, \underline{Alexandre Araujo}, Hisashi Kashima, Florian Yger, Cédric Gouy-Pailler and Jamal Atif, 
-%   \emph{Theoretical Evidence for Adversarial Robustness through Randomization},
-%   Advances in Neural Information Processing Systems
-% }
-% \paperbox{
-%   \underline{Alexandre Araujo}, Laurent Menuier, Rafael Pinot and Benjamin Negrevergne,
-%   \emph{Advocating for Multiple Defense Strategies against Adversarial Examples}
-%   Workshop on Machine Learning for CyberSecurity (MLCS@ECML-PKDD) 2020
-% }
 
 
 
@@ -298,7 +270,7 @@ This work shows that neural networks designed to be robust against one type of a
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 This thesis is organized in six chapters.
-First, \Cref{chapter:ch2-background} gives an introduction on the theory of Toeplitz matrices and on supervised learning and neural networks.
+First, \Cref{chapter:ch2-background} gives an introduction to the theory of Toeplitz matrices and on supervised learning and neural networks.
 This chapter presents the necessary technical tools we will need for presenting the related work and for our contributions.
 \Cref{chapter:ch3-related_work} is dedicated to enumerating the state-of-the-art approaches.
 The chapter is divided into two parts.
