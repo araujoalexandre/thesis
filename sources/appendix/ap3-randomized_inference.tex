@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Theoretical evidence for adversarial robustness through randomization}
+\chapter{Theoretical Evidence for Adversarial Robustness through Randomization}
 \label{appendix:ap3-theoretical_evidence_for_adversarial_robustness_through_randomization}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \localtoc
@@ -63,7 +63,7 @@ We present in \Cref{section:ap3-relatedwork} the related work on randomized defe
 \Cref{section:ap3-definition} introduces the definition of robustness relying on a metric/divergence between probability measures, and discusses the key role of the Renyi divergence.
 We state in~\Cref{sec:main_result} our main results on the robustness and accuracy of Exponential family-based defenses.
 \Cref{section:ap3-experiment} presents extensive experiments supporting our theoretical findings.
-\Cref{section:ap3-conclusion} provides concluding remarks.
+\Cref{section:ap3-conclusion_remarks} provides concluding remarks.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Related works}
@@ -79,7 +79,7 @@ Randomization techniques are generally oriented towards one of the following obj
 The first technique explicitly using randomization at inference time as a defense appeared during the 2017 NeurIPS defense challenge~\cite{xie2017mitigating}.
 This method uniformly samples over geometric transformations of the image to select a substitute image to feed the network.
 Then~\citet{dhillon2018stochastic} proposed to use stochastic activation pruning based on a multinomial distribution for adversarial defense.
-Several papers~\cite{xuanqing2018towards,rakin2018parametric} propose to inject Gaussian noise directly on the activation of selected layers both at training and inference time.
+Several works~\cite{xuanqing2018towards,rakin2018parametric} propose to inject Gaussian noise directly on the activation of selected layers both at training and inference time.
 While these works hypothesize that noise injection makes the network robust to adversarial perturbations, they do not provide any formal justification on the nature of the noise they use or on the loss of accuracy/robustness of the  network.
 
 \paragraph{Provable robustness:}
@@ -95,7 +95,7 @@ Since the initial discovery of adversarial examples, a wealth of non randomized 
 Even if these methods have their own merits, a thorough evaluation made by~\citet{athalye2018obfuscated} shows that most defenses can be easily broken with known powerful attacks~\cite{madry2018towards,carlini2017towards,chen2018ead}.
 Adversarial training, which consists in training a model directly on adversarial examples, came out as the best defense in average.
 Defense based on randomization could be overcome by the Expectation Over Transformation technique proposed by~\citet{athalye2017synthesizing} which consists in taking the expectation over the network to craft the perturbation.
-In this paper, to ensure that our results are not biased by obfuscated gradients, we follow the principles provided by~\cite{athalye2018obfuscated,carlini2019evaluating} and evaluate our randomized networks with this technique.
+In this chapter, to ensure that our results are not biased by obfuscated gradients, we follow the principles provided by~\cite{athalye2018obfuscated,carlini2019evaluating} and evaluate our randomized networks with this technique.
 We show that randomized defenses are still competitive given the intensity of noise injected in the network.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -203,7 +203,7 @@ According to this interpretation, it seems quite natural to consider the total v
 In the deterministic case, the total variation and the trivial distance coincides.
 In general, the total variation allows a finer analysis of the probabilistic mappings than the trivial distance.
 But it suffers from a high computational complexity.
-In the following of the paper we will show how to ensure robustness regarding TV distance.
+In the following of the chapter we will show how to ensure robustness regarding TV distance.
 
 Finally, denoting by $g_1$ and $g_2$ the respective probability distributions \wrt $\nu$, the Renyi divergence of order $\lambda$~\cite{renyi1961} writes as  
 \begin{equation}
@@ -328,14 +328,14 @@ Theorem~\ref{theorem:ap3-bound} provides a bound on the gap between the adversar
 
 \noindent
 This theorem gives a control on the loss of accuracy under attack \wrt the robustness parameter $\epsilon$ and the entropy of the predictor.
-It provides a tradeoff between the quantity of noise added in the network and the accuracy under attack.
+It provides a trade-off between the quantity of noise added in the network and the accuracy under attack.
 Intuitively, when the noise increases, for any input, the output distribution tends towards the uniform distribution, then, $\epsilon\rightarrow0$ and $H(\probmap(x))\rightarrow \log(K)$, and the risk and the adversarial risk both tends to $\frac{1}{K}$ where $K$ is the number of classes in the classification problem.
 On the opposite, if no noise is injected, for any input, the output distribution is a  Dirac distribution, then, if the prediction for the adversarial example is not the same as for the regular one, $\epsilon\rightarrow\infty$ and $H(\probmap(x))\rightarrow 0$.
 Hence, the noise needs to be designed both to preserve accuracy and robustness to adversarial attacks.
 In the Section~\ref{section:ap3-experiment}, we give an illustration of this bound when $\probmap$ is a neural network with noise injection at input level as presented in Theorem~\ref{theorem:ap3-netrob}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Numerical experiments}
+\section{Experiments}
 \label{section:ap3-experiment}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -347,7 +347,7 @@ This section aims to answer \textbf{Q2} stated in the introduction, by tackling 
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Experimental setup}
+\paragraph{Experimental setup}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 We present our results and analysis on  CIFAR-10, CIFAR-100 \cite{krizhevsky2009learning} and ImageNet datasets \cite{deng2009imagenet}.
@@ -391,9 +391,6 @@ This technique is called Expectation Over Transformation ($\EoT$) and we use a M
 \end{figure}
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Experimental results}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \paragraph{Trade-off between accuracy and intensity of noise (Q2.1):}
 
@@ -410,7 +407,6 @@ Next paragraph shows that in practice, randomized networks achieve much higher a
 
 
 \paragraph{Performance of randomized networks under attacks and comparison to state of the art (Q2.2):}
-\label{sec:perf_under_attack}
 
 While Figure~\ref{figure:ap3-gauss_certif_CIFAR10} and \ref{figure:ap3-laplace_certif_CIFAR10} illustrated a theoretical robustness against growing adversarial perturbations, Table~\ref{table:ap3-accuracy_under_attack} illustrates this trade-off experimentally.
 It compares the accuracy obtained under attack by a deterministic network with the one obtained by randomized networks with Gaussian and Laplace noises both with low ($0.01$) and high ($0.5$) standard deviations.
@@ -481,11 +477,11 @@ Nevertheless, the accuracy would never drop under the bounds illustrated in the 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Conclusion and future works}
-\label{section:ap3-conclusion}
+\section{Concluding Remarks}
+\label{section:ap3-conclusion_remarks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-This paper brings new contributions to the field of provable defenses to adversarial attacks.
+This chapter brings new contributions to the field of provable defenses to adversarial attacks.
 Principled answers have been provided to key questions on the interest of randomization techniques, and on their loss of accuracy under attack.
 The obtained bounds have been illustrated in practice by conducting thorough experiments on baseline datasets such as CIFAR and ImageNet.
 We show in particular that a simple method based on injecting noise drawn from the Exponential family is competitive compared to baseline approaches while leading to provable guarantees.
