@@ -4,7 +4,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Supervised learning consists in learning a function that maps an input to an output based on input-output pairs.
-For example, one could learn to ``predict'' if a fruit will be tasty based on its features (\eg size, weight, color, consistency, etc.).
+For example, one could learn to ``predict'' if a fruit will be tasty based on its features (\eg, size, weight, color, consistency, etc.).
 These features are used as inputs to the function and the function outputs a value characterizing the taste of the fruit.
 
 In the following, we will formalize the learning problem described above with the \emph{statistical learning framework}.
@@ -81,51 +81,6 @@ Formally,
 \begin{equation}
   \mathrm{ERM}_{\Hset}(\Sset) = \argmin_{h \in \Hset} R_{\Sset}(h) \enspace.
 \end{equation}
-For a training sample $\Sset$, we denote $h_\Sset \in \mathrm{ERM}_{\Hset}(\Sset)$, one solution of applying $\mathrm{ERM}_\Hset$ on the set $\Sset$, if there exists multiple hypotheses with minimal error on the training sample, then the minimization problem returns an arbitrary one.
-% In practice, the hypothesis class is chosen based on a hypothesis on the relation between the data and its label.
-In practice, the hypothesis class is chosen on the basis of an assumption about the relationship between the data and its label.
-For example, if the relation between the data and its label is supposedly linear then the hypothesis class can be the set of all linear functions.
-This kind of restriction is called an \emph{inductive bias} because the learner is \emph{biased} toward a particular set of predictors.
-
-The ERM paradigm assumes that an hypothesis $h_\Sset$ that minimizes the risk $R_\Sset$ will also minimize the true risk $R_\Dset$.
-% This assumption mean that as the \emph{size} of the training set increases the minimization becomes more ``accurate'' or equivalently the empirical risk $R_\Sset(h)$ \emph{converge uniformly} to the actual risk $R_\Dset(h)$ over $h \in \Hset$.
-% where the \emph{uniform convergence} is defined as follows:
-% \begin{equation}
-% 	\Pbb \left[ \sup_{h \in \Hset} \left| R_\Dset(h) - R_\Sset(h) \right| < \epsilon \right] \rightarrow 0 \quad \text{ when } \quad |\Sset| \rightarrow \infty, \quad \forall \epsilon > 0
-% \end{equation}
-To verify that this assumption is correct, we need to ensure that all hypotheses in the hypothesis class $\Hset$ are good approximators of their true risk.
-We say that an hypothesis class has \emph{uniform convergence property} if there exists a function $m_\Hset:(0, 1)^2 \rightarrow \Nbb$ such that for every $\epsilon, \delta \in (0, 1)$, if $\Sset$ is a sample of $m \leq m_\Hset(\epsilon, \delta)$ examples drawn \emph{independent and identically distributed} according to $\Dset$, then, with probability of at least $1 - \delta$:
-\begin{equation} \label{equation:ch2-eps_representative}
-  \forall h \in \Hset, \quad |R_\Dset(h) - R_\Sset(h)| \leq \epsilon \enspace,
-\end{equation}
-where the function $m_\Hset$, called \emph{the sample complexity}, measures the minimal number of examples needed to ensure that with probability of at least $1 - \delta$ the sample verify \Cref{equation:ch2-eps_representative}.
-The ``independent and identically distributed'' assumption is common in statistical learning theory.
-It is easy to see that the error between $R_\Sset(h)$ and $R_\Dset(h)$ is dependent on the quality of the sampling $\Sset$ with respect to the underlying distribution $\Dset$.
-Therefore, the parameter $\delta$ characterizes the probability of having a nonrepresentative sample. We call $1 - \delta$ the \emph{confidence parameter} of our prediction.
-
-
-% Therefore, we need to make the assumption that the training set $\Sset$ is a representative sample of the distribution $\Dset$.
-
-Now we can state a result which gives the sample complexity measure the maximum value for which the hypothesis class has \emph{uniform convergence property}.
-\begin{theorem}[\citet{shalev2014understanding}] \label{theorem:ch2-sample_complexity_bound}
-  Let $\Hset$ be a \emph{finite} hypothesis class, then $\Hset$ enjoys the uniform convergence property with sample complexity:
-  \begin{equation}
-      m_\Hset(\epsilon, \delta) \leq \left\lceil \frac{\log(2 |\Hset|	/ \delta)}{2 \epsilon^2} \right\rceil \enspace.
-  \end{equation}
-  \removespace
-\end{theorem}
-\noindent
-Note that we can also write the bound from~\Cref{theorem:ch2-sample_complexity_bound} as follows, $\forall h \in \Hset$, with probability $1 - \delta$, we have:
-\begin{equation}
-  \underbrace{\vphantom{\sqrt{\frac{\log(|\Hset|/\delta)}{2 m_\Hset(\epsilon, \delta)}}} R_\Dset(h)}_{\text{Error}} \leq \underbrace{\vphantom{\sqrt{\frac{\log(|\Hset|/\delta)}{2 m_\Hset(\epsilon, \delta)}}} R_\Sset(h)}_{\text{Estimation Error}} + \underbrace{\sqrt{\frac{\log(|\Hset|/\delta)}{2 m_\Hset(\epsilon, \delta)}}}_{\text{Complexity penality}} \enspace.
-\end{equation}
-This bound is called a \emph{generalization bound} and consists in bounding the true error by the empirical error and a complexity penalty.
-In the above theorem, the condition on the finiteness of the hypothesis class might by too strong.
-For example, if we consider the set of linear functions parameterized by a set of parameters in $\Rbb$ the hypothesis class is infinite and the theorem above does not apply.
-To characterize the learnability of infinite hypothesis class, several complexity measures have been proposed.
-One of the first, discovered by~\citet{vapnik2015uniform}, relies on a combinatorial notion called the Vapnik-Chervonenkis dimension (VC-dimension).
-In the same vein, the Rademacher complexity~\cite{koltchinskii2000rademacher}, measures the richness of a class of real-valued functions with respect to a probability distribution.
-In \Cref{subsection:ch2-recent_results_on_the_theory_of_neural_networks}, we will study recent generalization bounds specific to neural networks where the complexity penalty is dependent on the Lipschitz constant of the weights matrices.
 
 
 \begin{figure}[t]
@@ -154,6 +109,53 @@ In \Cref{subsection:ch2-recent_results_on_the_theory_of_neural_networks}, we wil
 \end{figure}
 
 
+For a training sample $\Sset$, we denote $h_\Sset \in \mathrm{ERM}_{\Hset}(\Sset)$, one solution of applying $\mathrm{ERM}_\Hset$ on the set $\Sset$, if there exists multiple hypotheses with minimal error on the training sample, then the minimization problem returns an arbitrary one.
+% In practice, the hypothesis class is chosen based on a hypothesis on the relation between the data and its label.
+In practice, the hypothesis class is chosen on the basis of an assumption about the relationship between the data and its label.
+For example, if the relation between the data and its label is supposedly linear then the hypothesis class can be the set of all linear functions.
+This kind of restriction is called an \emph{inductive bias} because the learner is \emph{biased} toward a particular set of predictors.
+
+The ERM paradigm assumes that a hypothesis $h_\Sset$ that minimizes the risk $R_\Sset$ will also minimize the true risk $R_\Dset$.
+% This assumption mean that as the \emph{size} of the training set increases the minimization becomes more ``accurate'' or equivalently the empirical risk $R_\Sset(h)$ \emph{converge uniformly} to the actual risk $R_\Dset(h)$ over $h \in \Hset$.
+% where the \emph{uniform convergence} is defined as follows:
+% \begin{equation}
+% 	\Pbb \left[ \sup_{h \in \Hset} \left| R_\Dset(h) - R_\Sset(h) \right| < \epsilon \right] \rightarrow 0 \quad \text{ when } \quad |\Sset| \rightarrow \infty, \quad \forall \epsilon > 0
+% \end{equation}
+To verify that this assumption is correct, we need to ensure that all hypotheses in the hypothesis class $\Hset$ are good approximators of their true risk.
+We say that a hypothesis class has \emph{uniform convergence property} if there exists a function $m_\Hset:(0, 1)^2 \rightarrow \Nbb$ such that for every $\epsilon, \delta \in (0, 1)$, if $\Sset$ is a sample of $m \leq m_\Hset(\epsilon, \delta)$ examples drawn \emph{independent and identically distributed} according to $\Dset$, then, with probability of at least $1 - \delta$:
+\begin{equation} \label{equation:ch2-eps_representative}
+  \forall h \in \Hset, \quad |R_\Dset(h) - R_\Sset(h)| \leq \epsilon \enspace,
+\end{equation}
+where the function $m_\Hset$, called \emph{the sample complexity}, measures the minimal number of examples needed to ensure that with probability of at least $1 - \delta$ the sample verify \Cref{equation:ch2-eps_representative}.
+The ``independent and identically distributed'' assumption is common in statistical learning theory.
+It is easy to see that the error between $R_\Sset(h)$ and $R_\Dset(h)$ is dependent on the quality of the sampling $\Sset$ with respect to the underlying distribution $\Dset$.
+Therefore, the parameter $\delta$ characterizes the probability of having a nonrepresentative sample. We call $1 - \delta$ the \emph{confidence parameter} of our prediction.
+
+
+% Therefore, we need to make the assumption that the training set $\Sset$ is a representative sample of the distribution $\Dset$.
+
+The following result gives the sample complexity measure the maximum value for which the hypothesis class has \emph{uniform convergence property}.
+\begin{theorem}[\citet{shalev2014understanding}] \label{theorem:ch2-sample_complexity_bound}
+  Let $\Hset$ be a \emph{finite} hypothesis class, then $\Hset$ enjoys the uniform convergence property with sample complexity:
+  \begin{equation}
+      m_\Hset(\epsilon, \delta) \leq \left\lceil \frac{\log(2 |\Hset|	/ \delta)}{2 \epsilon^2} \right\rceil \enspace.
+  \end{equation}
+  \removespace
+\end{theorem}
+\noindent
+Note that we can also write the bound from~\Cref{theorem:ch2-sample_complexity_bound} as follows, $\forall h \in \Hset$, with probability $1 - \delta$, we have:
+\begin{equation}
+  \underbrace{\vphantom{\sqrt{\frac{\log(|\Hset|/\delta)}{2 m_\Hset(\epsilon, \delta)}}} R_\Dset(h)}_{\text{Error}} \leq \underbrace{\vphantom{\sqrt{\frac{\log(|\Hset|/\delta)}{2 m_\Hset(\epsilon, \delta)}}} R_\Sset(h)}_{\text{Estimation Error}} + \underbrace{\sqrt{\frac{\log(|\Hset|/\delta)}{2 m_\Hset(\epsilon, \delta)}}}_{\text{Complexity penality}} \enspace.
+\end{equation}
+This bound is called a \emph{generalization bound} and consists in bounding the true error by the empirical error and a complexity penalty.
+In the above theorem, the condition on the finiteness of the hypothesis class might by too strong.
+For example, if we consider the set of linear functions parameterized by a set of parameters in $\Rbb$ the hypothesis class is infinite and the theorem above does not apply.
+To characterize the learnability of infinite hypothesis class, several complexity measures have been proposed.
+One of the first, discovered by~\citet{vapnik2015uniform}, relies on a combinatorial notion called the Vapnik-Chervonenkis dimension (VC-dimension).
+In the same vein, the Rademacher complexity~\cite{koltchinskii2000rademacher}, measures the richness of a class of real-valued functions with respect to a probability distribution.
+In \Cref{subsection:ch2-recent_results_on_the_theory_of_neural_networks}, we will study recent generalization bounds specific to neural networks where the complexity penalty is dependent on the Lipschitz constant of the weights matrices.
+
+
 A fundamental question of the ERM paradigm remains: \emph{how to choose the correct hypothesis class for which $\text{ERM}_\Hset$ will not lead to overfitting?} 
 We answer this question by decomposing the true risk into two different components as follows: 
 \begin{equation} \label{equation:ch2-bias_complexity_tradeoff}
@@ -169,8 +171,8 @@ We answer this question by decomposing the true risk into two different componen
   Recall that the empirical risk is only an estimate of the true risk.
   This error is dependent on the sample size and the complexity of the hypothesis class.
 \end{itemize}
-Recall that the main goal is to minimize the true risk $R_\Dset (h_\Sset)$, however, \Cref{equation:ch2-bias_complexity_tradeoff} shows a tradeoff called the \emph{bias-complexity tradeoff}.
-The tradeoff is as follows: if we choose a large and complex hypothesis space, we reduce the approximation error but at the same time we can increase the estimation error because a complex hypothesis space might lead to overfitting.
+Recall that the main goal is to minimize the true risk $R_\Dset (h_\Sset)$, however, \Cref{equation:ch2-bias_complexity_tradeoff} shows a trade-off called the \emph{bias-complexity trade-off}.
+The trade-off is as follows: if we choose a large and complex hypothesis space, we reduce the approximation error but at the same time we can increase the estimation error because a complex hypothesis space might lead to overfitting.
 Conversely, choosing a small hypothesis space might reduce the estimation error but increase the approximation error leading to an \emph{underfitting} phenomenon.
 We can illustrate the \emph{overfitting} and \emph{underfitting} phenomenons with \Cref{figure:ch2-fitting_points} which shows the decision boundary of 3 classifiers for the same set of samples.
 \Cref{figure:ch2-fitting_points_a} shows a classifier which \emph{underfit} the data, meaning the decision boundary is not complex enough to separate the data correctly.
@@ -179,8 +181,8 @@ Finally, \Cref{figure:ch2-fitting_points_c} shows a classifier that seems to hav
 
 
 As seen above, defining a small hypothesis class might lead to underfitting and a large hypothesis class might lead to overfitting.
-A good way to best balance the trade-off would be to minimize the empirical risk while also minimizing the complexity of the hypothesis class.
-Let us define a \emph{regularization} function $r: \Hset \rightarrow \Rbb$ which takes an hypothesis as input and a measure of the ``complexity'' of the hypothesis.
+A good way to balance the trade-off would be to minimize the empirical risk while also minimizing the complexity of the hypothesis class.
+Let us define a \emph{regularization} function $r: \Hset \rightarrow \Rbb$ which takes a hypothesis as input and a measure of the ``complexity'' of the hypothesis.
 We could now update the learning rule as follows:
 \begin{equation}
   \argmin_{h \in \Hset} \left[ R_\Sset(h) + r(h) \right]
