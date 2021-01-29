@@ -477,6 +477,10 @@
 \def\ddef#1{\expandafter\def\csname #1mat\endcsname{\ensuremath{\mathbf{#1}}}}
 \ddefloop ABCDEFGHIJKLMNOPQRSTUVWXYZ\ddefloop
 
+% sans serif matrices
+\def\ddef#1{\expandafter\def\csname #1matsf\endcsname{\ensuremath{\mathsf{#1}}}}
+\ddefloop ABCDEFGHIJKLMNOPQRSTUVWXYZ\ddefloop
+
 % bold vectors
 \def\ddef#1{\expandafter\def\csname #1vec\endcsname{\ensuremath{\mathbf{#1}}}}
 \ddefloop abcdefghijklmnopqrstuvwxyz\ddefloop
