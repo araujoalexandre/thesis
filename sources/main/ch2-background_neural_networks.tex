@@ -12,7 +12,7 @@ First, let us define the domain space $\Xset$ which corresponds to the set of in
 Let us denote the label space $\Yset$ and a finite sequence of pairs $\Sset = \left\{ \left(\xvec^{(1)}, y^{(1)} \right) \dots \left( \xvec^{(m)}, y^{(m)} \right) \right\}$ in $\Xset \times \Yset$.
 Such pairs \ie, labeled examples, are called \emph{training examples} and the set $\Sset$ is called the \emph{training set}.
 We denote $\Dset$ the \emph{joint distribution} over $\Xset \times \Yset$.
-The main objective of the task at hand is to output a \emph{prediction rule} $h: \Xset \rightarrow \Yset$ that maps the input $\xvec \in \Xset$ to the output $y \in \Yset$.
+The main objective of the task at hand is to output a function $h: \Xset \rightarrow \Yset$ that maps the input $\xvec \in \Xset$ to the output $y \in \Yset$.
 This function is called the \emph{hypothesis} or the \emph{classifier}.
 Given the probability distribution $\Dset$, we aim to measure how \emph{likely} the hypothesis $h$ makes an error when labeled points are randomly drawn from the distribution $\Dset$.
 Let us define the true error or \emph{risk} of the hypothesis $h$ that we wish to minimize:
@@ -20,7 +20,7 @@ Let us define the true error or \emph{risk} of the hypothesis $h$ that we wish t
   R_{\Dset}(h) \triangleq \Ebb_{(\xvec, y) \sim \Dset} \left[ L\big( h(\xvec), y \big) \right] \enspace.
 \end{equation}
 where $L: \Yset \times \Yset \rightarrow \Rbb_{+}$ is a \emph{loss function} which measures the correctness of the hypothesis.
-For example, for classification problems, we can use the 0-1 loss define as: %$L(h(\xvec), y) = \mathds{1}_\big[ h(\xvec) \neq y \big]$.
+For example, for classification problems, we can use the 0-1 loss defined as: %$L(h(\xvec), y) = \mathds{1}_\big[ h(\xvec) \neq y \big]$.
 \begin{equation}
   L(h(\xvec), y) \triangleq \mathds{1}_{\big[ h(\xvec) \neq y \big]}
 \end{equation}
@@ -65,15 +65,15 @@ We use the ERM paradigm as a surrogate to find a hypothesis $h$ that minimizes t
 However, all hypotheses that minimize the empirical error do not necessarily minimize the true risk.
 For example, consider the following function:
 \begin{equation} \label{equation:ch2-perfect_function}
-  h^*(\xvec) =
+  h_c(\xvec) =
   \begin{cases}
     y^{(i)} &\quad \text{if }\exists i \in [m] \text{ s.t. } \xvec^{(i)} = \xvec \\
-    0 &\quad \text{otherwise}
+    c &\quad \text{otherwise}
   \end{cases}
 \end{equation}
-Clearly, this function, for any training set, $\Sset$, will have $R_\Sset(h^*) = 0$, whereas the true risk would certainly be high.
+Clearly, this function, for any training set, $\Sset$, will have $R_\Sset(h_1) = R_\Sset(h_2) = 0$, whereas one the two functions will have a true risk $\geq \frac{1}{2}$ (under the reasonable assumption that $\Sset$ is a negligible set with respect to $\Dset$).
 The phenomenon, called \emph{overfitting}, happens when the classifier fits the training data ``too well'' but will likely have a high error on unseen data.
-One possible solution to this phenomenon is to apply ERM with a restricted search space to prevent the learning algorithm to output a function such as $h^*$ in \Cref{equation:ch2-perfect_function}.
+One possible solution to this phenomenon is to apply ERM with a restricted search space to prevent the learning algorithm to output a function such as $h_c$ in \Cref{equation:ch2-perfect_function}.
 We call this set the \emph{hypothesis class} and is denoted $\Hset$.
 Each $h \in \Hset$ is a function mapping from $\Xset$ to $\Yset$.
 We call $\mathrm{ERM}_{\Hset}$, the set of learned hypotheses that uses the $\mathrm{ERM}$ paradigm over the hypothesis class $\Hset$ and a training data $\Sset$.
@@ -122,13 +122,13 @@ The ERM paradigm assumes that a hypothesis $h_\Sset$ that minimizes the risk $R_
 % 	\Pbb \left[ \sup_{h \in \Hset} \left| R_\Dset(h) - R_\Sset(h) \right| < \epsilon \right] \rightarrow 0 \quad \text{ when } \quad |\Sset| \rightarrow \infty, \quad \forall \epsilon > 0
 % \end{equation}
 To verify that this assumption is correct, we need to ensure that all hypotheses in the hypothesis class $\Hset$ are good approximators of their true risk.
-We say that a hypothesis class has \emph{uniform convergence property} if there exists a function $m_\Hset:(0, 1)^2 \rightarrow \Nbb$ such that for every $\epsilon, \delta \in (0, 1)$, if $\Sset$ is a sample of $m \leq m_\Hset(\epsilon, \delta)$ examples drawn \emph{independent and identically distributed} according to $\Dset$, then, with probability of at least $1 - \delta$:
+We say that a hypothesis class has \emph{uniform convergence property} if there exists a function $m_\Hset:(0, 1)^2 \rightarrow \Nbb$ such that for every $\epsilon, \delta \in (0, 1)$, if $\Sset$ is a sample of $m \leq m_\Hset(\epsilon, \delta)$ examples drawn \emph{independent and identically} according to $\Dset$, then, with probability of at least $1 - \delta$:
 \begin{equation} \label{equation:ch2-eps_representative}
   \forall h \in \Hset, \quad |R_\Dset(h) - R_\Sset(h)| \leq \epsilon \enspace,
 \end{equation}
-where the function $m_\Hset$, called \emph{the sample complexity}, measures the minimal number of examples needed to ensure that with probability of at least $1 - \delta$ the sample verify \Cref{equation:ch2-eps_representative}.
+where the function $m_\Hset$, called \emph{the sample complexity}, measures the minimal number of examples needed to ensure that with probability of at least $1 - \delta$ the \Cref{equation:ch2-eps_representative} is verified.
 The ``independent and identically distributed'' assumption is common in statistical learning theory.
-It is easy to see that the error between $R_\Sset(h)$ and $R_\Dset(h)$ is dependent on the quality of the sampling $\Sset$ with respect to the underlying distribution $\Dset$.
+It is easy to see that the error between $R_\Sset(h)$ and $R_\Dset(h)$ is dependent on how well $\Sset$ is representative of $\Dset$.
 Therefore, the parameter $\delta$ characterizes the probability of having a nonrepresentative sample. We call $1 - \delta$ the \emph{confidence parameter} of our prediction.
 
 
@@ -143,15 +143,15 @@ The following result gives the sample complexity measure the maximum value for w
   \removespace
 \end{theorem}
 \noindent
-Note that we can also write the bound from~\Cref{theorem:ch2-sample_complexity_bound} as follows, $\forall h \in \Hset$, with probability $1 - \delta$, we have:
+Note that we can also write the bound from~\Cref{theorem:ch2-sample_complexity_bound} as follows, with probability $1 - \delta$, we have for all $h \in \Hset$:
 \begin{equation}
   \underbrace{\vphantom{\sqrt{\frac{\log(|\Hset|/\delta)}{2 m_\Hset(\epsilon, \delta)}}} R_\Dset(h)}_{\text{Error}} \leq \underbrace{\vphantom{\sqrt{\frac{\log(|\Hset|/\delta)}{2 m_\Hset(\epsilon, \delta)}}} R_\Sset(h)}_{\text{Estimation Error}} + \underbrace{\sqrt{\frac{\log(|\Hset|/\delta)}{2 m_\Hset(\epsilon, \delta)}}}_{\text{Complexity penality}} \enspace.
 \end{equation}
 This bound is called a \emph{generalization bound} and consists in bounding the true error by the empirical error and a complexity penalty.
 In the above theorem, the condition on the finiteness of the hypothesis class might by too strong.
-For example, if we consider the set of linear functions parameterized by a set of parameters in $\Rbb$ the hypothesis class is infinite and the theorem above does not apply.
-To characterize the learnability of infinite hypothesis class, several complexity measures have been proposed.
-One of the first, discovered by~\citet{vapnik2015uniform}, relies on a combinatorial notion called the Vapnik-Chervonenkis dimension (VC-dimension).
+For example, if we consider the set of linear functions parameterized by a set of real-valued parameters the hypothesis class is infinite and the theorem above does not apply.
+To characterize the learnability of infinite hypothesis classes, several complexity measures have been proposed.
+One of the first, discovered by~\citet{vapnik2015uniform}, relies on a combinatorial notion called the Vapnik-Chervonenkis dimension (VC-dimension). They showed that having a finite VC-dimension is a necessary and sufficient condition for the uniform convergence property.
 In the same vein, the Rademacher complexity~\cite{koltchinskii2000rademacher}, measures the richness of a class of real-valued functions with respect to a probability distribution.
 In \Cref{subsection:ch2-recent_results_on_the_theory_of_neural_networks}, we will study recent generalization bounds specific to neural networks where the complexity penalty is dependent on the Lipschitz constant of the weights matrices.
 
@@ -187,7 +187,7 @@ We could now update the learning rule as follows:
 \begin{equation}
   \argmin_{h \in \Hset} \left[ R_\Sset(h) + r(h) \right]
 \end{equation}
-This learning rule minimizes the empirical risk $R_\Sset(h)$ and the regularization function $r$, thus, preventing overfitting and improving generalization on unseen data.
+This learning rule minimizes the empirical risk $R_\Sset(h)$ and the regularization function $r$. If $r(\ \cdot\ )$ is carefully chosen, this prevent overfitting and improve generalization on unseen data.
 This learning rule is closely related to \emph{Structural Minimization Paradigm} (SRM) \cite{shalev2014understanding}.
 In the next section, we will present a classical regularization function for neural networks and we will introduce a new regularization scheme in \Cref{chapter:ch5-lipschitz_bound}.
 
@@ -335,7 +335,7 @@ In the next section, we will present a classical regularization function for neu
 % In the previous section, we said that we restrict the learner towards a specific set of predictors.
 % In this thesis, we focus on neural networks.
 Neural networks, which find their roots in the work of \citet{mcculloch1943logical,rosenblatt1958perceptron}, can be analytically described as a composition of linear functions interlaced with nonlinear functions (also called activation functions).
-A neural network can be defined as follows:
+A feedforward neural network can be defined as follows:
 
 % \begin{definition}[Neural Network]
 %   Given a depth $\depth \in \Nbb$, 
@@ -362,9 +362,9 @@ A neural network can be defined as follows:
 
 \begin{definition}[Neural Network] \label{definition:ch2-neural_networks}
   Given a depth $\depth \in \Nbb$, 
-  let $\dimw = \{ \dimw^{(i)} \}_{i \in [\depth]}$ and $\dimb = \{ \dimb^{(i)} \}_{i \in [\depth]}$ be sequences of integers, $\weights = \left\{ \left( \Wmat^{(i)}, \bvec^{(i)} \right) \right\}_{i \in [\depth]}$ a set of weights matrices and bias vectors 
-  such that $\Wmat^{(i)} \in \Rbb^{\dimw^{(i)}}$ and $\bvec^{(i)} \in \Rbb^{\dimb^{(i)}}$ and a sequence of activation functions $\act = \{\act_i \}_{i \in [\depth]}$.
-  Let $\Xset \subset \Rbb^{\dimw^{(1)}}$ and $\Yset \subset \Rbb^{\dimw^{(\depth)}}$ be the input and output spaces respectively.
+  let $\dimw = \{ \dimw^{(i)} \}_{i \in [\depth+1]}$ and $\dimb = \{ \dimb^{(i)} \}_{i \in [\depth]}$ be sequences of integers, $\weights = \left\{ \left( \Wmat^{(i)}, \bvec^{(i)} \right) \right\}_{i \in [\depth]}$ a set of weights matrices and bias vectors 
+  such that $\Wmat^{(i)} \in \Rbb^{\dimw^{(i)} \times \dimw^{(i+1)}}$ and $\bvec^{(i)} \in \Rbb^{\dimb^{(i)}}$ and a sequence of activation functions $\act = \{\act_i \}_{i \in [\depth]}$.
+  Let $\Xset \subset \Rbb^{\dimw^{(1)}}$ and $\Yset \subset \Rbb^{\dimw^{(\depth+1)}}$ be the input and output spaces respectively.
 	$\dimw^{(1)}$ and $\dimw^{(\depth)}$ refer to the input and output dimension respectively.
   % $\dimw^{(1)}$ refers to the input dimension and $\dimw^{(\depth)}$ refers to the output dimension.
   A neural network is a function $\nn^\act_\weights : \Xset \rightarrow \Yset$ such that
@@ -384,9 +384,9 @@ Based on this definition, for a given training set $\Sset \subset \Xset \times \
 \begin{equation} \label{equation:ch2-erm_neural_network}
   \argmin_{\weights} \frac{1}{|\Sset|} \sum_{(\xvec, y) \in \Sset} L(N^\act_\weights(\xvec), y) 
 \end{equation}
-For classification problems, the zero-one loss is known to be non-convex and non-smooth, and it has been shown that solving for the optimal solution is an NP-hard combinatorial optimization problem~\cite{feldman2012agnostic,bendavid2003difficulty}.
-Instead, a common approach is to use a surrogate such as the cross-entropy loss function and estimate the parameters by maximizing the \emph{likelihood} over the data.
-The cross-entropy loss $L:\Yset \times [k]$, is defined as follows:
+For classification problems, the zero-one loss is non-convex, and finding a near optimal solution is an NP-hard problem~\cite{feldman2012agnostic,bendavid2003difficulty}.
+Instead, a common approach is to use a surrogate such as the logistic loss multiclass function and estimate the parameters by maximizing the \emph{likelihood} over the data.
+This loss $L:\Yset \times [k]$, is defined as follows:
 \begin{equation}
   L(N^\rho_\Omega(\xvec), y) = -\log
     \left(
@@ -395,7 +395,7 @@ The cross-entropy loss $L:\Yset \times [k]$, is defined as follows:
 	{\sum_{j\in[k]} e^{\left(N^\rho_\Omega(\xvec)\right)_j}}
     \right)
 \end{equation}
-The generic approach for minimizing the empirical risk in \Cref{equation:ch2-erm_neural_network} is by \emph{gradient descent} with the \emph{backpropgation} algorithm ~\cite{rumelhart1986learning} which consists in computing the gradient with the chain-rule.
+The generic approach for minimizing the empirical risk in \Cref{equation:ch2-erm_neural_network} is by \emph{gradient descent} with the \emph{backpropagation} algorithm ~\cite{rumelhart1986learning} which consists in computing the gradient with the chain-rule.
 
 
 
@@ -412,10 +412,10 @@ As seen in the previous section, the SRM paradigm minimizes two terms, the empir
 % It has been shown that the number of free parameters can be used as a measure of complexity and a number of work have proposed techniques to reduce the number parameters~\cite{lecun1990optimal,thodberg1991improving,weigend1991generalization}.
 % However, a different way of constraining the complexity is to limit the growth of weights~\cite{hinton1987learning}.
 % This \emph{regularization} \cite{tikhonov1977solutions,krogh1992simple}, also called \emph{weight decay}, prevents weights from growing too large unless it is necessary.
-It has been shown that the $\ell_2$ norm of the weights of a network can be used as a measure of complexity; therefore, limiting the growth of the weights constrains the complexity of the network ~\cite{hinton1987learning}.
+It has been shown that the $\ell_2$ norm of the weights of a network can be used as an adequate measure of complexity \cite{hinton1987learning}.
 % However, a different way of constraining the complexity is to limit the growth of weights~\cite{hinton1987learning}.
-This \emph{regularization} \cite{tikhonov1977solutions,krogh1992simple}, also called \emph{weight decay}, prevents weights from growing too large unless it is necessary.
-The SRM learning algorithm with the weight decay regularization can be expressed as follows:
+This \emph{regularization} \cite{tikhonov1977solutions}, also called prevents weights from growing too large unless.
+The SRM learning algorithm can then be expressed as follows:
 \begin{equation}
   \argmin_{\weights} \frac{1}{|\Sset|} \sum_{(\xvec, y) \in \Sset} L(N^\act_\weights(\xvec), y) + \lambda \sum_{(\Wmat, \bvec) \in \weights} \left( \norm{\Wmat}_\mathrm{F} + \norm{\bvec}_\mathrm{2} \right)
 \end{equation}
@@ -520,7 +520,7 @@ However, it has been shown that such neural networks are vulnerable to \emph{adv
 Because it is difficult to characterize the space of visually imperceptible variations of a natural image, existing adversarial attacks use $\ell_p$ norms as surrogate measures.
 We can formally define an adversarial example as follows:
 \begin{definition}[Adversarial Pertubation]
-  Given an example $\xvec$ and its label $y$, a trained neural network $\nn_\weights$ with $\argmax_i \{ \nn_\weights(\xvec)_i \} = y$, let $\adv \in \Xset$ be an adversarial perturbation such that:
+  Given an example $\xvec$ and its label $y$, a trained neural network $\nn_\weights$ with $\argmax_i \{ \nn_\weights(\xvec)_i \} = y$ and a radius $\epsilon \in \Rbb$, an adversarial perturbation is a vector $\adv \in \Xset$ such that:
   % Given a dataset $\Sset \subset \Xset \times \Yset$, a pair $(\xvec, y) \in \Sset$ and a trained neural network $\nn_\weights$ on $\Sset$ such that $\argmax_{i} \{ \nn_\weights(\xvec)_i \} = y$, let $\adv \in \Xset$ be an adversarial perturbation such that:
   \begin{align}
     &\argmax_{i} \{ \nn_\weights (\xvec + \adv)_i \} \neq y \\
@@ -531,7 +531,7 @@ We can formally define an adversarial example as follows:
 
 Note that this definition assumes that the attacker (the person crafting the attack) has access to the parameters of the model.
 Typically, an attack method is either \emph{white-box} (complete knowledge of the model and its parameters) or \emph{black-box} (no knowledge of the model).
-It is possible to consider the white-box setting admits too strong assumptions because a model and its parameters could very well be hidden from the public.
+It is possible to consider that the white-box setting admits too strong assumptions because a model and its parameters could very well be hidden from the public.
 In general, it is safer to assume that the adversary has complete knowledge of the model and its defense.
 This principle is known in the field of security as Kerckhoffs’ principle~\cite{kerckhoffs1883cryptographie} or Shannon's maxim~\cite{shannon1949communication}.
 Therefore, in this thesis, we only consider defenses against white-box attacks which imply robustness against black-box adversaries.
@@ -649,7 +649,7 @@ In this section, we give recent generalization bounds for neural networks.
 Neural networks have the astonishing property of providing a low error rate on unseen data although they have more parameters than the number of training samples and therefore have the capabilities to fit random labels \cite{zhang2016understanding}.
 In this context, traditional approaches of statistical learning  fail to explain why large neural networks generalize well in practice.
 
-\citet{harvey2017nearly} have devised a generalization of neural networks with the VC-dimension a complexity measure of the hypothesis class.
+\citet{harvey2017nearly} have introduced a generalization bound of neural networks with the VC-dimension a complexity measure of the hypothesis class.
 They improved over previous bounds~\cite{bartlett1998almost,anthony1999neural} by showing that the VC-dimension of a $\depth$-layer neural network is equal to the depth times the number parameters.
 Unfortunately, this kind of bound with such a complexity measure is of little help to better understand the generalization capabilities of neural networks.
 
@@ -693,7 +693,6 @@ Let us recall the risk with respect to the neural network $N_\Omega$ and a distr
 \end{equation}
 where $\Sset$ is an i.i.d sample of the distribution $\Dset$.
 \citet{bartlett2017spectrally} extended this notion of risk with a \emph{margin operator} $\Mset: \Rbb^k \times [k] \rightarrow \Rbb$ defined as $\Mset(\vvec, j) \triangleq \vvec_j - \max_{i \neq j} \vvec_i$ and an extension to the 0-1 loss called the \emph{ramp loss} $L_\gamma: \Rbb \rightarrow \Rbb_+$ as:
-
 \begin{equation}
   L_\gamma(r) \triangleq 
   \begin{cases}
@@ -714,10 +713,10 @@ Note that the margin risk and the empirical margin risk upper bound the risk and
 The generalization bound of~\citet{bartlett2017spectrally} for neural network is stated as follows:
 \begin{theorem}[\citet{bartlett2017spectrally}]
   Let $(\rho^{(1)}, \dots, \rho^{(\depth)})$ be nonlinearities where $\forall i \in [\depth], \lip{\rho^{(i)}} \leq \infty$ and $\rho^{(i)}(0) = 0$.
-  Let $\left( \Amat^{(1)}, \dots, \Amat^{(\depth)} \right)$ be \emph{reference matrices} of the same dimensions of the matrices $\left( \Wmat^{(1)}, \dots, \Wmat^{(\depth)} \right)$.
-  Let $w^{(1)}, \dots, w^{(p)}$ be the dimension of the matrices $\Wmat^{(i)}$ and let $W = \max_i w^{(i)}$.
+  Let $\left( \Amat^{(1)}, \dots, \Amat^{(\depth)} \right)$ be \emph{reference matrices} of same dimensions as the matrices $\left( \Wmat^{(1)}, \dots, \Wmat^{(\depth)} \right)$.
+  Let $\dimw^{(1)}, \dots, \dimw^{(p+1)}$ be integers such that $\Wmat^{(i)} \in \Rbb^{\dimw^{(i)} \times \dimw^{(i+1)}}$ and let $W = \max_i w^{(i)}$.
   Let $\Xmat$ a matrix where the rows of $\Xmat$ are the input data $\xvec^{(1)}, \dots, \xvec^{(m)} \in \Sset$.
-  Let $N_\Omega: \Rbb^{w^{(1)}} \rightarrow \Rbb^{w^{(\depth)}}$ be a neural network parameterized by $\Omega$ as in the Definition~\ref{definition:ch2-neural_networks} where $\left( \Wmat^{(1)}, \dots, \Wmat^{(\depth)} \right)$ are the weights matrices.
+  Let $N_\Omega: \Rbb^{w^{(1)}} \rightarrow \Rbb^{w^{(\depth+1)}}$ be a neural network parameterized by $\Omega$ as in the Definition~\ref{definition:ch2-neural_networks} where $\left( \Wmat^{(1)}, \dots, \Wmat^{(\depth)} \right)$ are the weights matrices.
   Then, with probability at least $1 - \delta$ over $\Sset$, every margin $\gamma > 0$, the following bound applies:
   \begin{equation}
     R_\Dset(N_\Omega) \leq R_{\gamma,\Sset} (N_\Omega) + \widetilde{\bigO}\left( \frac{\norm{\Xmat}_\fro \Rset_{N_\Omega}}{\gamma |\Sset|} \ln(W) + \sqrt{\frac{\ln(1/\delta)}{|\Sset|}} \right)
@@ -733,26 +732,31 @@ As we stated in the introduction, the generalization of neural networks is impor
 Indeed, a neural network that performs well on natural data could be vulnerable to adversarial attacks.
 We saw in the previous section that \emph{adversarial training} is a technique that successfully improves the robustness of neural networks by learning on adversarial examples instead of natural ones.
 In the following, we present recent results devised by~\citet{farnia2018generalizable} on the generalization capabilities of neural networks trained with adversarial training.
-First, let us defined the \emph{adversarial margin risk} as:
+First, let us define the \emph{adversarial margin risk} as:
 \begin{equation}
-  R_{\gamma, \Dset}^{\text{adv}}(N_\Omega) \triangleq \Pbb_{(\xvec, y) \sim \Dset} \left[\argmax_i N_\Omega(\xvec + \adv^{\text{adv}}_\Omega(\xvec) ) \neq y \right] 
+  R^{\text{adv}}_{\gamma,\Dset} (N_\Omega) \triangleq \Ebb_{(\xvec, y) \sim \Dset} \ L_\gamma \big(-\Mset(N_\Omega(\xvec + \adv^{\text{adv}}_\Omega), y) \big) \enspace,
 \end{equation}
+% \begin{equation}
+%   R_{\gamma, \Dset}^{\text{adv}}(N_\Omega) \triangleq \Ebb_{(\xvec, y) \sim \Dset} \left[ -\Mset \left( N_\Omega(\xvec +\adv^{\text{adv}    \right) \right] 
+% \end{equation}
 where $\adv^{\text{adv}}_\Omega(\xvec)$ is an adversarial perturbation following the loss maximization strategy presented in~\Cref{subsubsection:ch2-adversarial_attacks}.
-The \emph{adversarial empirical margin risk} is defined similarly as in~\Cref{equation:ch2-emprical_margin_risk}.
+The \emph{adversarial empirical margin risk} $R^{\text{adv}}_{\gamma,\Sset}$ is defined similarly as in~\Cref{equation:ch2-emprical_margin_risk}.
 The adversarial generalization bound of~\citet{farnia2018generalizable} for neural network is stated as follows:
 \begin{theorem}[\citet{farnia2018generalizable}]
   Let $(\rho^{(1)}, \dots, \rho^{(\depth)})$ be nonlinearities where $\forall i \in [\depth], \lip{\rho^{(i)}} = 1$ and $\rho^{(i)}(0) = 0$.
   Let $B = \max_{\xvec \in \Sset} \norm{\xvec}_2$.
-  Let $N_\Omega: \Rbb^{w^{(1)}} \rightarrow \Rbb^{w^{(\depth)}}$ be a neural network parameterized by $\Omega$ of depth $\depth$ and width $w$ following the~\Cref{definition:ch2-neural_networks} where $\left( \Wmat^{(1)}, \dots, \Wmat^{(\depth)} \right)$ are the weights matrices.
+  Let $\Xset \subset \Rbb^{\dimw^{(1)}}$ and $\Yset \subset \Rbb^{\dimw^{(\depth+1)}}$ be the input and output spaces respectively.
+  Let $N_\Omega: \Xset \rightarrow \Yset$ be a neural network parameterized by $\Omega$ of depth $\depth$ and of largest width $W = \max_i \dimw^{(i)}$ following the~\Cref{definition:ch2-neural_networks}.
+  Let $\Xset \subset \Rbb^{\dimw^{(1)}}$ and $\Yset \subset \Rbb^{\dimw^{(\depth+1)}}$ be the input and output spaces respectively.
   Assume that for a constant $C_1 \geq 1$ the weights matrices satisfies:
   \begin{equation}
     \frac{1}{C_1} \leq \frac{\norm{\Wmat^{(i)}}}{\beta_\Omega} \leq C_1 \enspace, \quad \beta_\Omega \triangleq \prod_{i=1}^\depth \left(\norm{\Wmat^{(i)}}_2\right)^{1/\depth}
   \end{equation}
-  and that $C_2 \leq \norm{\nabla_\xvec L(N_\Omega(\xvec), y)}_2$ holds for any $C_2 > 0$, any $y \in \Yset$ and any $\xvec \in \Bset_2(\xvec, \epsilon)$ $\epsilon$-close to the support set $\Xset$.
+  and that $C_2 \leq \norm{\nabla_\xvec L(N_\Omega(\xvec), y)}_2$ holds for a constant $C_2 > 0$, any $y \in \Yset$ and any $\xvec \in \Bset_2(\xvec, \epsilon)$ $\epsilon$-close to the support set $\Xset$.
   Let us consider an attack such that $\norm{\adv^{\text{\emph{adv}}}_\Omega(\xvec)}_2 \leq \epsilon$ with $r$ iterations, and a stepsize $\alpha$.
   Then, with probability at least $1 - \delta$ over $\Sset$, every margin $\gamma > 0$, the following bound applies:
   \begin{equation}
-    R_\Dset^{\text{\emph{adv}}}(N_\Omega) \leq R_{\gamma, \Sset}^{\text{\emph{adv}}}(N_\Omega) + \bigO \left( \sqrt{\frac{(B + \epsilon)^2 \depth^2 w \log(\depth w) \Rset^{\text{\emph{adv}}}_{N_\Omega} + \depth \log(\frac{r \depth |\Sset| \log(M)}{\delta})}{\gamma^2 |\Sset|}} \right)
+    R_{0, \Dset}^{\text{\emph{adv}}}(N_\Omega) \leq R_{\gamma, \Sset}^{\text{\emph{adv}}}(N_\Omega) + \bigO \left( \sqrt{\frac{(B + \epsilon)^2 \depth^2 W \log(\depth W) \Rset^{\text{\emph{adv}}}_{N_\Omega} + \depth \log(\frac{r \depth |\Sset| \log(M)}{\delta})}{\gamma^2 |\Sset|}} \right)
   \end{equation}
   where the \emph{adversarial spectral complexity} $\Rset^{\text{\emph{adv}}}_{N_\Omega}$ is defined as follows:
   \begin{equation}

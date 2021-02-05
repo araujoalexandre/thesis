@@ -363,18 +363,24 @@ To recover the block Toeplitz matrix from its generating function, we use the To
   \label{figure:illustration_convolution}
 \end{figure}
 
-Doubly-block circulant and doubly-block Toeplitz matrices are very interesting structured due to their relation to 2-dimensional convolutions.
-Recall that a discrete convolution can be seen as a kernel sliding over the image and acting as a filter.
+
+% the convolution operation is a linear transform `performed' by a doubly-block Toeplitz matrix (in the 2d case), \ie, a block Toeplitz matrix where the blocks are also Toeplitz.
+%
+% Considering convolutions as a simple linear transform with a structured matrix has allowed multiple results to be derived~\citet{appuswamy2016structured,wang2020orthogonal,sedghi2018singular,singla2019bounding}, including one of our main contributions presented in \Cref{chapter:ch5-lipschitz_bound}.
+%
+% % This observation has been made by~\citet{jain1989fundamentals} and many works have been derived from it~\citet{appuswamy2016structured,wang2020orthogonal,sedghi2018singular,singla2019bounding}, including one of our main contributions presented in \Cref{chapter:ch5-lipschitz_bound}.
+%
+% A discrete convolution operation with a 2-dimensional kernel applied on a 2-dimensional signal is equivalent to a matrix multiplication with a doubly-block Toeplitz matrix.
+% Let $\Kmat$ be a 2-dimensional kernel defined as follows:
+
+
+
+Doubly-block circulant and doubly-block Toeplitz matrices are interesting structure due to their relation to 2-dimensional convolutions.
+We recall that a discrete convolution can be seen as a kernel sliding over the image and acting as a filter.
 \Cref{figure:illustration_convolution} illustrates the convolution operation with the image (blue), the kernel (gray) and the resulting operation (green).
-It has been shown by~\citet{jain1989fundamentals} that the convolution operation is a linear transform `performed' by a doubly-block Toeplitz matrix (in the 2d case), \ie, a block Toeplitz matrix where the blocks are also Toeplitz.
-Considering convolutions as a simple linear transform with a structured matrix has allowed multiple results to be derived~\citet{appuswamy2016structured,wang2020orthogonal,sedghi2018singular,singla2019bounding}, including one of our main contributions presented in \Cref{chapter:ch5-lipschitz_bound}.
-
-
-
-% This observation has been made by~\citet{jain1989fundamentals} and many works have been derived from it~\citet{appuswamy2016structured,wang2020orthogonal,sedghi2018singular,singla2019bounding}, including one of our main contributions presented in \Cref{chapter:ch5-lipschitz_bound}.
-
-A discrete convolution operation with a 2-dimensional kernel applied on a 2-dimensional signal is equivalent to a matrix multiplication with a doubly-block Toeplitz matrix.
-Let $\Kmat$ be a 2-dimensional kernel defined as follows:
+It has been shown by~\citet{jain1989fundamentals} that the result of a discrete 2d-convolution can be obtained by applying a doubly-block Toeplitz matrix to the input signal.
+A doubly-block Toeplitz matrix is a block Toeplitz matrix where the blocks are also Toeplitz.
+To illustrate, we consider a discrete convolution between a 2-dimensional signal $\xvec$ and a kernel $\Kmat$ where the kernel is defined as follows:
 \begin{equation*}
   \Kmat = \leftmatrix
     k_0 & k_1 & k_2 \\
@@ -422,13 +428,10 @@ where $\Tmatsf^{(j)}$ are Toeplitz matrices and the values of the kernel $\Kmat$
 \end{equation*}
 
 
-However, in practice, the signal can have multiple channels (\eg, images have 3 channels: RGB).
-% corresponding to the colors red, green and blue).
-Let us denote by $\cin$ and $\cout$ the number of channels of the input and output respectively.
-Then the convolution takes an input of size $\cin \times n \times n$, performed by a kernel of size $\cout \times \cin \times k \times k$, and outputs a signal of size $\cout \times m \times m$ with $m = n - k + 2p + 1$ where $p$ corresponds to the padding.
+In practice, the signal often can have multiple channels (\eg, images have 3 channels corresponding to the colors red, green and blue).
+Let us denote $\cin$ and $\cout$ the number of the input and output channels respectively.
+Then the input signal has a dimension of $\cin \times n \times n$, performed by a kernel of size $\cout \times \cin \times k \times k$, and outputs a signal of size $\cout \times m \times m$ with $m = n - k + 2p + 1$ where $p$ corresponds to the padding.
 The matrix for the multi-channel convolution is the concatenation of $\cout \cdot \cin$ doubly-block Toeplitz matrices.
-
-
 
 
 
@@ -438,17 +441,24 @@ The matrix for the multi-channel convolution is the concatenation of $\cout \cdo
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-Other structured matrices can benefit from reduced memory footprint and fast matrix-vector product.
+
+
+In this thesis, we mainly focus on structured transforms from the Toeplitz family.
+The properties of matrices from the Toeplitz family presented in the previous section make them good candidates for applications in the context of signal processing and deep neural network.
+However, other structured matrices with other properties have been considered.
+In this section, we briefly present these families of structured matrices and introduce LDR, a more general framework to capture all structured matrices
+% Other structured matrices can benefit from reduced memory footprint and fast matrix-vector product.
 Bellow a description of some known structured matrices: 
 \begin{itemize}
-  \item \textbf{Hankel matrix}: A Hankel matrix, named after Hermann Hankel, has constant values along each of its anti-diagonals.
-  \item \textbf{Vandermonde matrix}: A Vandermonde matrix, named after Alexandre-Théophile Vandermonde, is a matrix where each term follows a geometric progression.
+  \item \textbf{Hankel matrix}: A Hankel matrix has constant values along each of its anti-diagonals.
+  \item \textbf{Vandermonde matrix}: A Vandermonde matrix is a matrix where each term follows a geometric progression.
     A very important special case is the complex matrix associated with the Discrete Fourier transform (DFT) presented in \Cref{definition:ch2-fourier_matrix} which has a Vandermonde structure.
-  \item \textbf{Cauchy matrix}: A Cauchy matrix, named after Augustin Louis Cauchy, is an $m \times n$ matrix with elements $a_{ij}$ such that $a_{ij} = (\uvec_i - \vvec_j)^{-1}$ with $\uvec_i - \vvec_j \neq 0$, $i \in \{0,\dots,m-1\}$ and $j \in \{0,\dots,n-1\}$.
+  \item \textbf{Cauchy matrix}: A Cauchy matrix is an $m \times n$ matrix with elements $a_{ij}$ such that $a_{ij} = (\uvec_i - \vvec_j)^{-1}$ with $\uvec_i - \vvec_j \neq 0$, $i \in \{0,\dots,m-1\}$ and $j \in \{0,\dots,n-1\}$.
 \end{itemize}
 \Cref{figure:ch2-example_structure_matrices} shows the representation of the parameters sharing of Hankel, Vandermonde and Cauchy matrices.
-These matrices with matrices from the Toeplitz family can be unified thanks to the notion of \emph{Low Displacement Rank} (LDR).
-Although these matrices appear to have very different kinds of parameter sharing, they can be all associated with a specific displacement operator $\triangleopdown_{\Amat, \Bmat}: \Rbb^{m \times n} \rightarrow \Rbb^{m \times n}$ which takes a matrix, $\Mmat$, and outputs a low rank matrix $\triangleopdown_{\Amat, \Bmat}(\Mmat)$ such that $\rank(\triangleopdown_{\Amat, \Bmat}(\Mmat)) \ll \min(m,n)$.
+The study of these matrices along with matrices from the Toeplitz family can be unified thanks to the concept of \emph{Low Displacement Rank} (LDR) initially proposed by~\citet{kailath1979displacement}.
+Although these matrices appear to have very different kinds of structure, they can be all associated with a specific displacement operator $\triangleopdown_{\Amat, \Bmat}: \Rbb^{m \times n} \rightarrow \Rbb^{m \times n}$ which takes a matrix, $\Mmat$, and outputs a low rank matrix $\triangleopdown_{\Amat, \Bmat}(\Mmat)$ such that $\rank(\triangleopdown_{\Amat, \Bmat}(\Mmat)) \ll \min(m,n)$.
+
 
 
 \begin{figure}[t]
@@ -496,8 +506,8 @@ Although these matrices appear to have very different kinds of parameter sharing
 \end{figure}
 
 
-This displacement rank approach has been initially proposed by~\citet{kailath1979displacement} and has been further studied by~\citet{kailath1995displacement,pan2001structured}.
-More formally, we can define two displacement operators (for simplification, we consider $m = n$):
+
+More formally, two displacement operators can be defined as follows (for simplification, we consider $m = n$):
 \begin{definition}[\emph{Sylvester} \& \emph{Stein} displacement operators]
   Let $\Amat, \Bmat \in \Rbb^{n \times n}$, the \emph{Sylvester} displacement operator denoted $\triangleopdown_{\Amat, \Bmat} = \triangleopdown_{\Amat, \Bmat}: \Rbb^{n \times n} \rightarrow \Rbb^{n \times n}$ is defined as follows:
   \begin{equation}
@@ -537,7 +547,7 @@ More formally, we can define two displacement operators (for simplification, we 
 \noindent
 Based on this definition, if $\Mmat$ is a structured matrix, there exist operator matrices $\Amat$ and $\Bmat$ such that $\triangleopdown_{\Amat, \Bmat} (\Mmat)$ is low rank.
 In particular, $\Amat$ and $\Bmat$ can be chosen to be diagonal or $f$-unit-circulant matrices (see \Cref{definition:ch2-f_circulant_matrix}) for several classes of structured matrices.
-\Cref{table:ch2-displacing_matrices} shows some specific choices of operators for the four basic classes of structured matrices and for some related matrices.
+\Cref{table:ch2-displacing_matrices} shows some specific choices of operators for the four classes of structured matrices presented above as well as other types of structured matrices from the same family.
 We now define the matrices that can be considered structured with respect to the Sylvester or Stein operator.
 \begin{definition}[L-like matrices]
   For an $n \times n$ matrix $\Mmat$ and an associated operator $\triangleopdown_{\Amat, \Bmat}$ (or $\triangleopup_{\Amat, \Bmat}$), the value $r = \rank(\triangleopdown_{\Amat, \Bmat}(\Mmat))$ (or $r = \rank(\triangleopup_{\Amat, \Bmat}(\Mmat))$) is called the \emph{displacement rank}.
@@ -546,8 +556,9 @@ We now define the matrices that can be considered structured with respect to the
   \label{definition:ch2-l_like_matrices}
 \end{definition}
 
-An important result allows us to express structured matrices with low-displacement rank directly as a function of its low displacement generators.
-For the Stein type displacement operator, the following result holds:
+An important result allows us to express structured matrices with low-displacement rank directly as a function of their low displacement generators.
+This result can then be used to decompose structured matrices and define efficient algorithms for matrix-vector products.
+
 \begin{theorem}[Krylov Decomposition~\citet{pan2003inversion,sindhwani2015structured}] \label{theorem:ch2-krylov_decomposition}
   If an $n \times n$ matrix $\Mmat$ is such that $\triangleopup_{\Amat, \Bmat}(\Mmat) = \Gmat \Hmat^\top$ where 
   $\Gmat = (\gvec^{(1)} \ldots \gvec^{(r)}), \Hmat = (\hvec^{(1)} \ldots \hvec^{(r)}) \in \Rbb^{n \times r}$ 
@@ -563,8 +574,7 @@ For the Stein type displacement operator, the following result holds:
 \end{theorem}
 
 \noindent
-This theorem can be used to decompose structured matrices and define efficient algorithms for matrix-vector products.
-For example, this theorem can be simplified for \emph{Toeplitz-like matrices} as follows:
+In the case of \emph{Toeplitz-like matrices}, the above theorem can be simplified as follows:
 \begin{theorem}[Toeplitz-like matrix decomposition \citet{pan2001structured}] \label{theorem:ch2-toeplitz_like}
   If an $n \times n$ matrix $\Mmat$ satisfies $\triangleopdown_{\Zmat_1, \Zmat_{-1}}(\Mmat) = \Gmat \Hmat^\top$ $(\Mmat \text{ is Toeplitz-like})$ where $\Gmat = (\gvec ^{(1)} \ldots \gvec^{(r)}), \Hmat = (\hvec^{(1)} \ldots \hvec^{(r)}) \in \Rbb^{n \times r}$, then $\Mmat$ can be written as: 
   \begin{equation} \label{equation:ch2-toeplitz_like_matrix_decomposition}
