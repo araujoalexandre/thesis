@@ -305,22 +305,23 @@
       \draw[darkgray, line width=.5mm] (gl0) -| (current page.south east);
 
       \fontsize{11}{13}\selectfont
-      %% french keywords
-      \node[yshift=0mm, above] (frKeywords) at (o) {
-        \pslbacknode{MOTS CL\'{E}S}{\@frkeywords{}}{10}{12}
-      };
-      %% french abstract
-      \node[yshift=2mm, above] at (frKeywords.north) {
-        \pslbacknode{R\'{E}SUM\'{E}}{\@frabstract{}}{9}{11}
-      };
-      %% english abstract
-      \node[yshift=-10mm, below] (enAbstract) at (o) {
-        \pslbacknode{ABSTRACT}{\@enabstract{}}{9}{11}
-      };
       %% english keywords
-      \node[yshift=-2mm, below] at (enAbstract.south) {
+      \node[yshift=0mm, above] (frKeywords) at (o) {
         \pslbacknode{KEYWORDS}{\@enkeywords{}}{10}{12}
       };
+      %% english abstract
+      \node[yshift=2mm, above] at (frKeywords.north) {
+        \pslbacknode{ABSTRACT}{\@enabstract{}}{9}{11}
+      };
+      %% french abstract
+      \node[yshift=-10mm, below] (enAbstract) at (o) {
+        \pslbacknode{R\'{E}SUM\'{E}}{\@frabstract{}}{9}{11}
+      };
+      %% french keywords
+      \node[yshift=-2mm, below] at (enAbstract.south) {
+        \pslbacknode{MOTS CL\'{E}S}{\@frkeywords{}}{10}{12}
+      };
+
 
     \end{tikzpicture}
   \end{pslfontenv}
