@@ -31,6 +31,7 @@ def plot_convergence_bounds(path):
     ax.plot(dim, sv_max, label=label[2:])
   plt.ylim(0, 7)
   plt.legend()
+  plt.ylabel('$\Gamma(n)$')
   plt.xlabel('Image Size')
   plt.tight_layout()
   plt.savefig('{}/convergence_bounds.pdf'.format(path))
