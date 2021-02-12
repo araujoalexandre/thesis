@@ -4,8 +4,23 @@
 %
 \noindent
 %
-Résumé de la Thèse en Français.
-\todo{Ecrire le résumé de la thèse en français}
+
+Les réseaux de neurones profonds sont considérés comme étant état de l'art dans une grande variété de tâches, mais ils présentent des limites importantes qui entravent leur utilisation et leur déploiement dans de nombreux systèmes critiques.
+Lors du développement et l'entraînement de réseaux de neurones, la précision ne devrait pas être la seule préoccupation, les réseaux de neurones se doivent aussi d'être efficaces et sécurisés.
+Bien que précis, les réseaux de neurones avec de nombreux paramètres n'ont souvent pas ces propriétés.
+Cette thèse se concentre sur le problème de l'entraînement de réseaux de neurones qui ne sont pas seulement précis, mais aussi compacts, faciles à entraîner, fiables et robustes aux exemples contradictoires.
+Pour cela, nous exploitons les propriétés des matrices structurées de la famille de Toeplitz pour construire des réseaux de neurones compacts et sécurisés.
+Tout d'abord, nous étudions les réseaux neuronaux profonds dans lesquels les matrices de poids sont le produit des matrices diagonales et circulantes.
+Outre une analyse théorique de leur expressivité, nous introduisons de nouvelles techniques pour l'entraînement de ces modèles : nous concevons une procédure d'initialisation et proposons une utilisation intelligente des fonctions de non-linéarité afin de faciliter leur entraînement.
+Nous montrons que ces modèles sont plus précis que les autres approches structurées tout en nécessitant deux fois moins de poids que les meilleures approches.
+Deuxièmement, en plus d'être compacts et sécurisés, les réseaux de neurones se doivent d'être sécurisés.
+Pour améliorer la robustesse des réseaux de neurones, nous proposons une nouvelle régularisation Lipschitz pour les réseaux convolutifs.
+La régularisation Lipschitz est maintenant établie comme une propriété clé de l'apprentissage profond avec des implications dans la stabilité de l'entraînement, la généralisation, la robustesse contre des exemples contradictoires, etc.
+Cependant, le calcul pour obtenir la valeur exacte de la constante de Lipschitz d'un réseau de neurones est connu pour être un problème NP-complet.
+De récentes tentatives introduisent des bornes supérieures pour approximer cette constante qui sont soit efficaces, mais peu précises, soit précises mais coûteuses.
+Dans cette thèse, en exploitant les propriétés des matrices de Toeplitz à bloc de Toeplitz, nous introduisons une nouvelle borne supérieure des valeurs singulières des couches convolutionnelles qui est à la fois précise et facile à calculer.
+Sur la base de ce résultat, nous concevons un algorithme pour entraîner des réseaux de neurones convolutifs avec une régularisation Lipschitz.
+
 
 \newpage
 \null
