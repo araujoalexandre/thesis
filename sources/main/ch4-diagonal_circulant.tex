@@ -36,7 +36,7 @@ In particular two main questions call for investigation:
     % \item \emph{How to efficiently train diagonal-circulant neural networks with a large number of layers?}
     % \item \emph{How to efficiently train diagonal-circulant neural networks with a large depth?}
 \end{enumerate}
-In this chapter we aim at answering these questions by studying deep diagonal-circulant neural networks (\aka DCNNs), which are deep neural networks in which weight matrices are the product of diagonal and circulant ones.
+We aim at answering these questions by studying deep diagonal-circulant neural networks (\aka DCNNs), which are deep neural networks in which weight matrices are the product of diagonal and circulant ones.
 The idea of using diagonal and circulant matrices together comes from a series of results in linear algebra by~\citet{muller1998algorithmic} and~\citet{huhtanen2015factoring}.
 % The most recent result from~\cite{huhtanen2015factoring} demonstrates that any matrix can be decomposed into the product of $2n-1$ alternating diagonal and circulant matrices.
 
@@ -65,14 +65,14 @@ Finally, \Cref{section:ch4-concluding_remarks} provides concluding remarks.
 \label{section:ch4-diagonal_and_circulant_matrices_for_matrix_decomposition}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-As seen in the Related Work (\Cref{chapter:ch3-related_work}), circulant matrices exhibit several interesting properties from the perspective of numerical computations.
+As seen in the Background (\Cref{chapter:ch2-background}), circulant matrices exhibit several interesting properties from the perspective of numerical computations.
 Most importantly, any $n \times n$ circulant matrix $\Cmat$ can be represented using only $n$ coefficients instead of the $n^2$ coefficients required to represent classical unstructured matrices.
 In addition, the matrix-vector product is simplified from $\bigO(n^2)$ to $\bigO(n \log n)$ using the  convolution theorem.
 As we will show in this chapter, circulant matrices also have a strong expressive power.
 So far, we know that a single circulant matrix can be used to represent a variety of important linear transforms such as random projections~\cite{hinrichs2011johnson}. 
 However, when they are combined with diagonal matrices, they can also be used as building blocks to represent any linear transform~\cite{schmid2000decomposing,huhtanen2015factoring} with an arbitrary precision.
 
-First, we are interested in the relation between the product of diagonal and circulant matrices and low-rank matrices.
+We are interested in the relation between the product of diagonal and circulant matrices and the expressivity of low-rank matrices.
 \citet{huhtanen2015factoring} were able to bound the number of factors that is required to approximate any matrix $\Amat$ with arbitrary precision.
 We recall this result in \Cref{theorem:ch4-huhtanen} as it is the starting point of our theoretical analysis.
 
@@ -263,10 +263,10 @@ However, results on unbounded networks offer weak guarantees and two important q
   \item \emph{What function can we approximate with a diagonal circulant neural network that has a bounded width and a small depth?}
 \end{enumerate}
 We answer these two questions in this section.
-First, we formally define \emph{dense} and \emph{diagonal-circulant neural networks} based on the \Cref{definition:ch2-neural_networks} of neural networks presented in the Background (\Cref{chapter:ch2-background}).
-Then, we present two lemmas which make the link between the matrix decomposition presented in \Cref{theorem:ch4-rank-decomposition} and DCNNs and allow us to present our answer to the first question (\Cref{corollary:ch4-universal_approximation}).
+% First, we formally define \emph{dense} and \emph{diagonal-circulant neural networks} based on the \Cref{definition:ch2-neural_networks} of neural networks presented in the Background (\Cref{chapter:ch2-background}).
+First, we present two lemmas that establish a link between the matrix decomposition presented in \Cref{theorem:ch4-rank-decomposition} and DCNNs and allow us to present our answer to the first question (\Cref{corollary:ch4-universal_approximation}).
 % TODO: make sure I am not saying something wrong
-Finally, we make an analysis on the expressive power of small depth diagonal-circulant neural networks by comparing them to dense neural networks. 
+Then, we analyze the expressive power of small depth diagonal-circulant neural networks by comparing them to dense neural networks. 
 
 % \todotext{introduce the definitions dense neural networks vs diagonal-circulant neural networks}
 % \todotext{definition with some instancition: the dimension of the networks are equal to n}
@@ -506,7 +506,7 @@ This study allows us to better understand why DCNNs show good empirical performa
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{On the Expressive Power of Diagonal-Circulant Neural Networks}
+\subsection{The Expressive Power of Diagonal-Circulant Neural Networks}
 \label{subsection:ch4-on_the_expressive_power_of_diagonal-circulant_neural_networks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -520,7 +520,7 @@ This study allows us to better understand why DCNNs show good empirical performa
 
 % \todotext{introduire la sous partie}
 In this subsection, we study the expressive power of diagonal-circulant neural networks with small depth.
-To measure the expressivity of DCNNs, we compare the depth needed to approximate dense neural networks low \emph{total rank}, \ie, the sum of ranks of each weights matrix.
+To assess the expressivity of DCNNs, we compare the depth needed to approximate dense neural networks with low \emph{total rank} which we define as the sum of ranks of each weights matrix.
 With the concept of total rank, we present in the following,  our result on the expressive power of DCNNs with respect to the total rank of dense neural networks.
 
 % This concept will be useful to characterize the expressiveness of DCNNs.
@@ -567,7 +567,7 @@ With the concept of total rank, we present in the following,  our result on the 
 Remark that in the theorem, we require that $n$ is a power of $2$.
 We conjecture that the result still holds even without this condition.
 This result refines \Cref{lemma:ch4-dcnn_approx_neural_network} and answers our second question: a DCNN of bounded width and small depth can approximate a dense neural network of low total rank.
-Note that the converse is not true because a $n \times n$ circulant matrix can be of full rank, approximating a DCNN of depth $1$ can require a dense network of total rank equal to $n$.
+Note that the converse is not true because a $n \times n$ circulant matrix can be of full rank, therefore approximating a DCNN of depth $1$ can require a dense network of total rank equal to $n$.
 
 Finally, what if we choose to use diagonal-circulant networks with a small depth to approximate a dense neural network whose matrices are not of lower rank? 
 To answer this question, we present three results. First, we characterize the negative impact of replacing matrices by their low rank approximation.
@@ -607,7 +607,7 @@ Finally, \Cref{corollary:relu_to_circ} presents our result which bound the error
   This concludes the proof.
 \end{proof}
 
-The lemma above bound the error between a linear transform and its equivalent with a low rank approximation.
+The lemma above bound the error between a linear transform and its equivalent low rank approximation.
 In the following, we extend this result to neural networks.
 
 
