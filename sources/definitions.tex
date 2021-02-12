@@ -75,6 +75,12 @@
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
 
+% Switch Tableau for French chapter
+\addto\captionsfrench{\def\tablename{Tableau}}
+% \DefineBibliographyExtras{french}{\restorecommand\mkbibnamefamily}
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Hyperlinks
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -220,7 +226,9 @@
 
 \setlength\bibitemsep{5pt}
 
-
+% Fix citation when using French language
+% https://tex.stackexchange.com/questions/53309/changing-default-citet-font-in-biblatex
+\DefineBibliographyExtras{french}{\restorecommand\mkbibnamefamily}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Theorems
