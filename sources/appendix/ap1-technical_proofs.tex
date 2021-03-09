@@ -140,7 +140,7 @@ Let us define the matrix $\Jmat_{n^2}$ of size $n^2 \times n^2$ as the anti-iden
 \begin{flalign*}
   \leftmat \Gmat^{\alpha_1 \top}(f) \Gmat^{\alpha_1}(g^*) \rightmat_{i, j} &= \sum_{k_1, k_2 \in P} \hat{f}_{(k_1+i_1+1),(i_2-k_2)} \hat{g}^*_{(j_1+k_1+1),(j_2-k_2)} \\
   &= \sum_{k_1, k_2 \in P} \hat{f}_{(k_1+i_1+1),(i_2-k_2)} \hat{g}_{(-j_1-k_1-1),(k_2-j_2)} \\
-  \Leftrightarrow \leftmat \Jmat_{n^2} \Gmat^{\alpha_1 \top}(f) \Gmat^{\alpha_1}(g^*) \Jmat^{n^2} \rightmat_{i, j} &= \sum_{k_1, k_2 \in P} \hat{f}_{(k_1-i_1+n),(k_2-i_2)} \hat{g}_{(j_1-k_1-n),(j_2-k_2)}
+  \Leftrightarrow \leftmat \Jmat_{n^2} \Gmat^{\alpha_1 \top}(f) \Gmat^{\alpha_1}(g^*) \Jmat_{n^2} \rightmat_{i, j} &= \sum_{k_1, k_2 \in P} \hat{f}_{(k_1-i_1+n),(k_2-i_2)} \hat{g}_{(j_1-k_1-n),(j_2-k_2)}
 \end{flalign*}
 
 % Y @ H2_a.T @ H2_b_ @ Y

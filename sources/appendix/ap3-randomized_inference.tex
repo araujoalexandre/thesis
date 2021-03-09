@@ -53,7 +53,7 @@ Finally, thanks to the existing links between the Renyi divergence and the Expon
 \end{itemize}
 
 \paragraph{A2:}
-We present an upper bound on  the drop of accuracy (under attack) of the methods defended with noise drawn from the Exponential family (cf. \Cref{theorem:ap3-bound}).
+We present an upper bound on the drop of accuracy (under attack) of the methods defended with noise drawn from the Exponential family (\cf \Cref{theorem:ap3-bound}).
 Then, we illustrate this result by training different randomized models with Laplace and Gaussian distributions on CIFAR10/CIFAR100.
 These experiments highlight the trade-off between accuracy and robustness that depends on the amount of noise one injects in the network.
 Our theoretical and experimental conclusion is that randomized defenses are competitive (with the current state-of-the-art~\cite{madry2018towards}) given the intensity of noise injected in the network.
@@ -283,7 +283,7 @@ Theorem~\ref{theorem:ap3-netrob} shows that, injecting noise drawn from an Expon
   \begin{itemize}
     \item If $X\sim E_{F}(\theta,t,k)$ where $t$ and $k$ have non-decreasing modulus of continuity $\omega_t$ and $\omega_k$.
     Then for any $\alpha \geq 0$, $\mathcal{N}_{X}^i(\ \cdot\ )$ defines a probabilistic mapping that is $d_{R,\lambda}$-$(\alpha,\epsilon)$ robust with $\epsilon = \norm{\theta}_2 \omega^{B,2}_t(\Delta^{A,B}_{\alpha}(\phi)) +\omega_k^{B,1}(\Delta^{A,B}_{\alpha}(\phi)) $ where $\norm{\ \cdot\ }_2$ is the norm corresponding to the scalar product in the definition of the exponential family density function and $\norm{\ \cdot\ }_1$ is the absolute value on $\mathbb{R}$.
-    The notion of continuity modulus is defined in the long version of the paper.
+    \footnote{The notion of continuity modulus is defined in the arxiv version of this chapter: https://arxiv.org/abs/1902.01148.}
     \item If $X$ is a centered Gaussian random variable with a non degenerated matrix parameter $\Sigma$.
       Then for any $\alpha \geq 0$, $\mathcal{N}_{X}^i(\ \cdot\ )$ defines a probabilistic mapping that is $d_{R,\lambda}$-$(\alpha,\epsilon)$ robust with $ \epsilon = \frac{\lambda \Delta^{A,2}_{\alpha}(\phi)^2 }{2 \sigma_{min}(\Sigma) } $ where $\norm{\ \cdot\ }_2$ is the canonical Euclidean norm on $\mathbb{R}^n$.
   \end{itemize}

@@ -209,7 +209,7 @@ Thus, it is more robust to noise, as will be shown in the experiments section.
 % In order to train this model in a compact form we build upon the work of~\citet{cheng2015exploration} and use a more general framework presented by~\Cref{equation:ap2-general_framework}.
 % The fully connected layers are then represented as follows:
 
-In order to build compact layers, we use the diagonal circulant matrix decomposition.
+In order to build compact layers, we use the diagonal-circulant matrix decomposition.
 The layers are represented as follows:
 \begin{equation}
   \phi(\xvec) = \rho\left(\left[\prod_{i=1}^{m} \Dmat^{(i)} \Cmat^{(i)} \right] \xvec + \bvec \right)
@@ -321,7 +321,7 @@ The compact fully connected layer achieves a compression rate of 9.5 while havin
 The model with a compact DBoF shows a big variance over the validation GAP which can be associated with a difficulty to train.
 The model with a compact MoE is more stable but at the expense of its performance.
 
-Another series of experiments investigates the effect of adding factors of diagonal circulant layers.
+Another series of experiments investigates the effect of adding factors of diagonal-circulant layers.
 \Cref{table:ap2-factors} shows that there is no gain in accuracy even if the number of weights increases.
 It also shows that adding factors has an important effect on the speed of training.
 On the basis of this result, \ie given the performance and compression ratio, we can consider that representing the fully connected layer of the base model in a compact fashion can be a good trade-off.
