@@ -21,7 +21,7 @@ Although theoretically and empirically interesting, we will see how these techni
 The following subsection presents the approach of Lipschitz regularization via the Lipschitz constant of individual layers of the networks.
 We describe the advantages and disadvantages of this approach.
 Moreover, in the third subsection, we focus our presentation on current techniques that compute the singular values of convolutional layers.
-Finally, we discuss these techniques with respect to our contribution on Lipschitz regularization on convolutional neural networks.
+Finally, we discuss these techniques with respect to our contribution on Lipschitz regularization of convolutional neural networks.
 
 
 
@@ -45,8 +45,8 @@ Finally, we discuss these techniques with respect to our contribution on Lipschi
 
 In this section, we have shown current methods and techniques for designing compact neural networks with structured matrices. 
 Our contributions on \emph{Deep Diagonal Circulant Neural Networks} are a direct follow-up to the work of~\citet{cheng2015exploration,sindhwani2015structured,moczulski2016acdc,thomas2018learning} focusing on compact neural networks with \emph{structured matrices}.
-More precisely, we extend the work of \citet{moczulski2016acdc} by training \emph{fully structured networks} (\ie, networks with structured layers only) hence demonstrating that diagonal circulant layers are able to model complex relations between inputs and outputs.
-Although, this diagonal circulant layers fit in the low displacement rank framework, we demonstrate much better performances in practice.
+More precisely, we extend the work of \citet{moczulski2016acdc} by training \emph{fully structured networks} (\ie, networks with structured layers only) hence demonstrating that diagonal-circulant layers are able to model complex relations between inputs and outputs.
+Although, this diagonal-circulant layers fit in the low displacement rank framework, we demonstrate much better performances in practice.
 Indeed, thanks to a solid theoretical analysis and thorough experiments, we were able to train deep (up to 40 layers) circulant neural networks, and apply, for the first time, this structured architecture in the context of large-scale video classification.
 This contrasts with previous experiments in which only one or a few dense layers were replaced inside a large redundant network such as VGG~\cite{simonyan2014very}.
 
@@ -63,12 +63,13 @@ This contrasts with previous experiments in which only one or a few dense layers
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 We have presented state-of-the-art methods for regularizing the Lipschitz constant of neural networks with the aim to improve their robustness against adversarial attacks.
-The power method~\cite{golub2000eigenvalue} is a popular technique for approximating the maximal singular value of a matrix (Google used it in their PageRank algorithm \cite{page1999pagerank} which was the build block of their search engine and Twitter uses it to show users recommendations of whom to follow \cite{gupta2013wtf}).
+The power method~\cite{golub2000eigenvalue} is a popular technique for approximating the maximal singular value of a matrix.
+% (Google used it in their PageRank algorithm \cite{page1999pagerank} which was the build block of their search engine and Twitter uses it to show users recommendations of whom to follow \cite{gupta2013wtf}).
 Recent works in deep learning use this method in a wide variety of settings, for example, robustness \cite{farnia2018generalizable,tsuzuku2018lipschitz}, generalization~\cite{yoshida2017spectral,gouk2018regularisation} or to stabilize the training of Generative Adversarial Networks (GANs) \cite{miyato2018spectral}.
 Despite a number of interesting results, using the power method is expensive and results in prohibitive training times. 
 Other approaches to regularize the Lipschitz constant of neural networks have been proposed by~\citet{sedghi2018singular} and ~\citet{singla2019bounding}.
-The method of~\citet{sedghi2018singular,singla2019bounding} exploits the properties of circulant matrices to approximate the maximal singular value of a convolutional layer.
-Although interesting, theses method results in a loose approximation of the maximal singular value of a convolutional layer.
+These methods exploit the properties of circulant matrices to approximate the maximal singular value of a convolution layer.
+Although interesting, theses method results in a loose approximation of the maximal singular value.
 Our work is positioned at the intersection between these works, we will introduce a new approach for regularizing the Lipschitz constant of neural networks, that is more efficient than the power method and more accurate than methods relying on the structure of convolutions.
 
 
@@ -83,8 +84,8 @@ Our work is positioned at the intersection between these works, we will introduc
 %
 % In the first section, we have shown current methods and techniques for designing compact neural networks with structured matrices. 
 % Our contributions on \emph{Deep Diagonal Circulant Neural Networks} are a direct follow-up to the work of~\citet{cheng2015exploration,sindhwani2015structured,moczulski2016acdc,thomas2018learning} focusing on compact neural networks with \emph{structured matrices}.
-% More precisely, we extend the work of \citet{moczulski2016acdc} by training \emph{fully structured networks} (\ie, networks with structured layers only) hence demonstrating that diagonal circulant layers are able to model complex relations between inputs and outputs.
-% Although, this diagonal circulant layers fit in the low displacement rank framework, we demonstrate much better performances in practice.
+% More precisely, we extend the work of \citet{moczulski2016acdc} by training \emph{fully structured networks} (\ie, networks with structured layers only) hence demonstrating that diagonal-circulant layers are able to model complex relations between inputs and outputs.
+% Although, this diagonal-circulant layers fit in the low displacement rank framework, we demonstrate much better performances in practice.
 % Indeed, thanks to a solid theoretical analysis and thorough experiments, we were able to train deep (up to 40 layers) circulant neural networks, and apply, for the first time, this structured architecture in the context of large-scale video classification.
 % This contrasts with previous experiments in which only one or a few dense layers were replaced inside a large redundant network such as VGG~\cite{simonyan2014very}.
 

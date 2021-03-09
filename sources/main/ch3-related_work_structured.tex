@@ -23,13 +23,13 @@
 \subsection{General Techniques to Build Compact Neural Networks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-As seen in the Introduction (\Cref{chapter:ch1-introduction}), scaling up networks can lead to better accuracy~\cite{krizhevsky2012imagenet,he2016deep,vaswani2017attention}.
+As seen in the Introduction (\Cref{chapter:ch1-introduction}), scaling up networks can lead to better accuracy~\cite{tan2019efficientnet,brown2020language}.
 However, large neural networks lead to difficult and expensive training and after observing that a lot of parameters in large neural networks were redundant~\cite{dai2018compressing,frankle2018lottery}, an important question arises: \emph{do neural networks need to be over-parameterized? And if not, how to build accurate and compact neural networks?} 
 
 Numerous other directions have been investigated to build compact and cost-effective neural networks without impacting the accuracy.
 For example \citet{gupta2015deep,micikevicius2018mixed} have proposed to represent weights with limited numerical precision to reduce training time and memory requirements.
 They used half-precision floating-point format instead of single-precision floating-point format which uses 32 bits of computer memory.
-In the same direction, \citet{courbariaux2015binaryconnect} have proposed a method to train neural networks with binary weights.
+In the same direction, \citet{courbariaux2015binaryconnect} have proposed a method to train neural networks with binary weights without an important loss in the accuracy.
 
 An important idea in model compression, proposed by~\citet{bucilua2006model}, is based on the observation that the model used for training is not required to be the same as the one used for inference.
 Indeed, compressed models after training can be deployed on smartphones or IoT devices.
@@ -51,20 +51,12 @@ Although interesting for deployment purposes, this approach still requires to tr
 \end{figure}
 
 More recently, \citet{zoph2018learning,real2019regularized} have designed algorithms that automatically tune the width and depth of neural network architectures to obtain the best trade-off between compactness and accuracy.
-With this approach, \citet{tan2019efficientnet} found a new compound scaling method that uniformly scales network width and depth leading to efficient and compact architecture\Cref{figure:p1-ch3-illustration_efficientnet} illustrates the different scaling proposed by~\citet{tan2019efficientnet}.
+With this approach, \citet{tan2019efficientnet} found a new compound scaling method that uniformly scales network width and depth leading to efficient and compact architecture.
+\Cref{figure:p1-ch3-illustration_efficientnet} illustrates the different scaling proposed by~\citet{tan2019efficientnet}.
 
-Finally, in the context of deep learning, compact representations have gained much attention over the past years as a way to compress models or to reduce memory requirements.
-In this thesis, we focus on building compact neural networks with structured matrices.
-Hereafter, we present a comprehensive overview of the existing techniques in this line of research.
-
-
-
-
-
-
-
-
-
+% Finally, in the context of deep learning, compact representations have gained much attention over the past years as a way to compress models or to reduce memory requirements.
+% In this thesis, we focus on building compact neural networks with structured matrices.
+% Hereafter, we present a comprehensive overview of the existing techniques in this line of research.
 
 
 
@@ -111,7 +103,7 @@ Hereafter, we present a comprehensive overview of the existing techniques in thi
 % The idea of structured neural networks consists of replacing the dense weight matrices with \emph{structured} ones.
 
 An effective method to build compact neural networks is to constrain the hypothesis space by imposing a \emph{structure} on the weight matrices which constitute the different layers of the network.
-A structured matrix is a $n \times n$ matrix which can be represented with fewer than $n^2$ parameters and where the entries are distributed along specific rules.
+% A structured matrix is a $n \times n$ matrix which can be represented with fewer than $n^2$ parameters and where the entries are distributed along specific rules.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \paragraph{Structured Neural Networks with Low Rank Approximation} ~\\
@@ -119,11 +111,11 @@ A structured matrix is a $n \times n$ matrix which can be represented with fewer
 
 \noindent
 For example, \citet{sainath2013lowrank} were among the first to use low-rank matrices in deep learning contexts followed by the work of~\citet{jaderberg2014speeding,yu2017compressing}.
-Their work consists of replacing the weight matrices of size $n \times m$ by the product of two rectangular matrices of size $n \times r$ and $r \times m$ where $r$ corresponds to the rank of the new matrix. 
+Their work consists in replacing the weight matrices of size $n \times m$ by the product of two rectangular matrices of size $n \times r$ and $r \times m$, where $r$ corresponds to the rank of the new matrix. 
 In order to reduce the number of parameters, the rank $r$ is chosen to be small such that $r \ll \min(m, n)$.
-By representing the weight matrices with a low-rank decomposition, we can reduce the storage from $mn$ parameters to $(mr + nr)$ and accelerate the matrix-vector product from $\bigO(mn)$ to $\bigO(mr + rn)$.
-To enforce the low-rank constraint, reduced storage and computation time during training the authors trained the coefficient of the two rectangular matrices directly. 
-For formally, let $\Wmat \in \Rbb^{n \times m}$ be a weight matrix and let $\widetilde{\Wmat}$ be the low-rank approximation of rank $r$ of the matrix $\Wmat$.
+By representing the weight matrices with a low-rank decomposition, one can reduce the storage from $mn$ parameters to $(mr + nr)$ and accelerate the matrix-vector product from $\bigO(mn)$ to $\bigO(mr + rn)$.
+To enforce the low-rank constraint, reduced storage and computation time during training, the authors trained the coefficients of the two rectangular matrices directly. 
+Formally, let $\Wmat \in \Rbb^{n \times m}$ be a weight matrix and let $\widetilde{\Wmat}$ be the low-rank approximation of rank $r$ of the matrix $\Wmat$.
 Then, the low-matrix $\widetilde{\Wmat}$ can be decomposed by the product of two rectangular matrices $\Umat \in \Rbb^{n \times r}$ and $\Vmat \in \Rbb^{r \times m}$ such that $\widetilde{\Wmat} = \Umat \Vmat$.
 Therefore, a neural network layer with low-rank approximation can be expressed as follows:
 \begin{equation}
@@ -131,21 +123,20 @@ Therefore, a neural network layer with low-rank approximation can be expressed a
 \end{equation}
 The scalar $r$ defining the size of the two rectangular matrices becomes an hyper-parameter and controls the trade-off between the expressivity and compactness of the layer. 
 
-\newpage
 In the same vein, \citet{oseledets2011tensor} have proposed the \emph{Tensor Train decomposition} (TT-decomposition), which is based on the tensor rank decomposition (Tucker decomposition) proposed by~\citet{hitchcock1927expression} and named after \citet{tucker1966some}.
 The TT-decomposition is defined as follows.
-Let $\boldsymbol{\Aset} \in \Rbb^{n_1 \times n_2 \times \dots \times n_{d-1} \times n_d}$ be a $d$-dimensional array (tensor).
+Let $\boldsymbol{\Aset} \in \Rbb^{n_1 \times n_2 \times \dots \times n_{d-1} \times n_d}$ be a $d$-dimensional tensor.
 The Tensor-Train Decomposition factorizes $\boldsymbol{\Aset}$ in a product of third-order tensors and it is given by: 
 \begin{equation}
   (\boldsymbol{\Aset})_{(i_1,\dots,i_d)} = (\Gmat^{(1)})_{(i_1, :)} (\boldsymbol{\Gset}^{(2)})_{(:, i_2, :)} (\boldsymbol{\Gset}^{(3)})_{(:, i_3, :)} \dots (\Gmat^{(d)})_{(:, i_d)}
 \end{equation}
-where $\Gmat^{(i)}$ are matrices and $\boldsymbol{\Gset}^{(i)}$ are third-order tensors of size $r_{k-1} \times r_k$ called \emph{TT-cores}.
+where $\Gmat^{(i)}$ are matrices and $\boldsymbol{\Gset}^{(i)}$ are third-order tensors of size $r_{i} \times r_{i+1}$ called \emph{TT-cores}.
 The sequence $\{r_k\}_{k=0}^d$ is referred to as the ranks of the TT-representation.
 The above equation can be equivalently rewritten as a sum of elements of the TT-cores:
 \begin{equation}
   (\boldsymbol{\Aset})_{(i_1,\dots,i_d)} = \sum_{\alpha_1, \dots, \alpha_{d-1}} (\Gmat^{(1)})_{(i_1, \alpha_1)} (\boldsymbol{\Gset}^{(2)})_{(\alpha_1, i_2, \alpha_2)} \dots (\Gmat^{(d)})_{(\alpha_{d-1}, i_d)}
 \end{equation}
-\citet{oseledets2011tensor} have shown that for an arbitrary tensor $\boldsymbol{\Aset}$ several TT-representations exist with different ranks.
+\citet{oseledets2011tensor} have shown that for an arbitrary tensor $\boldsymbol{\Aset}$, several TT-representations exist with different ranks.
 The TT-decomposition can be very efficient in terms of memory requirement if the ranks are small.
 Indeed, the tensor $\boldsymbol{\Aset}$ has $\prod_{k=1}^{d} n_k$ values compared with $\sum_{k=1}^d n_k r_{k-1} r_k$ values.
 
@@ -158,7 +149,7 @@ Later, the TT-decomposition was used in other types of architectures.
 \citet{yang2017tensor} used it in the context of video classification, \citet{tjandra2017compressing} compressed the layers of recurrent neural networks and finally, \citet{xindian2019tensorized} developed a compact architecture based on TT-decomposition for Language Modeling.
 
 However, the Tensor-Train decomposition has some limitations.
-Although it can reduce the number of parameters when the ranks are low, finding the best alignment of the tensor dimensions in order to find the best optimized TT-cores remains a challenging problem as stated by~\citet{pan2019compressing}.
+Although it can reduce the number of parameters when the ranks are low, finding the best alignment of the tensor dimensions in order to find the best optimized TT-cores remains a challenging problem, as stated by~\citet{pan2019compressing}.
 
 
 % In the same vein, \citet{novikov2015tensorizing} have proposed a generalization of low-rank decomposition.
@@ -201,12 +192,12 @@ Although it can reduce the number of parameters when the ranks are low, finding 
 % Decomposition with structured matrices of interest for the contributions of this thesis are the ones based on diagonal and circulant matrices.
 
 % More practically, \citet{hinrichs2011johnson} have shown that the \DC transform $\xvec \mapsto \Dmat \Cmat \xvec$, where the matrix $\Dmat$ is a diagonal matrix with entries sampled from $\{1, -1\}$ and $\Cmat$ is a circulant matrix based on a sequence of independent identically distributed random variables respect the \citeauthor{johnson1984extensions} lemma.
-In the context of reducing the parameterization of neural networks, \citet{cheng2015exploration} proposed to replace the weight matrix of a fully connected layer by the product of a circulant and a diagonal matrix leading to following structured layer:
+\citet{cheng2015exploration} proposed to replace the weight matrix of a fully connected layer by the product of a circulant and a diagonal matrix leading to following structured layer:
 \begin{equation}
   \layer_{\Dmat, \Cmat, \bvec} (\xvec) = \act \left( \Dmat \Cmat \xvec + \bvec \right) \enspace,
 \end{equation}
 where the circulant matrix is learned by a gradient-based optimization algorithm and the diagonal matrix entries are sampled at random in $\{-1, 1\}$. 
-The idea of replacing dense matrices with circulant ones comes from their use in dimensionality reduction~\cite{hinrichs2011johnson,vybiral2011variant}, binary embedding~\cite{yu2014circulant}, and kernel approximation~\cite{yu2015compact}, etc.
+The idea of replacing dense matrices with circulant ones comes from their use in dimensionality reduction with the \emph{fast Johnson-Lindenstrauss transform}~\cite{hinrichs2011johnson,vybiral2011variant}, binary embedding~\cite{yu2014circulant}, and kernel approximation~\cite{yu2015compact}, etc.
 Circulant matrices exhibit several interesting properties from the perspective of numerical computations.
 Recall from \Cref{theorem:ch2-diagonalization_circulant_matrix} that circulant matrices can be diagonalized with the Fourier Transform as follows:
 \begin{equation}
@@ -222,183 +213,48 @@ Despite the reduction of expressivity, \citet{cheng2015exploration} demonstrated
 \citet{moczulski2016acdc} built upon the work of~\citet{cheng2015exploration} and \citet{huhtanen2015factoring} and introduced two \emph{Structured Efficient Linear Layers} (SELL) based on the Fourier and cosine transforms.
 First, by observing that the DC transform cannot express an arbitrary linear operator they proposed to apply the result of \citet{huhtanen2015factoring} which states that almost all matrices can be decomposed as a product of DC transforms.
 \begin{theorem}[Reformulation from \citet{huhtanen2015factoring}] \label{theorem:ch3-huhtanen}
-  For every matrix $\Mmat \in \Cnn$, for any $\epsilon > 0$, there exists a sequence of matrices $\{ \Amat^{(i)} \}_{i \in [2n-1]}$ where $\Amat^{(i)}$ is a circulant matrix if $i$ is odd, and a diagonal matrix otherwise, such that $\norm{\Amat^{(1)} \ldots \Amat^{(2n-1)} - \Mmat} < \epsilon$.
+  For every matrix $\Mmat \in \Cbb^{n \times n}$, for any $\epsilon > 0$, there exists a sequence of matrices $\{ \Amat^{(i)} \}_{i \in [2n-1]}$ where $\Amat^{(i)}$ is a circulant matrix if $i$ is odd, and a diagonal matrix otherwise, such that $\norm{\Amat^{(1)} \ldots \Amat^{(2n-1)} - \Mmat} < \epsilon$.
 \end{theorem}
 \noindent
-Based on this result, they proposed to parameterized the layers of a neural network with $k$ products of diagonal and circulant matrices as follows:
+Based on this result, they proposed to parameterize the layers of a neural network with $k$ products of diagonal and circulant matrices as follows:
 \begin{equation} \label{equation:acdc_layer}
   \layer_{\Dmat, \Cmat, \bvec} (\xvec) = \act \left( \left(\prod_{i = 1}^{k} \Dmat^{(i)} \Cmat^{(i)} \right) \xvec + \bvec \right)
 \end{equation}
 where $\Dmat$ and $\Cmat$ are sequences of $k$ diagonal and circulant matrices respectively.
 This structured layer is therefore parameterized by $n(2k+1)$ values and the value $k$ becomes a hyper-parameter controlling the trade-off between compactness and expressivity. 
-By diagonalizing the circulant matrix, \citet{moczulski2016acdc} can expressed the layer in \Cref{equation:acdc_layer} as a product of diagonal matrices and the Fourier transform as follows:
+By diagonalizing the circulant matrix, the layer in \Cref{equation:acdc_layer} can be expressed as a product of diagonal matrices and the Fourier transform as follows:
 \begin{equation} \label{equation:ch3-laye_acdc}
   \layer^\act_{\dvec, \cvec, \bvec} (\xvec) = \act \left(\frac{1}{n^k} \left(\prod_{i = 1}^{k} \diag\left(\dvec^{(i)}\right) \Umat_n^* \diag\left(\Umat_n \cvec^{(i)}\right) \Umat_n \right) \xvec + \bvec \right)
 \end{equation}
 \noindent
 Although interesting and demonstrating good empirical results, the work of~\citet{moczulski2016acdc} suffers from multiple limitations. 
-First, the result of~\citet{huhtanen2015factoring} is expressed with respect to $n$, the size of the matrices $\Amat$.
+First, the result from~\citet{huhtanen2015factoring} is expressed with respect to $n$, the size of the matrices $\Amat$.
 Therefore, the theorem does not provide any insights regarding the expressive power of $k$ factors when $k$ is much lower than $2n-1$ as it is the case in most practical scenarios they consider.
-Finally, in order to stay in the real domain, they replaced the Fourier transform in~\cref{equation:ch3-laye_acdc} with the cosine transform thus learning a different kind of linear transform \cite{sanchez1995diagonalizing}.
+Finally, in order to stay in the real domain, they replaced the Fourier transform in~\Cref{equation:ch3-laye_acdc} with the cosine transform thus learning a different kind of linear transform (see the work of~\citet{sanchez1995diagonalizing} which characterizes the matrices diagonalizable by the cosine transform).
 Furthermore, because the cosine transform does not diagonalize circulant matrices, \Cref{theorem:ch3-huhtanen} no longer applies.
 
-% As far as we can tell, the theoretical guarantees available with the Fourier Transform do not apply to the cosine transform because the cosine transform does not diagonalize circulant matrices \cite{sanchez1995diagonalizing}.
-%
-% The idea of using circulant matrices and other types of structured matrices in neural networks is motivated by the celebrated \citeauthor{johnson1984extensions} lemma which states that a set of points in a high-dimensional space can be embedded into a space of much lower dimension with near preservation of distance between the points.
-% This result can be formalized as follows:
 
+% \vspace{0.3cm}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \paragraph{General Representation of Structured Linear Maps: LDR and K-Matrices} ~\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \begin{figure}[htb]
-%    \centering
-%    \begin{subfigure}[b]{0.32\textwidth}
-%        \centering
-%        \begin{equation*}
-% 	  \leftmatrix
-% 	    \tvec_0      & \tvec_1 & \cdots     & \tvec_{n-1} \\
-% 	    \tvec_{-1}   & \tvec_0 & \ddots     & \vdots      \\
-% 	    \vdots       & \ddots  & \ddots     & \tvec_1     \\
-% 	    \tvec_{-n+1} & \cdots  & \tvec_{-1} & \tvec_0
-% 	  \rightmatrix
-%        \end{equation*}
-%        \caption*{Toeplitz}
-%    \end{subfigure}
-%    \hfill
-%    \begin{subfigure}[b]{0.32\textwidth}
-%        \centering
-%        \begin{equation*}
-% 	  \leftmatrix
-% 	    1 & \vvec_0     & \cdots & \vvec_0^{n-1} \\
-% 	    1 & \vvec_1     & \cdots & \vvec_1^{n-1} \\
-% 	    1 & \vdots      &        & \vdots        \\
-% 	    1 & \vvec_{n-1} & \cdots & \vvec_{n-1}^{n-1}
-% 	  \rightmatrix
-%        \end{equation*}
-%        \caption*{Vandermonde}
-%    \end{subfigure}
-%    \hfill
-%    \begin{subfigure}[b]{0.32\textwidth}
-%        \centering
-%        \begin{equation*}
-% 	  \leftmatrix
-% 	  \frac{1}{\uvec_0 - \vvec_{0}}     & \cdots & \frac{1}{\uvec_0 - \vvec_{n-1}} \\
-% 	  \frac{1}{\uvec_1 - \vvec_{0}}     & \cdots & \frac{1}{\uvec_1 - \vvec_{n-1}} \\
-% 	  \vdots                            & \cdots & \vdots                          \\
-% 	  \frac{1}{\uvec_{n-1} - \vvec_{0}} & \cdots & \frac{1}{\uvec_{n-1} - \vvec_{n-1}}
-% 	  \rightmatrix
-%        \end{equation*}
-%        \caption*{Cauchy}
-%    \end{subfigure}
-%    \caption{Representation of Toeplitz, Vandermonde and Cauchy matrices}
-%   \label{figure:ch3-example_structure_matrices}
-% \end{figure}
-%
-%
-%
-% \noindent
-% Other types of structured matrices that reduce the memory footprint but also accelerate matrix-vector product operations have been used to build compact neural networks.
-% Bellow a description of some known structured matrices: 
-% \begin{itemize}%[itemsep=0pt]
-%   \item \textbf{Toeplitz matrix}: As seen in \Cref{subsection:ch2-toeplitz_matrices}, a Toeplitz matrix, named after Otto Toeplitz, has constant values along each of its diagonals.
-%   \item \textbf{Hankel matrix}: A Hankel matrix, named after Hermann Hankel, has constant values along each of its anti-diagonals.
-%   % \item \textbf{Block Circulant matrix}: A block circulant matrix is a matrix in which each block is repeated identically along diagonals (like block Toeplitz matrices) and each ``row of blocks'' is cyclic right shift of the previous one.
-%   \item \textbf{Vandermonde matrix}: A Vandermonde matrix, named after Alexandre-Théophile Vandermonde, is a matrix where each terms follow a geometric progression.  
-%     A very important special case is the complex matrix associated with the Discrete Fourier transform (DFT) presented in \Cref{definition:ch2-fourier_matrix} which has a Vandermonde structure.
-%   \item \textbf{Cauchy matrix}: A Cauchy matrix, named after Augustin Louis Cauchy, is an $m \times n$ matrix with elements $a_{ij}$ such that $a_{ij} = (\uvec_i - \vvec_j)^{-1}$ with $\uvec_i - \vvec_j \neq 0$, $i \in \{0,\dots,m-1\}$ and $j \in \{0,\dots,n-1\}$.
-% \end{itemize}
-% \Cref{figure:ch3-example_structure_matrices} shows the representation of the parameters sharing of Toeplitz, Vandermonde and Cauchy matrices.
-% These matrices can be unified thanks to the notion of \emph{Low Displacement Rank} (LDR).
-% Although these matrices appear to have very different kinds of parameter sharing, they can be all associated with a specific displacement operator $\Rmat: \Rbb^{m \times n} \rightarrow \Rbb^{m \times n}$ which takes a matrix, $\Mmat$, and outputs a low rank matrix $\Rmat(\Mmat)$ such that $\rank(\Rmat(\Mmat)) \ll \min(m,n)$.
-% % The structured matrices presented above 
-% This displacement rank approach has been initially proposed by~\citet{kailath1979displacement} and has been further studied by~\citet{kailath1995displacement,pan2001structured}.
-% More formally, we can define two displacement operators (for simplification, we consider $m = n$):
-% \begin{definition}[\emph{Sylvester} \& \emph{Stein} displacement operators]
-%   Let $\Amat, \Bmat \in \Rbb^{n \times n}$, the \emph{Sylvester} displacement operator denoted $\triangleopdown_{\Amat, \Bmat} = \triangleopdown_{\Amat, \Bmat}: \Rbb^{n \times n} \rightarrow \Rbb^{n \times n}$ is defined as follows:
-%   \begin{equation}
-%     \triangleopdown_{\Amat, \Bmat} (\Mmat) \triangleq \Amat \Mmat - \Mmat \Bmat
-%   \end{equation}
-%   The \emph{Stein} displacement operator denoted $\triangleopup_{\Amat, \Bmat} = \triangleopup_{\Amat, \Bmat}: \Rbb^{n \times n} \rightarrow \Rbb^{n \times n}$ is defined as follows:
-%   \begin{equation}
-%     \triangleopup_{\Amat, \Bmat} (\Mmat) \triangleq \Mmat - \Amat \Mmat \Bmat
-%   \end{equation}
-%   where $\triangleopdown_{\Amat, \Bmat} = \Amat \triangleopup_{\Amat^{-1}, \Bmat}$ if the operator matrix $\Amat$ is non-singular, and $\triangleopdown_{\Amat, \Bmat} = -\triangleopup_{\Amat, \Bmat^{-1}}$ if the operator matrix $\Bmat$ is non-singular.
-% \end{definition}
-%
-% \begin{table}[ht]
-%   \centering
-%   % {\small
-%   \begin{tabular}{c|c|c|c}
-%     \toprule
-%     \multicolumn{2}{c|}{\textbf{Operator Matrices}} & \textbf{Class of structured} & \textbf{Rank of } \\
-%     \textbf{A} & \textbf{B} & \textbf{matrices M} & $\triangleopdown_{\Amat, \Bmat}(\Mmat)$ \\
-%     \midrule
-%     $\Zmat_1$                & $\Zmat_0$                & Toeplitz               & $\leq 2$ \\
-%     $\Zmat_1$                & $\Zmat_0^\top$           & Hankel                 & $\leq 2$ \\
-%     $\Zmat_0 + \Zmat_0^\top$ & $\Zmat_0 + \Zmat_0^\top$ & Toeplitz + Hankel      & $\leq 4$ \\
-%     $\diag(\vvec)$           & $\Zmat_0$                & Vandermonde            & $\leq 1$ \\
-%     $\Zmat_0$                & $\diag(\vvec)$           & Inverse of Vandermonde & $\leq 1$ \\
-%     $\diag(\uvec)$           & $\diag(\vvec)$           & Cauchy                 & $\leq 1$ \\
-%     $\diag(\vvec)$           & $\diag(\uvec)$           & Inverse of Cauchy      & $\leq 1$ \\
-%     \bottomrule
-%   \end{tabular}
-%   % }
-%   \caption{Displacing Matrices Associated with Families of Structured Matrices \cite{pan2001structured}}
-%   \label{table:ch2-displacing_matrices}
-%   % \vspace{0.5cm}
-% \end{table}
-%
-% \noindent
-% Based on this definition, then, if $\Mmat$ is a structured matrix, there exist operator matrices $\Amat$ and $\Bmat$ such that $\triangleopdown_{\Amat, \Bmat} (\Mmat)$ or $\triangleopup_{\Amat, \Bmat} (\Mmat)$ is low rank.
-% In particular, $\Amat$ and $\Bmat$ can be chosen to be diagonal or $f$-unit-circulant matrices (\eg \Cref{definition:ch2-f_circulant_matrix}) for several classes of structured matrices.
-% \Cref{table:ch2-displacing_matrices} shows some specific choices of operators for the four basic classes of structured matrices and for some related matrices.
-% An important result allows us to express structured matrices with low-displacement rank directly as a function of its low displacement generators.  
-% For the Stein type displacement operator, the following result holds:
-% \begin{theorem}[Krylov Decomposition~\citet{pan2003inversion,sindhwani2015structured}] \label{theorem:ch3-krylov_decomposition}
-%   If an $n \times n$ matrix $\Mmat$ is such that $\triangleopup_{\Amat, \Bmat}(\Mmat) = \Gmat \Hmat^\top$ where 
-%   $\Gmat = (\gvec^{(1)} \ldots \gvec^{(r)}), \Hmat = (\hvec^{(1)} \ldots \hvec^{(r)}) \in \Rbb^{n \times r}$ 
-%   and the operator matrices satisfy: $\Amat^n = a \Imat$, $\Bmat^n = b \Imat$ for some scalars $a, b$, then $\Mmat$ can be expressed as: 
-%   \begin{equation} \label{equation:ch3-krylov_decomposition}
-%     \Mmat = \frac{1}{1 - ab} \sum_{j=1}^{r} ~\krylov(\Amat, \gvec^{(j)}) ~\krylov(\Bmat^\top, \hvec^{(j)})^\top
-%   \end{equation}
-%   where $\krylov(\Amat, \vvec)$ is defined by:
-%   \begin{equation}
-%     \krylov(\Amat, \vvec) = [\vvec~~\Amat\vvec~~\Amat^2 \vvec~~\ldots~~\Amat^{n-1} \vvec]
-%   \end{equation}
-%   \removespace
-% \end{theorem}
-%
-% \noindent
-% This theorem can be used to decompose structured matrices and define efficient algorithms for matrix-vector products.
-% For example, this theorem can be simplified for \emph{Toeplitz-like matrices} as follows:
-% \begin{theorem}[Toeplitz-like matrix decomposition \citet{pan2001structured}]
-%   If an $n \times n$ matrix $\Mmat$ satisfies $\triangleopdown_{\Zmat_1, \Zmat_{-1}}(\Mmat) = \Gmat \Hmat^\top$ $(\Mmat \text{ is Toeplitz-like})$ where $\Gmat = (\gvec ^{(1)} \ldots \gvec^{(r)}), \Hmat = (\hvec^{(1)} \ldots \hvec^{(r)}) \in \Rbb^{n \times r}$, then $\Mmat$ can be written as: 
-%   \begin{equation} \label{equation:ch3-toeplitz_like_matrix_decomposition}
-%     \Mmat = \frac{1}{2} \sum_{j=1}^{r} \Zmat_1(\gvec^{(j)}) \Zmat_{-1}(\Jmat_n \hvec^{(j)})
-%   \end{equation}
-%   where $\Jmat_n$ is the reflection matrix of size $n \times n$ and $\Zmat_1$ and $\Zmat_{-1}$ are $f$-unit-circulant matrices defined in~\Cref{section:ch2-a_primer_on_circulant_and_toeplitz_matrices}, \Cref{definition:ch2-f_circulant_matrix}.
-% \end{theorem}
-% \noindent
-
-% Other types of structured matrices that reduce the memory footprint but also accelerate matrix-vector product operations have been used to build compact neural networks.
-
+\vspace{-0.5cm}
 
 General framework for structured matrices that reduce the memory footprint but also accelerate matrix-vector product operations have been used to build compact neural networks.
-\citet{sindhwani2015structured} have used the notion of low displacement rank presented in \Cref{subsection:ch2-general_frameworks_for_structured_matrices} to learn a broad family of structured parameter matrices.
+\citet{sindhwani2015structured} have used the notion of low displacement rank presented in \Cref{subsection:ch2-general_frameworks_for_structured_matrices} to learn a broad family of structured matrices.
 Recall from~\Cref{theorem:ch2-toeplitz_like} that all matrices expressed as the following sum of products are called \emph{Toeplitz-like} matrices:
 \begin{equation}
     \Mmat = \sum_{j=1}^{r} \Zmat_1(\gvec^{(j)}) \Zmat_{-1}(\Jmat_n \hvec^{(j)})
 \end{equation}
-where $\Zmat_f$ is a $f$-circulant matrix defined in \Cref{definition:ch2-f_circulant_matrix} and $\Gmat = \leftmat \gvec^{(1)} \ldots \gvec^{(r)} \rightmat, \Hmat = \leftmat \hvec^{(1)} \ldots \hvec^{(r)} \rightmat \in \Rbb^{n \times r}$ with $r \ll n$.
-
+where $\Zmat_f$ is an $f$-circulant matrix defined in \Cref{definition:ch2-f_circulant_matrix} and $\Gmat = \leftmat \gvec^{(1)} \ldots \gvec^{(r)} \rightmat, \Hmat = \leftmat \hvec^{(1)} \ldots \hvec^{(r)} \rightmat \in \Rbb^{n \times r}$ with $r \ll n$.
 More precisely, \citet{sindhwani2015structured} proposed to learn Toeplitz-like matrices by learning the factors $\Gmat$ and $\Hmat$. 
 Therefore, they proposed the following parameterized layer:
 \begin{equation}
   \layer_{\Gmat, \Hmat, \bvec}(\xvec) = \act \left( \left(\sum_{j=1}^{r} \Zmat_1\left(\gvec^{(j)}\right) \Zmat_{-1}\left(\Jmat_n \hvec^{(j)}\right) \right) \xvec + \bvec \right)
 \end{equation}
-where the rank $r$ is an hyper-parameter and control the expressivity and the number of parameters of the layer.
+where the rank $r$ is a hyper-parameter and controls the number of parameters of the layer.
 In addition to offer fast matrix-vector product, they have showed that this class of layers is very rich from a modeling perspective.
 More precisely, they characterize the expressivity of the layer as follows: 
 \begin{theorem}[LDR expressivity \citet{pan2001structured,sindhwani2015structured}] ~\\
@@ -409,69 +265,27 @@ More precisely, they characterize the expressivity of the layer as follows:
     \item All $n \times n$ Circulant and Skew-Circulant matrices for $r \geq 1$.
     \item All $n \times n$ Toeplitz matrices for $r \geq 2$.
     \item Inverses of Toeplitz matrices for $r \geq 2$.
-    \item All products of the form $\Amat^{(1)} \ldots \Amat^{(t)}$ for $r \geq 2t$.
-    \item All linear combinations of the form $\sum_{i=1}^p \beta_i \Amat^{(1, i)} \ldots \Amat^{(t, i)}$ where $r \geq 2tp$.
+    \item All products of the form $\Amat^{(1)} \ldots \Amat^{(t)}$ for any $t \leq \frac{r}{2}$.
+    \item All linear combinations of the form $\sum_{i=1}^p \beta_i \Amat^{(1, i)} \ldots \Amat^{(t, i)}$ for any $t \leq \frac{r}{2p}$.
     \item All $n\times n$ matrices for $r=n$.
   \end{compactitem}
   where each $\Amat^{(i)}$ above is a Toeplitz matrix or the inverse of a Toeplitz matrix. 
 \end{theorem}
 \noindent
 
-In the same line of work, \citet{thomas2018learning} have proposed neural network layers directly form the Krylov decomposition presented in~\Cref{theorem:ch2-krylov_decomposition} which encompasses an even larger family of structured matrices including Toeplitz-like, Vandermonde-like, Cauchy-like.
-Despite being elegant and general, we found that the LDR framework suffers from several limits which are inherent to its generality and makes it difficult to use in the context of large and deep neural networks.
-First, the training procedure for learning LDR matrices is highly involved and implies many complex mathematical objects such as Krylov matrices.
-Then, as acknowledged by the authors, the number of parameters required to represent a given structured matrix (a Toeplitz matrix) in practice is unnecessarily high (higher than required in theory). 
+In the same line of work, \citet{thomas2018learning} have proposed neural network layers directly form the Krylov decomposition presented in~\Cref{theorem:ch2-krylov_decomposition} which encompasses an even larger family of structured matrices including Toeplitz-like, Vandermonde-like, Cauchy-like ones.
+Despite being elegant and general, we found that the LDR framework suffers from several limits which are inherent to its generality and makes it difficult to use in the context of deep neural networks.
+% First, the training procedure for learning LDR matrices is highly involved and implies many complex mathematical objects such as Krylov matrices.
+As acknowledged by the authors, the number of parameters required to represent a given structured matrix (a Toeplitz matrix) in practice is unnecessarily high (higher than required in theory) making the training very hard. 
 
 
 
-More recently, another type of generalization of structured linear maps has been proposed by~\citet{dao2019learning,dao2020kaleidoscope} and used in the context of deep neural networks.
+More recently, another type of generalization of structured linear maps has been proposed by~\citet{dao2019learning,dao2020kaleidoscope}.
 They introduced a family of matrices called \emph{kaleidoscope matrices} (K-matrices) which are the product of sparse matrices with specific predefined sparsity patterns.
-They show that this type of matrices can capture any sparse matrix with near-optimal space (parameter) and time (arithmetic operation) complexity.
+They showed that this type of matrices can capture any sparse matrix with near-optimal space (parameter) and time (arithmetic operation) complexity.
 The authors claim that their structured linear maps can capture more common structures with a few numbers of parameters than the displacement operators presented above.
 More precisely, their representation is based on products of a particular building block known as a butterfly matrix introduced by~\citet{parker1995random}.
 Butterfly matrices have been extensively used in numerical linear algebra~\cite{parker1995random,li2015butterfly} and machine learning~\cite{mathieu2014fast,jing2017tunable,munkhoeva2018quadrature,dao2019learning,choromanski2019unifying}.
-
-
-
-
-
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \subsection{Other Approaches for Building Compact Neural Networks}
-% \label{subsection:ch3-other_approaches_for_building_compact_neural_networks}
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-%
-% This result have led to multiple \emph{Fast Johnson-Lindenstrauss Transform} to embed high-dimensional vectors into lower dimensional space with fast algorithm with reduce memory requirement and fast matrix-vector products.
-% For example, \citet{ailon2009fast} have proposed the PHD transorm: $\yvec = \Pmat \Hmat \Dmat \xvec$, where $\Pmat$ is a sparse random matrix with Gaussian entries $\Hmat$ is a 
-% Hadamard matrix and $\Dmat$ is a diagonal matrix with $\{1, -1\}$ entries drawn independently with probability $1/2$.
-
-% Another fast transform have been proposed involving circulant matrices.
-% Recall from \Cref{section:ch2-a_primer_on_circulant_and_toeplitz_matrices} that circulant matrices are a special case of Toeplitz matrices, they have constant values along each of their diagonals but also exhibit a circulant pattern where each row of a circulant matrix is a cyclic right shift of the previous one. 
-
-
-% that circulant, which have been used to perform dimensionality reduction~\cite{hinrichs2011johnson,vybiral2011variant}, binary embedding~\cite{yu2014circulant} and kernel approximation~\cite{yu2015compact} in the context of pattern recognition and machine learning 
-
-% A variety of structured matrices have been used to build compact neural networks.
-
-% circulant matrices are used to perform dimensionality reduction~\cite{hinrichs2011johnson,vybiral2011variant}, binary embedding~\cite{yu2014circulant} and kernel approximation~\cite{yu2015compact} in the context of pattern recognition and machine learning.
-
-
-% CirCNN: Accelerating and Compressing Deep Neural Networks Using Block-Circulant Weight Matrices
-% \cite{ding2017circnn}
-%
-% Accelerating Deep Neural Networks by Combining Block-Circulant Matrices and Low-Precision Weights
-% \cite{qin2019accelerating}
-%
-% Exploring GPU acceleration of Deep Neural Networks using Block Circulant Matrices
-% \cite{dong2020exploring}
-%
-% Energy-efficient, high-performance, highly-compressed deep neural network design using block-circulant matrices
-% \cite{liao2017energy}
-%
-% CircConv: A Structured Convolution with Low Complexity
-% \cite{liao2019circconv}
-
 
 
 
