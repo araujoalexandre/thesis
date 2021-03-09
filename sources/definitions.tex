@@ -331,9 +331,6 @@
   Refname={Property,Properties}]{properties}
 
 
-
-
-
 \let\proof\relax
 \let\endproof\relax
 
@@ -420,14 +417,15 @@
 \newcommand{\Var}         {\ensuremath \mathrm{Var}}
 \newcommand{\cin}         {\ensuremath c_{in}}
 \newcommand{\cout}        {\ensuremath c_{out}}
+\newcommand{\margin}      {\ensuremath M}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Custom Commands
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newcommand{\Cnn}{\Cbb^{n \times n}}
-\newcommand{\Cn}{\Cbb^{n}}
-\newcommand{\F}{\ensuremath \mathcal{F}}
+% \newcommand{\Cnn}{\Cbb^{n \times n}}
+% \newcommand{\Cn}{\Cbb^{n}}
+% \newcommand{\F}{\ensuremath \mathcal{F}}
 
 \newcommand{\scalefigure}{0.80}
 \newcommand{\removespace}{\vspace{-\baselineskip}}
@@ -505,7 +503,7 @@
 
 \let\todoorg\todo
 \renewcommand{\todo}[1]{\todoorg[inline]{#1}}
-\newcommand{\Omit}[1]{}
+% \newcommand{\Omit}[1]{}
 
 \newcommand{\drawline}{
   \begin{center}
@@ -516,8 +514,8 @@
 
 % todotext command 
 \newcommand{\todotext}[1]{{\color{red} \noindent \textbf{#1}}}
-\newcommand{\todotextok}[1]{{\color{green} \noindent \textbf{#1}}}
+% \newcommand{\todotextok}[1]{{\color{green} \noindent \textbf{#1}}}
 
 % command to count page of chapter
-\newcommand{\countpages}[2]{\the\numexpr\getpagerefnumber{#2}-\getpagerefnumber{#1}\relax}
+% \newcommand{\countpages}[2]{\the\numexpr\getpagerefnumber{#2}-\getpagerefnumber{#1}\relax}
 
