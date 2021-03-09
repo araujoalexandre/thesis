@@ -2,9 +2,9 @@
 
 
 % In this thesis, we make contributions at the intersection between neural networks and structured matrices.
-We build neural networks with structured matrices and develop new methods for training neural networks whose efficiency relies on the properties of structured matrices. 
+% We build neural networks with structured matrices and develop new methods for training neural networks whose efficiency relies on the properties of structured matrices. 
 % on certain properties of structured matrices.
-Hereafter, we present the preliminary knowledge on the theory of structured matrices that is required for the contribution of this thesis. 
+% Hereafter, we present the preliminary knowledge on the theory of structured matrices that is required for the contribution of this thesis. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -48,9 +48,9 @@ Furthermore, the $(j,k)$ entry of $\Cmat$ is given by
   \label{algorithm:ch2-matrix_vector_product_circulant_matrix}
 \end{algorithm}
 
-In numerical analysis, circulant matrices are important due to their numerous properties.
+In linear algebra, circulant matrices are important due to their numerous properties.
 Indeed, circulant matrices can be compactly represented in memory using only $n$ values instead of $n^2$ values required for arbitrary matrices.
-In addition, algorithms exist to accelerate the matrix-vector product operation from $\bigO(n^2)$ to $\bigO(n \log n)$. 
+In addition, algorithms exist to speed-up the matrix-vector product operation from $\bigO(n^2)$ to $\bigO(n \log n)$. 
 Finally, circulant matrices commute and are closed under the sum and products.
 All these properties can be demonstrated with the special diagonalization of circulant matrices with the matrix expansion of the Discrete Fourier Transform (DFT), \ie, Fourier matrix, and an explicit formula of their eigenvalues.
 The Fourier matrix is of the form:
@@ -69,11 +69,11 @@ The Fourier matrix is of the form:
   where $z_n = e^{-\frac{2\pi\ci}{n}}$ is an $n^{\text{th}}$ root of unity.
 \end{definition}
 \noindent
-The diagonalization of circulant matrices is presented in the following theorem:
-\begin{theorem}[Theorem 3.1 of \citet{gray2006toeplitz}] \label{theorem:ch2-diagonalization_circulant_matrix}
+The diagonalization of circulant matrices is given by the following theorem:
+\begin{theorem}[\citet{davis1979circulant}] \label{theorem:ch2-diagonalization_circulant_matrix}
   The eigenvalues $\lambda_k$ and the eigenvectors $\yvec^{(k)}$ of a circulant matrix $\Cmat = \circulant(\cvec)$ with $\cvec \in \Rbb^n$ are as follows:
   \begin{equation}
-    \lambda_k = \sum_{j \in \Iset^+_n} c_j e^{-\frac{2 \pi \ci}{n} jk} \quad \Leftrightarrow \quad \psi_k = \left( \Umat \cvec \right)_k
+    \lambda_k = \sum_{j \in \Iset^+_n} c_j e^{-\frac{2 \pi \ci}{n} jk} \quad \Leftrightarrow \quad \lambda_k = \left( \Umat \cvec \right)_k
   \end{equation}
   and
   \begin{equation}
@@ -90,17 +90,18 @@ The diagonalization of circulant matrices is presented in the following theorem:
 \allowdisplaybreaks
 
 \noindent
-Based on this decomposition, we can recover several important properties of circulant matrices:
+Based on this decomposition, we can state several important properties of circulant matrices:
 \begin{itemize}[leftmargin=13pt]
   \item \textbf{Matrix-vector product}: Let $\xvec \in \Rbb^n$ an arbitrary vector then the product $\Cmat \xvec$ can be expanded as follows:
   \begin{align}
     \Cmat \xvec &= \frac{1}{n} \Umat_n^* \diag(\Umat_n \cvec) \Umat_n \xvec  \\
     &= \frac{1}{n} \Umat_n^* \left( \big(\Umat_n \cvec \big) \odot \big( \Umat_n \xvec \big) \right)
   \end{align}
+  where $\odot$ is the element-wise vector multiplication.
   Thus, the matrix-vector product $\Cmat \xvec$ can be reduced to an element-wise multiplication between the characteristic vector $\cvec$ and the vector $\xvec$ in the Fourier domain.
   Furthermore, the multiplication between the Fourier matrix $\Umat_n$ and a vector can be efficiently computed with the \emph{Fast Fourier Transform} (FFT) algorithms~\cite{cooley1965algorithm}.
   \Cref{algorithm:ch2-matrix_vector_product_circulant_matrix} details the steps required to perform the $\bigO(n \log n)$ multiplication between  a circulant matrix and a vector.
-\item \textbf{Closeness under sum}: Let $\xvec, \yvec \in \Rbb^n$, let $\Xmat= \circulant(\xvec)$ and $\Ymat = \circulant(\yvec)$ then, $\Zmat  = \Xmat + \Ymat$ is also a circulant matrix with $\Zmat = \circulant(\xvec + \yvec)$:
+\item \textbf{Closeness under sum}: Let $\xvec, \yvec \in \Rbb^n$, $\Xmat= \circulant(\xvec)$ and $\Ymat = \circulant(\yvec)$ then, $\Zmat  = \Xmat + \Ymat$ is also a circulant matrix with $\Zmat = \circulant(\xvec + \yvec)$:
     \begin{align}
       \Xmat + \Ymat &= \left( \frac{1}{n} \Umat_n^* \diag(\Umat_n \xvec) \Umat_n \right) + \left( \frac{1}{n} \Umat_n^* \diag(\Umat_n \yvec) \Umat_n \right) \\
       &= \frac{1}{n}  \Umat_n^* \left( \diag(\Umat_n \xvec) \Umat_n  + \diag(\Umat_n \yvec) \Umat_n \right) \\
@@ -108,7 +109,7 @@ Based on this decomposition, we can recover several important properties of circ
       &= \frac{1}{n}  \Umat_n^* \left( \diag(\Umat_n (\xvec + \yvec)) \right) \Umat_n  \\
       &= \circulant(\xvec + \yvec)
     \end{align}
-  \item \textbf{Closeness under product}: Let $\xvec, \yvec \in \Rbb^n$, let $\Xmat= \circulant(\xvec)$ and $\Ymat = \circulant(\yvec)$ then, $\Zmat  = \Xmat \Ymat$ is also a circulant matrix with $\Zmat = \circulant(\xvec \odot \yvec)$:
+  \item \textbf{Closeness under product}: Let $\xvec, \yvec \in \Rbb^n$, $\Xmat= \circulant(\xvec)$ and $\Ymat = \circulant(\yvec)$ then, $\Zmat  = \Xmat \Ymat$ is also a circulant matrix with $\Zmat = \circulant(\xvec \odot \yvec)$:
     \begin{align}
       \Xmat \Ymat &= \left( \frac{1}{n} \Umat_n^* \diag(\Umat_n \xvec) \Umat_n \right) \left( \frac{1}{n} \Umat_n^* \diag(\Umat_n \yvec) \Umat_n \right) \\
       &= \frac{1}{n^2}  \Umat_n^* \diag(\Umat_n \xvec) \Umat_n \Umat_n^* \diag(\Umat_n \yvec) \Umat_n  \\
@@ -124,7 +125,8 @@ Based on this decomposition, we can recover several important properties of circ
 
 
 In this thesis, we also make use of specific type of circulant matrices called \emph{$f$-circulant matrices} which are one of the building blocks of \emph{low displacement rank operators} presented in \Cref{subsection:ch2-general_frameworks_for_structured_matrices} and also enjoy compact representation and fast matrix-vector product.
-A $f$-unit-circulant matrix is defined as follows:
+An $f$-unit-circulant matrix is defined as follows:
+
 \begin{definition}[$f$-circulant matrix] \label{definition:ch2-f_circulant_matrix}
   Given a vector $\xvec$ and a scalar $f$, the $f$-circulant matrix, $\Zmat_f(\xvec)$, is defined as follows:
   \begin{equation}
@@ -138,8 +140,8 @@ A $f$-unit-circulant matrix is defined as follows:
       \xvec_{n-1} & \cdots & \cdots & \xvec_{2} & \xvec_{1} & \xvec_0
     \rightmatrix
   \end{equation}
-  \removespace
 \end{definition}
+
 \noindent
 We denote $\Zmat_f$ the $f$-unit-circulant, defined by the vector $\left(0, 1, \dots, 0 \right)^\top$, a matrix of the form:
 % \begin{equation}
@@ -157,8 +159,10 @@ We denote $\Zmat_f$ the $f$-unit-circulant, defined by the vector $\left(0, 1, \
       0      & \cdots & \cdots & 0      & 1      & 0
     \rightmatrix
 \end{equation}
+
 \noindent
 The matrix-vector product $\Zmat_f \xvec$ scales the last element by $f$ and makes a circular shift on the components of the vector $\xvec$ by one resulting in $\Zmat_f \xvec = \leftmat f \xvec_{n-1}, \xvec_0, \dots, \xvec_{n-2} \rightmat^\top$.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -168,17 +172,19 @@ The matrix-vector product $\Zmat_f \xvec$ scales the last element by $f$ and mak
 
 Toeplitz matrices generalize circulant matrices by relaxing the cyclic right shift on the rows.
 Therefore, a Toeplitz matrix is a matrix in which each descending diagonal, from left to right, is constant, \ie, a matrix of the form:
+
 \begin{equation}
   \Amat =
   \leftmatrix
-    a_0      & a_1    & a_{2}  & \cdots & \cdots & a_{n-1} \\
-    a_{-1}   & a_0    & a_{1}  & \ddots &        & \vdots  \\
-    a_{-2}   & a_{-1} & \ddots & \ddots & \ddots & \vdots  \\
-    \vdots   & \ddots & \ddots & \ddots & a_{1}  & a_2     \\
-    \vdots   &        & \ddots & a_{-1} & a_{0}  & a_1     \\
-    a_{-n+1} & \cdots & \cdots & a_{-2} & a_{-1} & a_0
+    a_{0}   & a_{-1} & a_{2}  & \cdots & \cdots & a_{-n+1} \\
+    a_{1}   & a_{0}  & a_{1}  & \ddots &        & \vdots   \\
+    a_{2}   & a_{1}  & \ddots & \ddots & \ddots & \vdots   \\
+    \vdots  & \ddots & \ddots & \ddots & a_{-1} & a_{-2}   \\
+    \vdots  &        & \ddots & a_{1}  & a_{0}  & a_{-1}   \\
+    a_{n-1} & \cdots & \cdots & a_{2}  & a_{1}  & a_{0}
   \rightmatrix
 \end{equation}
+
 \noindent
 The $n \times n$ Toeplitz matrix $\Amat$ is fully determined by a two-sided sequence of scalars $\{a_h\}_{h \in \Iset_n}$ where $\Iset_n = \{-n+1, \dots, n-1\}$.
 Furthermore, the $(j,k)$ entry of $\Amat$ is given by
@@ -192,7 +198,7 @@ One important result regarding Toeplitz matrices is Szeg\"{o}'s theorem \cite{sz
 Because Toeplitz matrices do not have a closed-form expression for their eigenvalues, studying their spectrum is not as straightforward as their circulant counterpart.
 In order to devise results on Toeplitz matrices, \citet{grenander1958toeplitz} introduced a representation based on the Fourier transform.
 Indeed, Toeplitz matrices can be generated from a 2$\pi$-periodic function where the values of the Toeplitz matrix are the Fourier coefficients of this \emph{generating function}.
-The spectrum of Toeplitz matrices can be described precisely from the properties of their generating function.
+The spectrum of Toeplitz matrices can be described precisely from the properties of their generating functions.
 % This representation of Toeplitz matrices has been extensively used in the literature \cite{serra1997extension,parter1961extreme,avram1988bilinear,widom1965toeplitz,tilli1997asymptotic,tyrtyshnikov1998spectra,tilli1998singular,tilli1997asymptotic} in context such as signal processing, trigonometric moment problems, integral equations and elliptic partial differential equations with boundary conditions etc.
 This representation of Toeplitz matrices has been widely studied in contexts such as signal processing, trigonometric moment problems, integral equations and elliptic partial differential equations with boundary conditions, etc. \cite{serra1997extension,parter1961extreme,avram1988bilinear,widom1965toeplitz,tilli1997asymptotic,tyrtyshnikov1998spectra,tilli1998singular,tilli1997asymptotic} 
 
@@ -246,7 +252,8 @@ In the following, when it is clear from context, we will write $\Tmat(f)$ instea
 \label{subsubsection:ch2-block_circulant_and_block_toeplitz_matrices}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-We can adapt the structure of circulant matrices and their properties to block matrices. A block circulant matrix is a matrix where each block is repeated identically along diagonals and each row of blocks is a cyclic right shift of the previous one.
+We can adapt the structure of circulant matrices and their properties to block matrices.
+A block circulant matrix is a matrix where each block is repeated identically along diagonals and each row of blocks is a cyclic right shift of the previous one.
 Therefore, an $nm \times nm$ block circulant matrix $\Amat$ is fully determined by a sequence of blocks $\{\Amatsf^{(h)}\}_{h \in \Iset^+_n}$ and where each block $\Amatsf^{(h)}$ is an $m \times m$ matrix.
 The block circulant matrix $\Amat = \leftmat \Amatsf^{((k-j) \mod n)} \rightmat_{j,k \in \Iset^+_n} $ is given by
 \begin{equation}
@@ -289,7 +296,7 @@ The following theorem describes this block diagonalization:
 \end{theorem}
 \noindent
 One can remark that when the blocks are of size $1 \times 1$, \ie, scalars, this theorem coincides with \Cref{equation:ch2-diagonalization_circulant_matrix} of \Cref{theorem:ch2-diagonalization_circulant_matrix}.
-Although interesting, this representation does not provide a closed formed expression on the eigenvalues of the block circulant matrix.
+Although interesting, this representation does not provide a closed form expression of the eigenvalues of the block circulant matrix.
 However, in the special case where the blocks are also circulant matrices -- the matrix is called a doubly-block circulant matrix -- then we can extend the diagonalization and get a closed form of the eigenvalues of doubly-block circulant matrices.
 First, we can remark that if the blocks $\Amatsf^{(0)}, \dots, \Amatsf^{(n-1)}$ are circulant matrices then the blocks $\mathsf{\Psi}^{(0)}, \dots, \mathsf{\Psi}^{(n-1)}$ are also circulant matrices because they are linear combinations of circulant matrices which are closed under the sum and products.
 Therefore, using \Cref{theorem:ch2-diagonalization_circulant_matrix} for each block of the block diagonal independently, we have:
@@ -313,12 +320,12 @@ The block Toeplitz matrix $\Bmat = \leftmat\Bmatsf^{(k-j)} \rightmat_{j,k \in \I
 \begin{equation} \label{equation:ch2-block_toeplitz_matrices}
   \Bmat = 
   \leftmatrix
-    \Bmatsf^{(0)}    & \Bmatsf^{(1)}  & \Bmatsf^{(2)} & \cdots         & \cdots         & \Bmatsf^{(n-1)} \\
-    \Bmatsf^{(-1)}   & \Bmatsf^{(0)}  & \Bmatsf^{(1)} & \ddots         &                & \vdots          \\
-    \Bmatsf^{(-2)}   & \Bmatsf^{(-1)} & \ddots        & \ddots         & \ddots         & \vdots          \\ 
-    \vdots           & \ddots         & \ddots        & \ddots         & \Bmatsf^{(1)}  & \Bmatsf^{(2)}   \\
-    \vdots           &                & \ddots        & \Bmatsf^{(-1)} & \Bmatsf^{(0)}  & \Bmatsf^{(1)}   \\
-    \Bmatsf^{(-n+1)} & \cdots         & \cdots        & \Bmatsf^{(-2)} & \Bmatsf^{(-1)} & \Bmatsf^{(0)}
+    \Bmatsf^{(0)}   & \Bmatsf^{(-1)} & \Bmatsf^{(-2)} & \cdots         & \cdots         & \Bmatsf^{(-n+1)} \\
+    \Bmatsf^{(1)}   & \Bmatsf^{(0)}  & \Bmatsf^{(-1)} & \ddots         &                & \vdots           \\
+    \Bmatsf^{(2)}   & \Bmatsf^{(1)}  & \ddots         & \ddots         & \ddots         & \vdots           \\ 
+    \vdots          & \ddots         & \ddots         & \ddots         & \Bmatsf^{(-1)} & \Bmatsf^{(-2)}   \\
+    \vdots          &                & \ddots         & \Bmatsf^{(1)} & \Bmatsf^{(0)}   & \Bmatsf^{(-1)}   \\
+    \Bmatsf^{(n-1)} & \cdots         & \cdots         & \Bmatsf^{(2)} & \Bmatsf^{(1)}   & \Bmatsf^{(0)}
   \rightmatrix
 \end{equation}
 
@@ -440,15 +447,12 @@ The matrix for the multi-channel convolution is the concatenation of $\cout \cdo
 \label{subsection:ch2-general_frameworks_for_structured_matrices}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
-
 In this thesis, we mainly focus on structured transforms from the Toeplitz family.
 The properties of matrices from the Toeplitz family presented in the previous section make them good candidates for applications in the context of signal processing and deep neural network.
 However, other structured matrices with other properties have been considered.
 In this section, we briefly present these families of structured matrices and introduce LDR, a more general framework to capture all structured matrices
 % Other structured matrices can benefit from reduced memory footprint and fast matrix-vector product.
-Bellow a description of some known structured matrices: 
+Below a description of some known structured matrices: 
 \begin{itemize}
   \item \textbf{Hankel matrix}: A Hankel matrix has constant values along each of its anti-diagonals.
   \item \textbf{Vandermonde matrix}: A Vandermonde matrix is a matrix where each term follows a geometric progression.
@@ -456,7 +460,7 @@ Bellow a description of some known structured matrices:
   \item \textbf{Cauchy matrix}: A Cauchy matrix is an $m \times n$ matrix with elements $a_{ij}$ such that $a_{ij} = (\uvec_i - \vvec_j)^{-1}$ with $\uvec_i - \vvec_j \neq 0$, $i \in \{0,\dots,m-1\}$ and $j \in \{0,\dots,n-1\}$.
 \end{itemize}
 \Cref{figure:ch2-example_structure_matrices} shows the representation of the parameters sharing of Hankel, Vandermonde and Cauchy matrices.
-The study of these matrices along with matrices from the Toeplitz family can be unified thanks to the concept of \emph{Low Displacement Rank} (LDR) initially proposed by~\citet{kailath1979displacement}.
+The study of these matrices with those from the Toeplitz family can be unified thought to the concept of \emph{Low Displacement Rank} (LDR) initially proposed by~\citet{kailath1979displacement}.
 Although these matrices appear to have very different kinds of structure, they can be all associated with a specific displacement operator $\triangleopdown_{\Amat, \Bmat}: \Rbb^{m \times n} \rightarrow \Rbb^{m \times n}$ which takes a matrix, $\Mmat$, and outputs a low rank matrix $\triangleopdown_{\Amat, \Bmat}(\Mmat)$ such that $\rank(\triangleopdown_{\Amat, \Bmat}(\Mmat)) \ll \min(m,n)$.
 
 
@@ -509,11 +513,11 @@ Although these matrices appear to have very different kinds of structure, they c
 
 More formally, two displacement operators can be defined as follows (for simplification, we consider $m = n$):
 \begin{definition}[\emph{Sylvester} \& \emph{Stein} displacement operators]
-  Let $\Amat, \Bmat \in \Rbb^{n \times n}$, the \emph{Sylvester} displacement operator denoted $\triangleopdown_{\Amat, \Bmat} = \triangleopdown_{\Amat, \Bmat}: \Rbb^{n \times n} \rightarrow \Rbb^{n \times n}$ is defined as follows:
+  Let $\Amat, \Bmat \in \Rbb^{n \times n}$, the \emph{Sylvester} displacement operator $\triangleopdown_{\Amat, \Bmat}: \Rbb^{n \times n} \rightarrow \Rbb^{n \times n}$ is defined as follows:
   \begin{equation}
     \triangleopdown_{\Amat, \Bmat} (\Mmat) \triangleq \Amat \Mmat - \Mmat \Bmat
   \end{equation}
-  The \emph{Stein} displacement operator denoted $\triangleopup_{\Amat, \Bmat} = \triangleopup_{\Amat, \Bmat}: \Rbb^{n \times n} \rightarrow \Rbb^{n \times n}$ is defined as follows:
+  The \emph{Stein} displacement operator $\triangleopup_{\Amat, \Bmat}: \Rbb^{n \times n} \rightarrow \Rbb^{n \times n}$ is defined as follows:
   \begin{equation}
     \triangleopup_{\Amat, \Bmat} (\Mmat) \triangleq \Mmat - \Amat \Mmat \Bmat
   \end{equation}
@@ -549,7 +553,7 @@ Based on this definition, if $\Mmat$ is a structured matrix, there exist operato
 In particular, $\Amat$ and $\Bmat$ can be chosen to be diagonal or $f$-unit-circulant matrices (see \Cref{definition:ch2-f_circulant_matrix}) for several classes of structured matrices.
 \Cref{table:ch2-displacing_matrices} shows some specific choices of operators for the four classes of structured matrices presented above as well as other types of structured matrices from the same family.
 We now define the matrices that can be considered structured with respect to the Sylvester or Stein operator.
-\begin{definition}[L-like matrices]
+\begin{definition}[L-like matrices \citet{pan2001structured}]
   For an $n \times n$ matrix $\Mmat$ and an associated operator $\triangleopdown_{\Amat, \Bmat}$ (or $\triangleopup_{\Amat, \Bmat}$), the value $r = \rank(\triangleopdown_{\Amat, \Bmat}(\Mmat))$ (or $r = \rank(\triangleopup_{\Amat, \Bmat}(\Mmat))$) is called the \emph{displacement rank}.
     If the value of $r$ is small relative to $n$ as $n$ grows large, then we call the matrix $\Mmat$ \emph{L-like} having a structure of type $L$.
     For example, in the case where the operator $\triangleopdown_{\Amat, \Bmat}$ is associated with Toeplitz matrices (\ie, $\Amat = \Zmat_1$ and $\Bmat = \Zmat_{-1}$, see~\Cref{table:ch2-displacing_matrices}), we call the matrix $\Mmat$, \emph{Toeplitz-Like}.

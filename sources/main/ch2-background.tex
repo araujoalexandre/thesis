@@ -8,7 +8,7 @@
 
 % This chapter gives a short introduction on the theory of Toeplitz matrices~\cite{gray2006toeplitz} and on supervised learning and neural networks~\cite{shalev2014understanding}.
 This chapter gives an overview on the theory of Toeplitz matrices and on supervised learning with neural networks.
-The first section describes the mathematical properties of Toeplitz matrices and known theorems that we use in this thesis.
+The first section describes the mathematical properties of Toeplitz matrices and some known theorems that we use in this thesis.
 A Toeplitz matrix, named after Otto Toeplitz, is a matrix in which each descending diagonal, from left to right, is constant.
 This simple property has led to interesting theoretical results and numerous applications.
 We will use a number of these results in the context of neural networks.
@@ -16,8 +16,8 @@ We will use a number of these results in the context of neural networks.
 % For example, an image (input) to the content of the image (output).
 The second section of this chapter is divided into four parts.
 First, we review notions of supervised learning which refer to the problem of optimizing the parameters of a function in order to map an input to an output based on a series of input-output pairs.
-Then, we formally define neural networks and some of their properties.
-In the following, we introduce the concept of adversarial examples which we will use in \Cref{chapter:ch5-lipschitz_bound}.
+Then, we formally define neural networks and recall some of their properties.
+We pursue by introducing the concept of adversarial examples which we will use in \Cref{chapter:ch5-lipschitz_bound}.
 Finally, we present some recent theoretical results on neural networks that allow a better understanding of the contributions of this thesis.
 
 % In the statistical learning framework, supervised learning refers to the problem of optimizing the parameters of a function in order to map an input to an output based on a series of input-output pairs.
@@ -47,7 +47,7 @@ Finally, we present some recent theoretical results on neural networks that allo
 As explained in the Introduction (\Cref{chapter:ch1-introduction}), our contributions lie at the intersection between neural networks and structured matrices.
 In this chapter, we have reviewed the necessary concepts to present our contributions and some related work.
 
-First, \Cref{section:ch2-a_primer_on_circulant_and_toeplitz_matrices} introduces circulant and Toeplitz matrices which are the main mathematical objects used in this thesis.
+First, \Cref{section:ch2-a_primer_on_circulant_and_toeplitz_matrices} introduced circulant and Toeplitz matrices which are the main mathematical objects used in this thesis.
 Circulant and Toeplitz matrices are structured matrices in which each descending diagonal, from left to right, is constant.
 These structured matrices are the building blocks of our contribution on compact neural networks (\Cref{chapter:ch4-diagonal_circulant_neural_network}) and enable fast approximation of the Lipschitz constant of convolutional layers leading to a new regularization scheme (\Cref{chapter:ch5-lipschitz_bound}).
 
@@ -57,7 +57,7 @@ We also presented, in \Cref{subsection:ch2-adversarial_attacks_robustness_of_neu
 We showed how a neural network can be sensitive to small perturbations to its input and thus vulnerable to adversarial examples.
 Reducing the sensitivity and therefore increasing the robustness of neural networks is the central theme of our second contribution presented in \Cref{chapter:ch5-lipschitz_bound}.
 Finally, in \Cref{subsection:ch2-recent_results_on_the_theory_of_neural_networks}, we have presented some recent results on the theory of neural networks.
-These results give us important insights on how neural networks generalize and a theoretical justification of the regularization scheme that we propose in \Cref{chapter:ch5-lipschitz_bound}.
+These results give us insights on how neural networks generalize and a theoretical justification of the regularization scheme that we propose in \Cref{chapter:ch5-lipschitz_bound}.
 
 
 
