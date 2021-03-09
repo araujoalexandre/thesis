@@ -4,27 +4,37 @@
 \end{center}
 %
 \noindent
-%
-
-Deep neural networks are state-of-the-art in a wide variety of tasks, however, they exhibit important limitations which hinder their use and deployment in critical-decision systems.
-When developing and training neural networks, the accuracy should not be the only concern, neural networks need to be cost-effective and secure. 
+Deep neural networks are state-of-the-art in a wide variety of tasks, however, they exhibit important limitations which hinder their use and deployment in real-world applications.
+When developing and training neural networks, the accuracy should not be the only concern, neural networks must also be cost-effective and reliable.
 Although accurate, large neural networks often lack these properties.
-This thesis focuses on the problem of training neural networks which are not only accurate but also compact, easy to train, reliable and robust to adversarial examples.
-To tackle these problems, we leverage the properties of structured matrices from the Toeplitz family to build compact and secure neural networks. 
-First, we study deep diagonal-circulant neural networks, which are deep neural networks in which weight matrices are the product of diagonal and circulant ones.
-Besides making a theoretical analysis of their expressivity, we introduce principled techniques for training these models: we devise an initialization scheme and propose a smart use of non-linearity functions in order to train deep diagonal circulant networks.
+% \textbf{In this thesis, we leverage the properties of structured matrices from the Toeplitz family to build compact and secure neural networks.}
+In this thesis, we leverage the properties of structured matrices from the Toeplitz family to build compact and secure neural networks.
+Our contributions are twofold.
+
+% A first contribution tackles the problem of training neural networks which are not only accurate but also compact and easy to train while second contribtion propose an approach to build reliable and robust to adversarial examples.
+% This thesis focuses on the problem of training neural networks which are not only accurate but also compact, easy to train, reliable and robust to adversarial examples.
+% To tackle these problems, we leverage the properties of structured matrices from the Toeplitz family to build compact and secure neural networks. 
+
+First, we propose a new neural network architecture that is not only accurate but also compact and easy to train.
+The purpose of this contribution is to study deep diagonal-circulant neural networks, which are deep neural networks in which weight matrices are the product of diagonal and circulant ones.
+% % In this contribution, we study deep diagonal-circulant neural networks, which are deep neural networks in which weight matrices are the product of diagonal and circulant ones.
+% Besides making a theoretical analysis of their expressivity, we introduce principled techniques for training these models: we devise an initialization scheme and propose a smart use of non-linearity functions in order to train deep diagonal-circulant networks.
+% This architecture consists in replacing the weight matrices of neural networks by the product of diagonal and circulant matrices. 
+We perform a theoretical analysis of their expressivity and propose an initialization procedure and an intelligent use of nonlinearity functions to facilitate training. 
 Furthermore, we show that these networks outperform recently introduced deep networks with other types of structured layers.
-We conduct a thorough experimental study to compare the performance of deep diagonal circulant networks with state-of-the-art models based on structured matrices and with dense models.
+We conduct a thorough experimental study to compare the performance of deep diagonal-circulant networks with state-of-the-art models based on structured matrices and with dense models.
 We show that our models achieve better accuracy than other structured approaches while requiring 2x fewer weights than the next best approach.
-Finally, we train compact and accurate deep diagonal circulant networks on a real-world video classification dataset with over 3.8 million training examples.
-Secondly, in addition to being compact and cost-effective, neural networks also need to be secure.
-To improve the robustness of neural networks, we propose a new Lipschitz regularization for Convolutional Neural Networks.
+Finally, we train compact and accurate deep diagonal-circulant networks on a real-world video classification dataset with over 3.8 million training examples.
+
+% In addition to being compact and cost-effective, neural networks also need to be secure.
+Secondly, we propose an approach to build robust neural networks to adversarial examples.
+In this contribution, we introduce a new Lipschitz regularization for Convolutional Neural Networks that improves the robustness of neural networks.
+% To improve the robustness of neural networks, we propose a new Lipschitz regularization for Convolutional Neural Networks.
 Lipschitz regularity is now established as a key property of modern deep learning with implications in training stability, generalization, robustness against adversarial examples, etc.
 However, computing the exact value of the Lipschitz constant of a neural network is known to be NP-hard.
 Recent attempts from the literature introduce upper bounds to approximate this constant that are either efficient but loose or accurate but computationally expensive.
 In this work, by leveraging the properties of doubly-block Toeplitz matrices, we introduce a new upper bound of the singular values of convolutional layers that is both tight and easy to compute.
-Based on this result we devise an algorithm to train Lipschitz regularized Convolutional Neural Networks.
-
+Based on this result we devise an algorithm to train Lipschitz-regularized Convolutional Neural Networks.
 
 
 

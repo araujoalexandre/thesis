@@ -3,22 +3,43 @@
 \end{center}
 %
 \noindent
+Les réseaux de neurones profonds sont considérés comme étant état de l'art dans une grande variété de tâches, mais ils présentent des limites importantes qui entravent leur utilisation et leur déploiement.
+Lors du développement et l'entraînement de réseaux de neurones, la précision ne devrait pas être la seule préoccupation, ils se doivent aussi d'être efficaces et sécurisés.
+Bien que précis, les réseaux de neurones dotés de nombreux paramètres n'ont souvent pas ces propriétés.
+Dans cette thèse, nous exploitons les propriétés des matrices structurées de la famille de Toeplitz pour construire des réseaux de neurones compacts et sécurisés.
+Nous réalisons deux contributions sur ces thématiques.
+
+% Cette thèse se concentre sur le problème de l'entraînement de réseaux de neurones qui ne sont pas seulement précis, mais aussi compacts, faciles à entraîner, fiables et robustes aux exemples contradictoires.
+% Pour cela, nous exploitons les propriétés des matrices structurées de la famille de Toeplitz pour construire des réseaux de neurones compacts et sécurisés.
+
+Premièrement, nous proposons une nouvelle architecture de réseau de neurones précise, mais également compacte et facile à entraîner. 
+L'objectif de cette contribution est d'étudier les réseaux de neurones diagonaux-circulants, qui sont des réseaux de neurones profonds pour lesquels les matrices de poids sont le produit des matrices diagonales et circulantes.
+Nous effectuons une analyse théorique de leur expressivité et proposons une procédure d'initialisation et une utilisation intelligente des fonctions de non-linéarité qui facilitent leur entraînement.
+% En outre, nous montrons que ces réseaux sont plus performants que les réseaux profonds récemment introduits avec d'autres types de couches structurées.
+% Nous menons une étude expérimentale approfondie pour comparer les performances des réseaux profonds à circulation diagonale avec des modèles de pointe basés sur des matrices structurées et avec des modèles denses.
+Nous montrons que nos modèles atteignent une meilleure précision que les autres approches structurées tout en nécessitant deux fois moins de paramètres.
+Enfin, nous entraînons des réseaux de neurones diagonaux-circulants sur un ensemble de données de classification vidéo qui contient plus de 3,8 millions d'exemples.
+
+
+% Une première contribution propose une nouvelle architecture de réseau de neurones précise mais également compacte et facile à entraîner.
+% Cette architecture consiste à remplacer les matrices de poids des réseaux de neurones par le produit des matrices diagonales et circulantes. 
+% Nous réalisons une analyse théorique de l'expressivité de cette architecture et proposons une procédure d'initialisation et une utilisation intelligente des fonctions de non-linéarité afin de faciliter l'entraînement. 
+%
+% introduisons de nouvelles techniques pour faciliter l'entraînement.
+%
+% Outre une analyse théorique de leur expressivité, nous introduisons de nouvelles techniques pour l'entraînement de ces modèles : nous 
+%
+%
+% Nous montrons que ces modèles sont plus précis que les autres approches structurées tout en nécessitant deux fois moins de poids que les meilleures approches.
 %
 
-Les réseaux de neurones profonds sont considérés comme étant état de l'art dans une grande variété de tâches, mais ils présentent des limites importantes qui entravent leur utilisation et leur déploiement dans de nombreux systèmes critiques.
-Lors du développement et l'entraînement de réseaux de neurones, la précision ne devrait pas être la seule préoccupation, les réseaux de neurones se doivent aussi d'être efficaces et sécurisés.
-Bien que précis, les réseaux de neurones avec de nombreux paramètres n'ont souvent pas ces propriétés.
-Cette thèse se concentre sur le problème de l'entraînement de réseaux de neurones qui ne sont pas seulement précis, mais aussi compacts, faciles à entraîner, fiables et robustes aux exemples contradictoires.
-Pour cela, nous exploitons les propriétés des matrices structurées de la famille de Toeplitz pour construire des réseaux de neurones compacts et sécurisés.
-Tout d'abord, nous étudions les réseaux neuronaux profonds dans lesquels les matrices de poids sont le produit des matrices diagonales et circulantes.
-Outre une analyse théorique de leur expressivité, nous introduisons de nouvelles techniques pour l'entraînement de ces modèles : nous concevons une procédure d'initialisation et proposons une utilisation intelligente des fonctions de non-linéarité afin de faciliter leur entraînement.
-Nous montrons que ces modèles sont plus précis que les autres approches structurées tout en nécessitant deux fois moins de poids que les meilleures approches.
-Deuxièmement, en plus d'être compacts et sécurisés, les réseaux de neurones se doivent d'être sécurisés.
-Pour améliorer la robustesse des réseaux de neurones, nous proposons une nouvelle régularisation Lipschitz pour les réseaux convolutifs.
-La régularisation Lipschitz est maintenant établie comme une propriété clé de l'apprentissage profond avec des implications dans la stabilité de l'entraînement, la généralisation, la robustesse contre des exemples contradictoires, etc.
-Cependant, le calcul pour obtenir la valeur exacte de la constante de Lipschitz d'un réseau de neurones est connu pour être un problème NP-complet.
+
+Deuxièmement, en plus d'être compacts et précis, les réseaux de neurones se doivent d'être sécurisés.
+Pour améliorer leur robustesse, nous proposons une nouvelle régularisation pour les réseaux convolutifs basée sur la constante de Lipschitz.
+La régularisation Lipschitz est maintenant établie comme une propriété clé de l'apprentissage profond avec des implications en stabilité, généralisation et robustesse contre les attaques adversariales, etc.
+Cependant, le calcul de la constante de Lipschitz d'un réseau de neurones est connu pour être un problème NP-complet.
 De récentes tentatives introduisent des bornes supérieures pour approximer cette constante qui sont soit efficaces, mais peu précises, soit précises mais coûteuses.
-Dans cette thèse, en exploitant les propriétés des matrices de Toeplitz à bloc de Toeplitz, nous introduisons une nouvelle borne supérieure des valeurs singulières des couches convolutionnelles qui est à la fois précise et facile à calculer.
+Dans cette thèse, en exploitant les propriétés des matrices de Toeplitz à bloc de Toeplitz, nous introduisons une nouvelle borne supérieure de cette constante pour les couches convolutionnelles qui est à la fois précise et facile à calculer.
 Sur la base de ce résultat, nous concevons un algorithme pour entraîner des réseaux de neurones convolutifs avec une régularisation Lipschitz.
 
 
