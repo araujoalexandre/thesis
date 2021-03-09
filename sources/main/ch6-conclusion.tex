@@ -23,12 +23,22 @@ In order to characterize the expressive power of diagonal-circulant neural netwo
 Based on this result, we have successfully demonstrated that neural networks with diagonal and circulant matrices are \emph{universal approximators} and characterized their expressive power with respect to their depth.
 We also demonstrated the effectiveness of this class of compact neural networks to video classification with a real-world dataset.
 
-Secondly, we proposed a new regularization scheme of convolutional neural networks that improve their robustness against adversarial attacks.
+Secondly, we study the properties of doubly-block Toeplitz matrices which are the matrix equivalent of the convolution operation. 
+Using the properties of this type of structured matrix allows us to develop a new regularization scheme of convolutional neural networks that improve their robustness against adversarial attacks.
 This regularization scheme reduces a bound of the Lipschitz constant of the neural networks thus making it less sensitive to small perturbations of its input.
-This contribution is based on the observation that the convolution operation of convolutional layers can be interpreted as a matrix-multiplication where the matrix is the concatenation of multiple doubly-block Toeplitz matrices.
+
+
+% Secondly, we proposed a contribution based on the observation that the convolution operation of convolutional layers can be interpreted as a matrix-multiplication where the matrix is the concatenation of multiple doubly-block Toeplitz matrices.
+%
+% a new regularization scheme of convolutional neural networks that improve their robustness against adversarial attacks.
+%
+% This contribution is based 
+
+
 From the properties of doubly-block Toeplitz matrices and a Fourier representation introduced by~\citet{grenander1958toeplitz}, we demonstrated an upper-bound on the singular values of convolutional layers.
 In order to use this upper-bound in a large-scale setting, we introduce the PolyGrid algorithm (see \Cref{algorithm:ch5-polygrid}) which efficiently and accurately computes an approximation of this upper-bound.
 Finally, we demonstrated that employing this bound as a regularizer improved the generalization and the robustness of neural networks trained with the adversarial training scheme.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -36,38 +46,114 @@ Finally, we demonstrated that employing this bound as a regularizer improved the
 \label{section:ch6-perspectives_and_future_works}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In order to improve upon our work, several ideas follow naturally.
-First, the diagonal-circulant decomposition can be used in a wide variety of settings.
-In~\Cref{chapter:ch4-diagonal_circulant_neural_network} and Appendix~\ref{appendix:ap2-diagonal_circulant_neural_networks_for_video_classification}, we have used it for compressing embedding layers in the context of video classification.
+\subsection{Designing Compact Transformers for Natural Language Processing}
+
+
+In order to improve upon our work on compact neural networks, one idea follows naturally.
+The race towards larger convolutional neural networks seemed to have slowed following the work of \citet{tan2019efficientnet} which devised compact state-of-the-art neural networks for image recognition.
+However, other types of architecture, \eg, \emph{Transformers} which rely heavily on dense matrices, have seen their number of parameters exploding in recent years.
+The latest model which was designed by \citet{fedus2021switch} has 1 trillion parameters, 5.7 times than the second largest, proposed by \citet{brown2020language}, which had 175 billion parameters.
+
+In~\Cref{chapter:ch4-diagonal_circulant_neural_network} and Appendix~\ref{appendix:ap2-diagonal_circulant_neural_networks_for_video_classification}, we have used the diagonal-circulant decomposition for compressing embedding layers in the context of video classification.
 This decomposition could also be used to compress attention layers of Transformers networks~\cite{vaswani2017attention} where the attention layer is described as follows:
-% The attention layer is defined as follows:
 \begin{equation}
   \text{Attention}(\Qmat, \Kmat, \Vmat) = \text{softmax} \left( \frac{\Qmat \Kmat^\top}{\sqrt{d_k}} \right) \Vmat \enspace,
 \end{equation}
 where $\Qmat, \Kmat$ and $\Vmat$ are dense matrices.
 Taking this layer as a building block leads to large neural networks as demonstrated by the GPT-3 architecture with 96 attention layers and 175 billion parameters.
-Secondly, the regularization of the Lipschitz constant of neural networks has been a growing interest in the training of neural networks.
-Indeed, Lipschitz regularization goes beyond robustness of neural networks and can be used in a wide variety of settings, for example, to stabilize the training of Generative Adversarial Networks and invertible networks, or to improve generalization capabilities of classifiers.
-In \Cref{chapter:ch5-lipschitz_bound}, we have proposed a layer-wise approach and focused on the Lipschitz constant of convolutional layers.
-As future work, we could consider neural networks as nonlinear Lipschitz continuous operators.
-For example, for a two-layers neural networks $N(\xvec) = \Wmat^{(2)} \rho(\Wmat^{(1)} \xvec)$,
-we could define the operator:
+Although, the diagonal-circulant decomposition could successfully reduce the number of parameters of attention layers, it may have limited impact on \emph{multi-head attention layers} which are a concatenation of small attention layers due to the reduced dimension of each matrix.
+% , the total number of parameters is similar to that of single-head attention with full dimensionality.
+% \begin{align}
+%   \text{MultiHead}(\Qmat, \Kmat, \Vmat) &= \text{concat}(\Hmat^{(1)}, \dots, \Hmat^{(h)}) \Wmat_O \\
+%   \text{where } \Hmat^{(i)} &= \text{Attention}(\Qmat \Wmat^{(i)}_Q, \Kmat \Wmat^{(i)}_K, \Vmat \Wmat^{(i)}_V) 
+% \end{align}
+% where $\Wmat^{(i)}_Q$, $\Wmat^{(i)}_K$ and $\Wmat^{(i)}_V$ are projection matrices.
+% Due to the reduced dimension of each matrix of the multi-head attention layer, the total number of parameters is similar to that of single-head attention with full dimensionality.
+
+
+
+% ---------------
+%
+% \todotext{update here}
+%
+% The regularization of the Lipschitz constant of neural networks has been a growing interest in the training of neural networks.
+% Indeed, Lipschitz regularization goes beyond robustness of neural networks and can be used in a wide variety of settings, for example, to stabilize the training of Generative Adversarial Networks and invertible networks, or to improve generalization capabilities of classifiers.
+%
+%
+% Currently, 
+%
+% It is important to note that the result achieved by combining adversarial training and Lipschitz regularization allow an improvement of 
+%
+% and devising techniques to better control the expressiveness of neural network is  
+
+
+
+\subsection{Regularization on the Condition Number of Convolution Layers}
+
+
+In \Cref{chapter:ch5-lipschitz_bound}, we have proposed an upper bound on the largest singular value of convolutional layers which allow us to regularize the Lipschitz constant of the network thus improving the robustness.
+% Indeed, a Lipschitz regularization during training combined with a local smoothing technique such as adversarial training allow an important gain in robustness. 
+However, an important reduction of the Lipschitz constant prevents the network from learning correctly. 
+Indeed, as demonstrated by the work of \cite{zhang2019theoretically}, accuracy and robustness are actually at odds, meaning that improving the robustness (\ie in our case, reducing the expressivity) hurts the training and the natural accuracy of the network. 
+In our experiments, the phenomenon called \emph{rank collapse} \cite{saxe2014exact} where the rank of the weights matrices tend to decrease during training combined with a strong Lipschitz regularization would completely prevent convergence.
+% as the expressivity is concentrated in the singular vector associated with the largest singular values.
+An interesting solution would be to regularize the largest singular value and promoting the smallest in order to promote orthogonality.
+% regularize the condition number of the weight matrices (ratio between the highest and lowest singular values).
+The following bound on the condition number of general matrices \citet{guggenheimer1995simple} could be studied:
 \begin{equation}
-  \Mmat(\xvec) = \Wmat^{(2)} \Amat (\Wmat^{(1)} \xvec) \Wmat^{(1)}
+  \kappa(\Wmat) \le \frac{2}{\abs{\det(\Wmat)}} \left(\frac{\norm{\Amat}_\fro}{\sqrt{r}}\right)^r
 \end{equation}
-where $\Amat(\xvec) = \diag(\rho'(\xvec))$ is a diagonal matrix dependent of $\xvec$.
-Then, it is easy to see that $N(\xvec) = \Mmat(\xvec) \xvec$.
-The spectrum of this kind of operator has been studied by Kachurovskij in 1969 (see \citet{appell2008nonlinear}). 
-More precisely, the set 
+where $r$ is the rank of $\Wmat$.
+As such, using the bound as a regularizer will penalize the non-orthogonality, just like a layer normalization.
+Therefore, we could design some heuristic regularizers to encourage a smaller $\left(\frac{\norm{\Wmat}_\fro}{\sqrt{r}}\right)^r$ and larger $\abs{\det(\Wmat)}$ separately, as given by the following objective function: 
+\begin{align} 
+  \min_{\Omega} \Ebb_{\xvec, y \sim \Dset} \left[ L(N_\Omega(\xvec), y)  + C_1 \sum_{i=1}^\depth \norm{\Wmat^{(i)}}_\fro + C_2 \sum_{i=1}^{\depth} \abs{\det(\Wmat^{(i)})} \right]
+\end{align}
+where the determinant of doubly-block Toeplitz matrices under some assumption could be expressed with the Szeg\"{o} Theorem \cite{szego1915grenzwertsatz} and can be approximated with the help of \emph{Random Matrix Theory} \cite{basor2017asymptotics}.
+
+% \subsection{Stronger Provably Adversarial Robustness with Noise Injection and Lipschitz Regularization}
+%
+% xxx
+%
+% In Appendix xxx, we have shown that injecting random noise from the Exponential family both during training and inference phases provably defend against adversarial attacks.
+% In our experimental  
+%
+
+
+
+
+
+
+\subsection{Going Beyond the Lipschitz Constant} 
+
+Finally, in order to better understand the behavior of neural networks and the transformation they perform, it would be interesting to go beyond the Lipschitz constant and study their spectrum.
+Indeed, the spectrum of a linear map, a set that contains the eigenvalues, can be seen as a description of the properties and behavior of the operator.
+For example, for a linear operator $\Lmat: \Xset \rightarrow \Xset$, the spectrum gives precise information on the solvability of the following linear equation
 \begin{equation}
-  \mu(\Mmat) \triangleq \left\{ \lambda \in \Cbb \mid \lambda \Imat - \Mmat \text{ is a lipeomorphism} \right\} 
+  \lambda \xvec - \Lmat \xvec = \yvec
+\end{equation}
+It is natural to ask if we could define a spectrum that equivalently gives information on the following nonlinear equation
+\begin{equation}
+  \lambda \xvec - \Fmat(\xvec) = \yvec \enspace.
+\end{equation}
+
+In this line of research, \citet{kachurovskii1969regular} have defined a spectrum for nonlinear continuous Lipschitz operators which share important properties with the spectrum of linear operators.
+More precisely, let $\Fmat: \Xset \rightarrow \Xset$ be a nonlinear continuous Lipschitz map, the \emph{Kachurovskij spectrum} of $\Fmat$ is given by
+\begin{equation}
+  \sigma(\Fmat) \triangleq \left\{ \lambda \in \Cbb \mid \lambda \Imat - f \text{ is not a lipeomorphism} \right\} 
 \end{equation} 
-is called the \emph{Kachurovskij resolvent} set of $\Mmat$ and its complement
+where a nonlinear Lipschitz continuous operator is a \emph{lipeomorphism} if its inverse is also nonlinear Lipschitz continuous.
+We can also define the complement of the spectrum, \ie, the \emph{Kachurovskij resolvent set} as follows: 
 \begin{equation}
-  \sigma(\Mmat) \triangleq \Cbb \setminus \mu(\Mmat) \enspace, 
+  \mu(\Fmat) \triangleq \Cbb \setminus \mu(\Fmat) 
 \end{equation}
-the \emph{Kachurovskij spectrum} of $\Mmat$ and where a nonlinear Lipschitz continuous operator is a \emph{lipeomorphism} if its inverse is also nonlinear Lipschitz continuous.
-A study of this spectrum could provide some information on the behavior of neural networks.
+The resolvent set can be seen as the set of complex numbers for which the operator is \emph{well behaved}.
+The Kachurovskij spectrum is a compact subset of the complex plane but may be empty.
+Kachurovskij have also shown that the emptiness of this spectrum can be prevented if we restrict ourselves to nonlinear continuous Lipschitz operators that admit a Fréchet-derivative $\Fmat'(\xvec_0)$ at some point $\xvec_0 \in \Xset$.
+In this case, the Kachurovskij spectrum share all the properties of a linear operator which are: closed, compact, bounded and non-empty. 
+
+Neural networks are differentiable nonlinear Lipschitz continuous functions, therefore the study of the Kachurovskij spectrum could give important insight on their stability, invertibility and robustness to adversarial examples.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -75,11 +161,33 @@ A study of this spectrum could provide some information on the behavior of neura
 \label{section:ch6-discussion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+% The global regularization of neural network during training combined with a local smoothing technique such as adversarial training allow an important gain in robustness. 
+% However, our contribution also highlight some important difficulties in training neural networks.
+
+
 Although our contributions offer concrete techniques for building compact and reliable neural networks, they also highlight some important difficulties in training neural networks. 
 First, if we discard techniques such as pruning or quantization for building compact neural networks due to the necessity of training a large neural network prior to compression, designing parameters-efficient neural networks that are compact \emph{by nature} require rethinking the whole architecture.
-For computer vision tasks, the convolution operation is a compact and powerful transform, however, we still haven't found such equivalent transform for other use cases.
-For example, the attention layer is a powerful transform for NLP tasks but not very efficient in terms of parameters and complexity.
-Secondly, while new techniques successfully improve the robustness of neural networks, it has been shown that accuracy and robustness are actually at odds \cite{zhang2019theoretically}, meaning that reaching a perfect robustness while maintaining the current accuracy might be impossible in the current setting.
+For computer vision tasks, the convolution operation is a compact and powerful transform, however, we still haven't found such equivalent transforms for other use cases.
+Although the multi-head attention layer is more efficient than the attention layer for NLP tasks, using this type of transform in a neural network is still very parameter-hungry as demonstrated by the recent state-of-the-art for language models \cite{brown2020language}.
+
+
+Secondly, defense techniques against adversarial attacks have shown great improvements in the last few years.
+However, with current state-of-the-art techniques, it is still difficult to reach an accuracy higher than 60\% on a CIFAR10 (which is considered a small dataset) and the accuracy decreases further on datasets with a larger dimensionality.
+Consequently, building robust neural networks still remain very much an open question.
+We believe that further breakthroughs in this area will come as a by-product on research on \emph{understanding neural networks}. 
+Accordingly, we hope that our contribution to the understanding of diagonal-circulant and convolution neural networks is a small step in this direction.
+
+
+
+% while new techniques successfully improve the robustness of neural networks, it has been shown that accuracà and robustness are actually at odds \cite{zhang2019theoretically}, 
+
+
+
+
+
+
+
 
 
 
