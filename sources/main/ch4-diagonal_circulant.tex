@@ -722,7 +722,7 @@ Finally, all biases in the network are randomly drawn from $\mathcal{N}\left(0,\
   Then, for all $i$, the probability density function (\pdf) of $\yvec_{i}$ is symmetric.
   Also:
   \begin{itemize}
-    \item Assume $\uvec_0 \ldots \uvec_{n-1}$ is fixed. Then, we have for $i \neq i'$:
+    \item Assume $\uvec_0, \ldots, \uvec_{n-1}$ are fixed. Then, we have for $i \neq i'$:
       \begin{equation}
 	\Cov(\yvec_i, \yvec_{i'}) = 0 \quad \text{and} \quad
 	\Var(\yvec_i) = \alpha'^2 + \sum_{j} \uvec_{j}^{2} \alpha^{2}
@@ -740,7 +740,7 @@ Finally, all biases in the network are randomly drawn from $\mathcal{N}\left(0,\
   By an abuse of notation, we write $\cvec_0 = \cvec_n, \cvec_{-1} = \cvec_{n-1}$ and so on.
   First, note that: $\yvec_i = \sum_{j=0}^{n-1} \cvec_{j-i} \uvec_j \dvec_j + \bvec_i$.
   Observe that the term $\cvec_{j-i}\uvec_j\dvec_j$ has symmetric \pdf because of $\dvec_j$.
-  Thus, $\yvec_i$ has symmetric a \pdf.
+  Thus, $\yvec_i$ has a symmetric \pdf.
   Now let us compute the covariance.
   \begin{align}
     \Cov(\yvec_i,\yvec_{i'}) &= \left( \sum_{j,j'=0}^{n-1} \Cov\left(\cvec_{j-i}\uvec_j\dvec_j,\cvec_{j'-i'}\uvec_{j'}\dvec_{j'}\right) \right) + \Cov(\bvec_i, \bvec_{i'}) \\
@@ -762,7 +762,7 @@ Finally, all biases in the network are randomly drawn from $\mathcal{N}\left(0,\
   Now assume that $\uvec_j = \rho(\xvec_j)$ where $\xvec_j$ is a random variables in $\Rbb^n$.
   Clearly, $\uvec_j^2$ is independent from $\cvec_{j-i}$ and $\cvec_{j-i'}$, thus, we have:
   \begin{align}
-    \Cov(\yvec_i,\yvec_{i'}) &= \sum_{j=0}^{n-1} \Ebb \left[ \cvec_{j-i}\cvec_{j-i'}\right] \Ebb\left[ \uvec_j^2 \right]
+    \Cov(\yvec_i,\yvec_{i'}) &= \sum_{j=0}^{n-1} \Ebb \left[ \cvec_{j-i}\cvec_{j-i'}\right] \Ebb\left[ \uvec_j^2 \right] \enspace.
   \end{align}
   For $i \neq i'$, then $\cvec_{j-i}$ and $\cvec_{j-i'}$ are independent, we have $\Ebb\left[\cvec_{j-i}c_{j-i'}\right] = \Ebb\left[\cvec_{j-i}\right] \Ebb\left[\cvec_{j-i'}\right] = 0$ and $\Cov(\yvec_i,\yvec_{i'}) = 0$ if $i \neq i'$.
   Let us compute the variance.
@@ -770,14 +770,14 @@ Finally, all biases in the network are randomly drawn from $\mathcal{N}\left(0,\
   Because the \pdf of $\xvec_j$ is symmetric, $\Ebb\left[\xvec_j^2\right] = 2\Ebb\left[\uvec_j^2\right]$ and $\Ebb\left[\xvec_j\right] = 0$.
   Thus, 
   \begin{equation}
-    \Var(\yvec_i) = \frac{1}{2} \sum_{j=0}^{n-1} \Var(\cvec_{j-i}) \Ebb\left[\xvec_j^2\right] = \frac{1}{2} \sum_{j=0}^{n-1} \Var(\cvec_{j-i}) \Var(\xvec_j) \enspace
+    \Var(\yvec_i) = \frac{1}{2} \sum_{j=0}^{n-1} \Var(\cvec_{j-i}) \Ebb\left[\xvec_j^2\right] = \frac{1}{2} \sum_{j=0}^{n-1} \Var(\cvec_{j-i}) \Var(\xvec_j)
   \end{equation}
   which concludes the proof.
 \end{proof}
 
 Now we can state our result on the initialization of diagonal-circulant neural networks.
 The following proposition states that the covariance matrix at the output of any layer in a diagonal-circulant neural network is constant.
-Moreover, note that result of this proposition is independent of the depth of the network.
+Moreover, note that the result of this proposition is independent of the depth of the network.
 
 \begin{proposition}[Initialization of Diagonal-Circulant Neural Networks] \label{proposition:ch4-initialization_dcnn}
   Let $\nn_\Pi$ be a diagonal-circulant neural network of depth $\depth$ initialized according to our procedure, with $\sigma'=0$.
@@ -786,7 +786,7 @@ Moreover, note that result of this proposition is independent of the depth of th
 \end{proposition}
 
 \begin{proof}[\Cref{proposition:ch4-initialization_dcnn}]
-  Let $\nn_\Pi = \layer_{\Dmat^{(\depth)}, \Cmat^{(\depth)}} \circ \ldots \circ \layer_{\Dmat^{(1)}, \Cmat^{(1)}}$ be a $\depth$ layer diagonal-circulant neural network.
+  Let $\nn_\Pi \triangleq \layer_{\Dmat^{(\depth)}, \Cmat^{(\depth)}} \circ \ldots \circ \layer_{\Dmat^{(1)}, \Cmat^{(1)}}$ be a $\depth$ layer diagonal-circulant neural network.
   All matrices are initialized as described in the statement of the proposition.
   Let $\yvec = \Dmat^{(1)} \Cmat^{(1)} \xvec$.
   \Cref{lemma:ch4-covariance} shows that $\Cov(\yvec_{i}, \yvec_{i'}) = 0$ for $i \neq i'$ and $\Var(\yvec_{i}) = \frac{2}{n}\norm{x}_{2}^{2}$.
@@ -807,7 +807,7 @@ The fact that the result of \Cref{proposition:ch4-initialization_dcnn} is indepe
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Analysis on the Use of Nonlinearities}
+\subsection{Analysis of the Use of Nonlinearities}
 \label{subsection:ch4-analysis_on_the_use_of_nonlinearities}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -823,7 +823,7 @@ We empirically found that the ReLU activations had an impact on the training of 
 Indeed, the deeper the network, the more nonlinear it is, which makes convergence difficult.
 In an experiment, we replace the ReLU activations with Leaky-ReLU activations (\cf \Cref{subsection:ch2-preliminaries_on_neural_networks}) and vary the slope of the Leaky-ReLU (a higher slope means an activation function that is closer to a linear function).
 The results of this experiment are presented in~\Cref{figure:ch4-cifar10_leaky_relu}.
-In the experiment, we try different slopes for the Leaky-ReLU activation and train diagonal-circulant neural networks with different depth.
+In this experiment, we try different slopes for the Leaky-ReLU activation and train diagonal-circulant neural networks with different depth.
 We can observe that a higher slope (making the network more linear) facilitates convergence, allowing us to train deeper networks.
 This is an interesting result, since  we can use this technique to adjust the number of parameters in the network (increasing depth), without facing training difficulties.
 We hence rely on this setting in the experimental section. 
@@ -891,14 +891,14 @@ We hence rely on this setting in the experimental section.
 This experimental section aims at answering the following questions:
 \begin{enumerate}
     \itshape
-    \item How do DCNNs compare to other approaches such as ACDC, LDR or other structured approaches?
-    \item How do DCNNs compare to other compression based techniques?
-    \item How do DCNNs perform in the context of large-scale real-world machine learning applications?  
+    \item[Q1] How do DCNNs compare to other approaches such as ACDC, LDR or other structured approaches?
+    \item[Q2] How do DCNNs compare to other compression based techniques?
+    \item[Q3] How do DCNNs perform in the context of large-scale real-world machine learning applications?  
 \end{enumerate}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Comparison with Other Structured Approaches}
+\subsection{Comparison with Other Structured Approaches (Q1)}
 \label{subsection:ch4-comparison_with_other_structured_approches}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -944,7 +944,7 @@ This experimental section aims at answering the following questions:
 
 In \Cref{chapter:ch3-related_work}, we have discussed the differences between the ACDC framework and our approach from a theoretical perspective.
 In this section, we conduct experiments to compare the performance of DCNNs with neural networks based on ACDC layers. 
-We first reproduce the experimental setting from \citet{moczulski2016acdc}, and compare both approaches using only linear networks (\ie, networks without any ReLU activations).
+We first reproduce the experimental setting from \citet{moczulski2016acdc}, and compare both approaches using only linear networks (\ie, networks without any nonlinear activation).
 The synthetic dataset has been created in order to reproduce the experiment on the regression linear problem proposed by~\citet{moczulski2016acdc}.
 We draw $\Xmat$ and $\Wmat$ from a uniform distribution between [-1, +1] and $\epsilon$ from a normal distribution with mean 0 and variance $0.01$.
 The relationship between $\Xmat$ and $\Ymat$ is defined by $\Ymat = \Xmat\Wmat + \epsilon$. 
@@ -953,12 +953,11 @@ In this simple setting, while both architectures demonstrate good performance, w
 In \Cref{figure:ch4-acdc_cifar10}, we compare neural networks with ReLU activations on CIFAR-10. 
 
 We found that networks which are based only on ACDC layers are difficult to train and offer poor accuracy on CIFAR-10 (we have tried different initialization schemes including the one from the original paper, and the one we introduce in this chapter).
-\citet{moczulski2016acdc} manage to train a large VGG network  however these networks are generally highly redundant and the contribution of the structured layer is difficult to quantify. 
+\citet{moczulski2016acdc} managed to train a large VGG network  however these networks are generally highly redundant and the contribution of the structured layer is difficult to quantify. 
 We also observe that adding a single dense layer improves the convergence rate of ACDC in the linear case, which explains the good results of \citet{moczulski2016acdc}.
 However, it is difficult to characterize the true contribution of the ACDC layers when the network has a large number of expressive layers.
-
 In contrast, deep DCNNs can be trained and offer good performance without additional dense layers (these results are in line with our experiments on the \yt dataset).
-We can conclude that DCNNs are able to model complex relations at a low cost. 
+% We can conclude that DCNNs are able to model complex relations at a low cost. 
 
 % \begin{figure}
 %    \centering
@@ -1033,21 +1032,21 @@ Other approaches also offer good trade-offs but they are not able to reach the a
 
 We now compare DCNNs with the LDR framework using the network configuration proposed by~\citet{thomas2018learning}: a single LDR structured layer followed by a dense layer.
 In the LDR framework, we can change the size of a network by adjusting the rank of the residual matrix, effectively capturing matrices with a structure that is close to a known structure but not exactly (in the LDR framework, Toeplitz matrices can be encoded with a residual matrix with rank=2, so a matrix that can be encoded with a residual of rank=3 can be seen as Toeplitz-like.).
-The results are presented in \Cref{table:ch4-xp_ldr} and demonstrate that DCNNs outperforms all LDR networks both in terms in size and accuracy.
+The results are presented in \Cref{table:ch4-xp_ldr} and demonstrate that DCNNs outperform all LDR networks both in terms of size and accuracy.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Comparison with Other Compression Based Approaches}
+\subsection{Comparison with Other Compression Based Approaches (Q2)}
 \label{subsection:ch4-comparison_with_other_compression_based_approaches}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 We provide a comparison with other compression based approaches such as HashNet \cite{chen2015compressing}, Dark Knowledge \cite{hinton2015distilling} and Fast Food Transform (FF) \cite{yang2015deep}. 
 \Cref{table:ch4-mnist} shows the test error of DCNN against other known compression techniques on the MNIST datasets.
 We can observe that DCNN outperforms HashNet \cite{chen2015compressing} and Dark Knowledge \cite{hinton2015distilling} with fewer number of parameters.
-The architecture with Fast Food (FF) \cite{yang2015deep} achieves better performance but with convolutional layers and only $1$ Fast Food Layer as the last Softmax layer. 
+The architecture with Fast Food (FF) \cite{yang2015deep} achieves better performance but with convolution layers and only $1$ Fast Food Layer as the last Softmax layer. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Large-scale Video Classification on the \yt Dataset}
+\subsection{Large-scale Video Classification on the \yt Dataset (Q3)}
 \label{subsection:ch4-large_scale_video_classification}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1070,7 +1069,7 @@ The architecture with Fast Food (FF) \cite{yang2015deep} achieves better perform
 
 To understand the performance of deep DCNNs on large-scale applications, we conducted experiments on the \yt video classification with 3.8 training examples introduced by~\citet{abu2016youtube}.
 This section provides a summary of the results obtained on the \yt dataset, the full experimental analysis is reported in Appendix~\ref{appendix:ap2-diagonal_circulant_neural_networks_for_video_classification}.
-Notice that we favor this experiment over ImageNet applications because modern image classification architectures involve a large number of convolutional layers, and compressing convolutional layers is out of our scope. 
+Notice that we favor this experiment over ImageNet applications because modern image classification architectures involve a large number of convolution layers, and compressing convolution layers is out of our scope. 
 Also, as mentioned earlier, testing the performance of DCNN architectures mixed with a large number of expressive layers makes little sense.
 The \yt includes two datasets describing 8 million labeled videos.
 Both datasets contain audio and video features for each video.
@@ -1195,7 +1194,7 @@ We can also see that scattering followed by a DC layer systematically outperform
 \label{section:ch4-concluding_remarks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-This chapter deals with the training of diagonal-circulant neural networks.
+This chapter dealt with the training and understanding of diagonal-circulant neural networks.
 To the best of our knowledge, training such networks with a large number of layers had not been done before.
 We also endowed this kind of architecture with theoretical guarantees, hence enriching and refining previous theoretical work from the literature.
 More importantly, we showed that DCNNs outperform their competing structured alternatives, including the very recent general approach based on LDR networks.
