@@ -40,7 +40,7 @@
 % The main reasons for this success are twofold.
 % First, they used a convolutional neural network (CNN) with more than 60 million parameters which was one of the largest models of the time.
 % Secondly, they designed a specific architecture to exploit dual programmable graphics processing units (GPUs) to speed up the arithmetic operations, which enabled them to significantly reduce training time.
-% The \Cref{figure:ap7-alexnet_network} shows the AlexNet architecture which consists of five convolutional layers with two fully connected layers at the end.
+% The \Cref{figure:ap7-alexnet_network} shows the AlexNet architecture which consists of five convolution layers with two fully connected layers at the end.
 % The figure also shows the distribution of the workload between the two GPUs.
 
 L'une des percées les plus remarquables de l'apprentissage profond s'est produite en 2012 lors de la compétition de reconnaissance d'image ImageNet~\cite{russakovsky2015imagenet}.
@@ -245,7 +245,7 @@ Pour réduire le nombre de paramètres sur chaque couche, de nombreux chercheurs
 
 % An example of widely used neural networks with specialized and more compact linear operations are \emph{Convolutional Neural Networks} (CNN)~\cite{lecun1998gradient,krizhevsky2012imagenet,he2016deep,tan2019efficientnet} which achieve state-of-the-art results for computer vision tasks.
 % Convolutional neural networks use specific weight matrices which encode the translation invariant property often desirable to process images.
-% Whereas a classical linear layer with a dense matrix will have $n \times n$ parameters, a convolution layer only has $k \times k$ parameters where $k \ll n$ is the kernel size and is usually small (\eg, 3 or 5 for classical convolutional layers).
+% Whereas a classical linear layer with a dense matrix will have $n \times n$ parameters, a convolution layer only has $k \times k$ parameters where $k \ll n$ is the kernel size and is usually small (\eg, 3 or 5 for classical convolution layers).
 % A convolutional neural network is the most common type of \emph{structured} neural network.
 % Indeed, the convolution operation can be represented by a structured matrix \ie, a matrix that can be represented with less than $n^2$ parameters.
 
@@ -262,7 +262,7 @@ En effet, l'opération de convolution peut être représentée par une matrice s
 % \Cref{figure:ap7-example_structure_matrices} shows different types of structured matrices that have been used for deep learning.
 % Although convolutional neural networks have been state-of-the-art for computer vision tasks, it remains unclear whether other types of structured neural networks can be beneficial to other types of applications and which type of structure can provide both accuracy and efficient computation.
 
-En plus d'offrir une représentation plus compacte, la structure de certaines matrices peut être exploitée pour obtenir de meilleurs algorithmes pour multiplier la matrice avec un vecteur, cela permet d'optimiser la mémoire et de réduire le nombre d'opérations réalisées.
+En plus d'offrir une représentation plus compacte, la structure de certaines matrices peut être exploitée afin d'obtenir de meilleurs algorithmes pour multiplier la matrice avec un vecteur, cela permet d'optimiser la mémoire et de réduire le nombre d'opérations réalisées.
 En se basant sur le succès des réseaux de neurones convolutifs, les chercheurs ont étudié et proposé d'autres types de réseaux basés sur des matrices de poids avec différentes structures~\cite{moczulski2016acdc,sindhwani2015structured}.
 La Figure~\ref{figure:ap7-example_structure_matrices} montre différents types de matrices structurées qui ont été utilisées pour l'apprentissage profond.
 Bien que les réseaux de neurones convolutifs soient état de l'art pour les tâches de vision par ordinateur, il reste à savoir si d'autres types de réseaux structurés pourraient être utiles à d'autres types d'applications et quel type de structure pourraient fournir à la fois précision et efficacité de calcul.
@@ -285,11 +285,11 @@ Ci-après, nous détaillons nos contributions.
 
 % As a first contribution, we use circulant matrices, which are a particular type of Toeplitz matrix, to devise a new compact architecture replacing fully connected neural networks.
 % More precisely, we study deep diagonal-circulant neural networks, which are deep neural networks in which weight matrices are the product of diagonal and circulant ones.
-% Besides making a theoretical analysis of their expressivity, we introduce principled techniques for training these models: we devise an initialization scheme and propose a smart use of nonlinearity functions in order to train deep diagonal circulant networks.
+% Besides making a theoretical analysis of their expressivity, we introduce principled techniques for training these models: we devise an initialization scheme and propose a smart use of nonlinearity functions in order to train deep diagonal-circulant networks.
 % Furthermore, we show that these networks outperform recently introduced deep networks with other types of structured layers.
-% We conduct a thorough experimental study to compare the performance of deep diagonal circulant networks with state-of-the-art models. 
+% We conduct a thorough experimental study to compare the performance of deep diagonal-circulant networks with state-of-the-art models. 
 % We show that our models achieve better accuracy than other structured approaches while requiring 2x fewer weights than the next best approach.
-% Finally, we train accurate deep diagonal circulant networks on a real-world video classification dataset with over 3.8 million training examples.
+% Finally, we train accurate deep diagonal-circulant networks on a real-world video classification dataset with over 3.8 million training examples.
 %
 % The training procedure we have developed to train large diagonal-circulant neural networks was first published in the \textbf{\color{mydarkblue} European Conference on Computer Vision Workshops on Video Classification}, as part of the \yt challenge.
 % Then, the theoretical analysis of the expressivity of diagonal-circulant neural networks has been published in a second paper in the \textbf{\color{mydarkblue} 24th European Conference on Artificial Intelligence}.
@@ -319,7 +319,7 @@ Ensuite, l'analyse théorique de l'expressivité de ces réseaux a été publié
 % As a second contribution, we build robust neural networks by studying the properties of the structure of convolutions.
 % We devise a new upper bound on the largest singular value of convolution layers that is both tight and easy to compute.
 % Our work is based on the result of~\citet{gray2006toeplitz} which states that an upper bound on the singular value of Toeplitz matrices can be computed from the inverse Fourier transform of the characteristic sequence of these matrices.
-% From our analysis immediately follows an algorithm for bounding the Lipschitz constant of a convolutional layer, and by extension the Lipschitz constant of the whole network.
+% From our analysis immediately follows an algorithm for bounding the Lipschitz constant of a convolution layer, and by extension the Lipschitz constant of the whole network.
 % Finally, we illustrate our approach to adversarial robustness.
 % Recent work has shown that empirical methods such as adversarial training offer poor generalization~\cite{schmidt2018adversarially} and can be improved by applying Lipschitz regularization~\cite{farnia2018generalizable}.
 % To illustrate the benefit of our new method, we train neural networks with Lipschitz regularization and show that it offers a significant improvement over adversarial training alone.
@@ -428,7 +428,7 @@ Pour finir, nous démontrons les bonnes performances de ces réseaux dans le con
 % Instead of using the power method to iteratively approximate this value, we rely on Toeplitz matrix theory and its links with Fourier analysis.
 % Our work is based on the result of~\citet{gray2006toeplitz} which states that an upper bound on the singular value of Toeplitz matrices can be computed from the inverse Fourier transform of the characteristic sequence of these matrices.
 % We first extend this result to doubly-block Toeplitz matrices (\ie, block Toeplitz matrices where each block is Toeplitz) and then to convolutional operators, which can be represented as stacked sequences of doubly-block Toeplitz matrices.
-% From our analysis immediately follows an algorithm for bounding the Lipschitz constant of a convolutional layer, and by extension the Lipschitz constant of the whole network.
+% From our analysis immediately follows an algorithm for bounding the Lipschitz constant of a convolution layer, and by extension the Lipschitz constant of the whole network.
 % We theoretically study the approximation of this algorithm and show experimentally that it is more efficient and accurate than competing approaches.
 %
 % Finally, we illustrate our approach on adversarial robustness.
@@ -436,7 +436,7 @@ Pour finir, nous démontrons les bonnes performances de ces réseaux dans le con
 % To illustrate the benefit of our new method, we train a large, state-of-the-art Wide ResNet architecture with Lipschitz regularization and show that it offers a significant improvement over adversarial training alone, and over other methods for Lipschitz regularization.
 % In summary, we make the three following contributions:
 % \begin{enumerate}
-%   \item We devise an upper bound on the singular values of the operator matrix of convolutional layers by leveraging Toeplitz matrix theory and its links with Fourier analysis.
+%   \item We devise an upper bound on the singular values of the operator matrix of convolution layers by leveraging Toeplitz matrix theory and its links with Fourier analysis.
 %   \item We propose an efficient algorithm to compute this upper bound which enables its use in the context of Convolutional Neural Networks.
 %   \item We use our method to regularize the Lipschitz constant of neural networks for adversarial robustness and show that it offers a significant improvement over AT alone.
 % \end{enumerate}
@@ -447,7 +447,7 @@ Malheureusement, le calcul exact de la constante de Lipschitz d'un réseau de ne
 Pour surmonter cette difficulté au lieu de calculer la constante globale, la plupart des travaux se sont concentrés sur le calcul de la constante de Lipschitz des \emph{couches} du réseau.
 Le produit des constantes de Lipschitz de chaque couche est une borne supérieure de la constante de Lipschitz de l'ensemble du réseau, et elle peut être utilisée comme substitut pour effectuer une régularisation Lipschitz.
 Comme la plupart des fonctions d'activation courantes (telles que la ReLU) ont une constante de Lipschitz égale à un, la principale difficulté consiste à calculer la constante de Lipschitz de l'application linéaire sous-jacente qui est égale à sa plus grande valeur singulière.
-Les travaux dans ce domaine de recherche s'appuient principalement un célèbre algorithme itératif appelé \emph{méthode de la puissance itérée} \cite{golub2000eigenvalue} utilisée pour approximer la valeur singulière maximale d'une fonction linéaire.
+Les travaux dans ce domaine de recherche s'appuient principalement sur un célèbre algorithme itératif appelé \emph{méthode de la puissance itérée} \cite{golub2000eigenvalue} utilisée pour approximer la valeur singulière maximale d'une fonction linéaire.
 Bien que générique et précise, cette technique est également coûteuse en termes de calcul, ce qui en empêche son utilisation pour l'entraînement de larges réseaux de neurones. 
 
 Dans cette thèse, nous introduisons une nouvelle borne supérieure des valeurs singulières des couches de convolution, qui est à la fois précise et facile à calculer.
