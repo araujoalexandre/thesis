@@ -215,7 +215,7 @@ For a given matrix $\Wmat = \Wmat^{(0)}$, the algorithm finds the closest orthon
 \end{equation}
 where $\Vmat = \Imat - \Wmat^{(k)\top} \Wmat^{(k)}$.
 Although this algorithm works well on dense matrices, it can be difficult to apply it to convolutions. 
-\citet{li2019preventing} built upon this idea and proposed an algorithm to enforce the orthogonality of convolutional layers.
+\citet{li2019preventing} built upon this idea and proposed an algorithm to enforce the orthogonality of convolution layers.
 They used the orthogonal projection proposed by \citet{kautsky1994matrix} and \citet{xiao2018dynamical} to build convolutional neural networks with orthogonal convolutions.
 
 All techniques that impose an orthogonality constraint on the weights matrices successfully reduce the Lipschitz constant of the layers of the networks.
@@ -280,7 +280,7 @@ To find the largest singular value, we can leverage the relation between eigenva
 The rate of convergence of the algorithm depends on the ratio between the second-largest eigenvalue and the largest eigenvalue.
 Indeed, a high ratio can lead to slow convergence.
 The pseudocode of the power method is given in \Cref{algorithm:ch3-power_method}.
-Altough, \Cref{algorithm:ch3-power_method} needs explicit matrix for computing the largest singular value, \citet{farnia2018generalizable,ryu2019plug} extended the power method to convolutional layers where the matrix $\Wmat$ is not explicitly constructed.
+Altough, \Cref{algorithm:ch3-power_method} needs explicit matrix for computing the largest singular value, \citet{farnia2018generalizable,ryu2019plug} extended the power method to convolution layers where the matrix $\Wmat$ is not explicitly constructed.
 The pseudocode of their method is presented in \Cref{algorithm:ch3-power_method_generic}. 
 
 In the context of deep learning and spectral normalization, the largest singular value needs to be computed for each layer of the network at each step of the training. 
@@ -295,8 +295,8 @@ We will shown in~\Cref{subsection:ch5-comparison_of_lipbound_with_other_state-of
 \label{subsection:ch3-singular_values_of_convolutional_layers}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The power method is not the only technique available for approximating the largest singular value (Lipschitz constant) of a convolutional layer.
-Several works have devised bounds or approximations on the largest singular value of convolutional layers by exploiting the \emph{structure} of the convolution operation \cite{sedghi2018singular,bibi2019deep,singla2019bounding,jia2017improving}.
+The power method is not the only technique available for approximating the largest singular value (Lipschitz constant) of a convolution layer.
+Several works have devised bounds or approximations on the largest singular value of convolution layers by exploiting the \emph{structure} of the convolution operation \cite{sedghi2018singular,bibi2019deep,singla2019bounding,jia2017improving}.
 
 % \citet{sedghi2018singular} have observed that a doubly-block Toeplitz matrix can be approximated by a 
 %
@@ -305,7 +305,7 @@ Several works have devised bounds or approximations on the largest singular valu
 % \citet{gray2006toeplitz} have observed that band-Toeplitz matrices can be `approximated' by band-circulant matrices.
 % This `approximation' is formalized by a mathematical concept called \emph{}j
 
-To approximate the singular values of a convolutional layer, \citet{sedghi2018singular} have exploited the properties of doubly-block circulant matrices (\ie, a circulant block matrix where each block is also a circulant matrix).
+To approximate the singular values of a convolution layer, \citet{sedghi2018singular} have exploited the properties of doubly-block circulant matrices (\ie, a circulant block matrix where each block is also a circulant matrix).
 Indeed, a doubly-block circulant matrix is the matrix representation of a convolution with circulant padding.
 In their work, \citet{sedghi2018singular} assume that the properties of doubly-block circulant matrices are `close' to the properties of a doubly-block Toeplitz matrix.
 
@@ -331,12 +331,12 @@ To compute the singular values of doubly-block circulant matrices, \citet{sedghi
 To prove \Cref{theorem:ch3-singular_values_doubly_block_circulant}, \citet{sedghi2018singular} used the diagonalization of doubly-block circulant matrices (see~\Cref{chapter:ch2-background}, \Cref{equation:ch2-diagonalization_doubly_block_circulant_matrix}).
 The main advantage of this approach is that the singular values of a doubly-block circulant matrix can be computed with the Fast Fourier Transform algorithm (see \Cref{section:ch2-a_primer_on_circulant_and_toeplitz_matrices}) which offers a reduced complexity compared to classical approaches for computing the singular values of a matrix.
 However, this approach exhibits several limitations.
-First, this method results in a loose approximation of the maximal singular value of a convolutional layer which does not use the circulant padding which is often the case in practical settings.
+First, this method results in a loose approximation of the maximal singular value of a convolution layer which does not use the circulant padding which is often the case in practical settings.
 Also, the complexity of their algorithm is dependent on the size of the input which can be high for large datasets.
 Finally, for multi-channel convolution, their method requires the computation of the spectral norm of $n^2$ matrices each of size $\cin \times \cout$ as stated in the following theorem:
 
 \begin{theorem}[Theorem 6 from \citet{sedghi2018singular}]
-  Let $\Mmat$ be the matrix encoding the linear transform computed by a multi-channel convolutional layer.
+  Let $\Mmat$ be the matrix encoding the linear transform computed by a multi-channel convolution layer.
   Let $\Kmat \in \Rbb^{\cin \times \cout \times n \times n}$ such that $(\Kmat)_{i,j}$ for all $i,j$ be constructed as in \Cref{theorem:ch3-singular_values_doubly_block_circulant}, 
   Let $\widetilde{\Kmat}_{i,j} = \Umat^\top \leftmat \Kmat \rightmat_{i,j} \Umat_n $ and define the following operator matrix 
   \begin{equation}
@@ -410,7 +410,7 @@ Because this method is independent of the input dimension, the computational com
 % => spectral normalization (they all use the power method \citet{golub2000eigenvalue})
 % - first paper on spectral normalization \citet{gouk2018regularisation}
 % - \citet{yoshida2017spectral,miyato2018spectral}: with power method
-% - \citet{farnia2018generalizable}: with power method specific for convolutional layers
+% - \citet{farnia2018generalizable}: with power method specific for convolution layers
 % - \citet{tsuzuku2018lipschitz}: use power method but do not normalize
 %
 % =>> WORK ON CONVOLUTION
