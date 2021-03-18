@@ -23,21 +23,33 @@ In order to characterize the expressive power of diagonal-circulant neural netwo
 Based on this result, we have successfully demonstrated that neural networks with diagonal and circulant matrices are \emph{universal approximators} and characterized their expressive power with respect to their depth.
 We also demonstrated the effectiveness of this class of compact neural networks to video classification with a real-world dataset.
 
+% Secondly, we study the properties of doubly-block Toeplitz matrices which are the matrix equivalent of the convolution operation. 
+% Using the properties of this type of structured matrix allows us to develop a new regularization scheme of convolutional neural networks that improve their robustness against adversarial attacks.
+% This regularization scheme reduces a bound of the Lipschitz constant of the neural networks thus making it less sensitive to small perturbations of its input.
+
+% From the properties of doubly-block Toeplitz matrices and a Fourier representation introduced by~\citet{grenander1958toeplitz}, we demonstrated an upper-bound on the singular values of convolution layers.
+% In order to use this upper-bound in a large-scale setting, we introduce the PolyGrid algorithm (see \Cref{algorithm:ch5-polygrid}) which efficiently and accurately computes an approximation of this upper-bound.
+% Finally, we demonstrated that employing this bound as a regularizer improved the generalization and the robustness of neural networks trained with the adversarial training scheme.
+%
+% ---
+
 Secondly, we study the properties of doubly-block Toeplitz matrices which are the matrix equivalent of the convolution operation. 
-Using the properties of this type of structured matrix allows us to develop a new regularization scheme of convolutional neural networks that improve their robustness against adversarial attacks.
-This regularization scheme reduces a bound of the Lipschitz constant of the neural networks thus making it less sensitive to small perturbations of its input.
+Using the properties of this type of structured matrix and a Fourier representation introduced by~\citet{grenander1958toeplitz}, we demonstrated an upper-bound on the singular values of convolution layers leading to a new regularization scheme of convolutional neural networks that improve their robustness against adversarial attacks.
+In order to use this upper-bound in a large-scale setting, we introduced the PolyGrid algorithm (see \Cref{algorithm:ch5-polygrid}) which efficiently and accurately computes an approximation of this upper-bound.
+Finally, we demonstrated that employing this bound as a regularizer reduces the sensitivity of the network to small perturbations, thus, improving the generalization and the robustness of the network.
 
 
-% Secondly, we proposed a contribution based on the observation that the convolution operation of convolutional layers can be interpreted as a matrix-multiplication where the matrix is the concatenation of multiple doubly-block Toeplitz matrices.
+
+% This regularization scheme reduces a bound of the Lipschitz constant of the neural networks thus making it less sensitive to small perturbations of its input.
+
+
+
+% Secondly, we proposed a contribution based on the observation that the convolution operation of convolution layers can be interpreted as a matrix-multiplication where the matrix is the concatenation of multiple doubly-block Toeplitz matrices.
 %
 % a new regularization scheme of convolutional neural networks that improve their robustness against adversarial attacks.
 %
 % This contribution is based 
 
-
-From the properties of doubly-block Toeplitz matrices and a Fourier representation introduced by~\citet{grenander1958toeplitz}, we demonstrated an upper-bound on the singular values of convolutional layers.
-In order to use this upper-bound in a large-scale setting, we introduce the PolyGrid algorithm (see \Cref{algorithm:ch5-polygrid}) which efficiently and accurately computes an approximation of this upper-bound.
-Finally, we demonstrated that employing this bound as a regularizer improved the generalization and the robustness of neural networks trained with the adversarial training scheme.
 
 
 
@@ -91,11 +103,11 @@ Although, the diagonal-circulant decomposition could successfully reduce the num
 \subsection{Regularization on the Condition Number of Convolution Layers}
 
 
-In \Cref{chapter:ch5-lipschitz_bound}, we have proposed an upper bound on the largest singular value of convolutional layers which allow us to regularize the Lipschitz constant of the network thus improving the robustness.
+In \Cref{chapter:ch5-lipschitz_bound}, we have proposed an upper bound on the largest singular value of convolution layers which allow us to regularize the Lipschitz constant of the network thus improving the robustness.
 % Indeed, a Lipschitz regularization during training combined with a local smoothing technique such as adversarial training allow an important gain in robustness. 
 However, an important reduction of the Lipschitz constant prevents the network from learning correctly. 
 Indeed, as demonstrated by the work of \cite{zhang2019theoretically}, accuracy and robustness are actually at odds, meaning that improving the robustness (\ie in our case, reducing the expressivity) hurts the training and the natural accuracy of the network. 
-In our experiments, the phenomenon called \emph{rank collapse} \cite{saxe2014exact} where the rank of the weights matrices tend to decrease during training combined with a strong Lipschitz regularization would completely prevent convergence.
+In our experiments, the phenomenon called \emph{rank collapse} \cite{saxe2014exact} where the rank of the weights matrices tend to decrease during training combined with a strong Lipschitz regularization would prevent convergence.
 % as the expressivity is concentrated in the singular vector associated with the largest singular values.
 An interesting solution would be to regularize the largest singular value and promoting the smallest in order to promote orthogonality.
 % regularize the condition number of the weight matrices (ratio between the highest and lowest singular values).
@@ -104,7 +116,7 @@ The following bound on the condition number of general matrices \citet{guggenhei
   \kappa(\Wmat) \le \frac{2}{\abs{\det(\Wmat)}} \left(\frac{\norm{\Amat}_\fro}{\sqrt{r}}\right)^r
 \end{equation}
 where $r$ is the rank of $\Wmat$.
-As such, using the bound as a regularizer will penalize the non-orthogonality, just like a layer normalization.
+As such, using the bound as a regularizer will encourage the orthogonality, just like a layer normalization.
 Therefore, we could design some heuristic regularizers to encourage a smaller $\left(\frac{\norm{\Wmat}_\fro}{\sqrt{r}}\right)^r$ and larger $\abs{\det(\Wmat)}$ separately, as given by the following objective function: 
 \begin{align} 
   \min_{\Omega} \Ebb_{\xvec, y \sim \Dset} \left[ L(N_\Omega(\xvec), y)  + C_1 \sum_{i=1}^\depth \norm{\Wmat^{(i)}}_\fro + C_2 \sum_{i=1}^{\depth} \abs{\det(\Wmat^{(i)})} \right]
@@ -126,8 +138,8 @@ where the determinant of doubly-block Toeplitz matrices under some assumption co
 
 \subsection{Going Beyond the Lipschitz Constant} 
 
-Finally, in order to better understand the behavior of neural networks and the transformation they perform, it would be interesting to go beyond the Lipschitz constant and study their spectrum.
-Indeed, the spectrum of a linear map, a set that contains the eigenvalues, can be seen as a description of the properties and behavior of the operator.
+Finally, in order to better understand the behavior of neural networks and the transformation they perform, it would be interesting to go beyond the Lipschitz constant and consider their full spectrum.
+Indeed, the spectrum of a linear map is a set that contains the eigenvalues and can be seen as a description of the properties and behavior of the operator.
 For example, for a linear operator $\Lmat: \Xset \rightarrow \Xset$, the spectrum gives precise information on the solvability of the following linear equation
 \begin{equation}
   \lambda \xvec - \Lmat \xvec = \yvec
