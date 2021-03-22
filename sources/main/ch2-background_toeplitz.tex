@@ -226,12 +226,12 @@ Then, the trigonometric polynomial $f: \Rbb \rightarrow \Cbb$ of the form
 is the \emph{inverse Fourier transform} of the sequence $\{a_h\}_{h \in \Iset_n}$.
 From this function, one can recover the sequence $\{a_h\}_{h \in \Iset_n}$ using the standard Fourier transform:
 \begin{equation}
-  a_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} f(\omega) \diff \omega \enspace.
+  a_h = \frac{1}{2\pi} \int_0^{2\pi} e^{-\ci h \omega} f(\omega) \,\diff \omega \enspace.
 \end{equation}
 \noindent
 From there, we can define an operator $\Tmat$ mapping integrable functions to Toeplitz matrices:
 \begin{equation} \label{equation:ch2-toeplitz_operator}
-  \Tmat_n(f) \triangleq \leftmat\frac{1}{2\pi} \int_{0}^{2\pi} e^{-\ci(i-j)\omega}f(\omega) \diff \omega \rightmat_{i,j \in \Iset^+_n} \enspace.
+  \Tmat_n(f) \triangleq \leftmat\frac{1}{2\pi} \int_{0}^{2\pi} e^{-\ci(i-j)\omega}f(\omega) \,\diff \omega \rightmat_{i,j \in \Iset^+_n} \enspace.
 \end{equation}
 In the following, when it is clear from context, we will write $\Tmat(f)$ instead of $\Tmat_n(f)$.
 % We can show that if $f$ is the inverse Fourier transform of $\{a_h\}_{h \in \Iset_n}$, then $\Tmat_n(f)$ is equal to $\Amat$.
